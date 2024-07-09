@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
+import 'package:rando/utils/default_image_config.dart';
 
 class ProfilePicture extends StatefulWidget {
   const ProfilePicture({super.key});
@@ -33,8 +34,11 @@ class _ProfilePictureState extends State<ProfilePicture> {
       });
     } catch (e) {
       print('could not get profile picture: $e');
+      final imageBytes =
+          storage.ref.child('default/${DefaultImageConfig().profileIMG}');
+      Uint8List? imageRef = await imageBytes.getData();
       setState(() {
-        pickedImage = null;
+        pickedImage = imageRef;
         isLoading = false;
       });
     }

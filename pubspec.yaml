@@ -32,6 +32,8 @@ dependencies:
   crypto: ^3.0.3
   flutter_dotenv: ^5.0.2
   dotenv: ^4.2.0
+  # Logs
+  logger: ^1.0.0
 
 
 dev_dependencies:

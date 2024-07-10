@@ -134,7 +134,7 @@ class Item {
       description: data['description'] ?? '',
       uid: data['uid'] ?? '',
       likes: data['likes'] ?? 0,
-      tags: data['tags'] ?? [],
+      tags: List<String>.from(data['tags'] ?? []),
     );
   }
 }

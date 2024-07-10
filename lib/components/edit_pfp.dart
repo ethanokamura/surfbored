@@ -1,6 +1,8 @@
 // dart packages
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
@@ -8,7 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rando/utils/default_image_config.dart';
 
 class EditProfilePicture extends StatefulWidget {
-  const EditProfilePicture({super.key});
+  final String profilePicturePath;
+  const EditProfilePicture({super.key, required this.profilePicturePath});
 
   @override
   State<EditProfilePicture> createState() => _EditProfilePictureState();
@@ -17,8 +20,11 @@ class EditProfilePicture extends StatefulWidget {
 class _EditProfilePictureState extends State<EditProfilePicture> {
   // variables
   StorageService storage = StorageService();
+  FirestoreService firestoreService = FirestoreService();
   Uint8List? pickedImage;
   bool isLoading = true;
+
+  var user = AuthService().user;
 
   @override
   void initState() {
@@ -30,7 +36,8 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image == null) return;
-    await storage.uploadFile('profile.png', image);
+    await storage.uploadFile('users/${user!.uid}/profile.png', image);
+    firestoreService.setUserPhotoPath(user!.uid, 'profile.png');
     final imageBytes = await image.readAsBytes();
     setState(() {
       pickedImage = imageBytes;
@@ -40,18 +47,17 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
 
   Future<void> getProfilePicture() async {
     try {
-      final imageBytes = await storage.getFile('profile.png');
+      print("profilePicturePath: ${widget.profilePicturePath}");
+      final imageBytes = await storage.getFile(widget.profilePicturePath);
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;
       });
     } catch (e) {
-      print('could not get profile picture: $e');
-      final imageBytes =
-          storage.ref.child('default/${DefaultImageConfig().profileIMG}');
-      Uint8List? imageRef = await imageBytes.getData();
+      print("could not find image $e");
+      final imageBytes = await storage.getFile(DefaultImageConfig().profileIMG);
       setState(() {
-        pickedImage = imageRef;
+        pickedImage = imageBytes;
         isLoading = false;
       });
     }

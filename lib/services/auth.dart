@@ -39,7 +39,6 @@ class AuthService {
 
   // anonymous firebase login
   Future<void> emailLogin(
-    BuildContext context,
     String email,
     String password,
   ) async {
@@ -48,7 +47,7 @@ class AuthService {
         email: email,
         password: password,
       );
-      if (context.mounted) await routeUser();
+      await routeUser();
     } on FirebaseAuthException catch (e) {
       // handle error
       String errorMessage;

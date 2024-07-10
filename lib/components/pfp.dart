@@ -27,14 +27,12 @@ class _ProfilePictureState extends State<ProfilePicture> {
 
   Future<void> getProfilePicture() async {
     try {
-      print("imgURL: ${widget.imgURL}");
       final imageBytes = await storage.getFile(widget.imgURL);
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;
       });
     } catch (e) {
-      print("could not find image $e");
       setState(() {
         pickedImage = null;
         isLoading = false;

@@ -7,7 +7,6 @@ import 'package:rando/services/firestore.dart';
 // utils
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rando/utils/theme/theme.dart';
 
 class EditProfilePicture extends StatefulWidget {
   final String imgURL;
@@ -71,9 +70,8 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
           isLoading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text("Failed to pick image. Please try again."),
-            backgroundColor: Theme.of(context).surfaceColor,
+          const SnackBar(
+            content: Text("Failed to pick image. Please try again."),
           ),
         );
       }
@@ -82,14 +80,12 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
 
   Future<void> getProfilePicture() async {
     try {
-      print("imgURL: ${widget.imgURL}");
       final imageBytes = await storage.getFile(widget.imgURL);
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;
       });
     } catch (e) {
-      print("could not find image $e");
       setState(() {
         pickedImage = null;
         isLoading = false;

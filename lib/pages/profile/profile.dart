@@ -85,9 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ProfilePicture(
-                        profilePicturePath:
-                            getPhotoURL(userData!.profilePicturePath)),
+                    ProfilePicture(imgURL: getPhotoURL(userData!.imgURL)),
                     const SizedBox(width: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

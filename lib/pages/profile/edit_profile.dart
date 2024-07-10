@@ -30,6 +30,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 
+  // get profile photo url
+  String getPhotoURL(String photoURL) {
+    return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
+  }
+
   // edit user data
   Future<void> editField(String field) async {
     String newValue = "";
@@ -70,12 +75,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  String getPhotoURL() {
-    return (currentUser!.photoURL == '')
-        ? DefaultImageConfig().profileIMG
-        : '${currentUser!.photoURL}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,10 +103,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    EditProfilePicture(profilePicturePath: getPhotoURL()),
+                    EditProfilePicture(imgURL: getPhotoURL(userData!.imgURL)),
                     const SizedBox(height: 20),
                     MyTextBox(
-                      text: userData!.username,
+                      text: userData.username,
                       label: "username",
                       onPressed: () => editField('username'),
                     ),

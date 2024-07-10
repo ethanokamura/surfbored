@@ -9,7 +9,7 @@ part of 'models.dart';
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       id: json['id'] as String? ?? '',
       username: json['username'] as String? ?? '',
-      profilePicturePath: json['profilePicturePath'] as String? ?? '',
+      imgURL: json['imgURL'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
       website: json['website'] as String? ?? '',
       boards: (json['boards'] as List<dynamic>?)
@@ -26,7 +26,7 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
-      'profilePicturePath': instance.profilePicturePath,
+      'imgURL': instance.imgURL,
       'bio': instance.bio,
       'website': instance.website,
       'boards': instance.boards,
@@ -37,7 +37,7 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
 Board _$BoardFromJson(Map<String, dynamic> json) => Board(
       id: json['id'] as String? ?? '',
       uid: json['uid'] as String? ?? '',
-      imgID: json['imgID'] as String? ?? '',
+      imgURL: json['imgURL'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       likes: (json['likes'] as num?)?.toInt() ?? 0,
@@ -49,7 +49,7 @@ Board _$BoardFromJson(Map<String, dynamic> json) => Board(
 
 Map<String, dynamic> _$BoardToJson(Board instance) => <String, dynamic>{
       'id': instance.id,
-      'imgID': instance.imgID,
+      'imgURL': instance.imgURL,
       'title': instance.title,
       'description': instance.description,
       'uid': instance.uid,
@@ -59,7 +59,7 @@ Map<String, dynamic> _$BoardToJson(Board instance) => <String, dynamic>{
 
 Item _$ItemFromJson(Map<String, dynamic> json) => Item(
       id: json['id'] as String? ?? '',
-      imgID: json['imgID'] as String? ?? '',
+      imgURL: json['imgURL'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       uid: json['uid'] as String? ?? '',
@@ -71,7 +71,7 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
 
 Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
       'id': instance.id,
-      'imgID': instance.imgID,
+      'imgURL': instance.imgURL,
       'title': instance.title,
       'description': instance.description,
       'uid': instance.uid,

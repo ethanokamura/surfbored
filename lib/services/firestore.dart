@@ -71,26 +71,80 @@ class FirestoreService {
     });
   }
 
-  Future<void> setUserPhotoPath(String userID, String filename) async {
+  // Set user's photo URL path
+  Future<void> setUserPhotoURL(String userID, String filename) async {
     var userRef = db.collection('users').doc(userID);
     // save profilePicturePath in user doc
     await userRef.set(
-      {'profilePicturePath': 'users/$userID/$filename'},
+      {'imgURL': 'users/$userID/$filename'},
       SetOptions(merge: true),
     );
   }
 
-  // Future<void> setItemPhotoURL(String userID, String filepath) async {
-  //   var userRef = db.collection('users').doc(userID);
-  //   // save photoURL in user doc
-  //   await userRef.set({'photoURL': filepath}, SetOptions(merge: true));
-  // }
+  // Set user's item's photo URL path
+  Future<void> setItemPhotoURL(String userID, String filepath) async {
+    var userRef = db.collection('users').doc(userID);
+    // save photoURL in user doc
+    await userRef.set({'imgURL': filepath}, SetOptions(merge: true));
+  }
 
-  // Future<void> setBoardPhotoURL(String userID, String filepath) async {
-  //   var userRef = db.collection('users').doc(userID);
-  //   // save photoURL in user doc
-  //   await userRef.set({'photoURL': filepath}, SetOptions(merge: true));
-  // }
+  /// Create [Item]:
+  Future<String> createItem(Item item) async {
+    // grab current user
+    var user = AuthService().user!;
+    // get collection reference
+    var ref = db.collection('users').doc(user.uid).collection('items');
+    // add to list of items
+    await ref.add(item.toJson());
+    // return the item's id!
+    return ref.id;
+  }
+
+  /// Read [Item]:
+  Future<Item> readItem(String userID, String itemID) async {
+    // get reference to the item
+    var ref =
+        db.collection('users').doc(userID).collection('items').doc(itemID);
+    var snapshot = await ref.get();
+    // return json map
+    return Item.fromJson(snapshot.data() ?? {});
+  }
+
+  /// Read List of [Item]s:
+  Stream<List<Item>> readItemStream(String userID) {
+    var ref = db.collection('users').doc(userID).collection('items');
+    return ref.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Item.fromFirestore(doc)).toList());
+  }
+
+  /// Update [Item]:
+  Future<void> updateItem(String userID, Item item) async {
+    try {
+      var ref =
+          db.collection('users').doc(userID).collection('items').doc(item.id);
+      var data = item.toJson();
+      await ref.update(data);
+    } catch (e) {
+      throw Exception("item not found: $e");
+    }
+  }
+
+  /// Delete [Item]:
+  Future<void> deleteItem(Board list, String itemID) async {
+    try {
+      // reference to the item
+      var ref =
+          db.collection('users').doc(list.uid).collection('items').doc(itemID);
+      return ref.delete();
+      // must delete the image from storage bucket as well...
+    } catch (e) {
+      throw Exception("error deleting item: $e");
+    }
+  }
+
+  /// THIS IS THE END OF THE NEW VERSION OF FIRESTORE
+  /// ANYTHING BEYOND THIS POINT IS OLD AND MUST BE UPDATED
+  /// [DO NOT CROSS THIS LINE]
 
   // Create List:
   Future<void> addList(Board list) async {
@@ -218,17 +272,17 @@ class FirestoreService {
     return Item.fromJson(snapshot.data() ?? {});
   }
 
-  // Update Item:
-  Future<void> updateItem(
-      String title, String description, String itemID, String listID) async {
-    // grab current user
-    Item updatedItem = Item(
-      id: itemID,
-      title: title,
-      description: description,
-    );
-    await FirestoreService().updateItemInList(listID, updatedItem);
-  }
+  // // Update Item:
+  // Future<void> updateItem(
+  //     String title, String description, String itemID, String listID) async {
+  //   // grab current user
+  //   Item updatedItem = Item(
+  //     id: itemID,
+  //     title: title,
+  //     description: description,
+  //   );
+  //   await FirestoreService().updateItemInList(listID, updatedItem);
+  // }
 
   Future<void> updateItemInList(String listID, Item updatedItem) async {
     // grab current user
@@ -256,21 +310,21 @@ class FirestoreService {
     }
   }
 
-  // Delete Item:
-  Future<void> deleteItem(Board list, String itemID) async {
-    try {
-      // reference to the list
-      var ref = db
-          .collection('users')
-          .doc(list.uid)
-          .collection('lists')
-          .doc(list.id)
-          .collection('items')
-          .doc(itemID);
-      return ref.delete();
-    } catch (e) {
-      print("error deleting item: $e");
-      rethrow;
-    }
-  }
+  // // Delete Item:
+  // Future<void> deleteItem(Board list, String itemID) async {
+  //   try {
+  //     // reference to the list
+  //     var ref = db
+  //         .collection('users')
+  //         .doc(list.uid)
+  //         .collection('lists')
+  //         .doc(list.id)
+  //         .collection('items')
+  //         .doc(itemID);
+  //     return ref.delete();
+  //   } catch (e) {
+  //     print("error deleting item: $e");
+  //     rethrow;
+  //   }
+  // }
 }

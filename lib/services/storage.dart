@@ -3,18 +3,18 @@ import 'dart:typed_data';
 
 // utils
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 // import 'package:rando/services/auth.dart';
 
 // 'users/${user.uid}/$filename'
 class StorageService {
   StorageService() : ref = FirebaseStorage.instance.ref();
   final Reference ref;
-  Future<void> uploadFile(String filepath, XFile file) async {
+  Future<void> uploadFile(String filepath, Uint8List file) async {
     try {
-      final imageRef = ref.child(filepath);
-      final imageBytes = await file.readAsBytes();
-      await imageRef.putData(imageBytes);
+      final uploadTask = ref.child(filepath).putData(file);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      await snapshot.ref.getDownloadURL();
     } catch (e) {
       print("could not upload file. $e");
     }

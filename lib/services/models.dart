@@ -8,7 +8,7 @@ part 'models.g.dart';
 class UserData {
   final String id;
   final String username;
-  final String profilePicturePath;
+  final String imgURL;
   final String bio;
   final String website;
   final List<Board> boards;
@@ -19,7 +19,7 @@ class UserData {
   UserData({
     this.id = '',
     this.username = '',
-    this.profilePicturePath = '',
+    this.imgURL = '',
     this.bio = '',
     this.website = '',
     this.boards = const [],
@@ -44,7 +44,7 @@ class UserData {
     return UserData(
       id: doc.id,
       username: data['username'] ?? '',
-      profilePicturePath: data['profilePicturePath'] ?? '',
+      imgURL: data['imgURL'] ?? '',
       bio: data['bio'] ?? '',
       website: data['website'] ?? '',
       boards: boards,
@@ -58,7 +58,7 @@ class UserData {
 @JsonSerializable()
 class Board {
   String id;
-  final String imgID;
+  final String imgURL;
   final String title;
   final String description;
   final String uid;
@@ -69,7 +69,7 @@ class Board {
   Board({
     this.id = '',
     this.uid = '',
-    this.imgID = '',
+    this.imgURL = '',
     this.title = '',
     this.description = '',
     this.likes = 0,
@@ -89,10 +89,10 @@ class Board {
     return Board(
       id: doc.id,
       uid: data['uid'] ?? '',
-      imgID: data['imgID'] ?? '',
+      imgURL: data['imgURL'] ?? '',
       title: data['title'] ?? '',
       description: data['description'] ?? '',
-      likes: 0,
+      likes: data['likes'] ?? 0,
       items: items,
     );
   }
@@ -105,7 +105,7 @@ class Board {
 @JsonSerializable()
 class Item {
   String id;
-  final String imgID;
+  final String imgURL;
   final String title;
   final String description;
   final String uid;
@@ -115,7 +115,7 @@ class Item {
   // constructor
   Item({
     this.id = '',
-    this.imgID = '',
+    this.imgURL = '',
     this.title = '',
     this.description = '',
     this.uid = '',
@@ -129,12 +129,12 @@ class Item {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Item(
       id: doc.id, // Firestore document ID
-      imgID: data['imgID'] ?? '',
+      imgURL: data['imgURL'] ?? '',
       title: data['title'] ?? '',
       description: data['description'] ?? '',
       uid: data['uid'] ?? '',
-      likes: 0,
-      tags: const [],
+      likes: data['likes'] ?? 0,
+      tags: data['tags'] ?? [],
     );
   }
 }

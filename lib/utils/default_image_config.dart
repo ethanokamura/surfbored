@@ -1,5 +1,5 @@
 class DefaultImageConfig {
-  String profileIMG = 'localsonly_pfp.svg';
-  String itemIMG = 'localsonly_pfp.svg';
-  String boardIMG = 'localsonly_pfp.svg';
+  String profileIMG = 'default/localsonly_pfp.png';
+  String itemIMG = 'default/localsonly_pfp.png';
+  String boardIMG = 'default/localsonly_pfp.png';
 }

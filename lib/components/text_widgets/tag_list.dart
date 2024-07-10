@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // components
-import 'package:rando/components/tag.dart';
+import 'package:rando/components/text_widgets/tag.dart';
 
 class TagListWidget extends StatelessWidget {
   final List<String> tags;

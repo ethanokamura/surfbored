@@ -11,9 +11,9 @@ import 'package:rando/services/models.dart';
 import 'package:rando/services/storage.dart';
 
 // components
-import 'package:rando/components/tag_list.dart';
-import 'package:rando/components/upload_image.dart';
-import 'package:rando/components/input_field.dart';
+import 'package:rando/components/text_widgets/tag_list.dart';
+import 'package:rando/components/images/upload_image.dart';
+import 'package:rando/components/text_widgets/input_field.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';

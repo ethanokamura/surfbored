@@ -31,23 +31,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
     getProfilePicture();
   }
 
-  // Future<void> onProfileTapped() async {
-  //   final ImagePicker picker = ImagePicker();
-  //   final XFile? image = await picker.pickImage(
-  //     source: ImageSource.gallery,
-  //     maxWidth: 1024,
-  //     maxHeight: 1024,
-  //   );
-  //   if (image == null) return;
-  //   final imageBytes = await image.readAsBytes();
-  //   firestoreService.setUserPhotoPath(user!.uid, 'profile.png');
-  //   await storage.uploadFile('users/${user!.uid}/profile.png', imageBytes);
-  //   setState(() {
-  //     pickedImage = imageBytes;
-  //     isLoading = false;
-  //   });
-  // }
-
   Future<void> onProfileTapped() async {
     final ImagePicker picker = ImagePicker();
     try {

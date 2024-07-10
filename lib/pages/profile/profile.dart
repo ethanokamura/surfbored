@@ -8,7 +8,7 @@ import 'package:rando/services/models.dart';
 
 // components
 import 'package:rando/components/list.dart';
-import 'package:rando/components/pfp.dart';
+import 'package:rando/components/images/pfp.dart';
 import 'package:rando/utils/default_image_config.dart';
 
 // ui libraries

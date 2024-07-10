@@ -7,8 +7,8 @@ import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
 
 // components
-import 'package:rando/components/edit_pfp.dart';
-import 'package:rando/components/text_box.dart';
+import 'package:rando/components/images/edit_pfp.dart';
+import 'package:rando/components/text_widgets/text_box.dart';
 import 'package:rando/utils/default_image_config.dart';
 
 class EditProfileScreen extends StatefulWidget {

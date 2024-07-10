@@ -1,6 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/components/containers/item.dart';
+import 'package:rando/components/containers/block.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -18,7 +18,7 @@ class MyTextBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ItemWidget(
+    return BlockWidget(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -9,7 +9,7 @@ import 'package:rando/services/models.dart';
 import 'package:provider/provider.dart';
 
 // components
-import 'package:rando/components/containers/item.dart';
+import 'package:rando/components/containers/block.dart';
 import 'package:rando/components/bottom_nav.dart';
 
 // pages
@@ -201,7 +201,7 @@ class _ListScreenState extends State<ListScreen> {
                         itemBuilder: (context, index) {
                           Board list = lists[index];
                           String listID = list.id;
-                          return ItemWidget(
+                          return BlockWidget(
                             child: ListTile(
                               title: Text(
                                 list.title,

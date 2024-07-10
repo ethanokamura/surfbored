@@ -7,7 +7,7 @@ import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
 
 // components
-import 'package:rando/components/containers/item.dart';
+import 'package:rando/components/containers/block.dart';
 
 // pages
 import 'package:rando/pages/items.dart';
@@ -143,7 +143,7 @@ class _MyListState extends State<MyList> {
             itemBuilder: (context, index) {
               Board list = lists[index];
               String listID = list.id;
-              return ItemWidget(
+              return BlockWidget(
                 child: ListTile(
                   title: Text(
                     list.title,

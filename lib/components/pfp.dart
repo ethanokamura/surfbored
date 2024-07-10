@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
-import 'package:rando/utils/default_image_config.dart';
-// import 'package:rando/utils/default_image_config.dart';
 
 class ProfilePicture extends StatefulWidget {
-  final String profilePicturePath;
-  const ProfilePicture({super.key, required this.profilePicturePath});
+  final String imgURL;
+  const ProfilePicture({super.key, required this.imgURL});
 
   @override
   State<ProfilePicture> createState() => _ProfilePictureState();
@@ -29,17 +27,16 @@ class _ProfilePictureState extends State<ProfilePicture> {
 
   Future<void> getProfilePicture() async {
     try {
-      print("profilePicturePath: ${widget.profilePicturePath}");
-      final imageBytes = await storage.getFile(widget.profilePicturePath);
+      print("imgURL: ${widget.imgURL}");
+      final imageBytes = await storage.getFile(widget.imgURL);
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;
       });
     } catch (e) {
       print("could not find image $e");
-      final imageBytes = await storage.getFile(DefaultImageConfig().profileIMG);
       setState(() {
-        pickedImage = imageBytes;
+        pickedImage = null;
         isLoading = false;
       });
     }

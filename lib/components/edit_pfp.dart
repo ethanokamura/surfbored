@@ -7,11 +7,11 @@ import 'package:rando/services/firestore.dart';
 // utils
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rando/utils/default_image_config.dart';
+import 'package:rando/utils/theme/theme.dart';
 
 class EditProfilePicture extends StatefulWidget {
-  final String profilePicturePath;
-  const EditProfilePicture({super.key, required this.profilePicturePath});
+  final String imgURL;
+  const EditProfilePicture({super.key, required this.imgURL});
 
   @override
   State<EditProfilePicture> createState() => _EditProfilePictureState();
@@ -32,32 +32,66 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
     getProfilePicture();
   }
 
+  // Future<void> onProfileTapped() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? image = await picker.pickImage(
+  //     source: ImageSource.gallery,
+  //     maxWidth: 1024,
+  //     maxHeight: 1024,
+  //   );
+  //   if (image == null) return;
+  //   final imageBytes = await image.readAsBytes();
+  //   firestoreService.setUserPhotoPath(user!.uid, 'profile.png');
+  //   await storage.uploadFile('users/${user!.uid}/profile.png', imageBytes);
+  //   setState(() {
+  //     pickedImage = imageBytes;
+  //     isLoading = false;
+  //   });
+  // }
+
   Future<void> onProfileTapped() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    await storage.uploadFile('users/${user!.uid}/profile.png', image);
-    firestoreService.setUserPhotoPath(user!.uid, 'profile.png');
-    final imageBytes = await image.readAsBytes();
-    setState(() {
-      pickedImage = imageBytes;
-      isLoading = false;
-    });
+    try {
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      );
+      if (image == null) return;
+      final imageBytes = await image.readAsBytes();
+      firestoreService.setUserPhotoURL(user!.uid, 'profile.png');
+      await storage.uploadFile('users/${user!.uid}/profile.png', imageBytes);
+      setState(() {
+        pickedImage = imageBytes;
+        isLoading = false;
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text("Failed to pick image. Please try again."),
+            backgroundColor: Theme.of(context).surfaceColor,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> getProfilePicture() async {
     try {
-      print("profilePicturePath: ${widget.profilePicturePath}");
-      final imageBytes = await storage.getFile(widget.profilePicturePath);
+      print("imgURL: ${widget.imgURL}");
+      final imageBytes = await storage.getFile(widget.imgURL);
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;
       });
     } catch (e) {
       print("could not find image $e");
-      final imageBytes = await storage.getFile(DefaultImageConfig().profileIMG);
       setState(() {
-        pickedImage = imageBytes;
+        pickedImage = null;
         isLoading = false;
       });
     }

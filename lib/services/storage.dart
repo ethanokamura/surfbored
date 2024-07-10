@@ -4,15 +4,15 @@ import 'dart:typed_data';
 // utils
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rando/services/auth.dart';
+// import 'package:rando/services/auth.dart';
 
+// 'users/${user.uid}/$filename'
 class StorageService {
   StorageService() : ref = FirebaseStorage.instance.ref();
   final Reference ref;
-  Future<void> uploadFile(String filename, XFile file) async {
+  Future<void> uploadFile(String filepath, XFile file) async {
     try {
-      var user = AuthService().user!;
-      final imageRef = ref.child('users/${user.uid}/$filename');
+      final imageRef = ref.child(filepath);
       final imageBytes = await file.readAsBytes();
       await imageRef.putData(imageBytes);
     } catch (e) {
@@ -20,10 +20,9 @@ class StorageService {
     }
   }
 
-  Future<Uint8List?> getFile(String filename) async {
+  Future<Uint8List?> getFile(String filepath) async {
     try {
-      var user = AuthService().user!;
-      final imageRef = ref.child('users/${user.uid}/$filename');
+      final imageRef = ref.child(filepath);
       return imageRef.getData();
     } on FirebaseException catch (e) {
       if (e.code == 'object-not-found') {
@@ -37,10 +36,9 @@ class StorageService {
     return null;
   }
 
-  Future<void> deleteFile(String filename) async {
+  Future<void> deleteFile(String filepath) async {
     try {
-      var user = AuthService().user!;
-      final imageRef = ref.child('users/${user.uid}/$filename');
+      final imageRef = ref.child(filepath);
       await imageRef.delete();
     } on FirebaseException catch (e) {
       if (e.code == 'object-not-found') {

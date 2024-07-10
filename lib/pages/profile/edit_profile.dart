@@ -9,6 +9,7 @@ import 'package:rando/services/models.dart';
 // components
 import 'package:rando/components/edit_pfp.dart';
 import 'package:rando/components/text_box.dart';
+import 'package:rando/utils/default_image_config.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -69,6 +70,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  String getPhotoURL() {
+    return (currentUser!.photoURL == '')
+        ? DefaultImageConfig().profileIMG
+        : '${currentUser!.photoURL}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +104,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const EditProfilePicture(),
+                    EditProfilePicture(profilePicturePath: getPhotoURL()),
                     const SizedBox(height: 20),
                     MyTextBox(
                       text: userData!.username,

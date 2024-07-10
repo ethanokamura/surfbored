@@ -7,7 +7,9 @@ part of 'models.dart';
 // **************************************************************************
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
+      id: json['id'] as String? ?? '',
       username: json['username'] as String? ?? '',
+      profilePicturePath: json['profilePicturePath'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
       website: json['website'] as String? ?? '',
       boards: (json['boards'] as List<dynamic>?)
@@ -22,7 +24,9 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
     );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
+      'id': instance.id,
       'username': instance.username,
+      'profilePicturePath': instance.profilePicturePath,
       'bio': instance.bio,
       'website': instance.website,
       'boards': instance.boards,

@@ -6,7 +6,9 @@ part 'models.g.dart';
 // ITEMLIST
 @JsonSerializable()
 class UserData {
+  final String id;
   final String username;
+  final String profilePicturePath;
   final String bio;
   final String website;
   final List<Board> boards;
@@ -15,7 +17,9 @@ class UserData {
 
   // constructor
   UserData({
+    this.id = '',
     this.username = '',
+    this.profilePicturePath = '',
     this.bio = '',
     this.website = '',
     this.boards = const [],
@@ -28,6 +32,26 @@ class UserData {
   factory UserData.fromJson(Map<String, dynamic> json) =>
       _$UserDataFromJson(json);
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
+
+  // allows for an easy way to stream data
+  factory UserData.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    List<Item> items =
+        (data['items'] as List).map((item) => Item.fromJson(item)).toList();
+    List<Board> boards =
+        (data['boards'] as List).map((board) => Board.fromJson(board)).toList();
+
+    return UserData(
+      id: doc.id,
+      username: data['username'] ?? '',
+      profilePicturePath: data['profilePicturePath'] ?? '',
+      bio: data['bio'] ?? '',
+      website: data['website'] ?? '',
+      boards: boards,
+      items: items,
+      lastOnline: data['lastOnline'] ?? '',
+    );
+  }
 }
 
 // ITEMLIST

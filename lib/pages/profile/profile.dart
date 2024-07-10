@@ -9,6 +9,7 @@ import 'package:rando/services/models.dart';
 // components
 import 'package:rando/components/list.dart';
 import 'package:rando/components/pfp.dart';
+import 'package:rando/utils/default_image_config.dart';
 
 // ui libraries
 import 'package:rando/utils/theme/theme.dart';
@@ -26,6 +27,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   FirestoreService firestoreService = FirestoreService();
   var currentUser = AuthService().user;
   bool isCurrentUser = false;
+
+  String getPhotoURL(String photoURL) {
+    return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
+  }
 
   @override
   void initState() {
@@ -80,13 +85,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const ProfilePicture(),
+                    ProfilePicture(
+                        profilePicturePath:
+                            getPhotoURL(userData!.profilePicturePath)),
                     const SizedBox(width: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "@${userData!.username}",
+                          "@${userData.username}",
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,

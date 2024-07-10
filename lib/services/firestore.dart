@@ -71,6 +71,27 @@ class FirestoreService {
     });
   }
 
+  Future<void> setUserPhotoPath(String userID, String filename) async {
+    var userRef = db.collection('users').doc(userID);
+    // save profilePicturePath in user doc
+    await userRef.set(
+      {'profilePicturePath': 'users/$userID/$filename'},
+      SetOptions(merge: true),
+    );
+  }
+
+  // Future<void> setItemPhotoURL(String userID, String filepath) async {
+  //   var userRef = db.collection('users').doc(userID);
+  //   // save photoURL in user doc
+  //   await userRef.set({'photoURL': filepath}, SetOptions(merge: true));
+  // }
+
+  // Future<void> setBoardPhotoURL(String userID, String filepath) async {
+  //   var userRef = db.collection('users').doc(userID);
+  //   // save photoURL in user doc
+  //   await userRef.set({'photoURL': filepath}, SetOptions(merge: true));
+  // }
+
   // Create List:
   Future<void> addList(Board list) async {
     // grab current user

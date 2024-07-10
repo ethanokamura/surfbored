@@ -7,13 +7,7 @@ import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
 
 // components
-import 'package:rando/components/containers/item.dart';
-
-// pages
-// import 'package:rando/pages/items.dart';
-
-// ui libraries
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rando/components/activities/item_card.dart';
 
 class ItemListWidget extends StatefulWidget {
   final String userID;
@@ -46,42 +40,18 @@ class _ItemListWidgetState extends State<ItemListWidget> {
         } else if (snapshot.hasData) {
           // data found
           List<Item> items = snapshot.data!;
-          return ListView.separated(
-            separatorBuilder: (context, index) => const SizedBox(
-              height: 10,
+          return GridView.builder(
+            primary: false,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
             ),
             itemCount: items.length,
             itemBuilder: (context, index) {
               Item item = items[index];
               // String itemID = item.id;
-              return ItemWidget(
-                child: ListTile(
-                  title: Text(item.title),
-                  subtitle: Text(
-                    item.description,
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                  ),
-                  onTap: () {},
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // delete
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(FontAwesomeIcons.trash),
-                        iconSize: 15,
-                      ),
-                      // update
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(FontAwesomeIcons.ellipsisVertical),
-                        iconSize: 15,
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return ItemCardWidget(item: item);
             },
           );
         } else {

@@ -10,15 +10,17 @@ class TagWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).accentColor,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(5),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 7,
+          horizontal: 10,
         ),
         child: Text(
           tag,
-          style: TextStyle(color: Theme.of(context).onSurfaceColor),
+          style: TextStyle(
+            color: Theme.of(context).onSurfaceColor,
+            fontSize: 14,
+          ),
         ),
       ),
     );

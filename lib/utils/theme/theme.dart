@@ -16,8 +16,8 @@ class CustomTheme {
   static Color darkPrimary = const Color.fromRGBO(21, 22, 24, 1);
   static Color lightPrimary = const Color.fromARGB(255, 221, 221, 214);
   static Color darkTextColor = Colors.white70;
-  static Color darkSubtextColor = Colors.white54;
   static Color lightTextColor = Colors.black87;
+  static Color darkSubtextColor = Colors.white54;
   static Color lightSubtextColor = Colors.black54;
   static Color darkHintTextColor = Colors.white30;
   static Color lightHintTextColor = Colors.black38;
@@ -52,6 +52,12 @@ extension CustomThemeData on ThemeData {
     return brightness == Brightness.dark
         ? CustomTheme.onDarkSurface
         : CustomTheme.onLightSurface;
+  }
+
+  Color get textColor {
+    return brightness == Brightness.dark
+        ? CustomTheme.darkTextColor
+        : CustomTheme.lightTextColor;
   }
 
   Color get subtextColor {

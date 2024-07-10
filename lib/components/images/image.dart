@@ -7,7 +7,14 @@ import 'package:rando/services/storage.dart';
 
 class ImageWidget extends StatefulWidget {
   final String imgURL;
-  const ImageWidget({super.key, required this.imgURL});
+  final double height;
+  final double width;
+  const ImageWidget({
+    super.key,
+    required this.imgURL,
+    required this.height,
+    required this.width,
+  });
 
   @override
   State<ImageWidget> createState() => _ImageWidgetState();
@@ -43,8 +50,8 @@ class _ImageWidgetState extends State<ImageWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 128,
-      width: 128,
+      height: widget.height,
+      width: widget.width,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(8),

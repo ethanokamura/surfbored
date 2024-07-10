@@ -123,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        "My Lists:",
+                        "My Activities:",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

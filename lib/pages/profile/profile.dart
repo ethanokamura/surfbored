@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
+import 'package:rando/utils/default_image_config.dart';
 
 // components
-import 'package:rando/components/list.dart';
 import 'package:rando/components/images/pfp.dart';
-import 'package:rando/utils/default_image_config.dart';
+import 'package:rando/components/items_list.dart';
 
 // ui libraries
 import 'package:rando/utils/theme/theme.dart';
@@ -131,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Expanded(
-                      child: MyList(userID: currentUser!.uid),
+                      child: ItemListWidget(userID: currentUser!.uid),
                     ),
                   ],
                 ),

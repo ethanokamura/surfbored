@@ -4,6 +4,7 @@ import 'dart:async';
 // utils
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/models.dart';
@@ -12,6 +13,8 @@ class FirestoreService {
   // firestore database
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
+  final AuthService auth = AuthService();
+  final Logger logger = Logger();
 
   // Check if Username is Unique
   Future<bool> isUsernameUnique(String username) async {
@@ -24,7 +27,7 @@ class FirestoreService {
 
   // Save Username
   Future<void> saveUsername(String username) async {
-    var user = AuthService().user!;
+    var user = auth.user!;
     var userRef = db.collection('users').doc(user.uid);
 
     // save the username in a separate collection for quick lookup
@@ -41,7 +44,7 @@ class FirestoreService {
 
   // Check if the current user has a username
   Future<bool> userHasUsername() async {
-    var user = AuthService().user!;
+    var user = auth.user!;
     var userDoc = await db.collection('users').doc(user.uid).get();
     return userDoc.exists && userDoc.data()!.containsKey('username');
   }
@@ -61,7 +64,7 @@ class FirestoreService {
 
   // Read a Single List of Items:
   Stream<UserData> getUserStream() {
-    return AuthService().userStream.switchMap((user) {
+    return auth.userStream.switchMap((user) {
       if (user != null) {
         var ref = db.collection('users').doc(user.uid);
         return ref.snapshots().map((doc) => UserData.fromJson(doc.data()!));
@@ -82,22 +85,32 @@ class FirestoreService {
   }
 
   // Set user's item's photo URL path
-  Future<void> setItemPhotoURL(String userID, String filepath) async {
-    var userRef = db.collection('users').doc(userID);
+  Future<void> setItemPhotoURL(
+      String userID, String itemID, String filepath) async {
+    var userRef =
+        db.collection('users').doc(userID).collection('items').doc(itemID);
     // save photoURL in user doc
     await userRef.set({'imgURL': filepath}, SetOptions(merge: true));
   }
 
   /// Create [Item]:
   Future<String> createItem(Item item) async {
-    // grab current user
-    var user = AuthService().user!;
-    // get collection reference
-    var ref = db.collection('users').doc(user.uid).collection('items');
-    // add to list of items
-    await ref.add(item.toJson());
-    // return the item's id!
-    return ref.id;
+    try {
+      var user = auth.user;
+      // make sure user is found
+      if (user == null) throw Exception("User not authenticated.");
+      // get collection reference
+      var ref = db.collection('users').doc(auth.user!.uid).collection('items');
+      // add to list of items
+      var docRef = await ref.add(item.toJson());
+      // add the id to the item's id field
+      ref.doc(docRef.id).update({'id': docRef.id});
+      // return the item's id!
+      return docRef.id;
+    } catch (e) {
+      logger.e("error creating item: $e");
+      rethrow;
+    }
   }
 
   /// Read [Item]:
@@ -149,7 +162,7 @@ class FirestoreService {
   // Create List:
   Future<void> addList(Board list) async {
     // grab current user
-    var user = AuthService().user!;
+    var user = auth.user!;
     var ref = db.collection('users').doc(user.uid).collection('lists');
     // add to list
     await ref.add(list.toJson());
@@ -157,7 +170,7 @@ class FirestoreService {
 
   // Read List Stream
   Stream<List<Board>> getListStream() {
-    var user = AuthService().user!;
+    var user = auth.user!;
     var ref = db.collection('users').doc(user.uid).collection('lists');
     return ref.snapshots().map((snapshot) =>
         snapshot.docs.map((doc) => Board.fromFirestore(doc)).toList());
@@ -167,7 +180,8 @@ class FirestoreService {
   Future<Board> getList(String listID) async {
     try {
       // grab current user
-      var user = AuthService().user!;
+      var user = auth.user!;
+
       // get a reference of that item
       var ref =
           db.collection('users').doc(user.uid).collection('lists').doc(listID);
@@ -202,7 +216,8 @@ class FirestoreService {
   // Delete List:
   Future<void> deleteList(String listID) {
     // grab current user
-    var user = AuthService().user!;
+    var user = auth.user!;
+
     var ref =
         db.collection('users').doc(user.uid).collection('lists').doc(listID);
     return ref.delete();
@@ -217,7 +232,8 @@ class FirestoreService {
   // Add Item:
   Future<void> addItemToList(Item item, String listID) async {
     // grab current user
-    var user = AuthService().user!;
+    var user = auth.user!;
+
     var listRef =
         db.collection('users').doc(user.uid).collection('lists').doc(listID);
 
@@ -259,7 +275,8 @@ class FirestoreService {
   // Read Item:
   Future<Item> getItem(String itemID, String listID) async {
     // grab current user
-    var user = AuthService().user!;
+    var user = auth.user!;
+
     var ref = db
         .collection('users')
         .doc(user.uid)
@@ -286,7 +303,8 @@ class FirestoreService {
 
   Future<void> updateItemInList(String listID, Item updatedItem) async {
     // grab current user
-    var user = AuthService().user!;
+    var user = auth.user!;
+
     var listRef =
         db.collection('users').doc(user.uid).collection('lists').doc(listID);
     var itemRef = listRef.collection('items').doc(updatedItem.id);

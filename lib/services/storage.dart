@@ -9,6 +9,8 @@ class StorageService {
   final logger = Logger();
   StorageService() : ref = FirebaseStorage.instance.ref();
   final Reference ref;
+
+  // create a file
   Future<void> uploadFile(String filepath, Uint8List file) async {
     try {
       final uploadTask = ref.child(filepath).putData(file);
@@ -19,6 +21,7 @@ class StorageService {
     }
   }
 
+  // read a file
   Future<Uint8List?> getFile(String filepath) async {
     try {
       final imageRef = ref.child(filepath);
@@ -35,6 +38,7 @@ class StorageService {
     return null;
   }
 
+  // delete
   Future<void> deleteFile(String filepath) async {
     try {
       final imageRef = ref.child(filepath);

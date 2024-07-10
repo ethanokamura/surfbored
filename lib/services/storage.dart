@@ -3,11 +3,10 @@ import 'dart:typed_data';
 
 // utils
 import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:rando/services/auth.dart';
+import 'package:logger/logger.dart';
 
-// 'users/${user.uid}/$filename'
 class StorageService {
+  final logger = Logger();
   StorageService() : ref = FirebaseStorage.instance.ref();
   final Reference ref;
   Future<void> uploadFile(String filepath, Uint8List file) async {
@@ -16,7 +15,7 @@ class StorageService {
       final snapshot = await uploadTask.whenComplete(() => {});
       await snapshot.ref.getDownloadURL();
     } catch (e) {
-      print("could not upload file. $e");
+      logger.e("could not upload file. $e");
     }
   }
 
@@ -26,12 +25,12 @@ class StorageService {
       return imageRef.getData();
     } on FirebaseException catch (e) {
       if (e.code == 'object-not-found') {
-        print("No object exists at the desired reference");
+        logger.w("No object exists at the desired reference");
       } else {
-        print("could not get file. $e");
+        logger.e("could not get file. $e");
       }
     } catch (e) {
-      print("unkown error: $e");
+      logger.e("unkown error: $e");
     }
     return null;
   }
@@ -42,12 +41,12 @@ class StorageService {
       await imageRef.delete();
     } on FirebaseException catch (e) {
       if (e.code == 'object-not-found') {
-        print("No object existss at the desired reference");
+        logger.w("No object existss at the desired reference");
       } else {
-        print("could not get file. $e");
+        logger.e("could not get file. $e");
       }
     } catch (e) {
-      print("unknown error $e");
+      logger.e("unknown error $e");
     }
   }
 }

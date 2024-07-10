@@ -10,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:rando/services/firestore.dart';
 import 'package:rando/utils/global.dart';
+import 'package:logger/logger.dart';
 
 // pages
 import 'package:rando/pages/lists.dart';
@@ -17,6 +18,7 @@ import 'package:rando/pages/profile/create_profile.dart';
 
 // implementing firebase auth
 class AuthService {
+  final logger = Logger();
   // stream of current user's data (async)
   // used when we want to detect auth state change but timing is unknown
   final userStream = FirebaseAuth.instance.authStateChanges();
@@ -31,27 +33,33 @@ class AuthService {
       await FirebaseAuth.instance.signInAnonymously();
     } on FirebaseAuthException catch (e) {
       // handle error
-      print("error: $e");
+      throw Exception("error with annonymous login: $e");
     }
   }
 
   // anonymous firebase login
-  Future<void> emailLogin(String email, String password) async {
+  Future<void> emailLogin(
+    BuildContext context,
+    String email,
+    String password,
+  ) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      await routeUser();
+      if (context.mounted) await routeUser();
     } on FirebaseAuthException catch (e) {
       // handle error
+      String errorMessage;
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        errorMessage = 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        errorMessage = 'Wrong password provided for that user.';
       } else {
-        print('Error: ${e.message}');
+        errorMessage = 'Error: ${e.message}';
       }
+      logger.e(errorMessage);
     }
   }
 

@@ -1,6 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/components/item.dart';
+import 'package:rando/components/containers/item.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';

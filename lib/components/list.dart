@@ -7,7 +7,7 @@ import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
 
 // components
-import 'package:rando/components/item.dart';
+import 'package:rando/components/containers/item.dart';
 
 // pages
 import 'package:rando/pages/items.dart';

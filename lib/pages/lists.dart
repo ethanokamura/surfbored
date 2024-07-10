@@ -9,7 +9,7 @@ import 'package:rando/services/models.dart';
 import 'package:provider/provider.dart';
 
 // components
-import 'package:rando/components/item.dart';
+import 'package:rando/components/containers/item.dart';
 import 'package:rando/components/bottom_nav.dart';
 
 // pages

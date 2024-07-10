@@ -27,7 +27,6 @@ class HomeScreen extends StatelessWidget {
           // logged in
           final user = AuthService().user;
           if (user == null) return LoginScreen();
-          // print("user found @ home screen! with ID: ${user.uid}");
           return ListScreen(userID: user.uid);
         } else {
           // not logged in

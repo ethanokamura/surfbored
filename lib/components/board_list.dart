@@ -12,16 +12,16 @@ import 'package:rando/components/containers/block.dart';
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class MyList extends StatefulWidget {
+class BoardListWidget extends StatefulWidget {
   final String userID;
 
-  const MyList({super.key, required this.userID});
+  const BoardListWidget({super.key, required this.userID});
 
   @override
-  State<MyList> createState() => _MyListState();
+  State<BoardListWidget> createState() => _BoardListWidgetState();
 }
 
-class _MyListState extends State<MyList> {
+class _BoardListWidgetState extends State<BoardListWidget> {
   // firestore
   final FirestoreService firestoreService = FirestoreService();
 

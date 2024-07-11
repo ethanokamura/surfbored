@@ -25,7 +25,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
   var currentUser = AuthService().user;
 
   Future<UserData> getUserData() async {
-    return await firestoreService.getUserDetails(widget.userID);
+    return await firestoreService.getUserData(widget.userID);
   }
 
   @override

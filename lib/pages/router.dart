@@ -1,6 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/pages/home.dart';
+import 'package:rando/pages/main_screen.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -27,7 +27,7 @@ class RouterWidget extends StatelessWidget {
           // logged in
           final user = AuthService().user;
           if (user == null) return LoginScreen();
-          return HomeScreen();
+          return const MainScreen();
         } else {
           // not logged in
           return LoginScreen();

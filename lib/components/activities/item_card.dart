@@ -6,7 +6,7 @@ import 'package:rando/services/models.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ItemCardWidget extends StatelessWidget {
-  final Item item;
+  final ItemData item;
   const ItemCardWidget({super.key, required this.item});
 
   @override

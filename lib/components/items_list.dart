@@ -30,7 +30,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Item>>(
+    return StreamBuilder<List<ItemData>>(
       stream: firestoreService.readItemStream(widget.userID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,7 +39,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
           return Center(child: Text("error: ${snapshot.error.toString()}"));
         } else if (snapshot.hasData) {
           // data found
-          List<Item> items = snapshot.data!;
+          List<ItemData> items = snapshot.data!;
           return GridView.builder(
             primary: false,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -49,7 +49,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
             ),
             itemCount: items.length,
             itemBuilder: (context, index) {
-              Item item = items[index];
+              ItemData item = items[index];
               // String itemID = item.id;
               return ItemCardWidget(item: item);
             },

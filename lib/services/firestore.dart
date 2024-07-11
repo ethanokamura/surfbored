@@ -94,7 +94,7 @@ class FirestoreService {
   }
 
   /// Create [Item]:
-  Future<String> createItem(Item item) async {
+  Future<String> createItem(ItemData item) async {
     try {
       var user = auth.user;
       // make sure user is found
@@ -114,24 +114,24 @@ class FirestoreService {
   }
 
   /// Read [Item]:
-  Future<Item> readItem(String userID, String itemID) async {
+  Future<ItemData> readItem(String userID, String itemID) async {
     // get reference to the item
     var ref =
         db.collection('users').doc(userID).collection('items').doc(itemID);
     var snapshot = await ref.get();
     // return json map
-    return Item.fromJson(snapshot.data() ?? {});
+    return ItemData.fromJson(snapshot.data() ?? {});
   }
 
   /// Read List of [Item]s:
-  Stream<List<Item>> readItemStream(String userID) {
+  Stream<List<ItemData>> readItemStream(String userID) {
     var ref = db.collection('users').doc(userID).collection('items');
     return ref.snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => Item.fromFirestore(doc)).toList());
+        snapshot.docs.map((doc) => ItemData.fromFirestore(doc)).toList());
   }
 
   /// Update [Item]:
-  Future<void> updateItem(String userID, Item item) async {
+  Future<void> updateItem(String userID, ItemData item) async {
     try {
       var ref =
           db.collection('users').doc(userID).collection('items').doc(item.id);
@@ -143,7 +143,7 @@ class FirestoreService {
   }
 
   /// Delete [Item]:
-  Future<void> deleteItem(Board list, String itemID) async {
+  Future<void> deleteItem(BoardData list, String itemID) async {
     try {
       // reference to the item
       var ref =

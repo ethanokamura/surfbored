@@ -132,7 +132,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
   void createItem() async {
     try {
       // create a new post to get the itemID
-      String itemID = await firestoreService.createItem(Item(
+      String itemID = await firestoreService.createItem(ItemData(
         title: titleText,
         description: descriptionText,
         uid: user!.uid,

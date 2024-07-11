@@ -11,8 +11,8 @@ class UserData {
   final String imgURL;
   final String bio;
   final String website;
-  final List<Board> boards;
-  final List<Item> items;
+  final List<BoardData> boards;
+  final List<ItemData> items;
   final String lastOnline;
 
   // constructor
@@ -36,10 +36,11 @@ class UserData {
   // allows for an easy way to stream data
   factory UserData.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    List<Item> items =
-        (data['items'] as List).map((item) => Item.fromJson(item)).toList();
-    List<Board> boards =
-        (data['boards'] as List).map((board) => Board.fromJson(board)).toList();
+    List<ItemData> items =
+        (data['items'] as List).map((item) => ItemData.fromJson(item)).toList();
+    List<BoardData> boards = (data['boards'] as List)
+        .map((board) => BoardData.fromJson(board))
+        .toList();
 
     return UserData(
       id: doc.id,
@@ -56,17 +57,17 @@ class UserData {
 
 // ITEMLIST
 @JsonSerializable()
-class Board {
+class BoardData {
   String id;
   final String imgURL;
   final String title;
   final String description;
   final String uid;
   final int likes;
-  final List<Item> items;
+  final List<ItemData> items;
 
   // constructor
-  Board({
+  BoardData({
     this.id = '',
     this.uid = '',
     this.imgURL = '',
@@ -78,15 +79,16 @@ class Board {
 
   // factory constructor
   // this tells the json serializable what to do
-  factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);
-  Map<String, dynamic> toJson() => _$BoardToJson(this);
+  factory BoardData.fromJson(Map<String, dynamic> json) =>
+      _$BoardDataFromJson(json);
+  Map<String, dynamic> toJson() => _$BoardDataToJson(this);
 
   // allows for an easy way to stream data
-  factory Board.fromFirestore(DocumentSnapshot doc) {
+  factory BoardData.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    List<Item> items =
-        (data['items'] as List).map((item) => Item.fromJson(item)).toList();
-    return Board(
+    List<ItemData> items =
+        (data['items'] as List).map((item) => ItemData.fromJson(item)).toList();
+    return BoardData(
       id: doc.id,
       uid: data['uid'] ?? '',
       imgURL: data['imgURL'] ?? '',
@@ -96,14 +98,11 @@ class Board {
       items: items,
     );
   }
-  void removeItem(String itemID) {
-    items.removeWhere((item) => item.id == itemID);
-  }
 }
 
 // ITEM
 @JsonSerializable()
-class Item {
+class ItemData {
   String id;
   final String imgURL;
   final String title;
@@ -113,7 +112,7 @@ class Item {
   final int likes;
 
   // constructor
-  Item({
+  ItemData({
     this.id = '',
     this.imgURL = '',
     this.title = '',
@@ -123,11 +122,12 @@ class Item {
     this.tags = const [],
   });
 
-  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
-  Map<String, dynamic> toJson() => _$ItemToJson(this);
-  factory Item.fromFirestore(DocumentSnapshot doc) {
+  factory ItemData.fromJson(Map<String, dynamic> json) =>
+      _$ItemDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ItemDataToJson(this);
+  factory ItemData.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return Item(
+    return ItemData(
       id: doc.id, // Firestore document ID
       imgURL: data['imgURL'] ?? '',
       title: data['title'] ?? '',

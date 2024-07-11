@@ -6,7 +6,7 @@ import 'package:rando/components/images/image.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ActivityScreen extends StatelessWidget {
-  final Item item;
+  final ItemData item;
   ActivityScreen({super.key, required this.item});
 
   final auth = AuthService();

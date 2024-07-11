@@ -13,11 +13,11 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       bio: json['bio'] as String? ?? '',
       website: json['website'] as String? ?? '',
       boards: (json['boards'] as List<dynamic>?)
-              ?.map((e) => Board.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => BoardData.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       items: (json['items'] as List<dynamic>?)
-              ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => ItemData.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       lastOnline: json['lastOnline'] as String? ?? '',
@@ -34,7 +34,7 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'lastOnline': instance.lastOnline,
     };
 
-Board _$BoardFromJson(Map<String, dynamic> json) => Board(
+BoardData _$BoardDataFromJson(Map<String, dynamic> json) => BoardData(
       id: json['id'] as String? ?? '',
       uid: json['uid'] as String? ?? '',
       imgURL: json['imgURL'] as String? ?? '',
@@ -42,12 +42,12 @@ Board _$BoardFromJson(Map<String, dynamic> json) => Board(
       description: json['description'] as String? ?? '',
       likes: (json['likes'] as num?)?.toInt() ?? 0,
       items: (json['items'] as List<dynamic>?)
-              ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => ItemData.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     );
 
-Map<String, dynamic> _$BoardToJson(Board instance) => <String, dynamic>{
+Map<String, dynamic> _$BoardDataToJson(BoardData instance) => <String, dynamic>{
       'id': instance.id,
       'imgURL': instance.imgURL,
       'title': instance.title,
@@ -57,7 +57,7 @@ Map<String, dynamic> _$BoardToJson(Board instance) => <String, dynamic>{
       'items': instance.items,
     };
 
-Item _$ItemFromJson(Map<String, dynamic> json) => Item(
+ItemData _$ItemDataFromJson(Map<String, dynamic> json) => ItemData(
       id: json['id'] as String? ?? '',
       imgURL: json['imgURL'] as String? ?? '',
       title: json['title'] as String? ?? '',
@@ -69,7 +69,7 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
               const [],
     );
 
-Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
+Map<String, dynamic> _$ItemDataToJson(ItemData instance) => <String, dynamic>{
       'id': instance.id,
       'imgURL': instance.imgURL,
       'title': instance.title,

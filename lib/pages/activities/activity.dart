@@ -3,7 +3,6 @@ import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/components/images/image.dart';
-import 'package:rando/utils/default_image_config.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ActivityScreen extends StatelessWidget {
@@ -16,10 +15,6 @@ class ActivityScreen extends StatelessWidget {
   Future<bool> checkAuth() async {
     var user = auth.user!;
     return user.uid == item.uid;
-  }
-
-  String getPhotoURL(String photoURL) {
-    return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
   }
 
   @override
@@ -47,7 +42,7 @@ class ActivityScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ImageWidget(
-                    imgURL: getPhotoURL(item.imgURL),
+                    imgURL: item.imgURL,
                     width: 256,
                     height: 256,
                   ),

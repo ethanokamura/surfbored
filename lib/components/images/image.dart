@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
+import 'package:rando/utils/theme/theme.dart';
 
 class ImageWidget extends StatefulWidget {
   final String imgURL;
@@ -33,17 +34,24 @@ class _ImageWidgetState extends State<ImageWidget> {
   }
 
   Future<void> getImage() async {
-    try {
-      final imageBytes = await storage.getFile(widget.imgURL);
-      setState(() {
-        pickedImage = imageBytes;
-        isLoading = false;
-      });
-    } catch (e) {
+    if (widget.imgURL == '') {
       setState(() {
         pickedImage = null;
         isLoading = false;
       });
+    } else {
+      try {
+        final imageBytes = await storage.getFile(widget.imgURL);
+        setState(() {
+          pickedImage = imageBytes;
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          pickedImage = null;
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -71,10 +79,28 @@ class _ImageWidgetState extends State<ImageWidget> {
                 child: CircularProgressIndicator(),
               )
             : pickedImage == null
-                ? const Center(
-                    child: Icon(
-                      Icons.question_mark,
-                      size: 35,
+                ? Center(
+                    child: Container(
+                      height: widget.height,
+                      width: widget.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Theme.of(context).backgroundColor,
+                      ),
+                      child: Center(
+                        child: Container(
+                          height: widget.height / 2,
+                          width: widget.width / 2,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: const DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/localsonly_face.png'),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   )
                 : null,

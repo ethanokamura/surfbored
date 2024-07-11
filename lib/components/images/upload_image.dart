@@ -1,19 +1,27 @@
 // dart packages
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rando/utils/default_image_config.dart';
 
 // ui
 // import 'package:rando/utils/theme/theme.dart';
 
 class UploadImageWidget extends StatefulWidget {
   final Function(Uint8List imageBytes) onImagePicked;
-
-  const UploadImageWidget({required this.onImagePicked, super.key});
+  final String imgURL;
+  final double height;
+  final double width;
+  const UploadImageWidget({
+    super.key,
+    required this.imgURL,
+    required this.height,
+    required this.width,
+    required this.onImagePicked,
+  });
 
   @override
   State<UploadImageWidget> createState() => _UploadImageWidgetState();
@@ -23,7 +31,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
   // variables
   StorageService storage = StorageService();
   Uint8List? pickedImage;
-  bool isLoading = true;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -74,17 +82,24 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
   }
 
   Future<void> getImage() async {
-    try {
-      final imageBytes = await storage.getFile(DefaultImageConfig().profileIMG);
-      setState(() {
-        pickedImage = imageBytes;
-        isLoading = false;
-      });
-    } catch (e) {
+    if (widget.imgURL == '') {
       setState(() {
         pickedImage = null;
         isLoading = false;
       });
+    } else {
+      try {
+        final imageBytes = await storage.getFile(widget.imgURL);
+        setState(() {
+          pickedImage = imageBytes;
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          pickedImage = null;
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -115,10 +130,18 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
                       child: CircularProgressIndicator(),
                     )
                   : pickedImage == null
-                      ? const Center(
-                          child: Icon(
-                            Icons.person_rounded,
-                            size: 35,
+                      ? Center(
+                          child: Container(
+                            height: 128,
+                            width: 128,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: const DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/localsonly_face.png'),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                         )
                       : null,

@@ -9,9 +9,6 @@ import 'package:rando/services/models.dart';
 // components
 import 'package:rando/components/containers/block.dart';
 
-// pages
-import 'package:rando/pages/items.dart';
-
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -154,14 +151,7 @@ class _MyListState extends State<MyList> {
                     overflow: TextOverflow.fade,
                     maxLines: 1,
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ItemScreen(list: list),
-                      ),
-                    );
-                  },
+                  onTap: () {},
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

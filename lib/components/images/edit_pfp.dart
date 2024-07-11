@@ -7,10 +7,18 @@ import 'package:rando/services/firestore.dart';
 // utils
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rando/utils/theme/theme.dart';
 
 class EditProfilePicture extends StatefulWidget {
   final String imgURL;
-  const EditProfilePicture({super.key, required this.imgURL});
+  final double height;
+  final double width;
+  const EditProfilePicture({
+    super.key,
+    required this.imgURL,
+    required this.height,
+    required this.width,
+  });
 
   @override
   State<EditProfilePicture> createState() => _EditProfilePictureState();
@@ -21,26 +29,35 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
   StorageService storage = StorageService();
   FirestoreService firestoreService = FirestoreService();
   Uint8List? pickedImage;
-  bool isLoading = true;
+  bool isLoading = false;
 
   var user = AuthService().user;
 
   @override
   void initState() {
     super.initState();
-    getProfilePicture();
+    getImage();
   }
 
   Future<void> onProfileTapped() async {
     final ImagePicker picker = ImagePicker();
     try {
+      // get image
       final XFile? image = await picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1024,
         maxHeight: 1024,
       );
-      if (image == null) return;
+
+      // check mount before setting state
+      if (image == null || !mounted) return;
+      setState(() {
+        isLoading = true;
+      });
+
+      // convert image
       final imageBytes = await image.readAsBytes();
+
       firestoreService.setUserPhotoURL(user!.uid, 'profile.png');
       await storage.uploadFile('users/${user!.uid}/profile.png', imageBytes);
       setState(() {
@@ -61,18 +78,25 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
     }
   }
 
-  Future<void> getProfilePicture() async {
-    try {
-      final imageBytes = await storage.getFile(widget.imgURL);
-      setState(() {
-        pickedImage = imageBytes;
-        isLoading = false;
-      });
-    } catch (e) {
+  Future<void> getImage() async {
+    if (widget.imgURL == '') {
       setState(() {
         pickedImage = null;
         isLoading = false;
       });
+    } else {
+      try {
+        final imageBytes = await storage.getFile(widget.imgURL);
+        setState(() {
+          pickedImage = imageBytes;
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          pickedImage = null;
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -81,8 +105,8 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
     return GestureDetector(
       onTap: onProfileTapped,
       child: Container(
-        height: 200,
-        width: 200,
+        height: widget.height,
+        width: widget.width,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
           image: pickedImage != null
@@ -101,10 +125,28 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                   child: CircularProgressIndicator(),
                 )
               : pickedImage == null
-                  ? const Center(
-                      child: Icon(
-                        Icons.person_rounded,
-                        size: 35,
+                  ? Center(
+                      child: Container(
+                        height: widget.height,
+                        width: widget.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                        child: Center(
+                          child: Container(
+                            height: widget.height / 2,
+                            width: widget.width / 2,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: const DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/localsonly_face.png'),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     )
                   : null,

@@ -3,16 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/pages/activities/activity.dart';
 import 'package:rando/services/models.dart';
-import 'package:rando/utils/default_image_config.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ItemCardWidget extends StatelessWidget {
   final Item item;
   const ItemCardWidget({super.key, required this.item});
-
-  String getPhotoURL(String photoURL) {
-    return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +34,7 @@ class ItemCardWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ImageWidget(
-                imgURL: getPhotoURL(item.imgURL),
+                imgURL: item.imgURL,
                 width: 128,
                 height: 96,
               ),

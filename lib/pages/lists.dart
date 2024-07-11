@@ -16,7 +16,6 @@ import 'package:rando/components/bottom_nav.dart';
 import 'package:rando/pages/reroute/error.dart';
 import 'package:rando/pages/reroute/loading.dart';
 import 'package:rando/pages/profile/profile.dart';
-import 'package:rando/pages/items.dart';
 
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -212,15 +211,7 @@ class _ListScreenState extends State<ListScreen> {
                                 overflow: TextOverflow.fade,
                                 maxLines: 1,
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ItemScreen(list: list),
-                                  ),
-                                );
-                              },
+                              onTap: () {},
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [

@@ -1,14 +1,13 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/components/images/image.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
-import 'package:rando/utils/default_image_config.dart';
 
 // components
-import 'package:rando/components/images/pfp.dart';
 import 'package:rando/components/items_list.dart';
 
 // ui libraries
@@ -28,9 +27,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var currentUser = AuthService().user;
   bool isCurrentUser = false;
 
-  String getPhotoURL(String photoURL) {
-    return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
-  }
+  // String getPhotoURL(String photoURL) {
+  //   return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
+  // }
 
   @override
   void initState() {
@@ -85,7 +84,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ProfilePicture(imgURL: getPhotoURL(userData!.imgURL)),
+                    ImageWidget(
+                      imgURL: userData!.imgURL,
+                      width: 128,
+                      height: 128,
+                    ),
                     const SizedBox(width: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

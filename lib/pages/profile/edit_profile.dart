@@ -9,7 +9,6 @@ import 'package:rando/services/models.dart';
 // components
 import 'package:rando/components/images/edit_pfp.dart';
 import 'package:rando/components/containers/text_box.dart';
-import 'package:rando/utils/default_image_config.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -21,18 +20,13 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   // firestore service
   FirestoreService firestoreService = FirestoreService();
-  var currentUser = AuthService().user;
+  var user = AuthService().user;
 
   // logout user
   void logOut({context}) async {
     await AuthService().signOut();
     // reset navigation stack
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-  }
-
-  // get profile photo url
-  String getPhotoURL(String photoURL) {
-    return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
   }
 
   // edit user data
@@ -70,7 +64,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // only update if it is not empty
       await firestoreService.db
           .collection('users')
-          .doc(currentUser!.uid)
+          .doc(user!.uid)
           .update({field: newValue});
     }
   }
@@ -103,7 +97,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    EditProfilePicture(imgURL: getPhotoURL(userData!.imgURL)),
+                    EditProfilePicture(
+                      width: 200,
+                      height: 200,
+                      imgURL: userData!.imgURL,
+                    ),
                     const SizedBox(height: 20),
                     MyTextBox(
                       text: userData.username,

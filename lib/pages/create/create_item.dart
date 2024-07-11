@@ -168,6 +168,9 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
               children: [
                 // edit image
                 UploadImageWidget(
+                  width: 200,
+                  height: 200,
+                  imgURL: '',
                   onImagePicked: (image) {
                     setState(() {
                       pickedImage = image;

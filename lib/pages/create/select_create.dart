@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rando/utils/theme/theme.dart';
 
 class SelectCreateScreen extends StatelessWidget {
   const SelectCreateScreen({super.key});
@@ -24,13 +25,23 @@ class SelectCreateScreen extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, '/create-activity'),
-                        child: const Text("create activity"),
+                        child: Text(
+                          "create activity",
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, '/create-board'),
-                        child: const Text("create board"),
+                        child: Text(
+                          "create board",
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),

@@ -10,10 +10,7 @@ import 'package:rando/utils/theme/theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

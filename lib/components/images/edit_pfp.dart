@@ -101,6 +101,12 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
   }
 
   @override
+  void dispose() {
+    storage.cancelOperation(); // Example: Cancel any ongoing storage operations
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onProfileTapped,

@@ -157,6 +157,13 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
   }
 
   @override
+  void dispose() {
+    // Dispose controllers
+    textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

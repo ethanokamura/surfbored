@@ -157,6 +157,13 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   }
 
   @override
+  void dispose() {
+    // Dispose controllers
+    textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

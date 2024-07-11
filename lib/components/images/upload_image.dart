@@ -104,6 +104,12 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
   }
 
   @override
+  void dispose() {
+    storage.cancelOperation(); // Example: Cancel any ongoing storage operations
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

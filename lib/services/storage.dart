@@ -9,12 +9,13 @@ class StorageService {
   final logger = Logger();
   StorageService() : ref = FirebaseStorage.instance.ref();
   final Reference ref;
+  UploadTask? uploadTask; // Track upload task to cancel if needed
 
   // create a file
   Future<void> uploadFile(String filepath, Uint8List file) async {
     try {
-      final uploadTask = ref.child(filepath).putData(file);
-      final snapshot = await uploadTask.whenComplete(() => {});
+      uploadTask = ref.child(filepath).putData(file);
+      final snapshot = await uploadTask!.whenComplete(() => {});
       await snapshot.ref.getDownloadURL();
     } catch (e) {
       logger.e("could not upload file. $e");
@@ -51,6 +52,19 @@ class StorageService {
       }
     } catch (e) {
       logger.e("unknown error $e");
+    }
+  }
+
+  // cancel task on page leave
+  Future<void> cancelOperation() async {
+    try {
+      // Cancel any ongoing upload task
+      if (uploadTask != null) {
+        await uploadTask!.cancel();
+        logger.i("Upload task cancelled");
+      }
+    } catch (e) {
+      logger.e("Error cancelling upload task: $e");
     }
   }
 }

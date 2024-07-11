@@ -12,7 +12,7 @@ class CreateProfilePage extends StatefulWidget {
 }
 
 class _CreateProfilePageState extends State<CreateProfilePage> {
-  final TextEditingController usernameTextController = TextEditingController();
+  final TextEditingController textController = TextEditingController();
   final FirestoreService firestoreService = FirestoreService();
   bool isLoading = false;
   String? errorMessage;
@@ -26,7 +26,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
       isLoading = true;
       errorMessage = null;
     });
-    String username = usernameTextController.text.trim();
+    String username = textController.text.trim();
     if (username.isEmpty) {
       setState(() {
         errorMessage = "Username cannot be empty";
@@ -48,6 +48,13 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   }
 
   @override
+  void dispose() {
+    // Dispose controllers
+    textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +65,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
         child: Column(
           children: [
             TextField(
-              controller: usernameTextController,
+              controller: textController,
               decoration: InputDecoration(
                 labelText: "Username",
                 errorText: errorMessage,

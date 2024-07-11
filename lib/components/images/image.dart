@@ -56,6 +56,12 @@ class _ImageWidgetState extends State<ImageWidget> {
   }
 
   @override
+  void dispose() {
+    storage.cancelOperation(); // Example: Cancel any ongoing storage operations
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: widget.height,

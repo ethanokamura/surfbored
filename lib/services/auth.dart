@@ -7,7 +7,7 @@ import 'dart:math';
 // utils
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rando/pages/home.dart';
+import 'package:rando/pages/main_screen.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:rando/services/firestore.dart';
 import 'package:rando/utils/global.dart';
@@ -145,7 +145,7 @@ class AuthService {
       if (hasUsername) {
         print("user has username!");
         navigatorKey.currentState!.pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MainScreen()),
         );
       } else {
         print("user does not have username!");

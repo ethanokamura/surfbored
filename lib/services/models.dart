@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'models.g.dart';
 
-// ITEMLIST
 @JsonSerializable()
 class UserData {
   final String id;
@@ -55,7 +54,6 @@ class UserData {
   }
 }
 
-// ITEMLIST
 @JsonSerializable()
 class BoardData {
   String id;
@@ -100,7 +98,6 @@ class BoardData {
   }
 }
 
-// ITEM
 @JsonSerializable()
 class ItemData {
   String id;

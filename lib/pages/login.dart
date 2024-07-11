@@ -18,62 +18,73 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(30),
-        child: Column(
-          // center on screen
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const FlutterLogo(
-              size: 150,
-            ),
-            Column(
-              children: [
-                TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    hintText: 'email',
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            // center on screen
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Center(
+                child: Text(
+                  "Locals Only",
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    hintText: 'password',
-                  ),
-                ),
-              ],
-            ),
-            LoginButton(
-              text: 'Sign In',
-              icon: Icons.person,
-              color: Theme.of(context).surfaceColor,
-              loginMethod: () => AuthService().emailLogin(
-                emailController.text.trim(),
-                passwordController.text.trim(),
               ),
-            ),
-            LoginButton(
-              text: 'Sign in with Google',
-              icon: FontAwesomeIcons.google,
-              loginMethod: AuthService().googleLogin,
-              color: Theme.of(context).surfaceColor,
-            ),
-            FutureBuilder<Object>(
-              future: SignInWithApple.isAvailable(),
-              builder: (context, snapshot) {
-                if (snapshot.data == true) {
-                  return SignInWithAppleButton(
-                    onPressed: () {
-                      AuthService().signInWithApple();
+              Center(
+                child: Container(
+                  height: 128,
+                  width: 128,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/images/localsonly_face.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  LoginButton(
+                    text: 'Continue Annonymously',
+                    icon: FontAwesomeIcons.userNinja,
+                    color: Theme.of(context).surfaceColor,
+                    loginMethod: () => AuthService().anonLogin(),
+                  ),
+                  LoginButton(
+                    text: 'Sign in with Google',
+                    icon: FontAwesomeIcons.google,
+                    loginMethod: AuthService().googleLogin,
+                    color: Theme.of(context).surfaceColor,
+                  ),
+                  FutureBuilder<Object>(
+                    future: SignInWithApple.isAvailable(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data == true) {
+                        return SignInWithAppleButton(
+                          onPressed: () {
+                            AuthService().signInWithApple();
+                          },
+                        );
+                      } else {
+                        return Container();
+                      }
                     },
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
-          ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -100,7 +111,7 @@ class LoginButton extends StatelessWidget {
       child: ElevatedButton.icon(
         icon: Icon(
           icon,
-          color: Theme.of(context).onSurfaceColor,
+          color: Theme.of(context).textColor,
           size: 20,
         ),
         style: TextButton.styleFrom(
@@ -110,6 +121,7 @@ class LoginButton extends StatelessWidget {
         onPressed: () => loginMethod(),
         label: Text(
           text,
+          style: TextStyle(color: Theme.of(context).textColor),
           textAlign: TextAlign.center,
         ),
       ),

@@ -1,16 +1,16 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/pages/home.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
 
 // pages
 import 'package:rando/pages/login.dart';
-import 'package:rando/pages/lists.dart';
 
 // show topics if logged in otherwise show log in page
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class RouterWidget extends StatelessWidget {
+  const RouterWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           // logged in
           final user = AuthService().user;
           if (user == null) return LoginScreen();
-          return ListScreen(userID: user.uid);
+          return HomeScreen();
         } else {
           // not logged in
           return LoginScreen();

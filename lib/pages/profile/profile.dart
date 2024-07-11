@@ -27,10 +27,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var currentUser = AuthService().user;
   bool isCurrentUser = false;
 
-  // String getPhotoURL(String photoURL) {
-  //   return (photoURL == '') ? DefaultImageConfig().profileIMG : photoURL;
-  // }
-
   @override
   void initState() {
     super.initState();

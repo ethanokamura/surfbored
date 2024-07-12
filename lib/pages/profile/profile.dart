@@ -1,5 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/components/anon_wall.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -56,92 +57,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           if (isCurrentUser)
             IconButton(
-              onPressed: () => logOut(context),
-              icon: const Icon(Icons.logout),
-            ),
+                onPressed: () => Navigator.pushNamed(context, '/user_settings'),
+                icon: const Icon(Icons.settings))
         ],
       ),
-      body: StreamBuilder<UserData>(
-        stream: userService.getUserStream(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // loading
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            // error
-            return Center(child: Text("ERROR: ${snapshot.error.toString()}"));
-          } else if (snapshot.hasData) {
-            // has data
-            UserData? userData = snapshot.data;
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ImageWidget(
-                      imgURL: userData!.imgURL,
-                      width: 128,
-                      height: 128,
-                    ),
-                    const SizedBox(width: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "@${userData.username}",
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).accentColor,
+      body: currentUser!.isAnonymous
+          ? const AnonWallWidget(message: "Login To See Your Profile")
+          : StreamBuilder<UserData>(
+              stream: userService.getUserStream(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // loading
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  // error
+                  return Center(
+                      child: Text("ERROR: ${snapshot.error.toString()}"));
+                } else if (snapshot.hasData) {
+                  // has data
+                  UserData? userData = snapshot.data;
+                  return SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "999",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "following",
+                                    style: TextStyle(
+                                        color: Theme.of(context).subtextColor),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 20),
+                              ImageWidget(
+                                imgURL: userData!.imgURL,
+                                width: 96,
+                                height: 96,
+                              ),
+                              const SizedBox(width: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "999",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "followers",
+                                    style: TextStyle(
+                                        color: Theme.of(context).subtextColor),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ),
-                        if (isCurrentUser)
-                          ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/edit_profile'),
-                            child: const Icon(Icons.edit),
+                          const SizedBox(width: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "@${userData.username}",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).accentColor,
+                                ),
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("999 followers"),
-                        SizedBox(width: 20),
-                        Text("999 following"),
-                      ],
-                    ),
-                    Text(
-                      userData.bio,
-                      style: TextStyle(
-                        color: Theme.of(context).subtextColor,
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [],
+                          ),
+                          Text(
+                            userData.bio,
+                            style: TextStyle(
+                              color: Theme.of(context).subtextColor,
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              "My Activities:",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ItemListWidget(userID: currentUser!.uid),
+                          ),
+                        ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        "My Activities:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: ItemListWidget(userID: currentUser!.uid),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          } else {
-            // no data found
-            return const Center(child: Text("ERROR: USER NOT FOUND"));
-          }
-        },
-      ),
+                  );
+                } else {
+                  // no data found
+                  return const Center(child: Text("ERROR: USER NOT FOUND"));
+                }
+              },
+            ),
     );
   }
 }

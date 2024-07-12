@@ -73,9 +73,9 @@ Map<String, dynamic> _$BoardDataToJson(BoardData instance) => <String, dynamic>{
 ItemData _$ItemDataFromJson(Map<String, dynamic> json) => ItemData(
       id: json['id'] as String? ?? '',
       imgURL: json['imgURL'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      uid: json['uid'] as String? ?? '',
+      title: json['title'] as String,
+      description: json['description'] as String,
+      uid: json['uid'] as String,
       likes: (json['likes'] as num?)?.toInt() ?? 0,
       likedBy: (json['likedBy'] as List<dynamic>?)
               ?.map((e) => e as String)

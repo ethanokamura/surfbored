@@ -143,7 +143,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
       if (pickedImage != null) {
         String imageURL = 'users/${user!.uid}/items/$itemID/itemimage.png';
         firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await itemService.setItemPhotoURL(user!.uid, itemID, imageURL);
+        await itemService.setItemPhotoURL(itemID, imageURL);
       }
       if (mounted) Navigator.pop(context);
     } catch (e) {

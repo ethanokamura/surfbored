@@ -45,10 +45,10 @@ class UserData {
       imgURL: data['imgURL'] ?? '',
       bio: data['bio'] ?? '',
       website: data['website'] ?? '',
-      items: data['items'] ?? [],
-      boards: data['boards'] ?? [],
-      likedItems: data['likedItems'] ?? [],
-      likedBoards: data['likedBoards'] ?? [],
+      items: List<String>.from(data['items'] ?? []),
+      boards: List<String>.from(data['boards'] ?? []),
+      likedItems: List<String>.from(data['likedItems'] ?? []),
+      likedBoards: List<String>.from(data['likedBoards'] ?? []),
       lastOnline: data['lastOnline'] ?? '',
     );
   }
@@ -93,8 +93,8 @@ class BoardData {
       title: data['title'] ?? '',
       description: data['description'] ?? '',
       likes: data['likes'] ?? 0,
-      likedBy: data['likedBy'] ?? [],
-      items: data['items'] ?? [],
+      likedBy: List<String>.from(data['likedBy'] ?? []),
+      items: List<String>.from(data['items'] ?? []),
     );
   }
 }
@@ -102,29 +102,34 @@ class BoardData {
 @JsonSerializable()
 class ItemData {
   String id;
-  final String imgURL;
-  final String title;
-  final String description;
-  final String uid;
-  final int likes;
-  final List<String> likedBy;
-  final List<String> tags;
+  String imgURL;
+  String title;
+  String description;
+  String uid;
+  int likes;
+  List<String> likedBy;
+  List<String> tags;
 
   // constructor
   ItemData({
     this.id = '',
     this.imgURL = '',
-    this.title = '',
-    this.description = '',
-    this.uid = '',
+    required this.title,
+    required this.description,
+    required this.uid,
     this.likes = 0,
     this.likedBy = const [],
     this.tags = const [],
   });
 
+  // factory constructor for creating an instance from JSON
   factory ItemData.fromJson(Map<String, dynamic> json) =>
       _$ItemDataFromJson(json);
+
+  // method for converting an instance to JSON
   Map<String, dynamic> toJson() => _$ItemDataToJson(this);
+
+  // factory constructor for creating an instance from firestore doc
   factory ItemData.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return ItemData(
@@ -134,7 +139,7 @@ class ItemData {
       description: data['description'] ?? '',
       uid: data['uid'] ?? '',
       likes: data['likes'] ?? 0,
-      likedBy: data['likedBy'] ?? [],
+      likedBy: List<String>.from(data['likedBy'] ?? []),
       tags: List<String>.from(data['tags'] ?? []),
     );
   }

@@ -16,8 +16,7 @@ class ItemService {
   final Logger logger = Logger();
 
   // Set user's item's photo URL path
-  Future<void> setItemPhotoURL(
-      String userID, String itemID, String filepath) async {
+  Future<void> setItemPhotoURL(String itemID, String filepath) async {
     var ref = db.collection('items').doc(itemID);
     // save photoURL in user doc
     await ref.set({'imgURL': filepath}, SetOptions(merge: true));
@@ -26,23 +25,37 @@ class ItemService {
   /// Create [Item]:
   Future<String> createItem(ItemData item) async {
     try {
+      // make sure user exists
       var user = auth.user;
-      // make sure user is found
       if (user == null) throw Exception("User not authenticated.");
 
       // get references
       var userRef = db.collection('users').doc(user.uid);
       var itemRef = db.collection('items');
+
       // add to list of items
       return await db.runTransaction((transaction) async {
-        // add item to 'items' collection
+        // perform reads first
+        var userSnapshot = await transaction.get(userRef);
+
+        // make sure user exists:
+        if (!userSnapshot.exists) throw Exception("User does not exist");
+
+        // prepare data for the new item
         var docRef = itemRef.doc();
-        transaction.set(docRef, item.toJson());
+        var newItemData = item.toJson();
+        newItemData['id'] = docRef.id;
+        newItemData['uid'] = user.uid;
+
+        // preform writes
+        transaction.set(docRef, newItemData);
 
         // update user's item list
-        var userSnapshot = await transaction.get(userRef);
         List<String> items = List.from(userSnapshot.data()?['items'] ?? []);
         items.add(docRef.id);
+        transaction.update(userRef, {'items': items});
+
+        // return id
         return docRef.id;
       });
     } catch (e) {
@@ -95,33 +108,46 @@ class ItemService {
     DocumentReference userRef = db.collection('users').doc(userID);
     DocumentReference itemRef = db.collection('items').doc(itemID);
 
-    await db.runTransaction((transation) async {
+    try {
+      // user batch to perform atomic operations
+      WriteBatch batch = db.batch();
+
       // get docs
-      DocumentSnapshot userSnapshot = await transation.get(userRef);
-      DocumentSnapshot itemSnapshot = await transation.get(itemRef);
+      DocumentSnapshot userSnapshot = await userRef.get();
+      DocumentSnapshot itemSnapshot = await itemRef.get();
 
       // throw errors
       if (!userSnapshot.exists) throw Exception("User does not exists!");
       if (!itemSnapshot.exists) throw Exception("Item does not exists!");
 
-      // add to liked items
-      List<String> likedItems = List.from(userSnapshot['likedItems']);
-      if (isLiked && !likedItems.contains(itemID)) {
-        likedItems.add(itemID);
-      } else if (!isLiked && likedItems.contains(itemID)) {
-        likedItems.remove(itemID);
-      }
-      transation.update(userRef, {'likedItems': likedItems});
+      // get user's liked items or init if does not exist
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+      List<String> userLikedItems = userData.containsKey('likedItems')
+          ? List.from(userData['likedItems'])
+          : [];
 
-      // add to liked by
-      List<String> likedBy = List.from(userSnapshot['likedBy']);
-      if (isLiked && !likedBy.contains(userID)) {
-        likedBy.add(userID);
-      } else if (!isLiked && likedItems.contains(userID)) {
-        likedBy.remove(userID);
+      // update documents
+      if (isLiked) {
+        batch.update(itemRef, {
+          'likedBy': FieldValue.arrayUnion([userID]),
+          'likes': FieldValue.increment(1),
+        });
+        if (!userLikedItems.contains(itemID)) userLikedItems.add(itemID);
+      } else {
+        batch.update(itemRef, {
+          'likedBy': FieldValue.arrayRemove([userID]),
+          'likes': FieldValue.increment(-1),
+        });
+        if (userLikedItems.contains(itemID)) userLikedItems.remove(itemID);
       }
-      transation.update(userRef, {'likedBy': likedBy});
-    });
+      batch.update(userRef, {'likedItems': userLikedItems});
+
+      // post changes
+      await batch.commit();
+    } catch (e) {
+      logger.e("error updating item likes: $e");
+    }
   }
 
   /// Delete [Item]:

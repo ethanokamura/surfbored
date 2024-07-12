@@ -28,7 +28,7 @@ class CreateActivityScreen extends StatefulWidget {
 class _CreateActivityScreenState extends State<CreateActivityScreen> {
   // utility references
   var user = AuthService().user;
-  ItemService firestoreService = ItemService();
+  ItemService itemService = ItemService();
   StorageService firebaseStorage = StorageService();
 
   // text controller
@@ -132,7 +132,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   void createItem() async {
     try {
       // create a new post to get the itemID
-      String itemID = await firestoreService.createItem(ItemData(
+      String itemID = await itemService.createItem(ItemData(
         title: titleText,
         description: descriptionText,
         uid: user!.uid,
@@ -141,9 +141,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       ));
       // upload image to firebase
       if (pickedImage != null) {
-        String imageURL = 'users/${user!.uid}/items/$itemID/itemimage.png';
+        String imageURL = 'items/$itemID/itemimage.png';
         firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await firestoreService.setItemPhotoURL(user!.uid, itemID, imageURL);
+        await itemService.setItemPhotoURL(itemID, imageURL);
       }
       if (mounted) Navigator.pop(context);
     } catch (e) {

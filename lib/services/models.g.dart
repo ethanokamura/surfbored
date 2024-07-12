@@ -12,12 +12,11 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       imgURL: json['imgURL'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
       website: json['website'] as String? ?? '',
-      items: (json['items'] as List<dynamic>?)
-              ?.map((e) => ItemData.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+      items:
+          (json['items'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
       boards: (json['boards'] as List<dynamic>?)
-              ?.map((e) => BoardData.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => e as String)
               .toList() ??
           const [],
       likedItems: (json['likedItems'] as List<dynamic>?)
@@ -55,10 +54,9 @@ BoardData _$BoardDataFromJson(Map<String, dynamic> json) => BoardData(
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      items: (json['items'] as List<dynamic>?)
-              ?.map((e) => ItemData.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+      items:
+          (json['items'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
     );
 
 Map<String, dynamic> _$BoardDataToJson(BoardData instance) => <String, dynamic>{

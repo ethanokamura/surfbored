@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/firestore.dart';
+import 'package:rando/services/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/services/storage.dart';
 
@@ -28,7 +28,7 @@ class CreateActivityScreen extends StatefulWidget {
 class _CreateActivityScreenState extends State<CreateActivityScreen> {
   // utility references
   var user = AuthService().user;
-  FirestoreService firestoreService = FirestoreService();
+  ItemService firestoreService = ItemService();
   StorageService firebaseStorage = StorageService();
 
   // text controller

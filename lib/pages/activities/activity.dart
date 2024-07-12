@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/like_button.dart';
 import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/firestore.dart';
+import 'package:rando/services/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/components/images/image.dart';
+import 'package:rando/services/user_service.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -17,7 +18,8 @@ class ActivityScreen extends StatefulWidget {
 
 class _ActivityScreenState extends State<ActivityScreen> {
   AuthService auth = AuthService();
-  FirestoreService firestoreService = FirestoreService();
+  UserService userService = UserService();
+  ItemService itemService = ItemService();
   bool isLiked = false;
 
   // use statefull widget to check auth and add the ability to edit stuff
@@ -28,7 +30,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   Future<bool> checkLiked() async {
     var user = auth.user!;
-    isLiked = await firestoreService.userLikesItem(user.uid, widget.item.id);
+    isLiked = await userService.userLikesItem(user.uid, widget.item.id);
     return isLiked;
   }
 
@@ -42,7 +44,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
     setState(() {
       isLiked = !isLiked;
     });
-    firestoreService.updateItemLikes(auth.user!.uid, widget.item.id, isLiked);
+    itemService.updateItemLikes(auth.user!.uid, widget.item.id, isLiked);
   }
 
   @override

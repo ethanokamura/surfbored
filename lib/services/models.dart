@@ -10,8 +10,8 @@ class UserData {
   final String imgURL;
   final String bio;
   final String website;
-  final List<ItemData> items;
-  final List<BoardData> boards;
+  final List<String> items;
+  final List<String> boards;
   final List<String> likedItems;
   final List<String> likedBoards;
   final String lastOnline;
@@ -39,19 +39,14 @@ class UserData {
   // allows for an easy way to stream data
   factory UserData.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    List<ItemData> items =
-        (data['items'] as List).map((item) => ItemData.fromJson(item)).toList();
-    List<BoardData> boards = (data['boards'] as List)
-        .map((board) => BoardData.fromJson(board))
-        .toList();
     return UserData(
       id: doc.id,
       username: data['username'] ?? '',
       imgURL: data['imgURL'] ?? '',
       bio: data['bio'] ?? '',
       website: data['website'] ?? '',
-      items: items,
-      boards: boards,
+      items: data['items'] ?? [],
+      boards: data['boards'] ?? [],
       likedItems: data['likedItems'] ?? [],
       likedBoards: data['likedBoards'] ?? [],
       lastOnline: data['lastOnline'] ?? '',
@@ -68,7 +63,7 @@ class BoardData {
   final String uid;
   final int likes;
   final List<String> likedBy;
-  final List<ItemData> items;
+  final List<String> items;
 
   // constructor
   BoardData({
@@ -91,8 +86,6 @@ class BoardData {
   // allows for an easy way to stream data
   factory BoardData.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    List<ItemData> items =
-        (data['items'] as List).map((item) => ItemData.fromJson(item)).toList();
     return BoardData(
       id: doc.id,
       uid: data['uid'] ?? '',
@@ -101,7 +94,7 @@ class BoardData {
       description: data['description'] ?? '',
       likes: data['likes'] ?? 0,
       likedBy: data['likedBy'] ?? [],
-      items: items,
+      items: data['items'] ?? [],
     );
   }
 }

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
+import 'package:rando/services/user_service.dart';
 
 // components
 import 'package:rando/components/images/edit_pfp.dart';
@@ -19,7 +19,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   // firestore service
-  FirestoreService firestoreService = FirestoreService();
+  UserService userService = UserService();
   var user = AuthService().user;
 
   // logout user
@@ -62,7 +62,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // update in firestore
     if (newValue.trim().isNotEmpty) {
       // only update if it is not empty
-      await firestoreService.db
+      await userService.db
           .collection('users')
           .doc(user!.uid)
           .update({field: newValue});
@@ -76,7 +76,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: const Text('Profile'),
       ),
       body: StreamBuilder<UserData>(
-        stream: firestoreService.getUserStream(),
+        stream: userService.getUserStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // loading

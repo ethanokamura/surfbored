@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/firestore.dart';
+import 'package:rando/services/item_service.dart';
 import 'package:rando/services/models.dart';
 
 // components
 import 'package:rando/components/activities/item_card.dart';
+import 'package:rando/services/user_service.dart';
 
 class ItemListWidget extends StatefulWidget {
   final String userID;
@@ -20,18 +21,19 @@ class ItemListWidget extends StatefulWidget {
 
 class _ItemListWidgetState extends State<ItemListWidget> {
   // firestore
-  final FirestoreService firestoreService = FirestoreService();
+  final UserService userService = UserService();
+  final ItemService itemService = ItemService();
 
   var currentUser = AuthService().user;
 
   Future<UserData> getUserData() async {
-    return await firestoreService.getUserData(widget.userID);
+    return await userService.getUserData(widget.userID);
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ItemData>>(
-      stream: firestoreService.readItemStream(widget.userID),
+      stream: itemService.readItemStream(widget.userID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

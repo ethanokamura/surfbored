@@ -1,15 +1,15 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/components/anon_wall.dart';
-import 'package:rando/components/images/image.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
+import 'package:rando/services/user_service.dart';
 
 // components
 import 'package:rando/components/items_list.dart';
+import 'package:rando/components/images/image.dart';
+import 'package:rando/components/anon_wall.dart';
 
 // ui libraries
 import 'package:rando/utils/theme/theme.dart';
@@ -23,7 +23,7 @@ class MyProfileScreen extends StatefulWidget {
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
   // firestore service
-  FirestoreService firestoreService = FirestoreService();
+  UserService userService = UserService();
   var user = AuthService().user;
 
   @override
@@ -44,7 +44,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         ],
       ),
       body: StreamBuilder<UserData>(
-        stream: firestoreService.getUserStream(),
+        stream: userService.getUserStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // loading

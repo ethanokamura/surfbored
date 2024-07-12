@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // utils
-import 'package:rando/services/firestore.dart';
+import 'package:rando/services/user_service.dart';
 
 class CreateProfilePage extends StatefulWidget {
   const CreateProfilePage({super.key});
@@ -13,7 +13,7 @@ class CreateProfilePage extends StatefulWidget {
 
 class _CreateProfilePageState extends State<CreateProfilePage> {
   final TextEditingController textController = TextEditingController();
-  final FirestoreService firestoreService = FirestoreService();
+  final UserService userService = UserService();
   bool isLoading = false;
   String? errorMessage;
 
@@ -34,9 +34,9 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
       });
       return;
     }
-    bool isUnique = await firestoreService.isUsernameUnique(username);
+    bool isUnique = await userService.isUsernameUnique(username);
     if (isUnique) {
-      await firestoreService.saveUsername(username);
+      await userService.saveUsername(username);
       // go back to previous screen
       returnToHome();
     } else {

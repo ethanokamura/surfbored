@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/firestore.dart';
+import 'package:rando/services/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/services/storage.dart';
 
@@ -28,7 +28,7 @@ class CreateBoardScreen extends StatefulWidget {
 class _CreateBoardScreenState extends State<CreateBoardScreen> {
   // utility references
   var user = AuthService().user;
-  FirestoreService firestoreService = FirestoreService();
+  ItemService itemService = ItemService();
   StorageService firebaseStorage = StorageService();
 
   // text controller
@@ -132,7 +132,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
   void createItem() async {
     try {
       // create a new post to get the itemID
-      String itemID = await firestoreService.createItem(ItemData(
+      String itemID = await itemService.createItem(ItemData(
         title: titleText,
         description: descriptionText,
         uid: user!.uid,
@@ -143,7 +143,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
       if (pickedImage != null) {
         String imageURL = 'users/${user!.uid}/items/$itemID/itemimage.png';
         firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await firestoreService.setItemPhotoURL(user!.uid, itemID, imageURL);
+        await itemService.setItemPhotoURL(user!.uid, itemID, imageURL);
       }
       if (mounted) Navigator.pop(context);
     } catch (e) {

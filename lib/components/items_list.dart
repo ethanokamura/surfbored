@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 
 // components
@@ -22,7 +21,6 @@ class ItemListWidget extends StatefulWidget {
 class _ItemListWidgetState extends State<ItemListWidget> {
   // firestore
   final UserService userService = UserService();
-  final ItemService itemService = ItemService();
 
   var currentUser = AuthService().user;
 
@@ -33,7 +31,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ItemData>>(
-      stream: itemService.readItemStream(widget.userID),
+      stream: userService.readUserItemStream(widget.userID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

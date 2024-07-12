@@ -80,6 +80,19 @@ class UserService {
     );
   }
 
+  Stream<List<ItemData>> readUserItemStream(String userID) {
+    var userRef = db.collection('users').doc(userID);
+    return userRef.snapshots().asyncMap((userSnapshot) async {
+      List<String> itemIDs = List.from(userSnapshot.data()?['items'] ?? []);
+      var itemRefs =
+          itemIDs.map((id) => db.collection('items').doc(id)).toList();
+      var itemSnapshots = await Future.wait(itemRefs.map((ref) => ref.get()));
+      return itemSnapshots
+          .map((snapshot) => ItemData.fromFirestore(snapshot))
+          .toList();
+    });
+  }
+
   Future<List<String>> getUserItemLikes(String userID) async {
     var ref = db.collection('users').doc(userID);
     var snapshot = await ref.get();

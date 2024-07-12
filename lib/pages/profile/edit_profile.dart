@@ -8,7 +8,7 @@ import 'package:rando/services/models.dart';
 
 // components
 import 'package:rando/components/images/edit_pfp.dart';
-import 'package:rando/components/containers/text_box.dart';
+import 'package:rando/components/text/text_box.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});

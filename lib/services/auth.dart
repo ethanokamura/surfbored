@@ -1,4 +1,6 @@
 // dart packages
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -18,14 +20,14 @@ import 'package:rando/pages/profile/create_profile.dart';
 
 // implementing firebase auth
 class AuthService {
-  final logger = Logger();
+  final Logger logger = Logger();
   // stream of current user's data (async)
   // used when we want to detect auth state change but timing is unknown
-  final userStream = FirebaseAuth.instance.authStateChanges();
+  final Stream<User?> userStream = FirebaseAuth.instance.authStateChanges();
 
   // event in which we need the current auth state (sync)
   // gives user a way to create records
-  final user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   // anonymous firebase login
   Future<void> anonLogin() async {
@@ -78,7 +80,7 @@ class AuthService {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       // create user credentials
-      final authCredential = GoogleAuthProvider.credential(
+      final OAuthCredential authCredential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
@@ -92,17 +94,17 @@ class AuthService {
   }
 
   String generateNonce([int length = 32]) {
-    const charset =
+    const String charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
+    final Random random = Random.secure();
+    return List<String>.generate(
+        length, (_) => charset[random.nextInt(charset.length)]).join();
   }
 
   /// Returns the sha256 hash of [input] in hex notation.
   String sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
+    final Uint8List bytes = utf8.encode(input);
+    final Digest digest = sha256.convert(bytes);
     return digest.toString();
   }
 
@@ -111,12 +113,13 @@ class AuthService {
     // include a nonce in the credential request. When signing in with
     // Firebase, the nonce in the id token returned by Apple, is expected to
     // match the sha256 hash of `rawNonce`.
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
+    final String rawNonce = generateNonce();
+    final String nonce = sha256ofString(rawNonce);
 
     // Request credential for the currently signed in Apple account.
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
+    final AuthorizationCredentialAppleID appleCredential =
+        await SignInWithApple.getAppleIDCredential(
+      scopes: <AppleIDAuthorizationScopes>[
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
@@ -124,14 +127,15 @@ class AuthService {
     );
 
     // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = OAuthProvider("apple.com").credential(
+    final OAuthCredential oauthCredential =
+        OAuthProvider("apple.com").credential(
       idToken: appleCredential.identityToken,
       rawNonce: rawNonce,
     );
 
     // Sign in the user with Firebase. If the nonce we generated earlier does
     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-    final userCredential =
+    final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(oauthCredential);
     await routeUser();
     return userCredential;
@@ -140,17 +144,17 @@ class AuthService {
   // Route user based on username existence
   Future<void> routeUser() async {
     final bool hasUsername = await FirestoreService().userHasUsername();
-    final user = AuthService().user;
+    final User? user = AuthService().user;
     if (user != null) {
       if (hasUsername) {
-        print("user has username!");
-        navigatorKey.currentState!.pushReplacement(
-          MaterialPageRoute(builder: (context) => const MainScreen()),
+        navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
+          MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => const MainScreen()),
         );
       } else {
-        print("user does not have username!");
-        navigatorKey.currentState!.pushReplacement(
-          MaterialPageRoute(builder: (context) => const CreateProfilePage()),
+        navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
+          MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => const CreateProfilePage()),
         );
       }
     } else {

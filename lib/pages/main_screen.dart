@@ -1,11 +1,14 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/pages/create/select_create.dart';
-import 'package:rando/pages/home.dart';
-import 'package:rando/pages/profile/my_profile.dart';
 
 // utils
+import 'package:rando/services/auth.dart';
 import 'package:rando/utils/theme/theme.dart';
+
+// pages
+import 'package:rando/pages/create/select_create.dart';
+import 'package:rando/pages/home.dart';
+import 'package:rando/pages/profile/profile.dart';
 
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,15 +23,12 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
   final List<Widget> pages = [];
+  late AuthService authService;
 
   @override
   void initState() {
     super.initState();
-    pages.addAll({
-      const HomeScreen(),
-      SelectCreateScreen(),
-      const MyProfileScreen(),
-    });
+    authService = AuthService();
   }
 
   void onItemTapped(int index) {
@@ -66,7 +66,11 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: IndexedStack(
         index: currentIndex,
-        children: pages,
+        children: [
+          const HomeScreen(),
+          SelectCreateScreen(),
+          ProfileScreen(userID: authService.user!.uid),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: _items,

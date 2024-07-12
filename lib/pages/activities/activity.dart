@@ -21,23 +21,26 @@ class _ActivityScreenState extends State<ActivityScreen> {
   UserService userService = UserService();
   ItemService itemService = ItemService();
   bool isLiked = false;
+  late Stream<ItemData> itemStream;
 
-  // use statefull widget to check auth and add the ability to edit stuff
   Future<bool> checkAuth() async {
     var user = auth.user!;
     return user.uid == widget.item.uid;
   }
 
-  Future<bool> checkLiked() async {
+  Future<void> checkLiked() async {
     var user = auth.user!;
-    isLiked = await userService.userLikesItem(user.uid, widget.item.id);
-    return isLiked;
+    bool liked = await userService.userLikesItem(user.uid, widget.item.id);
+    setState(() {
+      isLiked = liked;
+    });
   }
 
   @override
   void initState() {
     super.initState();
     checkLiked();
+    itemStream = itemService.getItemStream(widget.item.id);
   }
 
   void toggleLike() {
@@ -53,61 +56,74 @@ class _ActivityScreenState extends State<ActivityScreen> {
       appBar: AppBar(
         title: Text(widget.item.title),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Material(
-            elevation: 15,
-            color: Theme.of(context).colorScheme.surface,
-            shadowColor: Theme.of(context).shadowColor,
-            borderRadius: BorderRadius.circular(10),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 25,
-                vertical: 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ImageWidget(
-                    imgURL: widget.item.imgURL,
-                    width: 256,
-                    height: 256,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    widget.item.title,
-                    style: TextStyle(
-                      color: Theme.of(context).textColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
+      body: StreamBuilder<ItemData>(
+          stream: itemStream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (!snapshot.hasData || snapshot.data == null) {
+              return const Center(child: Text("Item Not Found."));
+            }
+
+            ItemData itemData = snapshot.data!;
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Material(
+                  elevation: 15,
+                  color: Theme.of(context).colorScheme.surface,
+                  shadowColor: Theme.of(context).shadowColor,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 20,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ImageWidget(
+                          imgURL: itemData.imgURL,
+                          width: 256,
+                          height: 256,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          itemData.title,
+                          style: TextStyle(
+                            color: Theme.of(context).textColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                        Text(
+                          itemData.description,
+                          style: TextStyle(
+                            color: Theme.of(context).subtextColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TagListWidget(tags: itemData.tags),
+                        Row(
+                          children: [
+                            LikeButton(isLiked: isLiked, onTap: toggleLike),
+                            const SizedBox(width: 10),
+                            Text("${itemData.likes} likes"),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    widget.item.description,
-                    style: TextStyle(
-                      color: Theme.of(context).subtextColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TagListWidget(tags: widget.item.tags),
-                  Row(
-                    children: [
-                      LikeButton(isLiked: isLiked, onTap: toggleLike),
-                      const SizedBox(width: 10),
-                      Text("${widget.item.likes} likes"),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
-      ),
+            );
+          }),
     );
   }
 }

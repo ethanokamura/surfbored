@@ -75,18 +75,13 @@ class ItemService {
   }
 
   /// Read List of [Item]s:
-  // Stream<List<ItemData>> readItemStream(String userID) {
-  //   var userRef = db.collection('users').doc(userID);
-  //   return userRef.snapshots().asyncMap((userSnapshot) async {
-  //     List<String> itemIDs = List.from(userSnapshot.data()?['items'] ?? []);
-  //     var itemRefs =
-  //         itemIDs.map((id) => db.collection('items').doc(id)).toList();
-  //     var itemSnapshots = await Future.wait(itemRefs.map((ref) => ref.get()));
-  //     return itemSnapshots
-  //         .map((snapshot) => ItemData.fromFirestore(snapshot))
-  //         .toList();
-  //   });
-  // }
+  Stream<ItemData> getItemStream(String itemID) {
+    return db
+        .collection('items')
+        .doc(itemID)
+        .snapshots()
+        .map((doc) => ItemData.fromJson(doc.data()!));
+  }
 
   /// Update [Item]:
   Future<void> updateItem(String userID, ItemData item) async {

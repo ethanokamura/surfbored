@@ -1,5 +1,6 @@
 // dart packages
 import 'dart:async';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 // utils
@@ -11,6 +12,7 @@ class UserService {
   // firestore database
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final AuthService auth = AuthService();
+  final Logger logger = Logger();
 
   // Check if Username is Unique
   Future<bool> isUsernameUnique(String username) async {
@@ -103,9 +105,16 @@ class UserService {
   }
 
   Future<bool> userLikesItem(String userID, String itemID) async {
-    var ref = db.collection('users').doc(userID);
-    var snapshot = await ref.get();
-    if (snapshot.exists) return UserData().likedItems.contains(itemID);
-    return false;
+    try {
+      var ref = db.collection('users').doc(userID);
+      var snapshot = await ref.get();
+      if (!snapshot.exists) return false;
+
+      var userData = UserData.fromFirestore(snapshot);
+      return userData.likedItems.contains(itemID);
+    } catch (e) {
+      logger.e("error checking liked items: $e");
+      return false;
+    }
   }
 }

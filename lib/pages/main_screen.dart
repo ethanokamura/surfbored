@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     pages.addAll({
       const HomeScreen(),
-      const SelectCreateScreen(),
+      SelectCreateScreen(),
       const MyProfileScreen(),
     });
   }

@@ -13,8 +13,8 @@ import 'package:rando/pages/router.dart';
 var appRoutes = {
   '/': (context) => const RouterWidget(),
   '/home': (context) => const HomeScreen(),
-  '/login': (context) => LoginScreen(),
-  '/create': (context) => const SelectCreateScreen(),
+  '/login': (context) => const LoginScreen(),
+  '/create': (context) => SelectCreateScreen(),
   '/create-activity': (context) => const CreateActivityScreen(),
   '/create-board': (context) => const CreateBoardScreen(),
   '/my_profile': (context) => const MyProfileScreen(),

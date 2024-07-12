@@ -35,22 +35,28 @@ class _ImageWidgetState extends State<ImageWidget> {
 
   Future<void> getImage() async {
     if (widget.imgURL == '') {
-      setState(() {
-        pickedImage = null;
-        isLoading = false;
-      });
-    } else {
-      try {
-        final imageBytes = await storage.getFile(widget.imgURL);
-        setState(() {
-          pickedImage = imageBytes;
-          isLoading = false;
-        });
-      } catch (e) {
+      if (mounted) {
         setState(() {
           pickedImage = null;
           isLoading = false;
         });
+      }
+    } else {
+      try {
+        final Uint8List? imageBytes = await storage.getFile(widget.imgURL);
+        if (mounted) {
+          setState(() {
+            pickedImage = imageBytes;
+            isLoading = false;
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            pickedImage = null;
+            isLoading = false;
+          });
+        }
       }
     }
   }

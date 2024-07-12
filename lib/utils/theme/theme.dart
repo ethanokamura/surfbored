@@ -125,7 +125,7 @@ ThemeData darkMode = ThemeData(
       foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
       textStyle: WidgetStateProperty.all(
         TextStyle(
-          color: CustomTheme.darkTextColor,
+          color: CustomTheme.darkAccent,
           letterSpacing: 1.5,
           fontWeight: FontWeight.bold,
         ),
@@ -137,7 +137,7 @@ ThemeData darkMode = ThemeData(
       foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
       textStyle: WidgetStateProperty.all(
         TextStyle(
-          color: CustomTheme.darkTextColor,
+          color: CustomTheme.darkAccent,
           letterSpacing: 1.5,
           fontWeight: FontWeight.bold,
         ),
@@ -149,7 +149,7 @@ ThemeData darkMode = ThemeData(
       foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
       textStyle: WidgetStateProperty.all(
         TextStyle(
-          color: CustomTheme.darkTextColor,
+          color: CustomTheme.darkAccent,
           letterSpacing: 1.5,
           fontWeight: FontWeight.bold,
         ),
@@ -208,7 +208,7 @@ ThemeData lightMode = ThemeData(
     style: ElevatedButton.styleFrom(
       iconColor: CustomTheme.lightAccent,
       textStyle: TextStyle(
-        color: CustomTheme.lightTextColor,
+        color: CustomTheme.lightAccent,
         letterSpacing: 1.5,
         fontWeight: FontWeight.bold,
       ),
@@ -218,7 +218,7 @@ ThemeData lightMode = ThemeData(
     style: TextButton.styleFrom(
       foregroundColor: CustomTheme.lightAccent,
       textStyle: TextStyle(
-        color: CustomTheme.lightTextColor,
+        color: CustomTheme.lightAccent,
         letterSpacing: 1.5,
         fontWeight: FontWeight.bold,
       ),
@@ -229,7 +229,7 @@ ThemeData lightMode = ThemeData(
       foregroundColor: CustomTheme.lightAccent,
       side: BorderSide(color: CustomTheme.lightAccent),
       textStyle: TextStyle(
-        color: CustomTheme.lightTextColor,
+        color: CustomTheme.lightAccent,
         letterSpacing: 1.5,
         fontWeight: FontWeight.bold,
       ),

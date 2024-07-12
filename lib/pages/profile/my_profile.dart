@@ -1,5 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/components/anon_wall.dart';
 import 'package:rando/components/images/image.dart';
 
 // utils
@@ -23,7 +24,7 @@ class MyProfileScreen extends StatefulWidget {
 class _MyProfileScreenState extends State<MyProfileScreen> {
   // firestore service
   FirestoreService firestoreService = FirestoreService();
-  var currentUser = AuthService().user;
+  var user = AuthService().user;
 
   @override
   void initState() {
@@ -36,9 +37,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
-          IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/user_settings'),
-              icon: const Icon(Icons.settings))
+          if (!user!.isAnonymous)
+            IconButton(
+                onPressed: () => Navigator.pushNamed(context, '/user_settings'),
+                icon: const Icon(Icons.settings))
         ],
       ),
       body: StreamBuilder<UserData>(
@@ -49,7 +51,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             // error
-            return Center(child: Text("ERROR: ${snapshot.error.toString()}"));
+            return const AnonWallWidget(
+              message: "Sign In To View Your Profile",
+            );
           } else if (snapshot.hasData) {
             // has data
             UserData? userData = snapshot.data;
@@ -104,7 +108,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       ),
                     ),
                     Expanded(
-                      child: ItemListWidget(userID: currentUser!.uid),
+                      child: ItemListWidget(userID: user!.uid),
                     ),
                   ],
                 ),

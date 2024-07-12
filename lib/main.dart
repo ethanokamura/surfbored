@@ -17,7 +17,7 @@ import 'package:rando/utils/theme/theme_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // pages
-import 'package:rando/pages/reroute/page_not_found.dart';
+import 'package:rando/pages/reroutes/page_not_found.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,7 +70,7 @@ class _AppState extends State<App> {
         }
 
         // loading firebase
-        return const Text('loading', textDirection: TextDirection.ltr);
+        return const CircularProgressIndicator();
       },
     );
   }

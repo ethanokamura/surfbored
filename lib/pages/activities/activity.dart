@@ -1,27 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:rando/components/buttons/like_button.dart';
 import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/utils/theme/theme.dart';
 
-class ActivityScreen extends StatelessWidget {
+class ActivityScreen extends StatefulWidget {
   final ItemData item;
-  ActivityScreen({super.key, required this.item});
+  const ActivityScreen({super.key, required this.item});
 
-  final auth = AuthService();
+  @override
+  State<ActivityScreen> createState() => _ActivityScreenState();
+}
+
+class _ActivityScreenState extends State<ActivityScreen> {
+  AuthService auth = AuthService();
+  FirestoreService firestoreService = FirestoreService();
+  bool isLiked = false;
 
   // use statefull widget to check auth and add the ability to edit stuff
   Future<bool> checkAuth() async {
     var user = auth.user!;
-    return user.uid == item.uid;
+    return user.uid == widget.item.uid;
+  }
+
+  Future<bool> checkLiked() async {
+    var user = auth.user!;
+    isLiked = await firestoreService.userLikesItem(user.uid, widget.item.id);
+    return isLiked;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkLiked();
+  }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+    firestoreService.updateItemLikes(auth.user!.uid, widget.item.id, isLiked);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(item.title),
+        title: Text(widget.item.title),
       ),
       body: Center(
         child: Padding(
@@ -42,13 +70,13 @@ class ActivityScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ImageWidget(
-                    imgURL: item.imgURL,
+                    imgURL: widget.item.imgURL,
                     width: 256,
                     height: 256,
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    item.title,
+                    widget.item.title,
                     style: TextStyle(
                       color: Theme.of(context).textColor,
                       fontWeight: FontWeight.bold,
@@ -56,7 +84,7 @@ class ActivityScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    item.description,
+                    widget.item.description,
                     style: TextStyle(
                       color: Theme.of(context).subtextColor,
                       fontWeight: FontWeight.bold,
@@ -64,7 +92,14 @@ class ActivityScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  TagListWidget(tags: item.tags),
+                  TagListWidget(tags: widget.item.tags),
+                  Row(
+                    children: [
+                      LikeButton(isLiked: isLiked, onTap: toggleLike),
+                      const SizedBox(width: 10),
+                      Text("${widget.item.likes} likes"),
+                    ],
+                  ),
                 ],
               ),
             ),

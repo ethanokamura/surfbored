@@ -10,8 +10,10 @@ class UserData {
   final String imgURL;
   final String bio;
   final String website;
-  final List<BoardData> boards;
   final List<ItemData> items;
+  final List<BoardData> boards;
+  final List<String> likedItems;
+  final List<String> likedBoards;
   final String lastOnline;
 
   // constructor
@@ -21,8 +23,10 @@ class UserData {
     this.imgURL = '',
     this.bio = '',
     this.website = '',
-    this.boards = const [],
     this.items = const [],
+    this.boards = const [],
+    this.likedItems = const [],
+    this.likedBoards = const [],
     this.lastOnline = '',
   });
 
@@ -40,15 +44,16 @@ class UserData {
     List<BoardData> boards = (data['boards'] as List)
         .map((board) => BoardData.fromJson(board))
         .toList();
-
     return UserData(
       id: doc.id,
       username: data['username'] ?? '',
       imgURL: data['imgURL'] ?? '',
       bio: data['bio'] ?? '',
       website: data['website'] ?? '',
-      boards: boards,
       items: items,
+      boards: boards,
+      likedItems: data['likedItems'] ?? [],
+      likedBoards: data['likedBoards'] ?? [],
       lastOnline: data['lastOnline'] ?? '',
     );
   }
@@ -62,6 +67,7 @@ class BoardData {
   final String description;
   final String uid;
   final int likes;
+  final List<String> likedBy;
   final List<ItemData> items;
 
   // constructor
@@ -72,6 +78,7 @@ class BoardData {
     this.title = '',
     this.description = '',
     this.likes = 0,
+    this.likedBy = const [],
     this.items = const [],
   });
 
@@ -93,6 +100,7 @@ class BoardData {
       title: data['title'] ?? '',
       description: data['description'] ?? '',
       likes: data['likes'] ?? 0,
+      likedBy: data['likedBy'] ?? [],
       items: items,
     );
   }
@@ -105,8 +113,9 @@ class ItemData {
   final String title;
   final String description;
   final String uid;
-  final List<String> tags;
   final int likes;
+  final List<String> likedBy;
+  final List<String> tags;
 
   // constructor
   ItemData({
@@ -116,6 +125,7 @@ class ItemData {
     this.description = '',
     this.uid = '',
     this.likes = 0,
+    this.likedBy = const [],
     this.tags = const [],
   });
 
@@ -131,6 +141,7 @@ class ItemData {
       description: data['description'] ?? '',
       uid: data['uid'] ?? '',
       likes: data['likes'] ?? 0,
+      likedBy: data['likedBy'] ?? [],
       tags: List<String>.from(data['tags'] ?? []),
     );
   }

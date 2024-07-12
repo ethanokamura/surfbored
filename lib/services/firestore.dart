@@ -74,6 +74,56 @@ class FirestoreService {
     });
   }
 
+  Future<List<String>> getUserItemLikes(String userID) async {
+    var ref = db.collection('users').doc(userID);
+    var snapshot = await ref.get();
+    if (snapshot.exists) {
+      return UserData().likedItems;
+    }
+    return [];
+  }
+
+  Future<bool> userLikesItem(String userID, String itemID) async {
+    var ref = db.collection('users').doc(userID);
+    var snapshot = await ref.get();
+    if (snapshot.exists) return UserData().likedItems.contains(itemID);
+    return false;
+  }
+
+  Future<void> updateItemLikes(
+      String userID, String itemID, bool isLiked) async {
+    DocumentReference userRef = db.collection('users').doc(userID);
+    DocumentReference itemRef = db.collection('items').doc(itemID);
+
+    await db.runTransaction((transation) async {
+      // get docs
+      DocumentSnapshot userSnapshot = await transation.get(userRef);
+      DocumentSnapshot itemSnapshot = await transation.get(itemRef);
+
+      // throw errors
+      if (!userSnapshot.exists) throw Exception("User does not exists!");
+      if (!itemSnapshot.exists) throw Exception("Item does not exists!");
+
+      // add to liked items
+      List<String> likedItems = List.from(userSnapshot['likedItems']);
+      if (isLiked && !likedItems.contains(itemID)) {
+        likedItems.add(itemID);
+      } else if (!isLiked && likedItems.contains(itemID)) {
+        likedItems.remove(itemID);
+      }
+      transation.update(userRef, {'likedItems': likedItems});
+
+      // add to liked by
+      List<String> likedBy = List.from(userSnapshot['likedBy']);
+      if (isLiked && !likedBy.contains(userID)) {
+        likedBy.add(userID);
+      } else if (!isLiked && likedItems.contains(userID)) {
+        likedBy.remove(userID);
+      }
+      transation.update(userRef, {'likedBy': likedBy});
+    });
+  }
+
   // Set user's photo URL path
   Future<void> setUserPhotoURL(String userID, String filename) async {
     var userRef = db.collection('users').doc(userID);
@@ -230,7 +280,7 @@ class FirestoreService {
   // }
 
   // // Add Item:
-  // Future<void> addItemToList(Item item, String listID) async {
+  // Future<void> addItemToList(ItemData item, String listID) async {
   //   // grab current user
   //   var user = auth.user!;
 
@@ -247,9 +297,9 @@ class FirestoreService {
   //   // get the current list document
   //   DocumentSnapshot listDoc = await listRef.get();
   //   if (listDoc.exists) {
-  //     Board itemList = Board.fromFirestore(listDoc);
+  //     BoardData itemList = BoardData.fromFirestore(listDoc);
   //     // add the new item to the list of items
-  //     List<Item> updatedItems = [...itemList.items, item];
+  //     List<ItemData> updatedItems = [...itemList.items, item];
   //     // update the document
   //     await listRef.update({
   //       'items': updatedItems.map((item) => item.toJson()).toList(),

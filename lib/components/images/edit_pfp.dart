@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rando/services/user_service.dart';
+import 'package:rando/services/firestore/user_service.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class EditProfilePicture extends StatefulWidget {

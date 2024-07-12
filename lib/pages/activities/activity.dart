@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/like_button.dart';
 import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/item_service.dart';
+import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/components/images/image.dart';
-import 'package:rando/services/user_service.dart';
+import 'package:rando/services/firestore/user_service.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ActivityScreen extends StatefulWidget {

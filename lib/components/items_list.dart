@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/services/item_service.dart';
+import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 
 // components
 import 'package:rando/components/activities/item_card.dart';
-import 'package:rando/services/user_service.dart';
+import 'package:rando/services/firestore/user_service.dart';
 
 class ItemListWidget extends StatefulWidget {
   final String userID;

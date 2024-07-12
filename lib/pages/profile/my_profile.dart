@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // utils
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/models.dart';
-import 'package:rando/services/user_service.dart';
+import 'package:rando/services/firestore/user_service.dart';
 
 // components
 import 'package:rando/components/items_list.dart';

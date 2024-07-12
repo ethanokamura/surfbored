@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // utils
-import 'package:rando/services/user_service.dart';
+import 'package:rando/services/firestore/user_service.dart';
 
 class CreateProfilePage extends StatefulWidget {
   const CreateProfilePage({super.key});

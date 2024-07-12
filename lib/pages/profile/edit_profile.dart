@@ -20,7 +20,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   // firestore service
   UserService userService = UserService();
-  var user = AuthService().user;
+  var user = AuthService().user!;
 
   // logout user
   void logOut({context}) async {
@@ -64,8 +64,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // only update if it is not empty
       await userService.db
           .collection('users')
-          .doc(user!.uid)
+          .doc(user.uid)
           .update({field: newValue});
+
+      if (field == 'username') {
+        await userService.db
+            .collection('usernames')
+            .doc(user.uid)
+            .update({field: newValue});
+      }
     }
   }
 
@@ -76,7 +83,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: const Text('Profile'),
       ),
       body: StreamBuilder<UserData>(
-        stream: userService.getUserStream(),
+        stream: userService.getUserStream(user.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // loading

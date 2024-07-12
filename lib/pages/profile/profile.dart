@@ -49,11 +49,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 
+  // Stream to listen for changes in user data
+  Stream<UserData> getUserDataStream() {
+    return userService.getUserStream(widget.userID);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: StreamBuilder<UserData>(
+          stream: getUserDataStream(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text('Loading...');
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              UserData userData = snapshot.data!;
+              return Text(
+                userData.username,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).accentColor,
+                ),
+              );
+            } else {
+              return Text(widget.userID);
+            }
+          },
+        ),
         actions: [
           if (isCurrentUser)
             IconButton(
@@ -64,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: currentUser!.isAnonymous
           ? const AnonWallWidget(message: "Login To See Your Profile")
           : StreamBuilder<UserData>(
-              stream: userService.getUserStream(),
+              stream: getUserDataStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // loading
@@ -75,98 +101,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text("ERROR: ${snapshot.error.toString()}"));
                 } else if (snapshot.hasData) {
                   // has data
-                  UserData? userData = snapshot.data;
-                  return SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "999",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "following",
-                                    style: TextStyle(
-                                        color: Theme.of(context).subtextColor),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 20),
-                              ImageWidget(
-                                imgURL: userData!.imgURL,
-                                width: 96,
-                                height: 96,
-                              ),
-                              const SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "999",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "followers",
-                                    style: TextStyle(
-                                        color: Theme.of(context).subtextColor),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(width: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "@${userData.username}",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [],
-                          ),
-                          Text(
-                            userData.bio,
-                            style: TextStyle(
-                              color: Theme.of(context).subtextColor,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              "My Activities:",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: ItemListWidget(userID: currentUser!.uid),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                  UserData userData = snapshot.data!;
+                  return buildUserProfile(context, userData);
                 } else {
                   // no data found
                   return const Center(child: Text("ERROR: USER NOT FOUND"));
@@ -175,4 +111,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
     );
   }
+}
+
+Widget buildUserProfile(BuildContext context, UserData userData) {
+  return SafeArea(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "${userData.following.length}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "following",
+                    style: TextStyle(color: Theme.of(context).subtextColor),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 20),
+              ImageWidget(
+                imgURL: userData.imgURL,
+                width: 96,
+                height: 96,
+              ),
+              const SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${userData.followers.length}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "followers",
+                    style: TextStyle(
+                      color: Theme.of(context).subtextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(width: 20),
+          Text(
+            userData.name,
+            style: TextStyle(
+              color: Theme.of(context).textColor,
+            ),
+          ),
+          Text(
+            userData.bio,
+            style: TextStyle(
+              color: Theme.of(context).subtextColor,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              "My Activities:",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: ItemListWidget(userID: userData.id),
+          ),
+        ],
+      ),
+    ),
+  );
 }

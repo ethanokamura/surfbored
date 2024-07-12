@@ -7,9 +7,12 @@ part 'models.g.dart';
 class UserData {
   final String id;
   final String username;
+  final String name;
   final String imgURL;
   final String bio;
   final String website;
+  final List<String> followers;
+  final List<String> following;
   final List<String> items;
   final List<String> boards;
   final List<String> likedItems;
@@ -20,9 +23,12 @@ class UserData {
   UserData({
     this.id = '',
     this.username = '',
+    this.name = '',
     this.imgURL = '',
     this.bio = '',
     this.website = '',
+    this.followers = const [],
+    this.following = const [],
     this.items = const [],
     this.boards = const [],
     this.likedItems = const [],
@@ -42,9 +48,12 @@ class UserData {
     return UserData(
       id: doc.id,
       username: data['username'] ?? '',
+      name: data['name'] ?? '',
       imgURL: data['imgURL'] ?? '',
       bio: data['bio'] ?? '',
       website: data['website'] ?? '',
+      followers: List<String>.from(data['followers'] ?? []),
+      following: List<String>.from(data['following'] ?? []),
       items: List<String>.from(data['items'] ?? []),
       boards: List<String>.from(data['boards'] ?? []),
       likedItems: List<String>.from(data['likedItems'] ?? []),

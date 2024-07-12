@@ -1,7 +1,7 @@
 // dart packages
 import 'dart:async';
 import 'package:logger/logger.dart';
-import 'package:rxdart/rxdart.dart';
+// import 'package:rxdart/rxdart.dart';
 
 // utils
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,6 +47,20 @@ class UserService {
     return userDoc.exists && userDoc.data()!.containsKey('username');
   }
 
+  Future<String> getUsername(String userID) async {
+    try {
+      var snapshot = await db.collection('usernames').doc(userID).get();
+      if (snapshot.exists) {
+        return snapshot.get('username');
+      } else {
+        return userID;
+      }
+    } catch (e) {
+      logger.e('error retrieving username $e}');
+      return userID;
+    }
+  }
+
   // Read a Single List of Items:
   Future<UserData> getUserData(String userID) async {
     // get a reference of that item
@@ -60,16 +74,17 @@ class UserService {
     return UserData.fromJson(snapshot.data() ?? {});
   }
 
-  // Read a Single List of Items:
-  Stream<UserData> getUserStream() {
-    return auth.userStream.switchMap((user) {
-      if (user != null) {
-        var ref = db.collection('users').doc(user.uid);
-        return ref.snapshots().map((doc) => UserData.fromJson(doc.data()!));
-      } else {
-        return Stream.fromIterable([UserData()]);
-      }
-    });
+  Stream<UserData> getUserStream(String userID) {
+    try {
+      return db
+          .collection('users')
+          .doc(userID)
+          .snapshots()
+          .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>));
+    } catch (e) {
+      logger.e("error fetching user data $e");
+      rethrow;
+    }
   }
 
   // Set user's photo URL path

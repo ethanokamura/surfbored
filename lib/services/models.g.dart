@@ -9,9 +9,18 @@ part of 'models.dart';
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       id: json['id'] as String? ?? '',
       username: json['username'] as String? ?? '',
+      name: json['name'] as String? ?? '',
       imgURL: json['imgURL'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
       website: json['website'] as String? ?? '',
+      followers: (json['followers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      following: (json['following'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       items:
           (json['items'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
@@ -33,9 +42,12 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
+      'name': instance.name,
       'imgURL': instance.imgURL,
       'bio': instance.bio,
       'website': instance.website,
+      'followers': instance.followers,
+      'following': instance.following,
       'items': instance.items,
       'boards': instance.boards,
       'likedItems': instance.likedItems,

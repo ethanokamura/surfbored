@@ -26,16 +26,15 @@ class ItemCardWidget extends StatelessWidget {
         shadowColor: Theme.of(context).shadowColor,
         borderRadius: BorderRadius.circular(10),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ImageWidget(
                 imgURL: item.imgURL,
-                width: 128,
+                width: double.infinity,
                 height: 96,
               ),
               const SizedBox(height: 10),

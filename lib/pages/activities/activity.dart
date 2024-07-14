@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/like_button.dart';
 import 'package:rando/components/containers/tag_list.dart';
+import 'package:rando/components/text/link.dart';
+import 'package:rando/pages/profile/profile.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
@@ -21,6 +23,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   UserService userService = UserService();
   ItemService itemService = ItemService();
   bool isLiked = false;
+  String username = '';
   late Stream<ItemData> itemStream;
 
   Future<bool> checkAuth() async {
@@ -36,10 +39,18 @@ class _ActivityScreenState extends State<ActivityScreen> {
     });
   }
 
+  Future<void> getUsername() async {
+    String name = await userService.getUsername(widget.item.uid);
+    setState(() {
+      username = name;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     checkLiked();
+    getUsername();
     itemStream = itemService.getItemStream(widget.item.id);
   }
 
@@ -77,10 +88,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   shadowColor: Theme.of(context).shadowColor,
                   borderRadius: BorderRadius.circular(10),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 20,
-                    ),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +96,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       children: [
                         ImageWidget(
                           imgURL: itemData.imgURL,
-                          width: 256,
+                          width: double.infinity,
                           height: 256,
                         ),
                         const SizedBox(height: 20),
@@ -111,10 +119,26 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         const SizedBox(height: 10),
                         TagListWidget(tags: itemData.tags),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
                           children: [
-                            LikeButton(isLiked: isLiked, onTap: toggleLike),
-                            const SizedBox(width: 10),
-                            Text("${itemData.likes} likes"),
+                            LinkWidget(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProfileScreen(userID: itemData.uid),
+                                ),
+                              ),
+                              text: '@$username',
+                            ),
+                            Row(
+                              children: [
+                                LikeButton(isLiked: isLiked, onTap: toggleLike),
+                                const SizedBox(width: 10),
+                                Text("${itemData.likes} likes"),
+                              ],
+                            )
                           ],
                         ),
                       ],

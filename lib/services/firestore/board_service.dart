@@ -15,8 +15,8 @@ class BoardService {
   final AuthService auth = AuthService();
   final Logger logger = Logger();
 
-  /// Create [Item]:
-  Future<String> createBoard(ItemData item) async {
+  /// Create [Board]:
+  Future<String> createBoard(BoardData board) async {
     try {
       // make sure user exists
       var user = auth.user;
@@ -24,9 +24,9 @@ class BoardService {
 
       // get references
       var userRef = db.collection('users').doc(user.uid);
-      var itemRef = db.collection('items');
+      var boardRef = db.collection('boards');
 
-      // add to list of items
+      // add to list of boards
       return await db.runTransaction((transaction) async {
         // perform reads first
         var userSnapshot = await transaction.get(userRef);
@@ -34,73 +34,73 @@ class BoardService {
         // make sure user exists:
         if (!userSnapshot.exists) throw Exception("User does not exist");
 
-        // prepare data for the new item
-        var docRef = itemRef.doc();
-        var newItemData = item.toJson();
-        newItemData['id'] = docRef.id;
-        newItemData['uid'] = user.uid;
+        // prepare data for the new board
+        var docRef = boardRef.doc();
+        var newBoardData = board.toJson();
+        newBoardData['id'] = docRef.id;
+        newBoardData['uid'] = user.uid;
 
         // preform writes
-        transaction.set(docRef, newItemData);
+        transaction.set(docRef, newBoardData);
 
-        // update user's item list
-        List<String> items = List.from(userSnapshot.data()?['items'] ?? []);
-        items.add(docRef.id);
-        transaction.update(userRef, {'items': items});
+        // update user's board list
+        List<String> boards = List.from(userSnapshot.data()?['boards'] ?? []);
+        boards.add(docRef.id);
+        transaction.update(userRef, {'boards': boards});
 
         // return id
         return docRef.id;
       });
     } catch (e) {
-      logger.e("error creating item: $e");
+      logger.e("error creating board: $e");
       rethrow;
     }
   }
 
-  /// Read [Item]:
-  Future<ItemData> readItem(String userID, String itemID) async {
-    // get reference to the item
+  /// Read [Board]:
+  Future<BoardData> readBoard(String userID, String board) async {
+    // get reference to the board
     var ref =
-        db.collection('users').doc(userID).collection('items').doc(itemID);
+        db.collection('users').doc(userID).collection('boards').doc(board);
     var snapshot = await ref.get();
     // return json map
-    return ItemData.fromJson(snapshot.data() ?? {});
+    return BoardData.fromJson(snapshot.data() ?? {});
   }
 
-  /// Read List of [Item]s:
-  Stream<ItemData> getItemStream(String itemID) {
+  /// Read List of [Board]s:
+  Stream<BoardData> getBoardStream(String board) {
     return db
-        .collection('items')
-        .doc(itemID)
+        .collection('boards')
+        .doc(board)
         .snapshots()
-        .map((doc) => ItemData.fromJson(doc.data()!));
+        .map((doc) => BoardData.fromJson(doc.data()!));
   }
 
-  Stream<List<ItemData>> getAllItemStream() {
-    return db.collection('items').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => ItemData.fromFirestore(doc)).toList();
+  Stream<List<BoardData>> getAllBoardStream() {
+    return db.collection('boards').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => BoardData.fromFirestore(doc)).toList();
     });
   }
 
-  /// Update [Item]:
-  Future<void> updateItem(String userID, ItemData item) async {
+  /// Update [Board]:
+  Future<void> updateBoard(String userID, BoardData board) async {
     try {
-      var ref = db.collection('items').doc(item.id);
-      if (item.uid == auth.user?.uid) {
-        var data = item.toJson();
+      var ref = db.collection('boards').doc(board.id);
+      if (board.uid == auth.user?.uid) {
+        var data = board.toJson();
         await ref.update(data);
       } else {
         throw Exception("Unauthorized update attempt.");
       }
     } catch (e) {
-      throw Exception("item not found: $e");
+      throw Exception("board not found: $e");
     }
   }
 
-  Future<void> updateItemLikes(
-      String userID, String itemID, bool isLiked) async {
+  Future<void> updateBoardLikes(
+      String userID, String board, bool isLiked) async {
     DocumentReference userRef = db.collection('users').doc(userID);
-    DocumentReference itemRef = db.collection('items').doc(itemID);
+    DocumentReference boardRef = db.collection('boards').doc(board);
 
     try {
       // user batch to perform atomic operations
@@ -108,66 +108,66 @@ class BoardService {
 
       // get docs
       DocumentSnapshot userSnapshot = await userRef.get();
-      DocumentSnapshot itemSnapshot = await itemRef.get();
+      DocumentSnapshot boardSnapshot = await boardRef.get();
 
       // throw errors
       if (!userSnapshot.exists) throw Exception("User does not exists!");
-      if (!itemSnapshot.exists) throw Exception("Item does not exists!");
+      if (!boardSnapshot.exists) throw Exception("Board does not exists!");
 
-      // get user's liked items or init if does not exist
+      // get user's liked boards or init if does not exist
       Map<String, dynamic> userData =
           userSnapshot.data() as Map<String, dynamic>;
-      List<String> userLikedItems = userData.containsKey('likedItems')
-          ? List.from(userData['likedItems'])
+      List<String> userLikedBoards = userData.containsKey('likedBoards')
+          ? List.from(userData['likedBoards'])
           : [];
 
       // update documents
       if (isLiked) {
-        batch.update(itemRef, {
+        batch.update(boardRef, {
           'likedBy': FieldValue.arrayUnion([userID]),
           'likes': FieldValue.increment(1),
         });
-        if (!userLikedItems.contains(itemID)) userLikedItems.add(itemID);
+        if (!userLikedBoards.contains(board)) userLikedBoards.add(board);
       } else {
-        batch.update(itemRef, {
+        batch.update(boardRef, {
           'likedBy': FieldValue.arrayRemove([userID]),
           'likes': FieldValue.increment(-1),
         });
-        if (userLikedItems.contains(itemID)) userLikedItems.remove(itemID);
+        if (userLikedBoards.contains(board)) userLikedBoards.remove(board);
       }
-      batch.update(userRef, {'likedItems': userLikedItems});
+      batch.update(userRef, {'likedBoards': userLikedBoards});
 
       // post changes
       await batch.commit();
     } catch (e) {
-      logger.e("error updating item likes: $e");
+      logger.e("error updating board likes: $e");
     }
   }
 
-  /// Delete [Item]:
-  Future<void> deleteItem(String userID, String itemID, String imgPath) async {
+  /// Delete [Board]:
+  Future<void> deleteBoard(String userID, String board, String imgPath) async {
     try {
-      // reference to the item
+      // reference to the board
       var userRef = db.collection('users').doc(userID);
-      var itemRef = db.collection('items').doc(itemID);
+      var boardRef = db.collection('boards').doc(board);
       await db.runTransaction((transaction) async {
-        // check if the user is the owner of the item
-        var itemSnapshot = await transaction.get(itemRef);
-        if (!itemSnapshot.exists || itemSnapshot.data()?['uid'] != userID) {
+        // check if the user is the owner of the board
+        var boardSnapshot = await transaction.get(boardRef);
+        if (!boardSnapshot.exists || boardSnapshot.data()?['uid'] != userID) {
           throw Exception("Unauthorized delete attempt.");
         }
         // delete photo
         storage.deleteFile(imgPath);
-        // remove item from 'items collection'
-        transaction.delete(itemRef);
-        // update user's item list
+        // remove board from 'boards collection'
+        transaction.delete(boardRef);
+        // update user's board list
         var userSnapshot = await transaction.get(userRef);
-        List<String> items = List.from(userSnapshot.data()?['items'] ?? []);
-        items.remove(itemID);
-        transaction.update(userRef, {'items': items});
+        List<String> boards = List.from(userSnapshot.data()?['boards'] ?? []);
+        boards.remove(board);
+        transaction.update(userRef, {'boards': boards});
       });
     } catch (e) {
-      throw Exception("error deleting item: $e");
+      throw Exception("error deleting board: $e");
     }
   }
 }

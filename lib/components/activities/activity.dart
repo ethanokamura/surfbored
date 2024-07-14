@@ -47,28 +47,16 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   Future<void> checkLiked() async {
     var user = auth.user!;
     bool liked = await userService.userLikesItem(user.uid, widget.item.id);
-    if (mounted) {
-      setState(() {
-        isLiked = liked;
-      });
-    }
+    if (mounted) setState(() => isLiked = liked);
   }
 
   Future<void> getUsername() async {
     String name = await userService.getUsername(widget.item.uid);
-    if (mounted) {
-      setState(() {
-        username = name;
-      });
-    }
+    if (mounted) setState(() => username = name);
   }
 
   void toggleLike() {
-    if (mounted) {
-      setState(() {
-        isLiked = !isLiked;
-      });
-    }
+    if (mounted) setState(() => isLiked = !isLiked);
     itemService.updateItemLikes(auth.user!.uid, widget.item.id, isLiked);
   }
 

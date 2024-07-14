@@ -1,6 +1,7 @@
 // dart packages
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rando/components/buttons/custom_button.dart';
 import 'package:rando/utils/theme/theme_provider.dart';
 
 // show list screen if logged in otherwise show sign in page
@@ -25,9 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Icon(Icons.person),
+                  CustomButton(
+                    onTap: () {},
+                    icon: Icons.person,
                   ),
                   Text(
                     "LocalsOnly",

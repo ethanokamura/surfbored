@@ -10,11 +10,12 @@ class MyTextBox extends StatelessWidget {
   final String label;
   final void Function()? onPressed;
 
-  const MyTextBox(
-      {super.key,
-      required this.text,
-      required this.label,
-      required this.onPressed});
+  const MyTextBox({
+    super.key,
+    required this.text,
+    required this.label,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

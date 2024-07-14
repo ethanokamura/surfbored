@@ -1,22 +1,19 @@
 // dart packages
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/services/storage.dart';
+import 'package:rando/utils/methods.dart';
 
 // components
 import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/components/images/upload_image.dart';
 import 'package:rando/components/text/input_field.dart';
-
-// ui
-import 'package:rando/utils/theme/theme.dart';
+import 'package:rando/components/buttons/custom_button.dart';
 
 class CreateActivityScreen extends StatefulWidget {
   const CreateActivityScreen({super.key});
@@ -59,7 +56,6 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     return 50;
   }
 
-  // edit user data
   Future<void> editField(String field) async {
     if (field == "title" && field != titleText) {
       textController.text = titleText;
@@ -68,48 +64,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     } else if (field == "tags" && field != tagsText) {
       textController.text = tagsText;
     }
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          "Edit $field:",
-          style: TextStyle(
-            color: Theme.of(context).accentColor,
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: textController,
-                autofocus: true,
-                maxLength: maxInputLength(field),
-                maxLines: null,
-                decoration: InputDecoration(
-                  hintText: "Enter new $field",
-                  hintStyle: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).hintTextColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          //cancel
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          // save
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(textController.text),
-            child: const Text("Save"),
-          ),
-        ],
-      ),
-    );
+    await editTextField(context, field, maxInputLength(field), textController);
     // update field
     if (textController.text.trim().isNotEmpty) {
       if (field == "tags") {
@@ -211,14 +166,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 TagListWidget(tags: tags),
                 const SizedBox(height: 20),
                 // edit post
-                ElevatedButton(
-                  onPressed: createItem,
-                  child: Text(
-                    "Create",
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                    ),
-                  ),
+                CustomButton(
+                  onTap: createItem,
+                  text: "Create",
                 )
               ],
             ),

@@ -1,6 +1,7 @@
 // dart packages
 import 'package:flutter/material.dart';
 import 'package:rando/components/anon_wall.dart';
+import 'package:rando/components/buttons/custom_button.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -182,18 +183,18 @@ Widget buildUserProfile(
                     ? Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pushNamed(
+                            child: CustomButton(
+                              onTap: () => Navigator.pushNamed(
                                   context, '/user_settings'),
-                              child: const Text("Edit Profile"),
+                              text: "Edit Profile",
                             ),
                           ),
                           const SizedBox(width: 20),
                           Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pushNamed(
+                            child: CustomButton(
+                              onTap: () => Navigator.pushNamed(
                                   context, '/user_settings'),
-                              child: const Text("Share Profile"),
+                              text: "Share Profile",
                             ),
                           ),
                         ],

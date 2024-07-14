@@ -11,8 +11,6 @@ class CustomTheme {
   static Color lightBackground = const Color.fromRGBO(245, 245, 242, 1);
   static Color darkSurface = const Color.fromRGBO(21, 22, 24, 1);
   static Color lightSurface = const Color.fromARGB(255, 221, 221, 214);
-  static Color onDarkSurface = Colors.white;
-  static Color onLightSurface = Colors.black87;
   static Color darkPrimary = const Color.fromRGBO(21, 22, 24, 1);
   static Color lightPrimary = const Color.fromARGB(255, 221, 221, 214);
   static Color darkTextColor = Colors.white70;
@@ -21,6 +19,8 @@ class CustomTheme {
   static Color lightSubtextColor = Colors.black54;
   static Color darkHintTextColor = Colors.white30;
   static Color lightHintTextColor = Colors.black38;
+  static Color inverseDarkTextColor = Colors.black87;
+  static Color inverseLightTextColor = Colors.white70;
 }
 
 extension CustomThemeData on ThemeData {
@@ -42,16 +42,10 @@ extension CustomThemeData on ThemeData {
         : CustomTheme.lightSurface;
   }
 
-  Color get onSurfaceColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkSurface
-        : CustomTheme.lightSurface;
-  }
-
   Color get primaryColor {
     return brightness == Brightness.dark
-        ? CustomTheme.onDarkSurface
-        : CustomTheme.onLightSurface;
+        ? CustomTheme.darkPrimary
+        : CustomTheme.lightPrimary;
   }
 
   Color get textColor {
@@ -70,6 +64,12 @@ extension CustomThemeData on ThemeData {
     return brightness == Brightness.dark
         ? CustomTheme.darkSubtextColor
         : CustomTheme.lightSubtextColor;
+  }
+
+  Color get inverseTextColor {
+    return brightness == Brightness.dark
+        ? CustomTheme.inverseDarkTextColor
+        : CustomTheme.inverseLightTextColor;
   }
 }
 

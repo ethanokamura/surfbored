@@ -9,6 +9,7 @@ import 'package:rando/services/firestore/user_service.dart';
 // components
 import 'package:rando/components/images/edit_pfp.dart';
 import 'package:rando/components/text/text_box.dart';
+import 'package:rando/utils/methods.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -21,6 +22,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // firestore service
   UserService userService = UserService();
   var user = AuthService().user!;
+  final textController = TextEditingController();
 
   // logout user
   void logOut({context}) async {
@@ -29,51 +31,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 
+  // dynamic input length maximum
+  int maxInputLength(String field) {
+    if (field == "title") return 20;
+    if (field == "description") return 150;
+    return 50;
+  }
+
   // edit user data
   Future<void> editField(String field) async {
-    String newValue = "";
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Edit $field"),
-        content: TextField(
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: "Enter new $field",
-          ),
-          onChanged: (value) {
-            newValue = value;
-          },
-        ),
-        actions: [
-          //cancel
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          // save
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
-            child: const Text("Save"),
-          ),
-        ],
-      ),
-    );
-    // update in firestore
-    if (newValue.trim().isNotEmpty) {
-      // only update if it is not empty
+    await editTextField(context, field, maxInputLength(field), textController);
+    if (textController.text.trim().isNotEmpty) {
+      // update in firestore
       await userService.db
           .collection('users')
           .doc(user.uid)
-          .update({field: newValue});
-
+          .update({field: textController.text});
       if (field == 'username') {
         await userService.db
             .collection('usernames')
             .doc(user.uid)
-            .update({field: newValue});
+            .update({field: textController.text});
       }
     }
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers
+    textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -134,11 +121,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         text: userData.bio,
                         label: "bio",
                         onPressed: () => editField('bio'),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        child: const Icon(Icons.logout),
-                        onPressed: () => logOut(context: context),
                       ),
                     ],
                   ),

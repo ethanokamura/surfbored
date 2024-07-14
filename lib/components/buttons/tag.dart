@@ -18,7 +18,7 @@ class TagWidget extends StatelessWidget {
         child: Text(
           tag,
           style: TextStyle(
-            color: Theme.of(context).onSurfaceColor,
+            color: Theme.of(context).inverseTextColor,
             fontSize: 14,
           ),
         ),

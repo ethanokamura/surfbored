@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/anon_wall.dart';
+import 'package:rando/components/buttons/custom_button.dart';
 import 'package:rando/services/auth.dart';
-import 'package:rando/utils/theme/theme.dart';
 
 class SelectCreateScreen extends StatelessWidget {
   SelectCreateScreen({super.key});
@@ -28,26 +28,16 @@ class SelectCreateScreen extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            ElevatedButton(
-                              onPressed: () => Navigator.pushNamed(
+                            CustomButton(
+                              onTap: () => Navigator.pushNamed(
                                   context, '/create-activity'),
-                              child: Text(
-                                "create activity",
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
+                              text: "create activity",
                             ),
                             const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () =>
+                            CustomButton(
+                              onTap: () =>
                                   Navigator.pushNamed(context, '/create-board'),
-                              child: Text(
-                                "create board",
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
+                              text: "create board",
                             ),
                           ],
                         ),

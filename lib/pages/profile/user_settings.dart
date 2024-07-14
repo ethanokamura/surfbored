@@ -1,9 +1,9 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/components/buttons/custom_button.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
-import 'package:rando/utils/theme/theme.dart';
 
 // ui
 import 'package:provider/provider.dart';
@@ -49,25 +49,14 @@ class UserSettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, '/edit_profile'),
-                  child: Text(
-                    "Edit Profile",
-                    style: TextStyle(
-                      color: Theme.of(context).textColor,
-                    ),
-                  ),
+                CustomButton(
+                  onTap: () => Navigator.pushNamed(context, '/edit_profile'),
+                  text: "Edit Profile",
                 ),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () => logOut(context),
-                  child: Text(
-                    "Logout",
-                    style: TextStyle(
-                      color: Theme.of(context).textColor,
-                    ),
-                  ),
+                CustomButton(
+                  onTap: () => logOut(context),
+                  text: "Logout",
                 ),
               ],
             ),

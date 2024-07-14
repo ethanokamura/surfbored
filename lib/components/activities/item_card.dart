@@ -28,11 +28,12 @@ class ItemCardWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
+            verticalDirection: VerticalDirection.down,
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
+              Flexible(
                 child: ImageWidget(
                   imgURL: item.imgURL,
                   width: double.infinity,

@@ -7,8 +7,21 @@ import 'package:rando/utils/theme/theme.dart';
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class BottomNavBar extends StatelessWidget {
+class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
+
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+  int selectedIndex = 0;
+
+  void navigateBottomNavBar(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
 
   final List<BottomNavigationBarItem> _items = const <BottomNavigationBarItem>[
     BottomNavigationBarItem(
@@ -37,9 +50,11 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      currentIndex: selectedIndex,
       items: _items,
       fixedColor: Theme.of(context).accentColor,
       backgroundColor: Theme.of(context).colorScheme.surface,
+      type: BottomNavigationBarType.fixed,
       onTap: (int idx) {
         switch (idx) {
           case 0:

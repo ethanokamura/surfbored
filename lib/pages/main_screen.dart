@@ -1,4 +1,5 @@
 // dart packages
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // utils
@@ -21,63 +22,65 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int currentIndex = 0;
+  int selectedIndex = 0;
+  String userID = '';
   final List<Widget> pages = [];
-  late AuthService authService;
+  User user = AuthService().user!;
 
   @override
   void initState() {
     super.initState();
-    authService = AuthService();
+    getUserID();
   }
 
-  void onItemTapped(int index) {
-    setState(() {
-      currentIndex = index;
-    });
+  void navigateBottomNavBar(int index) {
+    setState(() => selectedIndex = index);
   }
 
-  final List<BottomNavigationBarItem> _items = const <BottomNavigationBarItem>[
-    BottomNavigationBarItem(
-      icon: Icon(
-        FontAwesomeIcons.house,
-        size: 20,
-      ),
-      label: 'Home',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(
-        FontAwesomeIcons.plus,
-        size: 20,
-      ),
-      label: 'Create',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(
-        FontAwesomeIcons.user,
-        size: 20,
-      ),
-      label: 'Profile',
-    ),
-  ];
+  void getUserID() {
+    setState(() => userID = user.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: currentIndex,
+        index: selectedIndex,
         children: [
           const HomeScreen(),
           SelectCreateScreen(),
-          ProfileScreen(userID: authService.user!.uid),
+          ProfileScreen(userID: userID),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: _items,
-        currentIndex: currentIndex,
+        currentIndex: selectedIndex,
+        type: BottomNavigationBarType.fixed,
+        onTap: navigateBottomNavBar,
         selectedItemColor: Theme.of(context).accentColor,
         backgroundColor: Theme.of(context).colorScheme.surface,
-        onTap: onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.house,
+              size: 20,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.plus,
+              size: 20,
+            ),
+            label: 'Create',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.user,
+              size: 20,
+            ),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }

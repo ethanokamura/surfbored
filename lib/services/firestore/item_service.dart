@@ -83,6 +83,12 @@ class ItemService {
         .map((doc) => ItemData.fromJson(doc.data()!));
   }
 
+  Stream<List<ItemData>> getAllItemStream() {
+    return db.collection('items').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => ItemData.fromFirestore(doc)).toList();
+    });
+  }
+
   /// Update [Item]:
   Future<void> updateItem(String userID, ItemData item) async {
     try {

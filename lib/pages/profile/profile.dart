@@ -85,158 +85,300 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildUserProfile(
-  BuildContext context,
-  UserData userData,
-  bool isCurrentUser,
-) {
+buildUserProfile(BuildContext context, UserData userData, bool isCurrentUser) {
   double spacing = 15;
-  return CustomScrollView(
-    slivers: [
-      SliverSafeArea(
-        sliver: SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '@${userData.username}',
+  return SafeArea(
+    child: Padding(
+      padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '@${userData.username}',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          SizedBox(height: spacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "${userData.following.length}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "following",
+                    style: TextStyle(color: Theme.of(context).subtextColor),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 20),
+              CircleImageWidget(
+                imgURL: userData.imgURL,
+                width: 96,
+                height: 96,
+              ),
+              const SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${userData.followers.length}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "followers",
+                    style: TextStyle(
+                      color: Theme.of(context).subtextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: spacing),
+          userData.name != ''
+              ? Text(
+                  userData.name,
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).textColor,
+                  ),
+                )
+              : const SizedBox.shrink(),
+          userData.website != ''
+              ? Text(
+                  userData.website,
+                  style: TextStyle(
                     color: Theme.of(context).accentColor,
                   ),
-                ),
-                SizedBox(height: spacing),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                )
+              : const SizedBox.shrink(),
+          userData.bio != ''
+              ? Text(
+                  userData.bio,
+                  style: TextStyle(
+                    color: Theme.of(context).subtextColor,
+                  ),
+                )
+              : const SizedBox.shrink(),
+          SizedBox(height: spacing),
+          isCurrentUser
+              ? Row(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "${userData.following.length}",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "following",
-                          style:
-                              TextStyle(color: Theme.of(context).subtextColor),
-                        ),
-                      ],
+                    Expanded(
+                      child: CustomButton(
+                        inverted: false,
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/user_settings'),
+                        text: "Edit Profile",
+                      ),
                     ),
                     const SizedBox(width: 20),
-                    CircleImageWidget(
-                      imgURL: userData.imgURL,
-                      width: 96,
-                      height: 96,
+                    Expanded(
+                      child: CustomButton(
+                        inverted: false,
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/user_settings'),
+                        text: "Share Profile",
+                      ),
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      // add follow button
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Follow"),
+                      ),
                     ),
                     const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${userData.followers.length}",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "followers",
-                          style: TextStyle(
-                            color: Theme.of(context).subtextColor,
-                          ),
-                        ),
-                      ],
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Message"),
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: spacing),
-                userData.name != ''
-                    ? Text(
-                        userData.name,
-                        style: TextStyle(
-                          color: Theme.of(context).textColor,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                userData.website != ''
-                    ? Text(
-                        userData.website,
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                userData.bio != ''
-                    ? Text(
-                        userData.bio,
-                        style: TextStyle(
-                          color: Theme.of(context).subtextColor,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                SizedBox(height: spacing),
-                isCurrentUser
-                    ? Row(
-                        children: [
-                          Expanded(
-                            child: CustomButton(
-                              inverted: false,
-                              onTap: () => Navigator.pushNamed(
-                                  context, '/user_settings'),
-                              text: "Edit Profile",
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: CustomButton(
-                              inverted: false,
-                              onTap: () => Navigator.pushNamed(
-                                  context, '/user_settings'),
-                              text: "Share Profile",
-                            ),
-                          ),
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          Expanded(
-                            // add follow button
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text("Follow"),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text("Message"),
-                            ),
-                          ),
-                        ],
-                      ),
-                SizedBox(height: spacing),
-                const Text(
-                  "My Activities:",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+          SizedBox(height: spacing),
+          const Text(
+            "My Activities:",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
+          Expanded(child: ItemListWidget(userID: userData.id)),
+        ],
       ),
-      SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        sliver: ItemListWidget(userID: userData.id),
-      ),
-    ],
+    ),
   );
 }
+
+// Widget buildUserProfile(
+//   BuildContext context,
+//   UserData userData,
+//   bool isCurrentUser,
+// ) {
+//   double spacing = 15;
+//   return CustomScrollView(
+//     slivers: [
+//       SliverSafeArea(
+//         sliver: SliverToBoxAdapter(
+//           child: Padding(
+//             padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 Text(
+//                   '@${userData.username}',
+//                   style: TextStyle(
+//                     fontSize: 24,
+//                     fontWeight: FontWeight.bold,
+//                     color: Theme.of(context).accentColor,
+//                   ),
+//                 ),
+//                 SizedBox(height: spacing),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: [
+//                     Column(
+//                       crossAxisAlignment: CrossAxisAlignment.end,
+//                       children: [
+//                         Text(
+//                           "${userData.following.length}",
+//                           style: const TextStyle(
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         ),
+//                         Text(
+//                           "following",
+//                           style:
+//                               TextStyle(color: Theme.of(context).subtextColor),
+//                         ),
+//                       ],
+//                     ),
+//                     const SizedBox(width: 20),
+//                     CircleImageWidget(
+//                       imgURL: userData.imgURL,
+//                       width: 96,
+//                       height: 96,
+//                     ),
+//                     const SizedBox(width: 20),
+//                     Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           "${userData.followers.length}",
+//                           style: const TextStyle(fontWeight: FontWeight.bold),
+//                         ),
+//                         Text(
+//                           "followers",
+//                           style: TextStyle(
+//                             color: Theme.of(context).subtextColor,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 ),
+//                 SizedBox(height: spacing),
+//                 userData.name != ''
+//                     ? Text(
+//                         userData.name,
+//                         style: TextStyle(
+//                           color: Theme.of(context).textColor,
+//                         ),
+//                       )
+//                     : const SizedBox.shrink(),
+//                 userData.website != ''
+//                     ? Text(
+//                         userData.website,
+//                         style: TextStyle(
+//                           color: Theme.of(context).accentColor,
+//                         ),
+//                       )
+//                     : const SizedBox.shrink(),
+//                 userData.bio != ''
+//                     ? Text(
+//                         userData.bio,
+//                         style: TextStyle(
+//                           color: Theme.of(context).subtextColor,
+//                         ),
+//                       )
+//                     : const SizedBox.shrink(),
+//                 SizedBox(height: spacing),
+//                 isCurrentUser
+//                     ? Row(
+//                         children: [
+//                           Expanded(
+//                             child: CustomButton(
+//                               inverted: false,
+//                               onTap: () => Navigator.pushNamed(
+//                                   context, '/user_settings'),
+//                               text: "Edit Profile",
+//                             ),
+//                           ),
+//                           const SizedBox(width: 20),
+//                           Expanded(
+//                             child: CustomButton(
+//                               inverted: false,
+//                               onTap: () => Navigator.pushNamed(
+//                                   context, '/user_settings'),
+//                               text: "Share Profile",
+//                             ),
+//                           ),
+//                         ],
+//                       )
+//                     : Row(
+//                         children: [
+//                           Expanded(
+//                             // add follow button
+//                             child: ElevatedButton(
+//                               onPressed: () {},
+//                               child: const Text("Follow"),
+//                             ),
+//                           ),
+//                           const SizedBox(width: 20),
+//                           Expanded(
+//                             child: ElevatedButton(
+//                               onPressed: () {},
+//                               child: const Text("Message"),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                 SizedBox(height: spacing),
+//                 const Text(
+//                   "My Activities:",
+//                   style: TextStyle(
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//       SliverPadding(
+//         padding: const EdgeInsets.symmetric(horizontal: 25),
+//         sliver: ItemListWidget(userID: userData.id),
+//       ),
+//     ],
+//   );
+// }

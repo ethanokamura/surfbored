@@ -79,7 +79,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Material(
-              elevation: 15,
+              elevation: 10,
               color: Theme.of(context).colorScheme.surface,
               shadowColor: Theme.of(context).shadowColor,
               borderRadius: BorderRadius.circular(10),

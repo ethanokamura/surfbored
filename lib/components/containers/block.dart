@@ -7,7 +7,7 @@ class BlockWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 15,
+      elevation: 10,
       color: Theme.of(context).colorScheme.surface,
       shadowColor: Theme.of(context).shadowColor,
       borderRadius: BorderRadius.circular(10),

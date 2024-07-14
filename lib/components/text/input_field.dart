@@ -29,7 +29,7 @@ class MyInputField extends StatelessWidget {
         const SizedBox(width: 20),
         Expanded(
             child: Material(
-          elevation: 15,
+          elevation: 10,
           color: Theme.of(context).colorScheme.surface,
           shadowColor: Theme.of(context).shadowColor,
           borderRadius: BorderRadius.circular(10),

@@ -1,7 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
 import 'package:rando/components/anon_wall.dart';
-import 'package:rando/components/buttons/custom_button.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -10,7 +9,9 @@ import 'package:rando/services/firestore/user_service.dart';
 
 // components
 import 'package:rando/components/items_list.dart';
-import 'package:rando/components/images/image.dart';
+import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/images/circle_image.dart';
+// import 'package:rando/components/images/image.dart';
 
 // ui libraries
 import 'package:rando/utils/theme/theme.dart';
@@ -130,7 +131,7 @@ Widget buildUserProfile(
                       ],
                     ),
                     const SizedBox(width: 20),
-                    ImageWidget(
+                    CircleImageWidget(
                       imgURL: userData.imgURL,
                       width: 96,
                       height: 96,

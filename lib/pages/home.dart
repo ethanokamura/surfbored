@@ -1,13 +1,9 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/components/activity_feed.dart';
-// import 'package:provider/provider.dart';
 import 'package:rando/components/buttons/custom_button.dart';
 import 'package:rando/pages/profile/profile.dart';
 import 'package:rando/services/auth.dart';
-// import 'package:rando/utils/theme/theme_provider.dart';
 
-// show list screen if logged in otherwise show sign in page
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -65,8 +61,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const Expanded(
-              child: ActivityFeedWidget(),
+            Expanded(
+              child: Center(
+                child: Container(
+                  height: 128,
+                  width: 128,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/images/localsonly_face.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

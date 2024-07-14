@@ -29,53 +29,48 @@ class _HomeScreenState extends State<HomeScreen> {
     // ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      body: buildHomeScreen(context, authService.user!.uid),
-    );
-  }
-}
-
-Widget buildHomeScreen(
-  BuildContext context,
-  String userID,
-) {
-  return CustomScrollView(
-    slivers: [
-      SliverSafeArea(
-        sliver: SliverPadding(
-          padding: const EdgeInsets.only(left: 25, right: 25, bottom: 25),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CustomButton(
-                  inverted: false,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(userID: userID),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 25,
+                right: 25,
+                bottom: 20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CustomButton(
+                    inverted: false,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProfileScreen(userID: authService.user!.uid),
+                      ),
                     ),
+                    icon: Icons.person,
                   ),
-                  icon: Icons.person,
-                ),
-                Text(
-                  "LocalsOnly",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                CustomButton(
-                  inverted: false,
-                  onTap: () => Navigator.pushNamed(context, '/create'),
-                  icon: Icons.add,
-                ),
-              ],
+                  Text(
+                    "LocalsOnly",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  CustomButton(
+                    inverted: false,
+                    onTap: () => Navigator.pushNamed(context, '/create'),
+                    icon: Icons.add,
+                  ),
+                ],
+              ),
             ),
-          ),
+            const Expanded(
+              child: ActivityFeedWidget(),
+            ),
+          ],
         ),
       ),
-      const SliverPadding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        sliver: ActivityFeedWidget(),
-      ),
-    ],
-  );
+    );
+  }
 }

@@ -132,13 +132,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               ),
                               text: '@$username',
                             ),
-                            Row(
-                              children: [
-                                LikeButton(isLiked: isLiked, onTap: toggleLike),
-                                const SizedBox(width: 10),
-                                Text("${itemData.likes} likes"),
-                              ],
-                            )
+                            LikeButton(
+                              likes: itemData.likes,
+                              isLiked: isLiked,
+                              onTap: toggleLike,
+                            ),
                           ],
                         ),
                       ],

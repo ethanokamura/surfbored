@@ -10,14 +10,12 @@ class TagListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Wrap(
-        spacing: 8.0,
-        runSpacing: 8.0,
-        children: tags.map((item) {
-          return TagWidget(tag: item);
-        }).toList(),
-      ),
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 8.0,
+      children: tags.map((item) {
+        return TagWidget(tag: item);
+      }).toList(),
     );
   }
 }

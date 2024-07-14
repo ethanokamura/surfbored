@@ -62,6 +62,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double spacing = 15;
     return StreamBuilder<ItemData>(
       stream: itemStream,
       builder: (context, snapshot) {
@@ -94,7 +95,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                       width: double.infinity,
                       height: 256,
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: spacing),
                     Text(
                       itemData.title,
                       style: TextStyle(
@@ -111,8 +112,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                         fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: spacing),
                     TagListWidget(tags: itemData.tags),
+                    SizedBox(height: spacing),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.max,
@@ -127,13 +129,11 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                           ),
                           text: '@$username',
                         ),
-                        Row(
-                          children: [
-                            LikeButton(isLiked: isLiked, onTap: toggleLike),
-                            const SizedBox(width: 10),
-                            Text("${itemData.likes} likes"),
-                          ],
-                        )
+                        LikeButton(
+                          likes: itemData.likes,
+                          isLiked: isLiked,
+                          onTap: toggleLike,
+                        ),
                       ],
                     ),
                   ],

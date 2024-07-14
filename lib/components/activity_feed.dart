@@ -31,18 +31,12 @@ class _ActivityFeedWidgetState extends State<ActivityFeedWidget> {
       stream: itemService.getAllItemStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator()),
-          );
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return SliverToBoxAdapter(
-            child: Center(
-              child: Text("error: ${snapshot.error.toString()}"),
-            ),
-          );
+          return Center(child: Text("error: ${snapshot.error.toString()}"));
         } else if (snapshot.hasData) {
           List<ItemData> items = snapshot.data!;
-          return SliverList.separated(
+          return ListView.separated(
             itemBuilder: (context, index) {
               ItemData item = items[index];
               return ActivityWidget(item: item);
@@ -53,9 +47,7 @@ class _ActivityFeedWidgetState extends State<ActivityFeedWidget> {
             itemCount: items.length,
           );
         } else {
-          return const SliverToBoxAdapter(
-            child: Text("No Lists Found in Firestore. Check Database"),
-          );
+          return const Text("No Lists Found in Firestore. Check Database");
         }
       },
     );

@@ -90,20 +90,32 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          itemData.title,
+                          style: TextStyle(
+                            color: Theme.of(context).textColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const Icon(Icons.more_horiz),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: spacing),
                     ImageWidget(
                       imgURL: itemData.imgURL,
                       width: double.infinity,
                       height: 256,
                     ),
                     SizedBox(height: spacing),
-                    Text(
-                      itemData.title,
-                      style: TextStyle(
-                        color: Theme.of(context).textColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                    ),
                     Text(
                       itemData.description,
                       style: TextStyle(

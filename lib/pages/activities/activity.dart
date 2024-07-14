@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/like_button.dart';
-import 'package:rando/components/containers/tag_list.dart';
-import 'package:rando/components/buttons/link.dart';
-import 'package:rando/pages/profile/profile.dart';
+import 'package:rando/components/activities/activity.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
-import 'package:rando/components/images/image.dart';
 import 'package:rando/services/firestore/user_service.dart';
-import 'package:rando/utils/theme/theme.dart';
 
 class ActivityScreen extends StatefulWidget {
   final ItemData item;
@@ -79,72 +74,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             }
 
             ItemData itemData = snapshot.data!;
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Material(
-                  elevation: 15,
-                  color: Theme.of(context).colorScheme.surface,
-                  shadowColor: Theme.of(context).shadowColor,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ImageWidget(
-                          imgURL: itemData.imgURL,
-                          width: double.infinity,
-                          height: 256,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          itemData.title,
-                          style: TextStyle(
-                            color: Theme.of(context).textColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),
-                        ),
-                        Text(
-                          itemData.description,
-                          style: TextStyle(
-                            color: Theme.of(context).subtextColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TagListWidget(tags: itemData.tags),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            LinkWidget(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ProfileScreen(userID: itemData.uid),
-                                ),
-                              ),
-                              text: '@$username',
-                            ),
-                            LikeButton(
-                              likes: itemData.likes,
-                              isLiked: isLiked,
-                              onTap: toggleLike,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
+            return ActivityWidget(item: itemData);
           }),
     );
   }

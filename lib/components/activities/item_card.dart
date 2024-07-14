@@ -26,26 +26,29 @@ class ItemCardWidget extends StatelessWidget {
         shadowColor: Theme.of(context).shadowColor,
         borderRadius: BorderRadius.circular(10),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ImageWidget(
-                imgURL: item.imgURL,
-                width: double.infinity,
-                height: 96,
+              Expanded(
+                child: ImageWidget(
+                  imgURL: item.imgURL,
+                  width: double.infinity,
+                  height: 128,
+                ),
               ),
               const SizedBox(height: 10),
               Text(
                 item.title,
                 maxLines: 1,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Theme.of(context).textColor,
                   overflow: TextOverflow.ellipsis,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               // TagListWidget(tags: item.tags),

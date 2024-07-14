@@ -1,209 +1,173 @@
-// // dart packages
-// import 'dart:async';
+// dart packages
+import 'dart:async';
 
-// // utils
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:logger/logger.dart';
-// import 'package:rando/services/storage.dart';
-// import 'package:rxdart/rxdart.dart';
-// import 'package:rando/services/auth.dart';
-// import 'package:rando/services/models.dart';
+// utils
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
+import 'package:rando/services/storage.dart';
+import 'package:rando/services/auth.dart';
+import 'package:rando/services/models.dart';
 
 class BoardService {
   // firestore database
-  // final FirebaseFirestore db = FirebaseFirestore.instance;
-  // final StorageService storage = StorageService();
-  // final AuthService auth = AuthService();
-  // final Logger logger = Logger();
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  final StorageService storage = StorageService();
+  final AuthService auth = AuthService();
+  final Logger logger = Logger();
 
-  // /// THIS IS THE END OF THE NEW VERSION OF FIRESTORE
-  // /// ANYTHING BEYOND THIS POINT IS OLD AND MUST BE UPDATED
-  // /// [DO NOT CROSS THIS LINE]
+  /// Create [Item]:
+  Future<String> createBoard(ItemData item) async {
+    try {
+      // make sure user exists
+      var user = auth.user;
+      if (user == null) throw Exception("User not authenticated.");
 
-  // // Create List:
-  // Future<void> addList(Board list) async {
-  //   // grab current user
-  //   var user = auth.user!;
-  //   var ref = db.collection('users').doc(user.uid).collection('lists');
-  //   // add to list
-  //   await ref.add(list.toJson());
-  // }
+      // get references
+      var userRef = db.collection('users').doc(user.uid);
+      var itemRef = db.collection('items');
 
-  // // Read List Stream
-  // Stream<List<Board>> getListStream() {
-  //   var user = auth.user!;
-  //   var ref = db.collection('users').doc(user.uid).collection('lists');
-  //   return ref.snapshots().map((snapshot) =>
-  //       snapshot.docs.map((doc) => Board.fromFirestore(doc)).toList());
-  // }
+      // add to list of items
+      return await db.runTransaction((transaction) async {
+        // perform reads first
+        var userSnapshot = await transaction.get(userRef);
 
-  // // Read a Single List:
-  // Future<Board> getList(String listID) async {
-  //   try {
-  //     // grab current user
-  //     var user = auth.user!;
+        // make sure user exists:
+        if (!userSnapshot.exists) throw Exception("User does not exist");
 
-  //     // get a reference of that item
-  //     var ref =
-  //         db.collection('users').doc(user.uid).collection('lists').doc(listID);
-  //     // get snapshot
-  //     var snapshot = await ref.get();
-  //     // check if document exists and convert data to ItemList
-  //     if (snapshot.exists) {
-  //       var itemList = Board.fromJson(snapshot.data()!);
-  //       return itemList;
-  //     } else {
-  //       throw Exception('ItemList not found with ID: $listID');
-  //     }
-  //   } catch (e) {
-  //     // handle errors, e.g., log the error or throw a custom exception
-  //     print('Error fetching ItemList: $e');
-  //     rethrow; // rethrow the exception to propagate it further
-  //   }
-  // }
+        // prepare data for the new item
+        var docRef = itemRef.doc();
+        var newItemData = item.toJson();
+        newItemData['id'] = docRef.id;
+        newItemData['uid'] = user.uid;
 
-  // // Update List:
-  // Future<void> updateList(Board list, String listID) async {
-  //   try {
-  //     var ref =
-  //         db.collection('users').doc(list.uid).collection('lists').doc(listID);
-  //     var data = list.toJson();
-  //     await ref.update(data);
-  //   } catch (e) {
-  //     throw Exception("list not found: $e");
-  //   }
-  // }
+        // preform writes
+        transaction.set(docRef, newItemData);
 
-  // // Delete List:
-  // Future<void> deleteList(String listID) {
-  //   // grab current user
-  //   var user = auth.user!;
+        // update user's item list
+        List<String> items = List.from(userSnapshot.data()?['items'] ?? []);
+        items.add(docRef.id);
+        transaction.update(userRef, {'items': items});
 
-  //   var ref =
-  //       db.collection('users').doc(user.uid).collection('lists').doc(listID);
-  //   return ref.delete();
-  // }
+        // return id
+        return docRef.id;
+      });
+    } catch (e) {
+      logger.e("error creating item: $e");
+      rethrow;
+    }
+  }
 
-  // // Create Item:
-  // Future<void> addItem(String title, String description, String listID) async {
-  //   Item newItem = Item(title: title, description: description);
-  //   await FirestoreService().addItemToList(newItem, listID);
-  // }
+  /// Read [Item]:
+  Future<ItemData> readItem(String userID, String itemID) async {
+    // get reference to the item
+    var ref =
+        db.collection('users').doc(userID).collection('items').doc(itemID);
+    var snapshot = await ref.get();
+    // return json map
+    return ItemData.fromJson(snapshot.data() ?? {});
+  }
 
-  // // Add Item:
-  // Future<void> addItemToList(ItemData item, String listID) async {
-  //   // grab current user
-  //   var user = auth.user!;
+  /// Read List of [Item]s:
+  Stream<ItemData> getItemStream(String itemID) {
+    return db
+        .collection('items')
+        .doc(itemID)
+        .snapshots()
+        .map((doc) => ItemData.fromJson(doc.data()!));
+  }
 
-  //   var listRef =
-  //       db.collection('users').doc(user.uid).collection('lists').doc(listID);
+  Stream<List<ItemData>> getAllItemStream() {
+    return db.collection('items').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => ItemData.fromFirestore(doc)).toList();
+    });
+  }
 
-  //   var itemRef = listRef.collection('items');
-  //   var data = {
-  //     'id': item.id,
-  //     'title': item.title,
-  //     'description': item.description,
-  //   };
+  /// Update [Item]:
+  Future<void> updateItem(String userID, ItemData item) async {
+    try {
+      var ref = db.collection('items').doc(item.id);
+      if (item.uid == auth.user?.uid) {
+        var data = item.toJson();
+        await ref.update(data);
+      } else {
+        throw Exception("Unauthorized update attempt.");
+      }
+    } catch (e) {
+      throw Exception("item not found: $e");
+    }
+  }
 
-  //   // get the current list document
-  //   DocumentSnapshot listDoc = await listRef.get();
-  //   if (listDoc.exists) {
-  //     BoardData itemList = BoardData.fromFirestore(listDoc);
-  //     // add the new item to the list of items
-  //     List<ItemData> updatedItems = [...itemList.items, item];
-  //     // update the document
-  //     await listRef.update({
-  //       'items': updatedItems.map((item) => item.toJson()).toList(),
-  //     });
-  //     await itemRef.add(data);
-  //   } else {
-  //     throw Exception("list not found");
-  //   }
-  // }
+  Future<void> updateItemLikes(
+      String userID, String itemID, bool isLiked) async {
+    DocumentReference userRef = db.collection('users').doc(userID);
+    DocumentReference itemRef = db.collection('items').doc(itemID);
 
-  // // Read Item Stream
-  // Stream<List<Item>> getItemStream(Board list) {
-  //   var ref = db
-  //       .collection('users')
-  //       .doc(list.uid)
-  //       .collection('lists')
-  //       .doc(list.id)
-  //       .collection('items');
-  //   return ref.snapshots().map((snapshot) =>
-  //       snapshot.docs.map((doc) => Item.fromFirestore(doc)).toList());
-  // }
+    try {
+      // user batch to perform atomic operations
+      WriteBatch batch = db.batch();
 
-  // // Read Item:
-  // Future<Item> getItem(String itemID, String listID) async {
-  //   // grab current user
-  //   var user = auth.user!;
+      // get docs
+      DocumentSnapshot userSnapshot = await userRef.get();
+      DocumentSnapshot itemSnapshot = await itemRef.get();
 
-  //   var ref = db
-  //       .collection('users')
-  //       .doc(user.uid)
-  //       .collection('lists')
-  //       .doc(listID)
-  //       .collection('items')
-  //       .doc(itemID);
-  //   var snapshot = await ref.get();
-  //   // return json map
-  //   return Item.fromJson(snapshot.data() ?? {});
-  // }
+      // throw errors
+      if (!userSnapshot.exists) throw Exception("User does not exists!");
+      if (!itemSnapshot.exists) throw Exception("Item does not exists!");
 
-  // // // Update Item:
-  // // Future<void> updateItem(
-  // //     String title, String description, String itemID, String listID) async {
-  // //   // grab current user
-  // //   Item updatedItem = Item(
-  // //     id: itemID,
-  // //     title: title,
-  // //     description: description,
-  // //   );
-  // //   await FirestoreService().updateItemInList(listID, updatedItem);
-  // // }
+      // get user's liked items or init if does not exist
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+      List<String> userLikedItems = userData.containsKey('likedItems')
+          ? List.from(userData['likedItems'])
+          : [];
 
-  // Future<void> updateItemInList(String listID, Item updatedItem) async {
-  //   // grab current user
-  //   var user = auth.user!;
+      // update documents
+      if (isLiked) {
+        batch.update(itemRef, {
+          'likedBy': FieldValue.arrayUnion([userID]),
+          'likes': FieldValue.increment(1),
+        });
+        if (!userLikedItems.contains(itemID)) userLikedItems.add(itemID);
+      } else {
+        batch.update(itemRef, {
+          'likedBy': FieldValue.arrayRemove([userID]),
+          'likes': FieldValue.increment(-1),
+        });
+        if (userLikedItems.contains(itemID)) userLikedItems.remove(itemID);
+      }
+      batch.update(userRef, {'likedItems': userLikedItems});
 
-  //   var listRef =
-  //       db.collection('users').doc(user.uid).collection('lists').doc(listID);
-  //   var itemRef = listRef.collection('items').doc(updatedItem.id);
-  //   var data = {
-  //     'title': updatedItem.title,
-  //     'description': updatedItem.description,
-  //   };
-  //   DocumentSnapshot listDoc = await listRef.get();
-  //   if (listDoc.exists) {
-  //     Board itemList = Board.fromFirestore(listDoc);
-  //     List<Item> updatedItems = itemList.items.map((item) {
-  //       return item.id == updatedItem.id ? updatedItem : item;
-  //     }).toList();
+      // post changes
+      await batch.commit();
+    } catch (e) {
+      logger.e("error updating item likes: $e");
+    }
+  }
 
-  //     await listRef.update({
-  //       'items': updatedItems.map((item) => item.toJson()).toList(),
-  //     });
-  //     await itemRef.set(data, SetOptions(merge: true));
-  //   } else {
-  //     throw Exception("list not found");
-  //   }
-  // }
-
-  // // // Delete Item:
-  // // Future<void> deleteItem(Board list, String itemID) async {
-  // //   try {
-  // //     // reference to the list
-  // //     var ref = db
-  // //         .collection('users')
-  // //         .doc(list.uid)
-  // //         .collection('lists')
-  // //         .doc(list.id)
-  // //         .collection('items')
-  // //         .doc(itemID);
-  // //     return ref.delete();
-  // //   } catch (e) {
-  // //     print("error deleting item: $e");
-  // //     rethrow;
-  // //   }
-  // // }
+  /// Delete [Item]:
+  Future<void> deleteItem(String userID, String itemID, String imgPath) async {
+    try {
+      // reference to the item
+      var userRef = db.collection('users').doc(userID);
+      var itemRef = db.collection('items').doc(itemID);
+      await db.runTransaction((transaction) async {
+        // check if the user is the owner of the item
+        var itemSnapshot = await transaction.get(itemRef);
+        if (!itemSnapshot.exists || itemSnapshot.data()?['uid'] != userID) {
+          throw Exception("Unauthorized delete attempt.");
+        }
+        // delete photo
+        storage.deleteFile(imgPath);
+        // remove item from 'items collection'
+        transaction.delete(itemRef);
+        // update user's item list
+        var userSnapshot = await transaction.get(userRef);
+        List<String> items = List.from(userSnapshot.data()?['items'] ?? []);
+        items.remove(itemID);
+        transaction.update(userRef, {'items': items});
+      });
+    } catch (e) {
+      throw Exception("error deleting item: $e");
+    }
+  }
 }

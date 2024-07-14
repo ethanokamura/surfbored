@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/services/storage.dart';
@@ -26,6 +27,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   // utility references
   var user = AuthService().user;
   ItemService itemService = ItemService();
+  FirestoreService firestoreService = FirestoreService();
   StorageService firebaseStorage = StorageService();
 
   // text controller
@@ -98,7 +100,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       if (pickedImage != null) {
         String imageURL = 'items/$itemID/itemimage.png';
         firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await itemService.setItemPhotoURL(itemID, imageURL);
+        await firestoreService.setPhotoURL('items', itemID, imageURL);
       }
       if (mounted) Navigator.pop(context);
     } catch (e) {

@@ -84,7 +84,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             );
           } else if (snapshot.hasData) {
             // has data
-            UserData? userData = snapshot.data;
+            UserData userData = snapshot.data!;
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -96,7 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       EditProfilePicture(
                         width: 200,
                         height: 200,
-                        imgURL: userData!.imgURL,
+                        imgURL: userData.imgURL,
                       ),
                       const SizedBox(height: 20),
                       MyTextBox(

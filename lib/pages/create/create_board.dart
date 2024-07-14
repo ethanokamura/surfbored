@@ -1,22 +1,20 @@
 // dart packages
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/services/storage.dart';
+import 'package:rando/utils/methods.dart';
 
 // components
 import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/components/images/upload_image.dart';
 import 'package:rando/components/text/input_field.dart';
-
-// ui
-import 'package:rando/utils/theme/theme.dart';
+import 'package:rando/components/buttons/custom_button.dart';
 
 class CreateBoardScreen extends StatefulWidget {
   const CreateBoardScreen({super.key});
@@ -29,6 +27,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
   // utility references
   var user = AuthService().user;
   ItemService itemService = ItemService();
+  FirestoreService firestoreService = FirestoreService();
   StorageService firebaseStorage = StorageService();
 
   // text controller
@@ -59,7 +58,6 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
     return 50;
   }
 
-  // edit user data
   Future<void> editField(String field) async {
     if (field == "title" && field != titleText) {
       textController.text = titleText;
@@ -68,48 +66,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
     } else if (field == "tags" && field != tagsText) {
       textController.text = tagsText;
     }
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          "Edit $field:",
-          style: TextStyle(
-            color: Theme.of(context).accentColor,
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: textController,
-                autofocus: true,
-                maxLength: maxInputLength(field),
-                maxLines: null,
-                decoration: InputDecoration(
-                  hintText: "Enter new $field",
-                  hintStyle: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).hintTextColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          //cancel
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          // save
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(textController.text),
-            child: const Text("Save"),
-          ),
-        ],
-      ),
-    );
+    await editTextField(context, field, maxInputLength(field), textController);
     // update field
     if (textController.text.trim().isNotEmpty) {
       if (field == "tags") {
@@ -141,9 +98,9 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
       ));
       // upload image to firebase
       if (pickedImage != null) {
-        String imageURL = 'users/${user!.uid}/items/$itemID/itemimage.png';
+        String imageURL = 'items/$itemID/itemimage.png';
         firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await itemService.setItemPhotoURL(itemID, imageURL);
+        await firestoreService.setPhotoURL('items', itemID, imageURL);
       }
       if (mounted) Navigator.pop(context);
     } catch (e) {
@@ -211,14 +168,10 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
                 TagListWidget(tags: tags),
                 const SizedBox(height: 20),
                 // edit post
-                ElevatedButton(
-                  onPressed: createItem,
-                  child: Text(
-                    "Create",
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                    ),
-                  ),
+                CustomButton(
+                  inverted: true,
+                  onTap: createItem,
+                  text: "Create",
                 )
               ],
             ),

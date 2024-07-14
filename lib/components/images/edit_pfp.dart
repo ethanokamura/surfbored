@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rando/services/firestore/user_service.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class EditProfilePicture extends StatefulWidget {
@@ -27,11 +27,11 @@ class EditProfilePicture extends StatefulWidget {
 class _EditProfilePictureState extends State<EditProfilePicture> {
   // variables
   StorageService storage = StorageService();
-  UserService userService = UserService();
+  FirestoreService firestoreService = FirestoreService();
   Uint8List? pickedImage;
   bool isLoading = false;
 
-  var user = AuthService().user;
+  var user = AuthService().user!;
 
   @override
   void initState() {
@@ -58,8 +58,8 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
       // convert image
       final imageBytes = await image.readAsBytes();
 
-      userService.setUserPhotoURL(user!.uid, 'profile.png');
-      await storage.uploadFile('users/${user!.uid}/profile.png', imageBytes);
+      firestoreService.setPhotoURL('users', user.uid, 'profile.png');
+      await storage.uploadFile('users/${user.uid}/profile.png', imageBytes);
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;

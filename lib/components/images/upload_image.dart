@@ -57,14 +57,12 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
 
       // convert image
       final imageBytes = await image.readAsBytes();
-
       // check mount before setting state
       if (!mounted) return;
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;
       });
-
       // return image bytes
       widget.onImagePicked(imageBytes);
     } catch (e) {

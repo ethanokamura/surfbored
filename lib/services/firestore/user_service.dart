@@ -87,16 +87,6 @@ class UserService {
     }
   }
 
-  // Set user's photo URL path
-  Future<void> setUserPhotoURL(String userID, String filename) async {
-    var userRef = db.collection('users').doc(userID);
-    // save profilePicturePath in user doc
-    await userRef.set(
-      {'imgURL': 'users/$userID/$filename'},
-      SetOptions(merge: true),
-    );
-  }
-
   Stream<List<ItemData>> readUserItemStream(String userID) {
     var userRef = db.collection('users').doc(userID);
     return userRef.snapshots().asyncMap((userSnapshot) async {

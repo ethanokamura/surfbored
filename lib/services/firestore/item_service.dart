@@ -15,13 +15,6 @@ class ItemService {
   final AuthService auth = AuthService();
   final Logger logger = Logger();
 
-  // Set user's item's photo URL path
-  Future<void> setItemPhotoURL(String itemID, String filepath) async {
-    var ref = db.collection('items').doc(itemID);
-    // save photoURL in user doc
-    await ref.set({'imgURL': filepath}, SetOptions(merge: true));
-  }
-
   /// Create [Item]:
   Future<String> createItem(ItemData item) async {
     try {

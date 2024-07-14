@@ -57,36 +57,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: StreamBuilder<UserData>(
-          stream: getUserDataStream(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              UserData userData = snapshot.data!;
-              return Text(
-                userData.username,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).accentColor,
-                ),
-              );
-            } else {
-              return Text(widget.userID);
-            }
-          },
-        ),
-        actions: [
-          if (isCurrentUser)
-            IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/user_settings'),
-                icon: const Icon(Icons.settings))
-        ],
-      ),
       body: currentUser!.isAnonymous
           ? const AnonWallWidget(message: "Login To See Your Profile")
           : StreamBuilder<UserData>(
@@ -102,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 } else if (snapshot.hasData) {
                   // has data
                   UserData userData = snapshot.data!;
-                  return buildUserProfile(context, userData);
+                  return buildUserProfile(context, userData, isCurrentUser);
                 } else {
                   // no data found
                   return const Center(child: Text("ERROR: USER NOT FOUND"));
@@ -113,85 +83,156 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildUserProfile(BuildContext context, UserData userData) {
-  return SafeArea(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "${userData.following.length}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+Widget buildUserProfile(
+  BuildContext context,
+  UserData userData,
+  bool isCurrentUser,
+) {
+  double spacing = 15;
+  return CustomScrollView(
+    slivers: [
+      SliverSafeArea(
+        sliver: SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '@${userData.username}',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                SizedBox(height: spacing),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "${userData.following.length}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "following",
+                          style:
+                              TextStyle(color: Theme.of(context).subtextColor),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    "following",
-                    style: TextStyle(color: Theme.of(context).subtextColor),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 20),
-              ImageWidget(
-                imgURL: userData.imgURL,
-                width: 96,
-                height: 96,
-              ),
-              const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${userData.followers.length}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "followers",
-                    style: TextStyle(
-                      color: Theme.of(context).subtextColor,
+                    const SizedBox(width: 20),
+                    ImageWidget(
+                      imgURL: userData.imgURL,
+                      width: 96,
+                      height: 96,
                     ),
+                    const SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${userData.followers.length}",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "followers",
+                          style: TextStyle(
+                            color: Theme.of(context).subtextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: spacing),
+                userData.name != ''
+                    ? Text(
+                        userData.name,
+                        style: TextStyle(
+                          color: Theme.of(context).textColor,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                userData.website != ''
+                    ? Text(
+                        userData.website,
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                userData.bio != ''
+                    ? Text(
+                        userData.bio,
+                        style: TextStyle(
+                          color: Theme.of(context).subtextColor,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                SizedBox(height: spacing),
+                isCurrentUser
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                  context, '/user_settings'),
+                              child: const Text("Edit Profile"),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                  context, '/user_settings'),
+                              child: const Text("Share Profile"),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            // add follow button
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text("Follow"),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text("Message"),
+                            ),
+                          ),
+                        ],
+                      ),
+                SizedBox(height: spacing),
+                const Text(
+                  "My Activities:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(width: 20),
-          Text(
-            userData.name,
-            style: TextStyle(
-              color: Theme.of(context).textColor,
+                ),
+              ],
             ),
           ),
-          Text(
-            userData.bio,
-            style: TextStyle(
-              color: Theme.of(context).subtextColor,
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Text(
-              "My Activities:",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Expanded(
-            child: ItemListWidget(userID: userData.id),
-          ),
-        ],
+        ),
       ),
-    ),
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        sliver: ItemListWidget(userID: userData.id),
+      ),
+    ],
   );
 }

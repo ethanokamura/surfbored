@@ -34,29 +34,37 @@ class _ItemListWidgetState extends State<ItemListWidget> {
       stream: userService.readUserItemStream(widget.userID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()),
+          );
         } else if (snapshot.hasError) {
-          return Center(child: Text("error: ${snapshot.error.toString()}"));
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text("error: ${snapshot.error.toString()}"),
+            ),
+          );
         } else if (snapshot.hasData) {
           // data found
           List<ItemData> items = snapshot.data!;
-          return GridView.builder(
-            primary: false,
+          return SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 20,
               mainAxisSpacing: 20,
             ),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              ItemData item = items[index];
-              // String itemID = item.id;
-              return ItemCardWidget(item: item);
-            },
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                ItemData item = items[index];
+                return ItemCardWidget(item: item);
+              },
+              childCount: items.length,
+            ),
           );
         } else {
           // data is empty..
-          return const Text("No Lists Found in Firestore. Check Database");
+          return const SliverToBoxAdapter(
+            child: Text("No Lists Found in Firestore. Check Database"),
+          );
         }
       },
     );

@@ -101,32 +101,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    EditProfilePicture(
-                      width: 200,
-                      height: 200,
-                      imgURL: userData!.imgURL,
-                    ),
-                    const SizedBox(height: 20),
-                    MyTextBox(
-                      text: userData.username,
-                      label: "username",
-                      onPressed: () => editField('username'),
-                    ),
-                    const SizedBox(height: 20),
-                    MyTextBox(
-                      text: userData.bio,
-                      label: "bio",
-                      onPressed: () => editField('bio'),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      child: const Icon(Icons.logout),
-                      onPressed: () => logOut(context: context),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      EditProfilePicture(
+                        width: 200,
+                        height: 200,
+                        imgURL: userData!.imgURL,
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextBox(
+                        text: userData.username,
+                        label: "username",
+                        onPressed: () => editField('username'),
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextBox(
+                        text: userData.name,
+                        label: "name",
+                        onPressed: () => editField('name'),
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextBox(
+                        text: userData.website,
+                        label: "website",
+                        onPressed: () => editField('website'),
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextBox(
+                        text: userData.bio,
+                        label: "bio",
+                        onPressed: () => editField('bio'),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        child: const Icon(Icons.logout),
+                        onPressed: () => logOut(context: context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

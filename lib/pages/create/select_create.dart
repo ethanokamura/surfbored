@@ -29,12 +29,14 @@ class SelectCreateScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CustomButton(
+                              inverted: true,
                               onTap: () => Navigator.pushNamed(
                                   context, '/create-activity'),
                               text: "create activity",
                             ),
                             const SizedBox(height: 10),
                             CustomButton(
+                              inverted: true,
                               onTap: () =>
                                   Navigator.pushNamed(context, '/create-board'),
                               text: "create board",

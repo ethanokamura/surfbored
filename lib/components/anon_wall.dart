@@ -22,6 +22,7 @@ class AnonWallWidget extends StatelessWidget {
           children: [
             Text(message),
             CustomButton(
+              inverted: true,
               onTap: () => logOut(context),
               text: "Login",
             ),

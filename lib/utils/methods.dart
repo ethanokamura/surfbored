@@ -42,6 +42,7 @@ Future<void> editTextField(
             //cancel
             Expanded(
               child: CustomButton(
+                inverted: true,
                 onTap: () => Navigator.pop(context),
                 text: "Cancel",
               ),
@@ -50,6 +51,7 @@ Future<void> editTextField(
             // save
             Expanded(
               child: CustomButton(
+                inverted: true,
                 onTap: () => Navigator.of(context).pop(textController.text),
                 text: "Save",
               ),

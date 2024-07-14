@@ -50,11 +50,13 @@ class UserSettingsScreen extends StatelessWidget {
                   ],
                 ),
                 CustomButton(
+                  inverted: false,
                   onTap: () => Navigator.pushNamed(context, '/edit_profile'),
                   text: "Edit Profile",
                 ),
                 const SizedBox(height: 10),
                 CustomButton(
+                  inverted: false,
                   onTap: () => logOut(context),
                   text: "Logout",
                 ),

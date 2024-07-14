@@ -167,6 +167,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 const SizedBox(height: 20),
                 // edit post
                 CustomButton(
+                  inverted: true,
                   onTap: createItem,
                   text: "Create",
                 )

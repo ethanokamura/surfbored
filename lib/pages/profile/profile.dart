@@ -184,6 +184,7 @@ Widget buildUserProfile(
                         children: [
                           Expanded(
                             child: CustomButton(
+                              inverted: false,
                               onTap: () => Navigator.pushNamed(
                                   context, '/user_settings'),
                               text: "Edit Profile",
@@ -192,6 +193,7 @@ Widget buildUserProfile(
                           const SizedBox(width: 20),
                           Expanded(
                             child: CustomButton(
+                              inverted: false,
                               onTap: () => Navigator.pushNamed(
                                   context, '/user_settings'),
                               text: "Share Profile",

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class CustomButton extends StatelessWidget {
+  final bool inverted;
   final IconData? icon;
   final String? text;
   final void Function()? onTap;
   const CustomButton({
     super.key,
+    required this.inverted,
     this.icon,
     this.text,
     required this.onTap,
@@ -19,7 +21,9 @@ class CustomButton extends StatelessWidget {
       child: SizedBox(
         child: Material(
           elevation: 5,
-          color: Theme.of(context).surfaceColor,
+          color: inverted
+              ? Theme.of(context).accentColor
+              : Theme.of(context).surfaceColor,
           shadowColor: Theme.of(context).shadowColor,
           borderRadius: BorderRadius.circular(10),
           child: Padding(
@@ -35,7 +39,9 @@ class CustomButton extends StatelessWidget {
                 icon != null
                     ? Icon(
                         icon,
-                        color: Theme.of(context).textColor,
+                        color: inverted
+                            ? Theme.of(context).inverseTextColor
+                            : Theme.of(context).accentColor,
                         size: 18,
                       )
                     : const SizedBox.shrink(),
@@ -43,7 +49,9 @@ class CustomButton extends StatelessWidget {
                     ? Text(
                         text!,
                         style: TextStyle(
-                          color: Theme.of(context).textColor,
+                          color: inverted
+                              ? Theme.of(context).inverseTextColor
+                              : Theme.of(context).accentColor,
                           letterSpacing: 1.5,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

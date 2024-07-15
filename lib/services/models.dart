@@ -66,10 +66,10 @@ class UserData {
 @JsonSerializable()
 class BoardData {
   String id;
+  final String uid;
   final String imgURL;
   final String title;
   final String description;
-  final String uid;
   final int likes;
   final List<String> likedBy;
   final List<String> items;
@@ -112,9 +112,9 @@ class BoardData {
 class ItemData {
   String id;
   String imgURL;
+  String uid;
   String title;
   String description;
-  String uid;
   int likes;
   List<String> likedBy;
   List<String> tags;
@@ -123,9 +123,9 @@ class ItemData {
   ItemData({
     this.id = '',
     this.imgURL = '',
+    required this.uid,
     required this.title,
     required this.description,
-    required this.uid,
     this.likes = 0,
     this.likedBy = const [],
     this.tags = const [],

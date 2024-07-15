@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore/board_service.dart';
 import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
@@ -16,17 +17,19 @@ import 'package:rando/components/images/upload_image.dart';
 import 'package:rando/components/text/input_field.dart';
 import 'package:rando/components/buttons/custom_button.dart';
 
-class CreateBoardScreen extends StatefulWidget {
-  const CreateBoardScreen({super.key});
+class CreateObjectWidget extends StatefulWidget {
+  final String type;
+  const CreateObjectWidget({super.key, required this.type});
 
   @override
-  State<CreateBoardScreen> createState() => _CreateBoardScreenState();
+  State<CreateObjectWidget> createState() => _CreateObjectWidgetState();
 }
 
-class _CreateBoardScreenState extends State<CreateBoardScreen> {
+class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   // utility references
   var user = AuthService().user;
   ItemService itemService = ItemService();
+  BoardService boardService = BoardService();
   FirestoreService firestoreService = FirestoreService();
   StorageService firebaseStorage = StorageService();
 
@@ -39,6 +42,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
   String descriptionText = 'description';
   String tagsText = 'tags';
   List<String> tags = [];
+  String id = '';
 
   @override
   void initState() {
@@ -89,20 +93,34 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
   void createItem() async {
     try {
       // create a new post to get the itemID
-      String itemID = await itemService.createItem(ItemData(
-        title: titleText,
-        description: descriptionText,
-        uid: user!.uid,
-        tags: tags,
-        likes: 0,
-      ));
+      if (widget.type == 'items') {
+        id = await itemService.createItem(ItemData(
+          title: titleText,
+          description: descriptionText,
+          uid: user!.uid,
+          tags: tags,
+          likes: 0,
+        ));
+      } else if (widget.type == 'boards') {
+        id = await boardService.createBoard(BoardData(
+          title: titleText,
+          description: descriptionText,
+          uid: user!.uid,
+          likes: 0,
+        ));
+      }
       // upload image to firebase
       if (pickedImage != null) {
-        String imageURL = 'items/$itemID/itemimage.png';
+        String imageURL = '${widget.type}/$id/coverImage.png';
         firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await firestoreService.setPhotoURL('items', itemID, imageURL);
+        await firestoreService.setPhotoURL(widget.type, id, imageURL);
       }
-      if (mounted) Navigator.pop(context);
+      // if (mounted) Navigator.pop(context);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("$titleText Created!")),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -122,62 +140,55 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Create An Activity"),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // edit image
-                UploadImageWidget(
-                  width: 200,
-                  height: 200,
-                  imgURL: '',
-                  onImagePicked: (image) {
-                    setState(() {
-                      pickedImage = image;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                // edit title
-                MyInputField(
-                  label: "title",
-                  text: titleText,
-                  onPressed: () => editField("title"),
-                ),
-                const SizedBox(height: 20),
-                // edit description
-                MyInputField(
-                  label: "info",
-                  text: descriptionText,
-                  onPressed: () => editField("description"),
-                ),
-                const SizedBox(height: 20),
-                // edit tags
-                MyInputField(
-                  label: "tags",
-                  text: tagsText,
-                  onPressed: () => editField("tags"),
-                ),
-                const SizedBox(height: 20),
-                TagListWidget(tags: tags),
-                const SizedBox(height: 20),
-                // edit post
-                CustomButton(
-                  inverted: true,
-                  onTap: createItem,
-                  text: "Create",
-                )
-              ],
-            ),
-          ),
+    return ListView(
+      children: [
+        // edit image
+        UploadImageWidget(
+          width: 200,
+          height: 200,
+          imgURL: '',
+          onImagePicked: (image) {
+            setState(() {
+              pickedImage = image;
+            });
+          },
         ),
-      ),
+        const SizedBox(height: 20),
+        // edit title
+        MyInputField(
+          label: "title",
+          text: titleText,
+          onPressed: () => editField("title"),
+        ),
+        const SizedBox(height: 20),
+        // edit description
+        MyInputField(
+          label: "info",
+          text: descriptionText,
+          onPressed: () => editField("description"),
+        ),
+        const SizedBox(height: 20),
+        // edit tags
+        if (widget.type == 'items')
+          Column(
+            children: [
+              MyInputField(
+                label: "tags",
+                text: tagsText,
+                onPressed: () => editField("tags"),
+              ),
+              const SizedBox(height: 20),
+              TagListWidget(tags: tags),
+            ],
+          ),
+        const SizedBox(height: 20),
+        // edit post
+        CustomButton(
+          inverted: true,
+          onTap: createItem,
+          text: "Create",
+        )
+      ],
     );
   }
 }

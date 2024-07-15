@@ -1,7 +1,5 @@
 // pages
-import 'package:rando/pages/create/create_activity.dart';
-import 'package:rando/pages/create/create_board.dart';
-import 'package:rando/pages/create/select_create.dart';
+import 'package:rando/pages/create/create.dart';
 import 'package:rando/pages/profile/create_profile.dart';
 import 'package:rando/pages/profile/edit_profile.dart';
 import 'package:rando/pages/login.dart';
@@ -13,9 +11,7 @@ var appRoutes = {
   '/': (context) => const RouterWidget(),
   '/home': (context) => const HomeScreen(),
   '/login': (context) => const LoginScreen(),
-  '/create': (context) => SelectCreateScreen(),
-  '/create-activity': (context) => const CreateActivityScreen(),
-  '/create-board': (context) => const CreateBoardScreen(),
+  '/create': (context) => const CreateObjectScreen(),
   '/user_settings': (context) => const UserSettingsScreen(),
   '/edit_profile': (context) => const EditProfileScreen(),
   '/create_profile': (context) => const CreateProfilePage(),

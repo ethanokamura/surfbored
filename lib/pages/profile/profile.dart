@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rando/components/anon_wall.dart';
+import 'package:rando/components/lists/board_list.dart';
 import 'package:rando/components/tab_bar/tab.dart';
 import 'package:rando/components/tab_bar/tab_bar.dart';
 
@@ -236,8 +237,18 @@ Widget buildUserProfile(
                 SizedBox(height: spacing),
                 const CustomTabBarWidget(
                   tabs: [
-                    CustomTabWidget(icon: Icons.photo_library_outlined),
-                    CustomTabWidget(icon: Icons.list),
+                    CustomTabWidget(
+                      child: Icon(
+                        Icons.photo_library_outlined,
+                        size: 20,
+                      ),
+                    ),
+                    CustomTabWidget(
+                      child: Icon(
+                        Icons.list,
+                        size: 20,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -249,7 +260,7 @@ Widget buildUserProfile(
         child: TabBarView(
           children: [
             ItemListWidget(userID: userData.id),
-            ItemListWidget(userID: userData.id),
+            BoardListWidget(userID: userData.id),
           ],
         ),
       ),

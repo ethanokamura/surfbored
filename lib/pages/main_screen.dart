@@ -7,9 +7,9 @@ import 'package:rando/services/auth.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 // pages
-import 'package:rando/pages/create/select_create.dart';
 import 'package:rando/pages/home.dart';
 import 'package:rando/pages/profile/profile.dart';
+import 'package:rando/pages/create/create.dart';
 
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
         index: selectedIndex,
         children: [
           const HomeScreen(),
-          SelectCreateScreen(),
+          const CreateObjectScreen(),
           ProfileScreen(userID: userID),
         ],
       ),

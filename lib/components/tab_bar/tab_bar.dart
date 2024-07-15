@@ -10,8 +10,9 @@ class CustomTabBarWidget extends StatelessWidget {
     return Container(
       height: 30,
       decoration: BoxDecoration(
-          color: Theme.of(context).surfaceColor,
-          borderRadius: BorderRadius.circular(8)),
+        color: Theme.of(context).surfaceColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: TabBar(
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,

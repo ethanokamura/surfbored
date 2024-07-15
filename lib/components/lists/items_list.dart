@@ -40,17 +40,18 @@ class _ItemListWidgetState extends State<ItemListWidget> {
         } else if (snapshot.hasData) {
           // data found
           List<ItemData> items = snapshot.data!;
-          return Center(
-            child: Wrap(
-              spacing: 20,
-              runSpacing: 20,
-              children: items.map((item) {
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width / 2 - 30,
-                  child: ItemCardWidget(item: item),
-                );
-              }).toList(),
+          return GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
             ),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              ItemData item = items[index];
+              return ItemCardWidget(item: item);
+            },
           );
         } else {
           // data is empty..

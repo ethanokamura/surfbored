@@ -39,18 +39,14 @@ class _BoardListWidgetState extends State<BoardListWidget> {
         } else if (snapshot.hasData) {
           // data found
           List<BoardData> boards = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ListView.separated(
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 10),
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: boards.length,
-                itemBuilder: (context, index) {
-                  BoardData board = boards[index];
-                  return BoardCard(board: board);
-                }),
-          );
+          return ListView.separated(
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: boards.length,
+              itemBuilder: (context, index) {
+                BoardData board = boards[index];
+                return BoardCard(board: board);
+              });
         } else {
           // data is empty..
           return const Text("No Lists Found in Firestore. Check Database");

@@ -50,15 +50,19 @@ class _BoardScreenState extends State<BoardScreen> {
           }
 
           BoardData boardData = snapshot.data!;
-          return temp(context, boardData, boardService, username);
+          return buildBoardScreen(context, boardData, boardService, username);
         },
       ),
     );
   }
 }
 
-Widget temp(BuildContext context, BoardData boardData,
-    BoardService boardService, String username) {
+Widget buildBoardScreen(
+  BuildContext context,
+  BoardData boardData,
+  BoardService boardService,
+  String username,
+) {
   double spacing = 20;
   return SingleChildScrollView(
     child: Padding(
@@ -119,78 +123,5 @@ Widget temp(BuildContext context, BoardData boardData,
         ],
       ),
     ),
-  );
-}
-
-Widget buildBoardScreen(BuildContext context, BoardData boardData,
-    BoardService boardService, String username) {
-  double spacing = 20;
-  return CustomScrollView(
-    slivers: [
-      SliverSafeArea(
-        sliver: SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ImageWidget(
-                  imgURL: boardData.imgURL,
-                  height: 256,
-                  width: double.infinity,
-                ),
-                SizedBox(height: spacing),
-                Text(
-                  boardData.title,
-                  style: TextStyle(
-                    color: Theme.of(context).textColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  boardData.description,
-                  style: TextStyle(
-                    color: Theme.of(context).subtextColor,
-                  ),
-                ),
-                Text(
-                  '@$username',
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 22,
-                  ),
-                ),
-                SizedBox(height: spacing),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        inverted: false,
-                        onTap: () {},
-                        text: "Edit Board",
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: CustomButton(
-                        inverted: false,
-                        onTap: () {},
-                        text: "Share Board",
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-      SliverFillRemaining(
-        child: BoardItemsWidget(boardID: boardData.id),
-      )
-    ],
   );
 }

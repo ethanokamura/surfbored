@@ -71,199 +71,216 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          // backgroundColor: Colors.transparent,
-          title: Text(
-            '@$profileUsername',
-            style: TextStyle(color: Theme.of(context).accentColor),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        // backgroundColor: Colors.transparent,
+        title: Text(
+          '@$profileUsername',
+          style: TextStyle(color: Theme.of(context).accentColor),
         ),
-        body: currentUser.isAnonymous
-            ? const AnonWallWidget(message: "Login To See Your Profile")
-            : StreamBuilder<UserData>(
-                stream: getUserDataStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // loading
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    // error
-                    return Center(
-                        child: Text("ERROR: ${snapshot.error.toString()}"));
-                  } else if (snapshot.hasData) {
-                    // has data
-                    UserData userData = snapshot.data!;
-                    return buildUserProfile(context, userData, isCurrentUser);
-                  } else {
-                    // no data found
-                    return const Center(child: Text("ERROR: USER NOT FOUND"));
-                  }
-                },
-              ),
+        backgroundColor: Colors.transparent,
       ),
+      body: currentUser.isAnonymous
+          ? const AnonWallWidget(message: "Login To See Your Profile")
+          : StreamBuilder<UserData>(
+              stream: getUserDataStream(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // loading
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  // error
+                  return Center(
+                      child: Text("ERROR: ${snapshot.error.toString()}"));
+                } else if (snapshot.hasData) {
+                  // has data
+                  UserData userData = snapshot.data!;
+                  return nestedUserProfile(context, userData, isCurrentUser);
+                } else {
+                  // no data found
+                  return const Center(child: Text("ERROR: USER NOT FOUND"));
+                }
+              },
+            ),
     );
   }
 }
 
-Widget buildUserProfile(
+Widget nestedUserProfile(
   BuildContext context,
   UserData userData,
   bool isCurrentUser,
 ) {
   double spacing = 15;
-  return CustomScrollView(
-    slivers: [
-      SliverSafeArea(
-        sliver: SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
+  List<Widget> profileData(BuildContext context) {
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "${userData.following.length}",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "following",
-                          style:
-                              TextStyle(color: Theme.of(context).subtextColor),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 20),
-                    CircleImageWidget(
-                      imgURL: userData.imgURL,
-                      width: 96,
-                      height: 96,
-                    ),
-                    const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${userData.followers.length}",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "followers",
-                          style: TextStyle(
-                            color: Theme.of(context).subtextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                Text(
+                  "${userData.following.length}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                SizedBox(height: spacing),
-                userData.name != ''
-                    ? Text(
-                        userData.name,
-                        style: TextStyle(
-                          color: Theme.of(context).textColor,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                userData.website != ''
-                    ? Text(
-                        userData.website,
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                userData.bio != ''
-                    ? Text(
-                        userData.bio,
-                        style: TextStyle(
-                          color: Theme.of(context).subtextColor,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                SizedBox(height: spacing),
-                isCurrentUser
-                    ? Row(
-                        children: [
-                          Expanded(
-                            child: CustomButton(
-                              inverted: false,
-                              onTap: () => Navigator.pushNamed(
-                                  context, '/user_settings'),
-                              text: "Edit Profile",
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: CustomButton(
-                              inverted: false,
-                              onTap: () => Navigator.pushNamed(
-                                  context, '/user_settings'),
-                              text: "Share Profile",
-                            ),
-                          ),
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          Expanded(
-                            // add follow button
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text("Follow"),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text("Message"),
-                            ),
-                          ),
-                        ],
-                      ),
-                SizedBox(height: spacing),
-                const CustomTabBarWidget(
-                  tabs: [
-                    CustomTabWidget(
-                      child: Icon(
-                        Icons.photo_library_outlined,
-                        size: 20,
-                      ),
-                    ),
-                    CustomTabWidget(
-                      child: Icon(
-                        Icons.list,
-                        size: 20,
-                      ),
-                    ),
-                  ],
+                Text(
+                  "following",
+                  style: TextStyle(color: Theme.of(context).subtextColor),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-      SliverFillRemaining(
-        child: TabBarView(
-          children: [
-            ItemListWidget(userID: userData.id),
-            BoardListWidget(userID: userData.id),
+            const SizedBox(width: 20),
+            CircleImageWidget(
+              imgURL: userData.imgURL,
+              width: 96,
+              height: 96,
+            ),
+            const SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${userData.followers.length}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "followers",
+                  style: TextStyle(
+                    color: Theme.of(context).subtextColor,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-    ],
+      SizedBox(height: spacing),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          userData.name != ''
+              ? Text(
+                  userData.name,
+                  style: TextStyle(
+                    color: Theme.of(context).textColor,
+                  ),
+                )
+              : const SizedBox.shrink(),
+          userData.website != ''
+              ? Text(
+                  userData.website,
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  ),
+                )
+              : const SizedBox.shrink(),
+          userData.bio != ''
+              ? Text(
+                  userData.bio,
+                  style: TextStyle(
+                    color: Theme.of(context).subtextColor,
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ],
+      ),
+      SizedBox(height: spacing),
+      isCurrentUser
+          ? Row(
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    inverted: false,
+                    onTap: () => Navigator.pushNamed(context, '/user_settings'),
+                    text: "Edit Profile",
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: CustomButton(
+                    inverted: false,
+                    onTap: () => Navigator.pushNamed(context, '/user_settings'),
+                    text: "Share Profile",
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  // add follow button
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("Follow"),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("Message"),
+                  ),
+                ),
+              ],
+            ),
+      SizedBox(height: spacing),
+    ];
+  }
+
+  return DefaultTabController(
+    length: 2,
+    child: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: NestedScrollView(
+          headerSliverBuilder: (context, _) {
+            // These are the slivers that show up in the "outer" scroll view.
+            return [
+              SliverList(
+                delegate: SliverChildListDelegate(profileData(context)),
+              )
+            ];
+          },
+          body: Column(
+            children: [
+              const CustomTabBarWidget(
+                tabs: [
+                  CustomTabWidget(
+                    child: Icon(
+                      Icons.photo_library_outlined,
+                      size: 20,
+                    ),
+                  ),
+                  CustomTabWidget(
+                    child: Icon(
+                      Icons.list,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: spacing),
+              Expanded(
+                child: TabBarView(
+                  // These are the contents of the tab views, below the tabs.
+                  children: [
+                    ItemListWidget(userID: userData.id),
+                    BoardListWidget(userID: userData.id),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
   );
 }

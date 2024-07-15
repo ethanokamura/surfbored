@@ -76,6 +76,19 @@ class BoardService {
         .map((doc) => BoardData.fromJson(doc.data()!));
   }
 
+  Stream<List<ItemData>> readBoardItemStream(String boardID) {
+    var boardRef = db.collection('boards').doc(boardID);
+    return boardRef.snapshots().asyncMap((boardSnapshot) async {
+      List<String> itemIDs = List.from(boardSnapshot.data()?['items'] ?? []);
+      var itemRefs =
+          itemIDs.map((id) => db.collection('items').doc(id)).toList();
+      var itemSnapshots = await Future.wait(itemRefs.map((ref) => ref.get()));
+      return itemSnapshots
+          .map((snapshot) => ItemData.fromFirestore(snapshot))
+          .toList();
+    });
+  }
+
   Stream<List<BoardData>> getAllBoardStream() {
     return db.collection('boards').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => BoardData.fromFirestore(doc)).toList();

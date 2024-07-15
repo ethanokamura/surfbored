@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/components/images/image.dart';
-import 'package:rando/pages/activities/activity.dart';
+import 'package:rando/pages/content/activity.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/utils/theme/theme.dart';
 

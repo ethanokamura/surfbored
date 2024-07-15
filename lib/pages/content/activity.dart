@@ -1,70 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/activities/activity.dart';
 import 'package:rando/components/buttons/custom_button.dart';
-import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
-import 'package:rando/services/firestore/user_service.dart';
 
-class ActivityScreen extends StatefulWidget {
+class ActivityScreen extends StatelessWidget {
   final ItemData item;
   const ActivityScreen({super.key, required this.item});
 
   @override
-  State<ActivityScreen> createState() => _ActivityScreenState();
-}
-
-class _ActivityScreenState extends State<ActivityScreen> {
-  AuthService auth = AuthService();
-  UserService userService = UserService();
-  ItemService itemService = ItemService();
-  bool isLiked = false;
-  String username = '';
-  late Stream<ItemData> itemStream;
-
-  Future<bool> checkAuth() async {
-    var user = auth.user!;
-    return user.uid == widget.item.uid;
-  }
-
-  Future<void> checkLiked() async {
-    var user = auth.user!;
-    bool liked = await userService.userLikesItem(user.uid, widget.item.id);
-    setState(() {
-      isLiked = liked;
-    });
-  }
-
-  Future<void> getUsername() async {
-    String name = await userService.getUsername(widget.item.uid);
-    setState(() {
-      username = name;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    checkLiked();
-    getUsername();
-    itemStream = itemService.getItemStream(widget.item.id);
-  }
-
-  void toggleLike() {
-    setState(() {
-      isLiked = !isLiked;
-    });
-    itemService.updateItemLikes(auth.user!.uid, widget.item.id, isLiked);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    ItemService itemService = ItemService();
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.item.title),
+        title: Text(item.title),
       ),
       body: StreamBuilder<ItemData>(
-        stream: itemStream,
+        stream: itemService.getItemStream(item.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

@@ -97,7 +97,7 @@ class _ImageWidgetState extends State<ImageWidget> {
                       width: widget.width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).surfaceColor,
                       ),
                       child: Center(
                         child: Container(

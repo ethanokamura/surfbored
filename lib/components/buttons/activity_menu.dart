@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:rando/pages/content/add_to_board.dart';
-import 'package:rando/pages/content/edit_activity.dart';
+import 'package:rando/pages/activities/add_to_board.dart';
+import 'package:rando/pages/activities/edit_activity.dart';
+
+/// [TODO]
+/// add share
+/// add or remove items from boards
 
 enum ActivityMenu {
   manage,

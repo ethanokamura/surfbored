@@ -9,6 +9,7 @@ import 'package:rando/components/buttons/custom_button.dart';
 
 // pages
 import 'package:rando/pages/profile/profile.dart';
+import 'package:rando/utils/global.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 128,
                   width: 128,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: borderRadius,
                     image: DecorationImage(
                       image: AssetImage(Theme.of(context).defaultImagePath),
                       fit: BoxFit.contain,

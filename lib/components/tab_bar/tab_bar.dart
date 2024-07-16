@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rando/utils/global.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class CustomTabBarWidget extends StatelessWidget {
@@ -11,14 +12,14 @@ class CustomTabBarWidget extends StatelessWidget {
       height: 30,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: borderRadius,
       ),
       child: TabBar(
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         indicator: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: borderRadius,
         ),
         labelColor: Theme.of(context).textColor,
         unselectedLabelColor: Theme.of(context).subtextColor,

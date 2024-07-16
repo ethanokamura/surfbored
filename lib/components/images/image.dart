@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
+import 'package:rando/utils/global.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -76,7 +77,7 @@ class _ImageWidgetState extends State<ImageWidget> {
       width: widget.width,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: borderRadius,
         image: pickedImage != null
             ? DecorationImage(
                 fit: BoxFit.cover,
@@ -98,7 +99,7 @@ class _ImageWidgetState extends State<ImageWidget> {
                       height: widget.height,
                       width: widget.width,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: borderRadius,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       child: Center(
@@ -106,7 +107,7 @@ class _ImageWidgetState extends State<ImageWidget> {
                           height: widget.height / 4,
                           width: widget.width / 4,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: borderRadius,
                             image: DecorationImage(
                               image: AssetImage(
                                 Theme.of(context).defaultImagePath,

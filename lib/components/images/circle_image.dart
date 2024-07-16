@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
+import 'package:rando/utils/global.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -98,7 +99,7 @@ class _CircleImageWidgetState extends State<CircleImageWidget> {
                       height: widget.height,
                       width: widget.width,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: borderRadius,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       child: Center(
@@ -106,7 +107,7 @@ class _CircleImageWidgetState extends State<CircleImageWidget> {
                           height: widget.height / 4,
                           width: widget.width / 4,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: borderRadius,
                             image: DecorationImage(
                               image: AssetImage(
                                 Theme.of(context).defaultImagePath,

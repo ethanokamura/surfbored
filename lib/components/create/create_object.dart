@@ -12,7 +12,7 @@ import 'package:rando/services/storage.dart';
 import 'package:rando/utils/methods.dart';
 
 // components
-import 'package:rando/components/containers/tag_list.dart';
+import 'package:rando/components/lists/tag_list.dart';
 import 'package:rando/components/images/upload_image.dart';
 import 'package:rando/components/text/input_field.dart';
 import 'package:rando/components/buttons/custom_button.dart';

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:rando/utils/global.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class BlockWidget extends StatelessWidget {
-  final Widget child;
   final bool inverted;
   final double? horizontal;
   final double? vertical;
+  final Widget child;
+
   const BlockWidget({
     super.key,
-    required this.child,
     required this.inverted,
     required this.horizontal,
     required this.vertical,
+    required this.child,
   });
 
   @override
@@ -22,7 +24,7 @@ class BlockWidget extends StatelessWidget {
           ? Theme.of(context).accentColor
           : Theme.of(context).colorScheme.surface,
       shadowColor: Theme.of(context).shadowColor,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: borderRadius,
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: horizontal == null ? 15 : horizontal!,

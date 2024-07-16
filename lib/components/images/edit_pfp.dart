@@ -7,6 +7,7 @@ import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rando/utils/global.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -138,7 +139,7 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                         height: widget.height,
                         width: widget.width,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: borderRadius,
                           color: Theme.of(context).colorScheme.primary,
                         ),
                         child: Center(
@@ -146,7 +147,7 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                             height: widget.height / 2,
                             width: widget.width / 2,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: borderRadius,
                               image: DecorationImage(
                                 image: AssetImage(
                                     Theme.of(context).defaultImagePath),

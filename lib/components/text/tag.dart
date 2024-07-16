@@ -1,5 +1,6 @@
 // dart pacakge
 import 'package:flutter/material.dart';
+import 'package:rando/components/block.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class TagWidget extends StatelessWidget {
@@ -8,21 +9,17 @@ class TagWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).accentColor,
-      borderRadius: BorderRadius.circular(5),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        child: Text(
-          tag,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Theme.of(context).inverseTextColor,
-            fontSize: 14,
-          ),
+    return BlockWidget(
+      inverted: true,
+      horizontal: 10,
+      vertical: 0,
+      child: Text(
+        tag,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: Theme.of(context).inverseTextColor,
+          fontSize: 14,
         ),
       ),
     );

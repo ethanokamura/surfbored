@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rando/components/containers/block.dart';
+import 'package:rando/components/block.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/pages/boards/board.dart';
 import 'package:rando/services/models.dart';

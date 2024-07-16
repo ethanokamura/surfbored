@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/utils/global.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 // ui libraries
@@ -38,7 +39,7 @@ class LoginScreen extends StatelessWidget {
                   height: 128,
                   width: 128,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: borderRadius,
                     image: DecorationImage(
                       image: AssetImage(Theme.of(context).defaultImagePath),
                       fit: BoxFit.contain,

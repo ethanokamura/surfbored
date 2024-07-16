@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rando/components/containers/block.dart';
 // import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/pages/activities/activity.dart';
@@ -20,41 +21,37 @@ class ItemCardWidget extends StatelessWidget {
           ),
         );
       },
-      child: Material(
-        elevation: 10,
-        color: Theme.of(context).colorScheme.surface,
-        shadowColor: Theme.of(context).shadowColor,
-        borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            verticalDirection: VerticalDirection.down,
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Flexible(
-                child: ImageWidget(
-                  imgURL: item.imgURL,
-                  width: double.infinity,
-                  height: 128,
-                ),
+      child: BlockWidget(
+        inverted: false,
+        horizontal: 10,
+        vertical: 10,
+        child: Column(
+          verticalDirection: VerticalDirection.down,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              child: ImageWidget(
+                imgURL: item.imgURL,
+                width: double.infinity,
+                height: 128,
               ),
-              const SizedBox(height: 10),
-              Text(
-                item.title,
-                maxLines: 1,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).textColor,
-                  overflow: TextOverflow.ellipsis,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              item.title,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).textColor,
+                overflow: TextOverflow.ellipsis,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
-              // TagListWidget(tags: item.tags),
-            ],
-          ),
+            ),
+            // TagListWidget(tags: item.tags),
+          ],
         ),
       ),
     );

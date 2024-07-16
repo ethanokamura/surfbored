@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rando/components/containers/block.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class MyInputField extends StatelessWidget {
@@ -28,15 +29,10 @@ class MyInputField extends StatelessWidget {
         ),
         const SizedBox(width: 20),
         Expanded(
-            child: Material(
-          elevation: 10,
-          color: Theme.of(context).colorScheme.surface,
-          shadowColor: Theme.of(context).shadowColor,
-          borderRadius: BorderRadius.circular(10),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-            ),
+          child: BlockWidget(
+            inverted: false,
+            horizontal: null,
+            vertical: 0,
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -65,7 +61,7 @@ class MyInputField extends StatelessWidget {
               ],
             ),
           ),
-        )),
+        ),
       ],
     );
   }

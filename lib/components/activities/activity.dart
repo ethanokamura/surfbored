@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/like_button.dart';
 import 'package:rando/components/buttons/activity_menu.dart';
+import 'package:rando/components/containers/block.dart';
 import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/components/buttons/link.dart';
 import 'package:rando/pages/profile/profile.dart';
@@ -79,79 +80,75 @@ class _ActivityWidgetState extends State<ActivityWidget> {
 
         ItemData itemData = snapshot.data!;
         return Center(
-          child: Material(
-            elevation: 10,
-            color: Theme.of(context).colorScheme.surface,
-            shadowColor: Theme.of(context).shadowColor,
-            borderRadius: BorderRadius.circular(10),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        itemData.title,
-                        style: TextStyle(
-                          color: Theme.of(context).textColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                        ),
+          child: BlockWidget(
+            inverted: false,
+            horizontal: null,
+            vertical: null,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      itemData.title,
+                      style: TextStyle(
+                        color: Theme.of(context).textColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
                       ),
-                      ActivityMenuButton(
-                        itemID: itemData.id,
-                        userID: user.uid,
-                        isOwner: isOwner,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: spacing),
-                  ImageWidget(
-                    imgURL: itemData.imgURL,
-                    width: double.infinity,
-                    height: 256,
-                  ),
-                  SizedBox(height: spacing),
-                  Text(
-                    itemData.description,
-                    style: TextStyle(
-                      color: Theme.of(context).subtextColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
                     ),
+                    ActivityMenuButton(
+                      itemID: itemData.id,
+                      userID: user.uid,
+                      isOwner: isOwner,
+                    ),
+                  ],
+                ),
+                SizedBox(height: spacing),
+                ImageWidget(
+                  imgURL: itemData.imgURL,
+                  width: double.infinity,
+                  height: 256,
+                ),
+                SizedBox(height: spacing),
+                Text(
+                  itemData.description,
+                  style: TextStyle(
+                    color: Theme.of(context).subtextColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
-                  SizedBox(height: spacing),
-                  TagListWidget(tags: itemData.tags),
-                  SizedBox(height: spacing),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      LinkWidget(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ProfileScreen(userID: itemData.uid),
-                          ),
+                ),
+                SizedBox(height: spacing),
+                TagListWidget(tags: itemData.tags),
+                SizedBox(height: spacing),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    LinkWidget(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProfileScreen(userID: itemData.uid),
                         ),
-                        text: '@$username',
                       ),
-                      LikeButton(
-                        likes: itemData.likes,
-                        isLiked: isLiked,
-                        onTap: toggleLike,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                      text: '@$username',
+                    ),
+                    LikeButton(
+                      likes: itemData.likes,
+                      isLiked: isLiked,
+                      onTap: toggleLike,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );

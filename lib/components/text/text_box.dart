@@ -20,8 +20,13 @@ class MyTextBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlockWidget(
+      inverted: false,
+      horizontal: null,
+      vertical: null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

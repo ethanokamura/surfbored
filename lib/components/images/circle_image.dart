@@ -99,7 +99,7 @@ class _CircleImageWidgetState extends State<CircleImageWidget> {
                       width: widget.width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       child: Center(
                         child: Container(
@@ -109,7 +109,8 @@ class _CircleImageWidgetState extends State<CircleImageWidget> {
                             borderRadius: BorderRadius.circular(8),
                             image: DecorationImage(
                               image: AssetImage(
-                                  Theme.of(context).defaultImagePath),
+                                Theme.of(context).defaultImagePath,
+                              ),
                               fit: BoxFit.contain,
                             ),
                           ),

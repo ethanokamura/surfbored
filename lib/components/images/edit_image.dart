@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 // utils
-import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,29 +10,29 @@ import 'package:image_picker/image_picker.dart';
 // ui
 import 'package:rando/utils/theme/theme.dart';
 
-class EditProfilePicture extends StatefulWidget {
+class EditImage extends StatefulWidget {
   final String imgURL;
+  final String itemID;
   final double height;
   final double width;
-  const EditProfilePicture({
+  const EditImage({
     super.key,
     required this.imgURL,
+    required this.itemID,
     required this.height,
     required this.width,
   });
 
   @override
-  State<EditProfilePicture> createState() => _EditProfilePictureState();
+  State<EditImage> createState() => _EditImageState();
 }
 
-class _EditProfilePictureState extends State<EditProfilePicture> {
+class _EditImageState extends State<EditImage> {
   // variables
   StorageService storage = StorageService();
   FirestoreService firestoreService = FirestoreService();
   Uint8List? pickedImage;
   bool isLoading = false;
-
-  var user = AuthService().user!;
 
   @override
   void initState() {
@@ -60,8 +59,9 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
       // convert image
       final imageBytes = await image.readAsBytes();
 
-      firestoreService.setPhotoURL('users', user.uid, 'profile.png');
-      await storage.uploadFile('users/${user.uid}/profile.png', imageBytes);
+      firestoreService.setPhotoURL('items', widget.itemID, 'coverImage.png');
+      await storage.uploadFile(
+          'items/${widget.itemID}/coverImage.png', imageBytes);
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;

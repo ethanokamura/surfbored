@@ -136,15 +136,24 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
                   : pickedImage == null
                       ? Center(
                           child: Container(
-                            height: 128,
-                            width: 128,
+                            height: widget.height,
+                            width: widget.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  Theme.of(context).defaultImagePath,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            child: Center(
+                              child: Container(
+                                height: widget.height / 2,
+                                width: widget.width / 2,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        Theme.of(context).defaultImagePath),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
-                                fit: BoxFit.contain,
                               ),
                             ),
                           ),

@@ -91,88 +91,90 @@ extension CustomThemeData on ThemeData {
 
 // Dark Mode
 ThemeData darkMode = ThemeData(
-  brightness: Brightness.dark,
-  fontFamily: GoogleFonts.rubik().fontFamily,
-  scaffoldBackgroundColor: CustomTheme.darkBackground,
-  shadowColor: Colors.black87,
-  colorScheme: ColorScheme.dark(
-    surface: CustomTheme.darkSurface,
-    onSurface: Colors.white,
-    primary: CustomTheme.darkPrimary,
-    onPrimary: Colors.white,
-  ),
+    brightness: Brightness.dark,
+    fontFamily: GoogleFonts.rubik().fontFamily,
+    scaffoldBackgroundColor: CustomTheme.darkBackground,
+    shadowColor: Colors.black87,
+    colorScheme: ColorScheme.dark(
+      surface: CustomTheme.darkSurface,
+      onSurface: Colors.white,
+      primary: CustomTheme.darkPrimary,
+      onPrimary: Colors.white,
+    ),
 
-  // TEXT
-  textTheme: TextTheme(
-    // BODY
-    bodyLarge: TextStyle(
-      fontSize: 18,
-      color: CustomTheme.darkTextColor,
+    // TEXT
+    textTheme: TextTheme(
+      // BODY
+      bodyLarge: TextStyle(
+        fontSize: 18,
+        color: CustomTheme.darkTextColor,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 16,
+        color: CustomTheme.darkTextColor,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 14,
+        color: CustomTheme.darkTextColor,
+      ),
+      // TITLE
+      titleLarge: TextStyle(
+        fontSize: 26,
+        fontWeight: FontWeight.w900,
+        color: CustomTheme.darkTextColor,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: CustomTheme.darkTextColor,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: CustomTheme.darkTextColor,
+      ),
     ),
-    bodyMedium: TextStyle(
-      fontSize: 16,
-      color: CustomTheme.darkTextColor,
-    ),
-    bodySmall: TextStyle(
-      fontSize: 14,
-      color: CustomTheme.darkTextColor,
-    ),
-    // TITLE
-    titleLarge: TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.w900,
-      color: CustomTheme.darkTextColor,
-    ),
-    titleMedium: TextStyle(
-      fontSize: 22,
-      fontWeight: FontWeight.bold,
-      color: CustomTheme.darkTextColor,
-    ),
-    titleSmall: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      color: CustomTheme.darkTextColor,
-    ),
-  ),
 
-  // BUTTONS
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
-      textStyle: WidgetStateProperty.all(
-        TextStyle(
-          color: CustomTheme.darkAccent,
-          letterSpacing: 1.5,
-          fontWeight: FontWeight.bold,
+    // BUTTONS
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
+        textStyle: WidgetStateProperty.all(
+          TextStyle(
+            color: CustomTheme.darkAccent,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),
-  ),
-  textButtonTheme: TextButtonThemeData(
-    style: ButtonStyle(
-      foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
-      textStyle: WidgetStateProperty.all(
-        TextStyle(
-          color: CustomTheme.darkAccent,
-          letterSpacing: 1.5,
-          fontWeight: FontWeight.bold,
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
+        textStyle: WidgetStateProperty.all(
+          TextStyle(
+            color: CustomTheme.darkAccent,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),
-  ),
-  outlinedButtonTheme: OutlinedButtonThemeData(
-    style: ButtonStyle(
-      foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
-      textStyle: WidgetStateProperty.all(
-        TextStyle(
-          color: CustomTheme.darkAccent,
-          letterSpacing: 1.5,
-          fontWeight: FontWeight.bold,
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
+        textStyle: WidgetStateProperty.all(
+          TextStyle(
+            color: CustomTheme.darkAccent,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),
-  ),
-);
+    popupMenuTheme: PopupMenuThemeData(
+      color: CustomTheme.darkPrimary,
+    ));
 
 // Light Mode
 ThemeData lightMode = ThemeData(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/like_button.dart';
+import 'package:rando/components/buttons/activity_menu.dart';
 import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/components/buttons/link.dart';
 import 'package:rando/pages/profile/profile.dart';
@@ -19,19 +20,19 @@ class ActivityWidget extends StatefulWidget {
 }
 
 class _ActivityWidgetState extends State<ActivityWidget> {
-  AuthService auth = AuthService();
+  var user = AuthService().user!;
   UserService userService = UserService();
   ItemService itemService = ItemService();
   bool isLiked = false;
   String username = '';
-  late Stream<ItemData> itemStream;
+  bool isOwner = false;
 
   @override
   void initState() {
     super.initState();
     checkLiked();
+    checkAuth();
     getUsername();
-    itemStream = itemService.getItemStream(widget.item.id);
   }
 
   @override
@@ -39,13 +40,11 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     super.dispose();
   }
 
-  Future<bool> checkAuth() async {
-    var user = auth.user!;
-    return user.uid == widget.item.uid;
+  Future<void> checkAuth() async {
+    if (mounted) setState(() => isOwner = (user.uid == widget.item.uid));
   }
 
   Future<void> checkLiked() async {
-    var user = auth.user!;
     bool liked = await userService.userLikesItem(user.uid, widget.item.id);
     if (mounted) setState(() => isLiked = liked);
   }
@@ -57,14 +56,18 @@ class _ActivityWidgetState extends State<ActivityWidget> {
 
   void toggleLike() {
     if (mounted) setState(() => isLiked = !isLiked);
-    itemService.updateItemLikes(auth.user!.uid, widget.item.id, isLiked);
+    itemService.updateItemLikes(user.uid, widget.item.id, isLiked);
+  }
+
+  Stream<ItemData> getItemDataStream() {
+    return itemService.getItemStream(widget.item.id);
   }
 
   @override
   Widget build(BuildContext context) {
     double spacing = 15;
     return StreamBuilder<ItemData>(
-      stream: itemStream,
+      stream: getItemDataStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -101,9 +104,10 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                           fontSize: 24,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Icon(Icons.more_horiz),
+                      ActivityMenuButton(
+                        itemID: itemData.id,
+                        userID: user.uid,
+                        isOwner: isOwner,
                       ),
                     ],
                   ),

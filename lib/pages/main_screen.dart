@@ -9,7 +9,7 @@ import 'package:rando/utils/theme/theme.dart';
 // pages
 import 'package:rando/pages/home.dart';
 import 'package:rando/pages/profile/profile.dart';
-import 'package:rando/pages/create/create.dart';
+import 'package:rando/pages/create.dart';
 
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

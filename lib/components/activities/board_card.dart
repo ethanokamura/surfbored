@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/images/image.dart';
-import 'package:rando/pages/content/board.dart';
+import 'package:rando/pages/boards/board.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/utils/theme/theme.dart';
 

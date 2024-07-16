@@ -1,5 +1,5 @@
 // pages
-import 'package:rando/pages/create/create.dart';
+import 'package:rando/pages/create.dart';
 import 'package:rando/pages/profile/create_profile.dart';
 import 'package:rando/pages/profile/edit_profile.dart';
 import 'package:rando/pages/login.dart';

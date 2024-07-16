@@ -23,7 +23,7 @@ class CustomButton extends StatelessWidget {
           elevation: 5,
           color: inverted
               ? Theme.of(context).accentColor
-              : Theme.of(context).surfaceColor,
+              : Theme.of(context).colorScheme.surface,
           shadowColor: Theme.of(context).shadowColor,
           borderRadius: BorderRadius.circular(10),
           child: Padding(
@@ -41,7 +41,7 @@ class CustomButton extends StatelessWidget {
                         icon,
                         color: inverted
                             ? Theme.of(context).inverseTextColor
-                            : Theme.of(context).accentColor,
+                            : Theme.of(context).subtextColor,
                         size: 18,
                       )
                     : const SizedBox.shrink(),
@@ -51,7 +51,7 @@ class CustomButton extends StatelessWidget {
                         style: TextStyle(
                           color: inverted
                               ? Theme.of(context).inverseTextColor
-                              : Theme.of(context).accentColor,
+                              : Theme.of(context).subtextColor,
                           letterSpacing: 1.5,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

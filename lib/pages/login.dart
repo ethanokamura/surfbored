@@ -55,14 +55,14 @@ class LoginScreen extends StatelessWidget {
                   LoginButton(
                     text: 'Continue Annonymously',
                     icon: FontAwesomeIcons.userNinja,
-                    color: Theme.of(context).surfaceColor,
+                    color: Theme.of(context).colorScheme.surface,
                     loginMethod: () => AuthService().anonLogin(),
                   ),
                   LoginButton(
                     text: 'Sign in with Google',
                     icon: FontAwesomeIcons.google,
                     loginMethod: AuthService().googleLogin,
-                    color: Theme.of(context).surfaceColor,
+                    color: Theme.of(context).colorScheme.surface,
                   ),
                   FutureBuilder<Object>(
                     future: SignInWithApple.isAvailable(),

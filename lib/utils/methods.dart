@@ -11,6 +11,7 @@ Future<void> editTextField(
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       title: Text(
         "Edit $field:",
         style: TextStyle(

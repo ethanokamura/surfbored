@@ -5,22 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTheme {
-  static Color darkAccent = Colors.greenAccent.shade400;
-  static Color lightAccent = Colors.purple.shade600;
-  static Color darkBackground = const Color.fromRGBO(13, 14, 15, 1);
-  static Color lightBackground = const Color.fromRGBO(245, 245, 242, 1);
-  static Color darkSurface = const Color.fromRGBO(21, 22, 24, 1);
-  static Color lightSurface = const Color.fromARGB(255, 221, 221, 214);
-  static Color darkPrimary = const Color.fromRGBO(21, 22, 24, 1);
-  static Color lightPrimary = const Color.fromARGB(255, 221, 221, 214);
-  static Color darkTextColor = Colors.white70;
-  static Color lightTextColor = Colors.black87;
-  static Color darkSubtextColor = Colors.white54;
-  static Color lightSubtextColor = Colors.black54;
+  // dark
+  static Color darkBackground = const Color.fromRGBO(29, 32, 37, 1);
+  static Color darkSurface = const Color.fromRGBO(40, 44, 52, 1);
+  static Color darkPrimary = const Color.fromRGBO(59, 65, 77, 1);
+  static Color darkAccent = const Color.fromRGBO(60, 214, 138, 1);
+  static Color darkTextColor = Colors.white;
   static Color darkHintTextColor = Colors.white30;
+  static Color darkSubtextColor = const Color.fromRGBO(171, 178, 191, 1);
+  static Color inverseDarkTextColor = const Color.fromRGBO(29, 32, 37, 1);
+
+  // light
+  static Color lightBackground = const Color.fromRGBO(220, 220, 220, 1);
+  static Color lightSurface = const Color.fromRGBO(245, 245, 245, 1);
+  static Color lightPrimary = const Color.fromRGBO(190, 190, 190, 1);
+  static Color lightAccent = const Color.fromRGBO(45, 179, 112, 1);
+  static Color lightTextColor = Colors.black87;
+  static Color lightSubtextColor = Colors.black54;
   static Color lightHintTextColor = Colors.black38;
-  static Color inverseDarkTextColor = Colors.black87;
-  static Color inverseLightTextColor = Colors.white70;
+  static Color inverseLightTextColor = const Color.fromRGBO(220, 220, 220, 1);
 }
 
 extension CustomThemeData on ThemeData {

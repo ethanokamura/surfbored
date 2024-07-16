@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
-import 'package:rando/utils/theme/theme.dart';
 
 class ImageWidget extends StatefulWidget {
   final String imgURL;
@@ -97,7 +96,7 @@ class _ImageWidgetState extends State<ImageWidget> {
                       width: widget.width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).surfaceColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       child: Center(
                         child: Container(

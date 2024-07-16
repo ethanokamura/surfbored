@@ -74,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Center(
                 child: Container(
-                  height: 128,
-                  width: 128,
+                  height: 64,
+                  width: 64,
                   decoration: BoxDecoration(
                     borderRadius: borderRadius,
                     image: DecorationImage(

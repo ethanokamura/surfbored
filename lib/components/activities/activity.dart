@@ -10,6 +10,7 @@ import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/services/firestore/user_service.dart';
+import 'package:rando/utils/global.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ActivityWidget extends StatefulWidget {
@@ -111,9 +112,10 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                 ),
                 SizedBox(height: spacing),
                 ImageWidget(
+                  borderRadius: borderRadius,
                   imgURL: itemData.imgURL,
-                  width: double.infinity,
                   height: 256,
+                  width: double.infinity,
                 ),
                 SizedBox(height: spacing),
                 Text(

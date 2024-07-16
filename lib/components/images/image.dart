@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
-import 'package:rando/utils/global.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -13,11 +12,13 @@ class ImageWidget extends StatefulWidget {
   final String imgURL;
   final double height;
   final double width;
+  final BorderRadius borderRadius;
   const ImageWidget({
     super.key,
     required this.imgURL,
     required this.height,
     required this.width,
+    required this.borderRadius,
   });
 
   @override
@@ -77,37 +78,34 @@ class _ImageWidgetState extends State<ImageWidget> {
       width: widget.width,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
-        borderRadius: borderRadius,
+        borderRadius: widget.borderRadius,
         image: pickedImage != null
             ? DecorationImage(
                 fit: BoxFit.cover,
-                image: Image.memory(
-                  pickedImage!,
-                  fit: BoxFit.cover,
-                ).image,
+                image: MemoryImage(pickedImage!),
               )
             : null,
       ),
       child: Center(
         child: isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
+            ? const Center(child: CircularProgressIndicator())
             : pickedImage == null
                 ? Center(
                     child: Container(
                       height: widget.height,
                       width: widget.width,
                       decoration: BoxDecoration(
-                        borderRadius: borderRadius,
+                        borderRadius: widget.borderRadius,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       child: Center(
                         child: Container(
                           height: widget.height / 4,
-                          width: widget.width / 4,
+                          width: widget.width == double.infinity
+                              ? 64
+                              : widget.width / 4,
                           decoration: BoxDecoration(
-                            borderRadius: borderRadius,
+                            borderRadius: widget.borderRadius,
                             image: DecorationImage(
                               image: AssetImage(
                                 Theme.of(context).defaultImagePath,

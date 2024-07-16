@@ -23,31 +23,35 @@ class ItemCardWidget extends StatelessWidget {
       },
       child: BlockWidget(
         inverted: false,
-        horizontal: 10,
-        vertical: 10,
+        horizontal: 0,
+        vertical: 0,
         child: Column(
           verticalDirection: VerticalDirection.down,
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Flexible(
               child: ImageWidget(
                 imgURL: item.imgURL,
-                width: double.infinity,
                 height: 128,
+                width: double.infinity,
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(5), topRight: Radius.circular(5)),
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              item.title,
-              maxLines: 1,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).textColor,
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Text(
+                item.title,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).textColor,
+                  overflow: TextOverflow.ellipsis,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
             // TagListWidget(tags: item.tags),

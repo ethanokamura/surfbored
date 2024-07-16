@@ -43,7 +43,7 @@ class CustomButton extends StatelessWidget {
                       style: TextStyle(
                         color: inverted
                             ? Theme.of(context).inverseTextColor
-                            : Theme.of(context).subtextColor,
+                            : Theme.of(context).textColor,
                         letterSpacing: 1.5,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

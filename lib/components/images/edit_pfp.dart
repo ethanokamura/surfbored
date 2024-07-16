@@ -7,6 +7,8 @@ import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
+
+// ui
 import 'package:rando/utils/theme/theme.dart';
 
 class EditProfilePicture extends StatefulWidget {
@@ -145,9 +147,9 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                             width: widget.width / 2,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              image: const DecorationImage(
+                              image: DecorationImage(
                                 image: AssetImage(
-                                    'assets/images/localsonly_face.png'),
+                                    Theme.of(context).defaultImagePath),
                                 fit: BoxFit.contain,
                               ),
                             ),

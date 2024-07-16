@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 // utils
 import 'package:rando/services/storage.dart';
 
+// ui
+import 'package:rando/utils/theme/theme.dart';
+
 class ImageWidget extends StatefulWidget {
   final String imgURL;
   final double height;
@@ -104,9 +107,10 @@ class _ImageWidgetState extends State<ImageWidget> {
                           width: widget.width / 4,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            image: const DecorationImage(
+                            image: DecorationImage(
                               image: AssetImage(
-                                  'assets/images/localsonly_face.png'),
+                                Theme.of(context).defaultImagePath,
+                              ),
                               fit: BoxFit.contain,
                             ),
                           ),

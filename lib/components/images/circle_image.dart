@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
+
+// ui
 import 'package:rando/utils/theme/theme.dart';
 
 class CircleImageWidget extends StatefulWidget {
@@ -105,9 +107,9 @@ class _CircleImageWidgetState extends State<CircleImageWidget> {
                           width: widget.width / 4,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            image: const DecorationImage(
+                            image: DecorationImage(
                               image: AssetImage(
-                                  'assets/images/localsonly_face.png'),
+                                  Theme.of(context).defaultImagePath),
                               fit: BoxFit.contain,
                             ),
                           ),

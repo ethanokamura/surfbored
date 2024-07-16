@@ -8,7 +8,7 @@ import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 // ui
-// import 'package:rando/utils/theme/theme.dart';
+import 'package:rando/utils/theme/theme.dart';
 
 class UploadImageWidget extends StatefulWidget {
   final Function(Uint8List imageBytes) onImagePicked;
@@ -140,9 +140,10 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
                             width: 128,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              image: const DecorationImage(
+                              image: DecorationImage(
                                 image: AssetImage(
-                                    'assets/images/localsonly_face.png'),
+                                  Theme.of(context).defaultImagePath,
+                                ),
                                 fit: BoxFit.contain,
                               ),
                             ),

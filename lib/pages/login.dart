@@ -39,8 +39,8 @@ class LoginScreen extends StatelessWidget {
                   width: 128,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/localsonly_face.png'),
+                    image: DecorationImage(
+                      image: AssetImage(Theme.of(context).defaultImagePath),
                       fit: BoxFit.contain,
                     ),
                   ),

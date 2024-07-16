@@ -6,24 +6,37 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CustomTheme {
   // dark
+  static Color darkAccent = const Color.fromRGBO(97, 175, 239, 1);
   static Color darkBackground = const Color.fromRGBO(29, 32, 37, 1);
   static Color darkSurface = const Color.fromRGBO(40, 44, 52, 1);
   static Color darkPrimary = const Color.fromRGBO(59, 65, 77, 1);
-  static Color darkAccent = const Color.fromRGBO(60, 214, 138, 1);
-  static Color darkTextColor = Colors.white;
-  static Color darkHintTextColor = Colors.white30;
-  static Color darkSubtextColor = const Color.fromRGBO(171, 178, 191, 1);
+  static Color darkTextColor = const Color.fromRGBO(255, 255, 255, 1);
+  static Color darkSubtextColor = const Color.fromRGBO(175, 175, 175, 1);
+  static Color darkHintTextColor = const Color.fromRGBO(100, 100, 100, 1);
   static Color inverseDarkTextColor = const Color.fromRGBO(29, 32, 37, 1);
 
   // light
+  static Color lightAccent = const Color.fromRGBO(68, 157, 230, 1);
   static Color lightBackground = const Color.fromRGBO(220, 220, 220, 1);
   static Color lightSurface = const Color.fromRGBO(245, 245, 245, 1);
   static Color lightPrimary = const Color.fromRGBO(190, 190, 190, 1);
-  static Color lightAccent = const Color.fromRGBO(45, 179, 112, 1);
-  static Color lightTextColor = Colors.black87;
-  static Color lightSubtextColor = Colors.black54;
-  static Color lightHintTextColor = Colors.black38;
+  static Color lightTextColor = const Color.fromRGBO(10, 10, 10, 1);
+  static Color lightSubtextColor = const Color.fromRGBO(64, 64, 64, 1);
+  static Color lightHintTextColor = const Color.fromRGBO(100, 100, 100, 1);
   static Color inverseLightTextColor = const Color.fromRGBO(220, 220, 220, 1);
+}
+
+class ImageConfig {
+  static String defaultDarkImage = 'assets/images/dark_mode_face.png';
+  static String defaultLightImage = 'assets/images/light_mode_face.png';
+}
+
+extension ImageConfigData on ThemeData {
+  String get defaultImagePath {
+    return brightness == Brightness.dark
+        ? ImageConfig.defaultDarkImage
+        : ImageConfig.defaultLightImage;
+  }
 }
 
 extension CustomThemeData on ThemeData {

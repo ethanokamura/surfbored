@@ -56,10 +56,11 @@ class UserService {
       );
       var json = data.toJson();
       await ref.set(json);
-      await boardService.createBoard(BoardData(
+      String boardID = await boardService.createBoard(BoardData(
         title: "Liked Activities:",
         description: "A collection of activities you have liked!",
       ));
+      await ref.set({'likedItemsBoardID': boardID});
     } catch (e) {
       logger.e("Error creating user data $e");
     }
@@ -93,10 +94,10 @@ class UserService {
     // get snapshot
     var snapshot = await ref.get();
     if (snapshot.exists) {
-      return UserData();
+      // convert to note model from model.dart
+      return UserData.fromJson(snapshot.data() ?? {});
     }
-    // convert to note model from model.dart
-    return UserData.fromJson(snapshot.data() ?? {});
+    return UserData();
   }
 
   Stream<UserData> getUserStream(String userID) {

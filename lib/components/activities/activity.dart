@@ -28,6 +28,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   bool isLiked = false;
   String username = '';
   bool isOwner = false;
+  String likedBoardID = '';
 
   @override
   void initState() {
@@ -35,11 +36,19 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     checkLiked();
     checkAuth();
     getUsername();
+    getLikedBoard();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> getLikedBoard() async {
+    UserData data = await userService.getUserData(user.uid);
+    setState(() {
+      likedBoardID = data.likedItemsBoardID;
+    });
   }
 
   Future<void> checkAuth() async {
@@ -58,7 +67,12 @@ class _ActivityWidgetState extends State<ActivityWidget> {
 
   void toggleLike() {
     if (mounted) setState(() => isLiked = !isLiked);
-    itemService.updateItemLikes(user.uid, widget.item.id, isLiked);
+    itemService.updateItemLikes(
+      user.uid,
+      widget.item.id,
+      likedBoardID,
+      isLiked,
+    );
   }
 
   Stream<ItemData> getItemDataStream() {

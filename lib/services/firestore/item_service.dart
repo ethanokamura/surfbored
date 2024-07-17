@@ -98,21 +98,29 @@ class ItemService {
   }
 
   Future<void> updateItemLikes(
-      String userID, String itemID, bool isLiked) async {
-    DocumentReference userRef = db.collection('users').doc(userID);
-    DocumentReference itemRef = db.collection('items').doc(itemID);
-
+    String userID,
+    String itemID,
+    String boardID,
+    bool isLiked,
+  ) async {
     try {
+      // get document references
+      DocumentReference userRef = db.collection('users').doc(userID);
+      DocumentReference itemRef = db.collection('items').doc(itemID);
+      DocumentReference boardRef = db.collection('boards').doc(boardID);
+
       // user batch to perform atomic operations
       WriteBatch batch = db.batch();
 
-      // get docs
+      // get document data
       DocumentSnapshot userSnapshot = await userRef.get();
       DocumentSnapshot itemSnapshot = await itemRef.get();
+      DocumentSnapshot boardSnapshot = await boardRef.get();
 
       // throw errors
       if (!userSnapshot.exists) throw Exception("User does not exists!");
       if (!itemSnapshot.exists) throw Exception("Item does not exists!");
+      if (!boardSnapshot.exists) throw Exception("Board does not exists!");
 
       // get user's liked items or init if does not exist
       Map<String, dynamic> userData =
@@ -121,6 +129,12 @@ class ItemService {
           ? List.from(userData['likedItems'])
           : [];
 
+      // get liked board's items or init if does not exist
+      Map<String, dynamic> boardData =
+          boardSnapshot.data() as Map<String, dynamic>;
+      List<String> likedBoardItems =
+          boardData.containsKey('items') ? List.from(boardData['items']) : [];
+
       // update documents
       if (isLiked) {
         batch.update(itemRef, {
@@ -128,14 +142,17 @@ class ItemService {
           'likes': FieldValue.increment(1),
         });
         if (!userLikedItems.contains(itemID)) userLikedItems.add(itemID);
+        if (!likedBoardItems.contains(itemID)) likedBoardItems.add(itemID);
       } else {
         batch.update(itemRef, {
           'likedBy': FieldValue.arrayRemove([userID]),
           'likes': FieldValue.increment(-1),
         });
         if (userLikedItems.contains(itemID)) userLikedItems.remove(itemID);
+        if (likedBoardItems.contains(itemID)) likedBoardItems.remove(itemID);
       }
       batch.update(userRef, {'likedItems': userLikedItems});
+      batch.update(boardRef, {'items': likedBoardItems});
 
       // post changes
       await batch.commit();

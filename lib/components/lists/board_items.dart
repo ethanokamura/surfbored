@@ -36,16 +36,22 @@ class _BoardItemsWidgetState extends State<BoardItemsWidget> {
         } else if (snapshot.hasData) {
           // data found
           List<ItemData> items = snapshot.data!;
-          return Wrap(
-            spacing: 20,
-            runSpacing: 20,
-            children: items.map((item) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width / 2 - 30,
-                child: ItemCardWidget(item: item),
-              );
-            }).toList(),
-          );
+          if (items.isEmpty) {
+            return const Center(
+              child: Text("User has not created an activity yet!"),
+            );
+          } else {
+            return Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              children: items.map((item) {
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width / 2 - 30,
+                  child: ItemCardWidget(item: item),
+                );
+              }).toList(),
+            );
+          }
         } else {
           // data is empty..
           return const Text("No Lists Found in Firestore. Check Database");

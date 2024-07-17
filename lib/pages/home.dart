@@ -22,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  AuthService authService = AuthService();
+  var user = AuthService().user!;
 
   @override
   void initState() {
@@ -52,8 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileScreen(userID: authService.user!.uid),
+                        builder: (context) => ProfileScreen(userID: user.uid),
                       ),
                     ),
                     icon: Icons.person,

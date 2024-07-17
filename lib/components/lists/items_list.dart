@@ -8,6 +8,7 @@ import 'package:rando/services/models.dart';
 // components
 import 'package:rando/components/activities/item_card.dart';
 import 'package:rando/services/firestore/user_service.dart';
+import 'package:rando/components/buttons/custom_button.dart';
 
 class ItemListWidget extends StatefulWidget {
   final String userID;
@@ -22,7 +23,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
   // firestore
   final UserService userService = UserService();
 
-  var currentUser = AuthService().user;
+  var currentUser = AuthService().user!;
 
   Future<UserData> getUserData() async {
     return await userService.getUserData(widget.userID);
@@ -40,19 +41,37 @@ class _ItemListWidgetState extends State<ItemListWidget> {
         } else if (snapshot.hasData) {
           // data found
           List<ItemData> items = snapshot.data!;
-          return GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-            ),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              ItemData item = items[index];
-              return ItemCardWidget(item: item);
-            },
-          );
+          if (widget.userID == currentUser.uid && items.isEmpty) {
+            return Column(
+              children: [
+                const Text("You have not created any activities yet!"),
+                const SizedBox(height: 15),
+                CustomButton(
+                  inverted: false,
+                  text: "Create an activity!",
+                  onTap: () => Navigator.pushNamed(context, '/create'),
+                ),
+              ],
+            );
+          } else if (widget.userID != currentUser.uid && items.isEmpty) {
+            return const Center(
+              child: Text("User has not created an activity yet!"),
+            );
+          } else {
+            return GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+              ),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                ItemData item = items[index];
+                return ItemCardWidget(item: item);
+              },
+            );
+          }
         } else {
           // data is empty..
           return const Text("No Lists Found in Firestore. Check Database");

@@ -120,6 +120,7 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("$titleText Created!")),
         );
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {

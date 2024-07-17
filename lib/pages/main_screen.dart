@@ -1,6 +1,7 @@
 // dart packages
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rando/pages/create_redirect.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -9,7 +10,6 @@ import 'package:rando/utils/theme/theme.dart';
 // pages
 import 'package:rando/pages/home.dart';
 import 'package:rando/pages/profile/profile.dart';
-import 'package:rando/pages/create.dart';
 
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +24,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
   String userID = '';
-  final List<Widget> pages = [];
   User user = AuthService().user!;
 
   @override
@@ -35,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void navigateBottomNavBar(int index) {
     setState(() => selectedIndex = index);
+    if (selectedIndex == 1) Navigator.pushNamed(context, '/create');
   }
 
   void getUserID() {
@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
         index: selectedIndex,
         children: [
           const HomeScreen(),
-          const CreateObjectScreen(),
+          const CreateRedirect(),
           ProfileScreen(userID: userID),
         ],
       ),

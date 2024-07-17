@@ -53,6 +53,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .doc(user.uid)
             .update({field: textController.text});
       }
+      textController.clear();
     }
   }
 

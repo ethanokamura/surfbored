@@ -1,6 +1,8 @@
 // dart packages
 import 'package:flutter/material.dart';
 import 'package:rando/pages/main_screen.dart';
+import 'package:rando/pages/reroutes/error.dart';
+import 'package:rando/pages/reroutes/loading.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -19,18 +21,16 @@ class RouterWidget extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // show loading widget
-          return const Center(child: CircularProgressIndicator());
+          return const LoadingScreen();
         } else if (snapshot.hasError) {
           // show error widget
-          return const Center(child: Text('error'));
+          return const ErrorScreen();
         } else if (snapshot.hasData) {
           // logged in
-          final user = AuthService().user;
-          if (user == null) return LoginScreen();
           return const MainScreen();
         } else {
           // not logged in
-          return LoginScreen();
+          return const LoginScreen();
         }
       },
     );

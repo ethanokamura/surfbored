@@ -18,7 +18,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   String? errorMessage;
 
   void returnToHome() {
-    Navigator.pop(context);
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 
   void submitUsername() async {
@@ -36,7 +36,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     }
     bool isUnique = await userService.isUsernameUnique(username);
     if (isUnique) {
-      await userService.saveUsername(username);
+      await userService.createUser(username);
       // go back to previous screen
       returnToHome();
     } else {

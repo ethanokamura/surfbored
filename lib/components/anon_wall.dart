@@ -10,7 +10,9 @@ class AnonWallWidget extends StatelessWidget {
   void logOut(BuildContext context) async {
     await AuthService().signOut();
     // reset navigation stack
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    if (context.mounted) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    }
   }
 
   @override

@@ -91,7 +91,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 } else if (snapshot.hasError) {
                   // error
                   return Center(
-                      child: Text("ERROR: ${snapshot.error.toString()}"));
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("ERROR: ${snapshot.error.toString()}"),
+                        AnonWallWidget(
+                            message:
+                                "Error could not log in ${snapshot.error.toString()}")
+                      ],
+                    ),
+                  );
                 } else if (snapshot.hasData) {
                   // has data
                   UserData userData = snapshot.data!;
@@ -272,8 +283,8 @@ Widget nestedUserProfile(
                 child: TabBarView(
                   // These are the contents of the tab views, below the tabs.
                   children: [
-                    ItemListWidget(userID: userData.id),
-                    BoardListWidget(userID: userData.id),
+                    ItemListWidget(userID: userData.uid),
+                    BoardListWidget(userID: userData.uid),
                   ],
                 ),
               ),

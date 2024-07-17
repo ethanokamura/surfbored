@@ -21,6 +21,7 @@ import 'package:rando/pages/profile/create_profile.dart';
 // implementing firebase auth
 class AuthService {
   final Logger logger = Logger();
+
   // stream of current user's data (async)
   // used when we want to detect auth state change but timing is unknown
   final Stream<User?> userStream = FirebaseAuth.instance.authStateChanges();
@@ -89,7 +90,7 @@ class AuthService {
       await routeUser();
     } on FirebaseAuthException catch (e) {
       // handle error
-      print("error: $e");
+      logger.e("error: $e");
     }
   }
 
@@ -138,6 +139,7 @@ class AuthService {
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(oauthCredential);
     await routeUser();
+
     return userCredential;
   }
 
@@ -159,7 +161,7 @@ class AuthService {
       }
     } else {
       // handle case where user is null (possibly show a login screen)
-      print("user is null");
+      logger.e("user is null");
     }
   }
 }

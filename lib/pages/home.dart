@@ -22,12 +22,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AuthService authService;
+  AuthService authService = AuthService();
 
   @override
   void initState() {
     super.initState();
-    authService = AuthService();
   }
 
   @override

@@ -5,7 +5,7 @@ part 'models.g.dart';
 
 @JsonSerializable()
 class UserData {
-  final String id;
+  final String uid;
   final String username;
   final String name;
   final String imgURL;
@@ -17,11 +17,11 @@ class UserData {
   final List<String> boards;
   final List<String> likedItems;
   final List<String> likedBoards;
-  final String lastOnline;
+  final String likedItemsBoardID;
 
   // constructor
   UserData({
-    this.id = '',
+    this.uid = '',
     this.username = '',
     this.name = '',
     this.imgURL = '',
@@ -33,7 +33,7 @@ class UserData {
     this.boards = const [],
     this.likedItems = const [],
     this.likedBoards = const [],
-    this.lastOnline = '',
+    this.likedItemsBoardID = '',
   });
 
   // factory constructor
@@ -46,7 +46,7 @@ class UserData {
   factory UserData.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return UserData(
-      id: doc.id,
+      uid: doc.id,
       username: data['username'] ?? '',
       name: data['name'] ?? '',
       imgURL: data['imgURL'] ?? '',
@@ -58,7 +58,7 @@ class UserData {
       boards: List<String>.from(data['boards'] ?? []),
       likedItems: List<String>.from(data['likedItems'] ?? []),
       likedBoards: List<String>.from(data['likedBoards'] ?? []),
-      lastOnline: data['lastOnline'] ?? '',
+      likedItemsBoardID: data['likedItemsBoardID'] ?? '',
     );
   }
 }

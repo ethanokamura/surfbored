@@ -7,7 +7,7 @@ part of 'models.dart';
 // **************************************************************************
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
-      id: json['id'] as String? ?? '',
+      uid: json['uid'] as String? ?? '',
       username: json['username'] as String? ?? '',
       name: json['name'] as String? ?? '',
       imgURL: json['imgURL'] as String? ?? '',
@@ -36,11 +36,11 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      lastOnline: json['lastOnline'] as String? ?? '',
+      likedItemsBoardID: json['likedItemsBoardID'] as String? ?? '',
     );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
-      'id': instance.id,
+      'uid': instance.uid,
       'username': instance.username,
       'name': instance.name,
       'imgURL': instance.imgURL,
@@ -52,7 +52,7 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'boards': instance.boards,
       'likedItems': instance.likedItems,
       'likedBoards': instance.likedBoards,
-      'lastOnline': instance.lastOnline,
+      'likedItemsBoardID': instance.likedItemsBoardID,
     };
 
 BoardData _$BoardDataFromJson(Map<String, dynamic> json) => BoardData(
@@ -73,10 +73,10 @@ BoardData _$BoardDataFromJson(Map<String, dynamic> json) => BoardData(
 
 Map<String, dynamic> _$BoardDataToJson(BoardData instance) => <String, dynamic>{
       'id': instance.id,
+      'uid': instance.uid,
       'imgURL': instance.imgURL,
       'title': instance.title,
       'description': instance.description,
-      'uid': instance.uid,
       'likes': instance.likes,
       'likedBy': instance.likedBy,
       'items': instance.items,
@@ -85,9 +85,9 @@ Map<String, dynamic> _$BoardDataToJson(BoardData instance) => <String, dynamic>{
 ItemData _$ItemDataFromJson(Map<String, dynamic> json) => ItemData(
       id: json['id'] as String? ?? '',
       imgURL: json['imgURL'] as String? ?? '',
+      uid: json['uid'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
-      uid: json['uid'] as String,
       likes: (json['likes'] as num?)?.toInt() ?? 0,
       likedBy: (json['likedBy'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -101,9 +101,9 @@ ItemData _$ItemDataFromJson(Map<String, dynamic> json) => ItemData(
 Map<String, dynamic> _$ItemDataToJson(ItemData instance) => <String, dynamic>{
       'id': instance.id,
       'imgURL': instance.imgURL,
+      'uid': instance.uid,
       'title': instance.title,
       'description': instance.description,
-      'uid': instance.uid,
       'likes': instance.likes,
       'likedBy': instance.likedBy,
       'tags': instance.tags,

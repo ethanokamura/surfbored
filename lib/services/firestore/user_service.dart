@@ -6,11 +6,13 @@ import 'package:logger/logger.dart';
 // utils
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore/board_service.dart';
 import 'package:rando/services/models.dart';
 
 class UserService {
   // firestore database
   final FirebaseFirestore db = FirebaseFirestore.instance;
+  final BoardService boardService = BoardService();
   final AuthService auth = AuthService();
   final Logger logger = Logger();
 
@@ -38,6 +40,29 @@ class UserService {
     await userRef.set({
       'username': username,
     }, SetOptions(merge: true));
+  }
+
+  Future<void> createUser(String username) async {
+    var user = auth.user!;
+    var ref = db.collection('users').doc(user.uid);
+    try {
+      await db.collection('usernames').doc(user.uid).set({
+        'username': username,
+        'uid': user.uid,
+      });
+      UserData data = UserData(
+        uid: user.uid,
+        username: username,
+      );
+      var json = data.toJson();
+      await ref.set(json);
+      await boardService.createBoard(BoardData(
+        title: "Liked Activities:",
+        description: "A collection of activities you have liked!",
+      ));
+    } catch (e) {
+      logger.e("Error creating user data $e");
+    }
   }
 
   // Check if the current user has a username

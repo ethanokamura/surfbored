@@ -41,7 +41,7 @@ class _EditImageState extends State<EditImage> {
     getImage();
   }
 
-  Future<void> onProfileTapped() async {
+  Future<void> onTap() async {
     final ImagePicker picker = ImagePicker();
     try {
       // get image
@@ -112,7 +112,7 @@ class _EditImageState extends State<EditImage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onProfileTapped,
+      onTap: onTap,
       child: Container(
         height: widget.height,
         width: widget.width,

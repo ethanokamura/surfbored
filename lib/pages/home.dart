@@ -31,8 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-
     return Scaffold(
       body: SafeArea(
         child: Column(

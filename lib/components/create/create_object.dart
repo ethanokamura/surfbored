@@ -111,9 +111,10 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
       }
       // upload image to firebase
       if (pickedImage != null) {
+        // Save the converted image
         String imageURL = '${widget.type}/$id/coverImage.png';
-        firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await firestoreService.setPhotoURL(widget.type, id, imageURL);
+        await firebaseStorage.uploadFile(imageURL, pickedImage!);
+        await firestoreService.setPhotoURL(widget.type, id, 'coverImage.png');
       }
       // if (mounted) Navigator.pop(context);
       if (mounted) {
@@ -136,6 +137,7 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   void dispose() {
     // Dispose controllers
     textController.dispose();
+    firebaseStorage.cancelOperation();
     super.dispose();
   }
 

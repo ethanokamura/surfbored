@@ -2,13 +2,11 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
 
 // utils
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rando/utils/global.dart';
-import 'package:image/image.dart' as img;
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -42,7 +40,6 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     getImage();
   }
 
-
   Future<void> onImageTapped() async {
     final ImagePicker picker = ImagePicker();
     try {
@@ -54,28 +51,6 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
       setState(() {
         isLoading = true;
       });
-
-if (image != null) {
-	    File imageFile = File(image.path);
-	
-	    // Load the image
-	    List<int> imageBytes = await imageFile.readAsBytes();
-	    img.Image? originalImage = img.decodeImage(imageBytes);
-	
-	    if (originalImage != null) {
-	      // Convert to JPEG
-	      List<int> jpegBytes = img.encodeJpg(originalImage);
-	
-	      // Save the converted image
-	      File jpegImage = await File('${imageFile.parent.path}/converted_image.jpg').writeAsBytes(jpegBytes);
-	
-	      print('Image converted to JPEG: ${jpegImage.path}');
-	    } else {
-	      print('Failed to decode image.');
-	    }
-	  } else {
-	    print('No image selected.');
-	  }
 
       // convert image
       final imageBytes = await image.readAsBytes();
@@ -185,9 +160,11 @@ if (image != null) {
           ),
         ),
         const SizedBox(height: 20),
-        const Center(
-          child: Text("(Tap my face to upload a picture!)"),
-        ),
+        pickedImage == null
+            ? const Center(
+                child: Text("(Tap my face to upload a picture!)"),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }

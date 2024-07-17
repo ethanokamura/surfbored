@@ -81,7 +81,10 @@ class ActivityMenuButton extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddToBoardScreen(userID: userID),
+                builder: (context) => AddToBoardScreen(
+                  itemID: itemID,
+                  userID: userID,
+                ),
               ),
             );
             break;

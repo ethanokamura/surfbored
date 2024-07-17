@@ -183,4 +183,41 @@ class BoardService {
       throw Exception("error deleting board: $e");
     }
   }
+
+  Future<bool> boardIncludesItem(String boardID, String itemID) async {
+    try {
+      var ref = db.collection('boards').doc(boardID);
+      var snapshot = await ref.get();
+      if (!snapshot.exists) return false;
+
+      var data = BoardData.fromFirestore(snapshot);
+      return data.items.contains(itemID);
+    } catch (e) {
+      logger.e("error checking included items: $e");
+      return false;
+    }
+  }
+
+  Future<void> updateBoardItems(
+    String boardID,
+    String itemID,
+    bool isSelected,
+  ) async {
+    // reference to the board collection
+    DocumentReference ref = db.collection('boards').doc(boardID);
+
+    try {
+      if (isSelected) {
+        await ref.update({
+          'items': FieldValue.arrayUnion([itemID])
+        });
+      } else {
+        await ref.update({
+          'items': FieldValue.arrayRemove([itemID])
+        });
+      }
+    } catch (e) {
+      logger.e("error updating board selection: $e");
+    }
+  }
 }

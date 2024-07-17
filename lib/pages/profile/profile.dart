@@ -98,8 +98,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text("ERROR: ${snapshot.error.toString()}"),
                         AnonWallWidget(
-                            message:
-                                "Error could not log in ${snapshot.error.toString()}")
+                          message:
+                              "Error could not log in ${snapshot.error.toString()}",
+                        )
                       ],
                     ),
                   );

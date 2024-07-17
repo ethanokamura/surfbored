@@ -6,15 +6,10 @@ import 'package:rando/services/models.dart';
 import 'package:rando/utils/global.dart';
 import 'package:rando/utils/theme/theme.dart';
 
-class BoardCard extends StatefulWidget {
+class BoardCard extends StatelessWidget {
   final BoardData board;
   const BoardCard({super.key, required this.board});
 
-  @override
-  State<BoardCard> createState() => _BoardCardState();
-}
-
-class _BoardCardState extends State<BoardCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -22,7 +17,7 @@ class _BoardCardState extends State<BoardCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BoardScreen(board: widget.board),
+            builder: (context) => BoardScreen(board: board),
           ),
         );
       },
@@ -35,7 +30,7 @@ class _BoardCardState extends State<BoardCard> {
           children: [
             ImageWidget(
               borderRadius: borderRadius,
-              imgURL: widget.board.imgURL,
+              imgURL: board.imgURL,
               height: 64,
               width: 64,
             ),
@@ -47,7 +42,7 @@ class _BoardCardState extends State<BoardCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    widget.board.title,
+                    board.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -56,7 +51,7 @@ class _BoardCardState extends State<BoardCard> {
                     ),
                   ),
                   Text(
-                    widget.board.description,
+                    board.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

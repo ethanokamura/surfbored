@@ -7,7 +7,7 @@ import 'package:rando/services/models.dart';
 import 'package:rando/services/firestore/user_service.dart';
 
 // components
-import 'package:rando/components/activities/board_card.dart';
+import 'package:rando/components/boards/board_card.dart';
 
 class BoardListWidget extends StatefulWidget {
   final String userID;

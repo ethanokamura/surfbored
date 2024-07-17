@@ -8,7 +8,7 @@ import 'package:rando/services/models.dart';
 // components
 import 'package:rando/components/activities/item_card.dart';
 import 'package:rando/services/firestore/user_service.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 
 class ItemListWidget extends StatefulWidget {
   final String userID;
@@ -46,7 +46,7 @@ class _ItemListWidgetState extends State<ItemListWidget> {
               children: [
                 const Text("You have not created any activities yet!"),
                 const SizedBox(height: 15),
-                CustomButton(
+                DefualtButton(
                   inverted: false,
                   text: "Create an activity!",
                   onTap: () => Navigator.pushNamed(context, '/create'),

@@ -13,7 +13,7 @@ import 'package:rando/services/firestore/user_service.dart';
 
 // components
 import 'package:rando/components/lists/items_list.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/components/images/circle_image.dart';
 // import 'package:rando/components/images/image.dart';
 
@@ -209,7 +209,7 @@ Widget nestedUserProfile(
           ? Row(
               children: [
                 Expanded(
-                  child: CustomButton(
+                  child: DefualtButton(
                     inverted: false,
                     onTap: () => Navigator.pushNamed(context, '/user_settings'),
                     text: "Edit Profile",
@@ -217,7 +217,7 @@ Widget nestedUserProfile(
                 ),
                 const SizedBox(width: 20),
                 Expanded(
-                  child: CustomButton(
+                  child: DefualtButton(
                     inverted: false,
                     onTap: () => Navigator.pushNamed(context, '/user_settings'),
                     text: "Share Profile",

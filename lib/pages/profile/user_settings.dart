@@ -1,6 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -51,13 +51,13 @@ class UserSettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                CustomButton(
+                DefualtButton(
                   inverted: false,
                   onTap: () => Navigator.pushNamed(context, '/edit_profile'),
                   text: "Edit Profile",
                 ),
                 const SizedBox(height: 10),
-                CustomButton(
+                DefualtButton(
                   inverted: false,
                   onTap: () => logOut(context),
                   text: "Logout",

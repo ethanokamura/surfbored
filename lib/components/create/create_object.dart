@@ -15,7 +15,7 @@ import 'package:rando/utils/methods.dart';
 import 'package:rando/components/lists/tag_list.dart';
 import 'package:rando/components/images/upload_image.dart';
 import 'package:rando/components/text/input_field.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 
 class CreateObjectWidget extends StatefulWidget {
   final String type;
@@ -184,7 +184,7 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
           ),
         const SizedBox(height: 20),
         // edit post
-        CustomButton(
+        DefualtButton(
           inverted: true,
           onTap: createItem,
           text: "Create",

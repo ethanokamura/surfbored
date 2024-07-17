@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/services/auth.dart';
 
 class AnonWallWidget extends StatelessWidget {
@@ -23,7 +23,7 @@ class AnonWallWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(message),
-            CustomButton(
+            DefualtButton(
               inverted: true,
               onTap: () => logOut(context),
               text: "Login",

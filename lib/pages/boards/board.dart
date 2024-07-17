@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/components/lists/board_items.dart';
 import 'package:rando/services/firestore/board_service.dart';
@@ -104,7 +104,7 @@ Widget buildBoardScreen(
           Row(
             children: [
               Expanded(
-                child: CustomButton(
+                child: DefualtButton(
                   inverted: false,
                   onTap: () {},
                   text: "Edit Board",
@@ -112,7 +112,7 @@ Widget buildBoardScreen(
               ),
               const SizedBox(width: 20),
               Expanded(
-                child: CustomButton(
+                child: DefualtButton(
                   inverted: false,
                   onTap: () {},
                   text: "Share Board",

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/activities/activity.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 
@@ -39,7 +39,7 @@ class ActivityScreen extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: CustomButton(
+                          child: DefualtButton(
                             inverted: false,
                             onTap: () {},
                             text: 'X',
@@ -47,7 +47,7 @@ class ActivityScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 20),
                         Expanded(
-                          child: CustomButton(
+                          child: DefualtButton(
                             inverted: true,
                             onTap: () {},
                             icon: Icons.favorite,

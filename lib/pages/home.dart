@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/services/auth.dart';
 
 // components
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 
 // pages
 import 'package:rando/pages/profile/profile.dart';
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CustomButton(
+                  DefualtButton(
                     inverted: false,
                     onTap: () => Navigator.push(
                       context,
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     "LocalsOnly",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  CustomButton(
+                  DefualtButton(
                     inverted: false,
                     onTap: () => Navigator.pushNamed(context, '/create'),
                     icon: Icons.add,

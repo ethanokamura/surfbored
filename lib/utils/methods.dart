@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 Future<void> editTextField(
@@ -42,7 +42,7 @@ Future<void> editTextField(
           children: [
             //cancel
             Expanded(
-              child: CustomButton(
+              child: DefualtButton(
                 inverted: true,
                 onTap: () => Navigator.pop(context),
                 text: "Cancel",
@@ -51,7 +51,7 @@ Future<void> editTextField(
             const SizedBox(width: 20),
             // save
             Expanded(
-              child: CustomButton(
+              child: DefualtButton(
                 inverted: true,
                 onTap: () => Navigator.of(context).pop(textController.text),
                 text: "Save",

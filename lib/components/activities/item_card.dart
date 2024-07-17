@@ -29,7 +29,7 @@ class ItemCardWidget extends StatelessWidget {
           verticalDirection: VerticalDirection.down,
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
               child: ImageWidget(
@@ -41,17 +41,35 @@ class ItemCardWidget extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(5),
-              child: Text(
-                item.title,
-                maxLines: 1,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).textColor,
-                  overflow: TextOverflow.ellipsis,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    item.title,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).textColor,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    item.description,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).subtextColor,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
               ),
             ),
             // TagListWidget(tags: item.tags),

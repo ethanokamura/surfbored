@@ -1,6 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/custom_button.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 
 class CreateRedirect extends StatelessWidget {
   const CreateRedirect({super.key});
@@ -11,7 +11,7 @@ class CreateRedirect extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: CustomButton(
+          child: DefualtButton(
             inverted: true,
             text: "Create Something!",
             onTap: () => Navigator.pushNamed(context, '/create'),

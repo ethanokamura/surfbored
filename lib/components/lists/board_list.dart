@@ -27,10 +27,18 @@ class _BoardListWidgetState extends State<BoardListWidget> {
     return await userService.getUserData(widget.userID);
   }
 
+  Stream<List<BoardData>> getBoardData() {
+    return userService.readUserBoardStream(widget.userID);
+  }
+
+  Future<void> refreshData() async {
+    await getBoardData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<BoardData>>(
-      stream: userService.readUserBoardStream(widget.userID),
+      stream: getBoardData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -39,14 +47,18 @@ class _BoardListWidgetState extends State<BoardListWidget> {
         } else if (snapshot.hasData) {
           // data found
           List<BoardData> boards = snapshot.data!;
-          return ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: boards.length,
-              itemBuilder: (context, index) {
-                BoardData board = boards[index];
-                return BoardCard(board: board);
-              });
+          return RefreshIndicator(
+            onRefresh: refreshData,
+            child: ListView.separated(
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: boards.length,
+                itemBuilder: (context, index) {
+                  BoardData board = boards[index];
+                  return BoardCard(board: board);
+                }),
+          );
         } else {
           // data is empty..
           return const Text("No Lists Found in Firestore. Check Database");

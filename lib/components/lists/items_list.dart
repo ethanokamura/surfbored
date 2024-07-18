@@ -29,10 +29,18 @@ class _ItemListWidgetState extends State<ItemListWidget> {
     return await userService.getUserData(widget.userID);
   }
 
+  Stream<List<ItemData>> getItemData() {
+    return userService.readUserItemStream(widget.userID);
+  }
+
+  Future<void> refreshData() async {
+    getItemData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ItemData>>(
-      stream: userService.readUserItemStream(widget.userID),
+      stream: getItemData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -58,18 +66,21 @@ class _ItemListWidgetState extends State<ItemListWidget> {
               child: Text("User has not created an activity yet!"),
             );
           } else {
-            return GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
+            return RefreshIndicator(
+              onRefresh: refreshData,
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  ItemData item = items[index];
+                  return ItemCardWidget(itemID: item.id);
+                },
               ),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                ItemData item = items[index];
-                return ItemCardWidget(item: item);
-              },
             );
           }
         } else {

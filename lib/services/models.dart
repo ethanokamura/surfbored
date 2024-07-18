@@ -5,6 +5,7 @@ part 'models.g.dart';
 
 @JsonSerializable()
 class UserData {
+  // data fields
   final String uid;
   final String username;
   final String name;
@@ -19,7 +20,7 @@ class UserData {
   final List<String> likedBoards;
   final String likedItemsBoardID;
 
-  // constructor
+  // UserData data constructor
   UserData({
     this.uid = '',
     this.username = '',
@@ -40,6 +41,8 @@ class UserData {
   // this tells the json serializable what to do
   factory UserData.fromJson(Map<String, dynamic> json) =>
       _$UserDataFromJson(json);
+
+  // method for converting an instance to JSON
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
 
   // allows for an easy way to stream data
@@ -65,6 +68,7 @@ class UserData {
 
 @JsonSerializable()
 class BoardData {
+  // data fields
   String id;
   final String uid;
   final String imgURL;
@@ -74,7 +78,7 @@ class BoardData {
   final List<String> likedBy;
   final List<String> items;
 
-  // constructor
+  // BoardData data constructor
   BoardData({
     this.id = '',
     this.uid = '',
@@ -90,6 +94,8 @@ class BoardData {
   // this tells the json serializable what to do
   factory BoardData.fromJson(Map<String, dynamic> json) =>
       _$BoardDataFromJson(json);
+
+  // method for converting an instance to JSON
   Map<String, dynamic> toJson() => _$BoardDataToJson(this);
 
   // allows for an easy way to stream data
@@ -110,6 +116,7 @@ class BoardData {
 
 @JsonSerializable()
 class ItemData {
+  // data fields
   String id;
   String imgURL;
   String uid;

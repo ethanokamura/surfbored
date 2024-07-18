@@ -8,14 +8,18 @@ import 'package:rando/services/storage.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/models.dart';
 
+// Firestore ItemData Service Provider
 class ItemService {
-  // firestore database
+  // firestore database reference
   final FirebaseFirestore db = FirebaseFirestore.instance;
+  // fireabase storage reference
   final StorageService storage = StorageService();
+  // firestore functions for user auth
   final AuthService auth = AuthService();
+  // handles pretty printing
   final Logger logger = Logger();
 
-  /// Create [Item]:
+  // create item
   Future<String> createItem(ItemData item) async {
     try {
       // make sure user exists
@@ -24,7 +28,7 @@ class ItemService {
 
       // get references
       var userRef = db.collection('users').doc(user.uid);
-      var itemRef = db.collection('items');
+      var itemRef = db.collection('items').doc();
 
       // add to list of items
       return await db.runTransaction((transaction) async {
@@ -35,21 +39,20 @@ class ItemService {
         if (!userSnapshot.exists) throw Exception("User does not exist");
 
         // prepare data for the new item
-        var docRef = itemRef.doc();
         var newItemData = item.toJson();
-        newItemData['id'] = docRef.id;
+        newItemData['id'] = itemRef.id;
         newItemData['uid'] = user.uid;
 
         // preform writes
-        transaction.set(docRef, newItemData);
+        transaction.set(itemRef, newItemData);
 
         // update user's item list
         List<String> items = List.from(userSnapshot.data()?['items'] ?? []);
-        items.add(docRef.id);
+        items.add(itemRef.id);
         transaction.update(userRef, {'items': items});
 
         // return id
-        return docRef.id;
+        return itemRef.id;
       });
     } catch (e) {
       logger.e("error creating item: $e");
@@ -57,38 +60,40 @@ class ItemService {
     }
   }
 
-  /// Read [Item]:
-  Future<ItemData> readItem(String userID, String itemID) async {
+  // get item document data from firestore as ItemData
+  Future<ItemData> readItem(String itemID) async {
     // get reference to the item
-    var ref =
-        db.collection('users').doc(userID).collection('items').doc(itemID);
+    var ref = db.collection('items').doc(itemID);
+    // get data from firestore
     var snapshot = await ref.get();
     // return json map
     return ItemData.fromJson(snapshot.data() ?? {});
   }
 
-  /// Read List of [Item]s:
+  // get stream of ItemData for a given item
   Stream<ItemData> getItemStream(String itemID) {
-    return db
-        .collection('items')
-        .doc(itemID)
-        .snapshots()
-        .map((doc) => ItemData.fromJson(doc.data()!));
+    return db.collection('items').doc(itemID).snapshots().map((doc) {
+      return ItemData.fromJson(doc.data()!);
+    });
   }
 
+  /// [deprecated] ///
+  // get a stream of all items that exist in firestore
   Stream<List<ItemData>> getAllItemStream() {
     return db.collection('items').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => ItemData.fromFirestore(doc)).toList();
     });
   }
 
-  /// Update [Item]:
+  // update item
   Future<void> updateItem(String userID, ItemData item) async {
     try {
+      // get firestore reference
       var ref = db.collection('items').doc(item.id);
+      // check ownership
       if (item.uid == auth.user?.uid) {
-        var data = item.toJson();
-        await ref.update(data);
+        // update firestore doc
+        await ref.update(item.toJson());
       } else {
         throw Exception("Unauthorized update attempt.");
       }
@@ -97,6 +102,8 @@ class ItemService {
     }
   }
 
+  // update liked items
+  // using batch to handle updating user, item, and board docs at the same time
   Future<void> updateItemLikes(
     String userID,
     String itemID,
@@ -123,48 +130,52 @@ class ItemService {
       if (!boardSnapshot.exists) throw Exception("Board does not exists!");
 
       // get user's liked items or init if does not exist
-      Map<String, dynamic> userData =
-          userSnapshot.data() as Map<String, dynamic>;
-      List<String> userLikedItems = userData.containsKey('likedItems')
-          ? List.from(userData['likedItems'])
-          : [];
+      var userData = userSnapshot.data() as Map<String, dynamic>;
+      List<String> userLikedItems = List.from(userData['likedItems'] ?? []);
 
       // get liked board's items or init if does not exist
-      Map<String, dynamic> boardData =
-          boardSnapshot.data() as Map<String, dynamic>;
-      List<String> likedBoardItems =
-          boardData.containsKey('items') ? List.from(boardData['items']) : [];
+      var boardData = boardSnapshot.data() as Map<String, dynamic>;
+      List<String> likedBoardItems = List.from(boardData['items'] ?? []);
 
-      // update documents
+      // update item documents based on isLiked value
       if (isLiked) {
+        // update item doc
         batch.update(itemRef, {
           'likedBy': FieldValue.arrayUnion([userID]),
           'likes': FieldValue.increment(1),
         });
+        // update user doc
         if (!userLikedItems.contains(itemID)) userLikedItems.add(itemID);
+        // update board doc
         if (!likedBoardItems.contains(itemID)) likedBoardItems.add(itemID);
       } else {
+        // update item doc
         batch.update(itemRef, {
           'likedBy': FieldValue.arrayRemove([userID]),
           'likes': FieldValue.increment(-1),
         });
-        if (userLikedItems.contains(itemID)) userLikedItems.remove(itemID);
-        if (likedBoardItems.contains(itemID)) likedBoardItems.remove(itemID);
+        // update user doc
+        userLikedItems.remove(itemID);
+        // update board doc
+        likedBoardItems.remove(itemID);
       }
+      // batch update
       batch.update(userRef, {'likedItems': userLikedItems});
       batch.update(boardRef, {'items': likedBoardItems});
 
-      // post changes
+      // commit changes
       await batch.commit();
     } catch (e) {
       logger.e("error updating item likes: $e");
     }
   }
 
-  /// Delete [Item]:
+  // delete item:
+  // we need to delete the item at all reference points
   Future<void> deleteItem(String userID, String itemID, String imgPath) async {
-    // reference to the item
+    // reference to the user
     var userRef = db.collection('users').doc(userID);
+    // reference to the item
     var itemRef = db.collection('items').doc(itemID);
     try {
       WriteBatch batch = db.batch();
@@ -176,7 +187,7 @@ class ItemService {
       if (!itemSnapshot.exists) throw Exception("Board does not exists!");
 
       // delete image
-      if (imgPath != '') await storage.deleteFile(imgPath);
+      if (imgPath.isNotEmpty) await storage.deleteFile(imgPath);
 
       // delete item ref
       batch.delete(itemRef);
@@ -196,31 +207,22 @@ class ItemService {
         batch.update(boardDoc.reference, {'items': boardItems});
       }
 
-      // get user data
-      Map<String, dynamic> userData =
-          userSnapshot.data() as Map<String, dynamic>;
-
-      // remove item from liked items
-      List<String> userLikedItems = userData.containsKey('likedItems')
-          ? List.from(userData['likedItems'])
-          : [];
-      if (userLikedItems.contains(itemID)) userLikedItems.remove(itemID);
+      // update user's liked items list
+      var userData = userSnapshot.data() as Map<String, dynamic>;
+      List<String> likedItems = List.from(userData['likedItems'] ?? []);
+      likedItems.remove(itemID);
 
       // update user's items list
       List<String> items = List.from(userData['items'] ?? []);
       items.remove(itemID);
-      batch.update(userRef, {'items': items});
+
+      // update user doc
+      batch.update(userRef, {'items': items, 'likedItems': likedItems});
 
       // commit changes
       batch.commit();
     } catch (e) {
       throw Exception("error deleting item: $e");
     }
-  }
-
-  Future<ItemData> getItem(String itemID) async {
-    var ref = db.collection('items').doc(itemID);
-    var snapshot = await ref.get();
-    return ItemData.fromJson(snapshot.data() ?? {});
   }
 }

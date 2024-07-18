@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 // ui libraries
 import 'package:google_fonts/google_fonts.dart';
 
+// defines custom colors for the app
 class CustomTheme {
-  // dark
+  // dark mode
   static Color darkAccent = const Color.fromRGBO(97, 175, 239, 1);
   static Color darkBackground = const Color.fromRGBO(29, 32, 37, 1);
   static Color darkSurface = const Color.fromRGBO(40, 44, 52, 1);
@@ -15,7 +16,7 @@ class CustomTheme {
   static Color darkHintTextColor = const Color.fromRGBO(100, 100, 100, 1);
   static Color inverseDarkTextColor = const Color.fromRGBO(29, 32, 37, 1);
 
-  // light
+  // light mode
   static Color lightAccent = const Color.fromRGBO(68, 157, 230, 1);
   static Color lightBackground = const Color.fromRGBO(220, 220, 220, 1);
   static Color lightSurface = const Color.fromRGBO(245, 245, 245, 1);
@@ -26,11 +27,13 @@ class CustomTheme {
   static Color inverseLightTextColor = const Color.fromRGBO(220, 220, 220, 1);
 }
 
+// default image config
 class ImageConfig {
   static String defaultDarkImage = 'assets/images/dark_mode_face.png';
   static String defaultLightImage = 'assets/images/light_mode_face.png';
 }
 
+// show different image based on brightness mode
 extension ImageConfigData on ThemeData {
   String get defaultImagePath {
     return brightness == Brightness.dark
@@ -39,49 +42,69 @@ extension ImageConfigData on ThemeData {
   }
 }
 
+// create custom themes that adapt to user brightness mode
 extension CustomThemeData on ThemeData {
+  /// [accentColor]
+  /// Gives the signature look to the app
   Color get accentColor {
     return brightness == Brightness.dark
         ? CustomTheme.darkAccent
         : CustomTheme.lightAccent;
   }
 
+  /// [backgroundColor]
+  /// Used for scaffolds
+  /// the main background color for the app
   Color get backgroundColor {
     return brightness == Brightness.dark
         ? CustomTheme.darkBackground
         : CustomTheme.lightBackground;
   }
 
+  /// [surfaceColor]
+  /// The main color of all widgets on the page
+  /// Most common color in the app
   Color get surfaceColor {
     return brightness == Brightness.dark
         ? CustomTheme.darkSurface
         : CustomTheme.lightSurface;
   }
 
+  /// [primaryColor]
+  /// Sits on top of surface colored containers / widgets
+  /// Secondary surface
   Color get primaryColor {
     return brightness == Brightness.dark
         ? CustomTheme.darkPrimary
         : CustomTheme.lightPrimary;
   }
 
+  /// [textColor]
+  /// Default text color for the app
   Color get textColor {
     return brightness == Brightness.dark
         ? CustomTheme.darkTextColor
         : CustomTheme.lightTextColor;
   }
 
+  /// [subtextColor]
+  /// Secondary text color. ie used for descriptions
   Color get subtextColor {
     return brightness == Brightness.dark
         ? CustomTheme.darkSubtextColor
         : CustomTheme.lightSubtextColor;
   }
 
+  /// [hintTextColor]
+  /// Tertiary color for text. rarely used
   Color get hintTextColor {
     return brightness == Brightness.dark
         ? CustomTheme.darkSubtextColor
         : CustomTheme.lightSubtextColor;
   }
 
+  /// [inverseTextColor]
+  /// Used on backgrounds with the accent color
   Color get inverseTextColor {
     return brightness == Brightness.dark
         ? CustomTheme.inverseDarkTextColor
@@ -91,106 +114,82 @@ extension CustomThemeData on ThemeData {
 
 // Dark Mode
 ThemeData darkMode = ThemeData(
-    brightness: Brightness.dark,
-    fontFamily: GoogleFonts.rubik().fontFamily,
-    scaffoldBackgroundColor: CustomTheme.darkBackground,
-    shadowColor: Colors.black87,
-    colorScheme: ColorScheme.dark(
-      surface: CustomTheme.darkSurface,
-      onSurface: Colors.white,
-      primary: CustomTheme.darkPrimary,
-      onPrimary: Colors.white,
-    ),
+  // brightness mode
+  brightness: Brightness.dark,
 
-    // TEXT
-    textTheme: TextTheme(
-      // BODY
-      bodyLarge: TextStyle(
-        fontSize: 18,
-        color: CustomTheme.darkTextColor,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 16,
-        color: CustomTheme.darkTextColor,
-      ),
-      bodySmall: TextStyle(
-        fontSize: 14,
-        color: CustomTheme.darkTextColor,
-      ),
-      // TITLE
-      titleLarge: TextStyle(
-        fontSize: 26,
-        fontWeight: FontWeight.w900,
-        color: CustomTheme.darkTextColor,
-      ),
-      titleMedium: TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: CustomTheme.darkTextColor,
-      ),
-      titleSmall: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: CustomTheme.darkTextColor,
-      ),
-    ),
+  // default font
+  fontFamily: GoogleFonts.rubik().fontFamily,
 
-    // BUTTONS
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
-        textStyle: WidgetStateProperty.all(
-          TextStyle(
-            color: CustomTheme.darkAccent,
-            letterSpacing: 1.5,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+  // app background color
+  scaffoldBackgroundColor: CustomTheme.darkBackground,
+
+  // misc colors
+  shadowColor: Colors.black87,
+
+  // custom color scheme
+  colorScheme: ColorScheme.dark(
+    surface: CustomTheme.darkSurface,
+    onSurface: CustomTheme.darkTextColor,
+    primary: CustomTheme.darkPrimary,
+    onPrimary: CustomTheme.darkTextColor,
+  ),
+
+  // default text themes
+  textTheme: TextTheme(
+    bodyLarge: TextStyle(
+      fontSize: 18,
+      color: CustomTheme.darkTextColor,
     ),
-    textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
-        textStyle: WidgetStateProperty.all(
-          TextStyle(
-            color: CustomTheme.darkAccent,
-            letterSpacing: 1.5,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+    bodyMedium: TextStyle(
+      fontSize: 16,
+      color: CustomTheme.darkTextColor,
     ),
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all(CustomTheme.darkAccent),
-        textStyle: WidgetStateProperty.all(
-          TextStyle(
-            color: CustomTheme.darkAccent,
-            letterSpacing: 1.5,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+    bodySmall: TextStyle(
+      fontSize: 14,
+      color: CustomTheme.darkTextColor,
     ),
-    popupMenuTheme: PopupMenuThemeData(
-      color: CustomTheme.darkPrimary,
-    ));
+    titleLarge: TextStyle(
+      fontSize: 26,
+      fontWeight: FontWeight.w900,
+      color: CustomTheme.darkTextColor,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.bold,
+      color: CustomTheme.darkTextColor,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: CustomTheme.darkTextColor,
+    ),
+  ),
+);
 
 // Light Mode
 ThemeData lightMode = ThemeData(
+  // brightness mode
   brightness: Brightness.light,
+
+  // default font
   fontFamily: GoogleFonts.rubik().fontFamily,
+
+  // app background color
   scaffoldBackgroundColor: CustomTheme.lightBackground,
+
+  // default shadow color
   shadowColor: Colors.black87,
+
+  // custom color scheme
   colorScheme: ColorScheme.light(
     surface: CustomTheme.lightSurface,
-    onSurface: Colors.black87,
+    onSurface: CustomTheme.lightTextColor,
     primary: CustomTheme.lightPrimary,
-    onPrimary: Colors.black87,
+    onPrimary: CustomTheme.lightTextColor,
   ),
-  // TEXT
+
+  // default text themes
   textTheme: TextTheme(
-    // BODY
     bodyLarge: TextStyle(
       fontSize: 18,
       color: CustomTheme.lightTextColor,
@@ -203,7 +202,6 @@ ThemeData lightMode = ThemeData(
       fontSize: 14,
       color: CustomTheme.lightTextColor,
     ),
-    // TITLE
     titleLarge: TextStyle(
       fontSize: 26,
       fontWeight: FontWeight.w900,
@@ -218,39 +216,6 @@ ThemeData lightMode = ThemeData(
       fontSize: 20,
       fontWeight: FontWeight.bold,
       color: CustomTheme.lightTextColor,
-    ),
-  ),
-
-  // BUTTONS
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      iconColor: CustomTheme.lightAccent,
-      textStyle: TextStyle(
-        color: CustomTheme.lightAccent,
-        letterSpacing: 1.5,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ),
-  textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(
-      foregroundColor: CustomTheme.lightAccent,
-      textStyle: TextStyle(
-        color: CustomTheme.lightAccent,
-        letterSpacing: 1.5,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ),
-  outlinedButtonTheme: OutlinedButtonThemeData(
-    style: OutlinedButton.styleFrom(
-      foregroundColor: CustomTheme.lightAccent,
-      side: BorderSide(color: CustomTheme.lightAccent),
-      textStyle: TextStyle(
-        color: CustomTheme.lightAccent,
-        letterSpacing: 1.5,
-        fontWeight: FontWeight.bold,
-      ),
     ),
   ),
 );

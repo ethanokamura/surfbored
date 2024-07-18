@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/utils/theme/theme.dart';
 
+// global method to edit a text field
 Future<void> editTextField(
   BuildContext context,
   String field,

@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 // ui libraries
 import 'package:rando/utils/theme/theme.dart';
 
+/// [ThemeProvider]
+/// this class provides all listeners of changes to the theme
+/// ie switching from light mode to dark mode
+/// notifies the entire app (wraps the main build function)
 class ThemeProvider extends ChangeNotifier {
   // initialized
   ThemeData _themeData = darkMode;
@@ -12,13 +16,13 @@ class ThemeProvider extends ChangeNotifier {
   // is current theme dark?
   bool get isDarkMode => _themeData == darkMode;
 
-  // set theme
+  // set theme method
   set themeData(ThemeData themeData) {
     _themeData = themeData;
     notifyListeners();
   }
 
-  // toggle theme
+  // toggle theme method
   void toggleTheme() {
     themeData = (_themeData == lightMode) ? darkMode : lightMode;
   }

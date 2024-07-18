@@ -5,29 +5,47 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
 
+// FireBase Storage Service Provider
 class StorageService {
-  final logger = Logger();
+  // Constructor
   StorageService() : ref = FirebaseStorage.instance.ref();
   final Reference ref;
-  UploadTask? uploadTask; // Track upload task to cancel if needed
 
-  // create a file
+  // allows us to print errors to the console in a nicer way
+  final logger = Logger();
+
+  // track upload tasks to cancel if needed (helps prevent mem leaks)
+  UploadTask? uploadTask;
+
+  /// Upload A File
+  /// [filepath] the path where the file is located
+  /// [file] the file that needs to be uploaded
   Future<void> uploadFile(String filepath, Uint8List file) async {
     try {
-      UploadTask uploadTask = ref.child(filepath).putData(file);
-      final snapshot = await uploadTask.whenComplete(() => {});
-      await snapshot.ref.getDownloadURL();
+      // assign an upload task var to the new task
+      uploadTask = ref.child(filepath).putData(file);
+      // make sure upload task succeeds
+      if (uploadTask != null) {
+        // get snapshot when the task is complete
+        final snapshot = await uploadTask!.whenComplete(() => {});
+        // download the snapshot
+        await snapshot.ref.getDownloadURL();
+      }
     } catch (e) {
       logger.e("could not upload file. $e");
     }
   }
 
-  // read a file
+  /// Read A File
+  /// [filepath] the path where the file is located
   Future<Uint8List?> getFile(String filepath) async {
     try {
+      // get reference to the file at the given filepath
       final imageRef = ref.child(filepath);
+      // return found data
       return imageRef.getData();
     } on FirebaseException catch (e) {
+      // handle errors
       if (e.code == 'object-not-found') {
         logger.w("No object exists at the desired reference");
       } else {
@@ -39,12 +57,16 @@ class StorageService {
     return null;
   }
 
-  // delete
+  /// Delete A File
+  /// [filepath] the path where the file is located
   Future<void> deleteFile(String filepath) async {
     try {
+      // locate the file
       final imageRef = ref.child(filepath);
+      // delete the file
       await imageRef.delete();
     } on FirebaseException catch (e) {
+      // handle errors
       if (e.code == 'object-not-found') {
         logger.w("No object existss at the desired reference");
       } else {
@@ -55,14 +77,11 @@ class StorageService {
     }
   }
 
-  // cancel task on page leave
+  // Cancel Task
   Future<void> cancelOperation() async {
     try {
       // Cancel any ongoing upload task
-      if (uploadTask != null) {
-        await uploadTask!.cancel();
-        logger.i("Upload task cancelled");
-      }
+      if (uploadTask != null) await uploadTask!.cancel();
     } catch (e) {
       logger.e("Error cancelling upload task: $e");
     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/utils/methods.dart';
 import 'package:rando/utils/theme/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -39,74 +40,56 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   Future<void> showCreateMenu() async {
-    await showModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (context) => Padding(
-        padding: const EdgeInsets.only(
-          top: 20,
-          left: 30,
-          right: 30,
-          bottom: 60,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Create Something:",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).textColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                CustomIconButton(
-                  icon: FontAwesomeIcons.mountain,
-                  label: "Activity",
-                  inverted: true,
-                  size: 40,
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateScreen(type: 'items'),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(width: 20),
-                CustomIconButton(
-                  icon: FontAwesomeIcons.list,
-                  label: "Board",
-                  inverted: true,
-                  size: 40,
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const CreateScreen(type: 'boards'),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            )
-          ],
+    await showBottomModal(context, <Widget>[
+      Text(
+        "Create Something:",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Theme.of(context).textColor,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
         ),
       ),
-    );
+      const SizedBox(height: 20),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          CustomIconButton(
+            icon: FontAwesomeIcons.mountain,
+            label: "Activity",
+            inverted: true,
+            size: 40,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateScreen(type: 'items'),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 20),
+          CustomIconButton(
+            icon: FontAwesomeIcons.list,
+            label: "Board",
+            inverted: true,
+            size: 40,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateScreen(type: 'boards'),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    ]);
     if (context.mounted) setState(() => selectedIndex = 0);
   }
 

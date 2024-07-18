@@ -64,3 +64,27 @@ Future<void> editTextField(
     ),
   );
 }
+
+Future<void> showBottomModal(
+  BuildContext context,
+  List<Widget> children,
+) async {
+  await showModalBottomSheet(
+    context: context,
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    builder: (context) => Padding(
+      padding: const EdgeInsets.only(
+        top: 20,
+        left: 30,
+        right: 30,
+        bottom: 60,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: children,
+      ),
+    ),
+  );
+}

@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rando/pages/activities/add_to_board.dart';
 import 'package:rando/pages/activities/edit_activity.dart';
+import 'package:rando/services/firestore/item_service.dart';
 
 /// [TODO]
 /// add share
@@ -10,10 +12,12 @@ enum ActivityMenu {
   manage,
   share,
   edit,
+  delete,
 }
 
 class ActivityMenuButton extends StatelessWidget {
   final String itemID;
+  final String imgURL;
   final String userID;
   final bool isOwner;
 
@@ -21,6 +25,7 @@ class ActivityMenuButton extends StatelessWidget {
     super.key,
     required this.itemID,
     required this.userID,
+    required this.imgURL,
     required this.isOwner,
   });
 
@@ -73,6 +78,20 @@ class ActivityMenuButton extends StatelessWidget {
               ],
             ),
           ),
+        if (isOwner)
+          const PopupMenuItem(
+            value: ActivityMenu.delete,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(CupertinoIcons.delete),
+                SizedBox(width: 10),
+                Text("Delete"),
+              ],
+            ),
+          ),
       ],
       onSelected: (value) {
         switch (value) {
@@ -100,6 +119,10 @@ class ActivityMenuButton extends StatelessWidget {
                 builder: (context) => EditActivityScreen(itemID: itemID),
               ),
             );
+            break;
+          // delete activity
+          case ActivityMenu.delete:
+            ItemService().deleteItem(userID, itemID, imgURL);
             break;
           default:
             break;

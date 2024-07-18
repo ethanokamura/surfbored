@@ -163,26 +163,56 @@ class ItemService {
 
   /// Delete [Item]:
   Future<void> deleteItem(String userID, String itemID, String imgPath) async {
+    // reference to the item
+    var userRef = db.collection('users').doc(userID);
+    var itemRef = db.collection('items').doc(itemID);
     try {
-      // reference to the item
-      var userRef = db.collection('users').doc(userID);
-      var itemRef = db.collection('items').doc(itemID);
-      await db.runTransaction((transaction) async {
-        // check if the user is the owner of the item
-        var itemSnapshot = await transaction.get(itemRef);
-        if (!itemSnapshot.exists || itemSnapshot.data()?['uid'] != userID) {
-          throw Exception("Unauthorized delete attempt.");
-        }
-        // delete photo
-        storage.deleteFile(imgPath);
-        // remove item from 'items collection'
-        transaction.delete(itemRef);
-        // update user's item list
-        var userSnapshot = await transaction.get(userRef);
-        List<String> items = List.from(userSnapshot.data()?['items'] ?? []);
-        items.remove(itemID);
-        transaction.update(userRef, {'items': items});
-      });
+      WriteBatch batch = db.batch();
+      DocumentSnapshot userSnapshot = await userRef.get();
+      DocumentSnapshot itemSnapshot = await itemRef.get();
+
+      // throw errors
+      if (!userSnapshot.exists) throw Exception("User does not exists!");
+      if (!itemSnapshot.exists) throw Exception("Board does not exists!");
+
+      // delete image
+      if (imgPath != '') await storage.deleteFile(imgPath);
+
+      // delete item ref
+      batch.delete(itemRef);
+
+      // find all boards that contain the item
+      QuerySnapshot boardsSnapshot = await db
+          .collection('boards')
+          .where('items', arrayContains: itemID)
+          .get();
+
+      // remove item reference from each board
+      for (QueryDocumentSnapshot boardDoc in boardsSnapshot.docs) {
+        Map<String, dynamic> boardData =
+            boardDoc.data() as Map<String, dynamic>;
+        List<String> boardItems = List<String>.from(boardData['items'] ?? []);
+        boardItems.remove(itemID);
+        batch.update(boardDoc.reference, {'items': boardItems});
+      }
+
+      // get user data
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      // remove item from liked items
+      List<String> userLikedItems = userData.containsKey('likedItems')
+          ? List.from(userData['likedItems'])
+          : [];
+      if (userLikedItems.contains(itemID)) userLikedItems.remove(itemID);
+
+      // update user's items list
+      List<String> items = List.from(userData['items'] ?? []);
+      items.remove(itemID);
+      batch.update(userRef, {'items': items});
+
+      // commit changes
+      batch.commit();
     } catch (e) {
       throw Exception("error deleting item: $e");
     }

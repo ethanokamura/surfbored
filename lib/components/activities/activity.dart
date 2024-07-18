@@ -121,6 +121,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                       itemID: itemData.id,
                       userID: user.uid,
                       isOwner: isOwner,
+                      imgURL: itemData.imgURL,
                     ),
                   ],
                 ),

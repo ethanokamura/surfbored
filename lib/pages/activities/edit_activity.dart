@@ -100,6 +100,10 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
     }
   }
 
+  void deleteItem(String userID, String itemID, String imgPath) async {
+    await itemService.deleteItem(userID, itemID, imgPath);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

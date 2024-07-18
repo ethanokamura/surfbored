@@ -1,14 +1,15 @@
 // dart packages
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/create_redirect.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
 import 'package:rando/utils/theme/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// components
+import 'package:rando/components/buttons/icon_button.dart';
 
 // pages
-import 'package:rando/pages/home.dart';
 import 'package:rando/pages/profile/profile.dart';
 
 // ui libraries
@@ -32,30 +33,60 @@ class _MainScreenState extends State<MainScreen> {
     getUserID();
   }
 
-  void navigateBottomNavBar(int index) {
-    setState(() => selectedIndex = index);
-    if (selectedIndex == 1) Navigator.pushNamed(context, '/create');
-  }
-
   void getUserID() {
     setState(() => userID = user.uid);
+  }
+
+  Future<void> showCreateMenu() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
+          "Create Something!",
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
+          ),
+        ),
+        content: Row(
+          children: [
+            CustomIconButton(
+              icon: Icons.add,
+              inverted: true,
+              onTap: () {},
+              label: "Activity",
+            ),
+            CustomIconButton(
+              icon: Icons.add,
+              inverted: true,
+              onTap: () {},
+              label: "Board",
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: [
-          const HomeScreen(),
-          const CreateRedirect(),
-          ProfileScreen(userID: userID),
-        ],
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         type: BottomNavigationBarType.fixed,
-        onTap: navigateBottomNavBar,
+        onTap: (int index) {
+          setState(() => selectedIndex = index);
+          if (selectedIndex == 1) Navigator.pushNamed(context, '/create');
+          if (index == 2) showCreateMenu();
+          if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(userID: userID),
+              ),
+            );
+          }
+        },
         selectedItemColor: Theme.of(context).accentColor,
         backgroundColor: Theme.of(context).colorScheme.surface,
         items: const [

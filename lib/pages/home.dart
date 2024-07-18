@@ -1,5 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/components/bottom_nav_bar.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -85,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

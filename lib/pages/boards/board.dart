@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/components/lists/board_items.dart';
+import 'package:rando/pages/boards/edit_board.dart';
 import 'package:rando/services/firestore/board_service.dart';
 import 'package:rando/services/firestore/user_service.dart';
 import 'package:rando/services/models.dart';
@@ -106,7 +107,13 @@ Widget buildBoardScreen(
               Expanded(
                 child: DefualtButton(
                   inverted: false,
-                  onTap: () {},
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditBoardScreen(boardID: boardData.id),
+                    ),
+                  ),
                   text: "Edit Board",
                 ),
               ),

@@ -20,53 +20,6 @@ class ActivityScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Center(
             child: ActivityWidget(item: item),
-
-            // StreamBuilder<ItemData>(
-            //   stream: itemService.getItemStream(item.id),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return const Center(child: CircularProgressIndicator());
-            //     }
-
-            //     if (!snapshot.hasData || snapshot.data == null) {
-            //       return const Center(child: Text("Item Not Found."));
-            //     }
-
-            //     ItemData itemData = snapshot.data!;
-            //     return SafeArea(
-            //       child: Center(
-            //         child: Padding(
-            //           padding: const EdgeInsets.symmetric(horizontal: 20),
-            //           child: Column(
-            //             mainAxisSize: MainAxisSize.min,
-            //             children: [
-            //               ActivityWidget(item: itemData),
-            //               const SizedBox(height: 20),
-            //               // Row(
-            //               //   children: [
-            //               //     Expanded(
-            //               //       child: DefualtButton(
-            //               //         inverted: false,
-            //               //         onTap: () {},
-            //               //         text: 'X',
-            //               //       ),
-            //               //     ),
-            //               //     const SizedBox(width: 20),
-            //               //     Expanded(
-            //               //       child: DefualtButton(
-            //               //         inverted: true,
-            //               //         onTap: () {},
-            //               //         icon: Icons.favorite,
-            //               //       ),
-            //               //     )
-            //               //   ],
-            //               // )
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     );
-            //   },
           ),
         ),
       ),

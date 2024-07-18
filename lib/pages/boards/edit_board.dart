@@ -25,12 +25,16 @@ class EditBoardScreen extends StatefulWidget {
 class _EditBoardScreenState extends State<EditBoardScreen> {
   // utility references
   BoardService boardService = BoardService();
-  FirestoreService firestoreService = FirestoreService();
   StorageService firebaseStorage = StorageService();
+  FirestoreService firestoreService = FirestoreService();
+
+  // images
+  String imgURL = '';
+  Uint8List? pickedImage;
+  late Uint8List imgBytes;
 
   // text controller
   final textController = TextEditingController();
-  Uint8List? pickedImage;
 
   @override
   void initState() {
@@ -41,8 +45,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
   void dispose() {
     // Dispose controllers
     textController.dispose();
-    firebaseStorage
-        .cancelOperation(); // Example: Cancel any ongoing storage operations
+    firebaseStorage.cancelOperation();
     super.dispose();
   }
 
@@ -84,6 +87,29 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
     }
   }
 
+  void saveImage() async {
+    // upload image to firebase storage
+    if (pickedImage != null) {
+      // convert to jpg
+      final file = await firebaseStorage.convertToJPG(imgBytes);
+
+      // get path
+      String path = 'items/${widget.boardID}/${file.uri.pathSegments.last}';
+
+      // upload file and get photo URL
+      await firebaseStorage.uploadFile(path, file);
+
+      // set photo url to firestore document
+      await firestoreService.setPhotoURL(
+        'items',
+        widget.boardID,
+        path,
+      );
+
+      setState(() => imgURL = path);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +132,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
           } else if (snapshot.hasData) {
             // has data
             BoardData boardData = snapshot.data!;
+            imgURL = boardData.imgURL;
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -117,9 +144,14 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                       EditImage(
                         width: 200,
                         height: 200,
+                        imgURL: imgURL,
                         collection: 'boards',
                         docID: boardData.id,
-                        imgURL: boardData.imgURL,
+                        onFileChanged: (imgBytes) {
+                          setState(() {
+                            this.imgBytes = imgBytes;
+                          });
+                        },
                       ),
                       const SizedBox(height: 20),
                       MyTextBox(

@@ -25,14 +25,19 @@ class EditActivityScreen extends StatefulWidget {
 class _EditActivityScreenState extends State<EditActivityScreen> {
   // utility references
   ItemService itemService = ItemService();
-  FirestoreService firestoreService = FirestoreService();
   StorageService firebaseStorage = StorageService();
+  FirestoreService firestoreService = FirestoreService();
+
+  // images
+  String imgURL = '';
+  Uint8List? pickedImage;
+  late Uint8List imgBytes;
+
+  // variables
+  List<String> tags = [];
 
   // text controller
   final textController = TextEditingController();
-  Uint8List? pickedImage;
-
-  List<String> tags = [];
 
   @override
   void initState() {
@@ -43,8 +48,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
   void dispose() {
     // Dispose controllers
     textController.dispose();
-    firebaseStorage
-        .cancelOperation(); // Example: Cancel any ongoing storage operations
+    firebaseStorage.cancelOperation();
     super.dispose();
   }
 
@@ -126,6 +130,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
           } else if (snapshot.hasData) {
             // has data
             ItemData itemData = snapshot.data!;
+            imgURL = itemData.imgURL;
             tags = itemData.tags;
             return SafeArea(
               child: Padding(
@@ -138,9 +143,14 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                       EditImage(
                         width: 200,
                         height: 200,
-                        docID: itemData.id,
+                        imgURL: imgURL,
                         collection: 'items',
-                        imgURL: itemData.imgURL,
+                        docID: itemData.id,
+                        onFileChanged: (imgBytes) {
+                          setState(() {
+                            this.imgBytes = imgBytes;
+                          });
+                        },
                       ),
                       const SizedBox(height: 20),
                       MyTextBox(

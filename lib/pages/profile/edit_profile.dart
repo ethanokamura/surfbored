@@ -1,14 +1,18 @@
 // dart packages
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/models.dart';
 import 'package:rando/services/firestore/user_service.dart';
 
 // components
 import 'package:rando/components/images/edit_image.dart';
 import 'package:rando/components/text/text_box.dart';
+import 'package:rando/services/storage.dart';
 import 'package:rando/utils/methods.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -20,21 +24,32 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   // firestore service
-  UserService userService = UserService();
-  var user = AuthService().user!;
-  final textController = TextEditingController();
+  FirestoreService firestoreService = FirestoreService();
 
-  // logout user
-  void logOut({context}) async {
-    await AuthService().signOut();
-    // reset navigation stack
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-  }
+  // storage service
+  StorageService storageService = StorageService();
+
+  // user
+  var user = AuthService().user!;
+  UserService userService = UserService();
+
+  // images
+  String imgURL = '';
+  Uint8List? pickedImage;
+  late Uint8List imgBytes;
+
+  // Placeholder data for new item
+  String usernameText = 'username';
+  String nameText = 'name';
+  String bioText = 'bio';
+
+  // text controller
+  final textController = TextEditingController();
 
   // dynamic input length maximum
   int maxInputLength(String field) {
-    if (field == "title") return 20;
-    if (field == "description") return 150;
+    if (field == "username") return 20;
+    if (field == "bio") return 150;
     return 50;
   }
 
@@ -86,6 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           } else if (snapshot.hasData) {
             // has data
             UserData userData = snapshot.data!;
+            imgURL = userData.imgURL;
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -97,9 +113,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       EditImage(
                         width: 200,
                         height: 200,
+                        imgURL: imgURL,
                         collection: 'users',
                         docID: user.uid,
-                        imgURL: userData.imgURL,
+                        onFileChanged: (imgBytes) {
+                          setState(() {
+                            this.imgBytes = imgBytes;
+                          });
+                        },
                       ),
                       const SizedBox(height: 20),
                       MyTextBox(

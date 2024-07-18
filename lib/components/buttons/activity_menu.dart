@@ -20,6 +20,7 @@ class ActivityMenuButton extends StatelessWidget {
   final String imgURL;
   final String userID;
   final bool isOwner;
+  final void Function() onDelete;
 
   const ActivityMenuButton({
     super.key,
@@ -27,6 +28,7 @@ class ActivityMenuButton extends StatelessWidget {
     required this.userID,
     required this.imgURL,
     required this.isOwner,
+    required this.onDelete,
   });
 
   @override
@@ -97,6 +99,7 @@ class ActivityMenuButton extends StatelessWidget {
         switch (value) {
           // add to or remove from board
           case ActivityMenu.manage:
+            Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -113,6 +116,7 @@ class ActivityMenuButton extends StatelessWidget {
             break;
           // edit activity
           case ActivityMenu.edit:
+            Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -122,7 +126,9 @@ class ActivityMenuButton extends StatelessWidget {
             break;
           // delete activity
           case ActivityMenu.delete:
+            Navigator.pop(context);
             ItemService().deleteItem(userID, itemID, imgURL);
+            onDelete;
             break;
           default:
             break;

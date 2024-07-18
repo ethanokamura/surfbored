@@ -1,9 +1,12 @@
 // dart packages
+import 'dart:io';
 import 'dart:typed_data';
 
 // utils
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 
 // FireBase Storage Service Provider
 class StorageService {
@@ -20,19 +23,21 @@ class StorageService {
   /// Upload A File
   /// [filepath] the path where the file is located
   /// [file] the file that needs to be uploaded
-  Future<void> uploadFile(String filepath, Uint8List file) async {
+  Future<String> uploadFile(String filePath, File file) async {
     try {
       // assign an upload task var to the new task
-      uploadTask = ref.child(filepath).putData(file);
+      uploadTask = ref.child(filePath).putFile(file);
       // make sure upload task succeeds
-      if (uploadTask != null) {
-        // get snapshot when the task is complete
-        final snapshot = await uploadTask!.whenComplete(() => {});
-        // download the snapshot
-        await snapshot.ref.getDownloadURL();
-      }
+      if (uploadTask == null) throw Exception("Upload Task is null.");
+      // get snapshot when the task is complete
+      final snapshot = await uploadTask!.whenComplete(() => {});
+      // download the snapshot
+      final fileURL = await snapshot.ref.getDownloadURL();
+      // return file URL
+      return fileURL;
     } catch (e) {
       logger.e("could not upload file. $e");
+      return '';
     }
   }
 
@@ -85,5 +90,19 @@ class StorageService {
     } catch (e) {
       logger.e("Error cancelling upload task: $e");
     }
+  }
+
+  Future<File> convertToJPG(Uint8List bytes) async {
+    // decode image
+    img.Image? image = img.decodeImage(bytes);
+
+    // make sure the image is decoded
+    if (image == null) throw Exception("error coverting to jpg");
+
+    // save the jpg image to a file
+    List<int> jpgBytes = img.encodeJpg(image);
+    String dir = (await getTemporaryDirectory()).path;
+    File jpgFile = File('$dir/coverImage.jpg');
+    return await jpgFile.writeAsBytes(jpgBytes);
   }
 }

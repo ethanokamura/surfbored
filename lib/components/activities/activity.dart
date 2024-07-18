@@ -120,6 +120,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                   userID: user.uid,
                   isOwner: isOwner,
                   imgURL: widget.item.imgURL,
+                  onDelete: () => Navigator.pop(context),
                 ),
               ],
             ),

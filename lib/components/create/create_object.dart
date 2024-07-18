@@ -1,6 +1,7 @@
 // dart packages
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:rando/components/images/upload_image.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -13,7 +14,6 @@ import 'package:rando/utils/methods.dart';
 
 // components
 import 'package:rando/components/lists/tag_list.dart';
-import 'package:rando/components/images/upload_image.dart';
 import 'package:rando/components/text/input_field.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 
@@ -30,11 +30,14 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   var user = AuthService().user!;
   ItemService itemService = ItemService();
   BoardService boardService = BoardService();
+  StorageService storageService = StorageService();
   FirestoreService firestoreService = FirestoreService();
   StorageService firebaseStorage = StorageService();
 
   // text controller
   final textController = TextEditingController();
+
+  // images
   Uint8List? pickedImage;
 
   // Placeholder data for new item
@@ -42,7 +45,8 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   String descriptionText = 'description';
   String tagsText = 'tags';
   List<String> tags = [];
-  String id = '';
+  String docID = '';
+  String imgURL = '';
 
   @override
   void initState() {
@@ -94,7 +98,7 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
     try {
       // create a new post to get the itemID
       if (widget.type == 'items') {
-        id = await itemService.createItem(ItemData(
+        docID = await itemService.createItem(ItemData(
           title: titleText,
           description: descriptionText,
           uid: user.uid,
@@ -102,19 +106,20 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
           likes: 0,
         ));
       } else if (widget.type == 'boards') {
-        id = await boardService.createBoard(BoardData(
+        docID = await boardService.createBoard(BoardData(
           title: titleText,
           description: descriptionText,
           uid: user.uid,
           likes: 0,
         ));
       }
-      // upload image to firebase
+      // upload image to firebase storage
       if (pickedImage != null) {
         // Save the converted image
-        String imageURL = '${widget.type}/$id/coverImage.png';
-        await firebaseStorage.uploadFile(imageURL, pickedImage!);
-        await firestoreService.setPhotoURL(widget.type, id, 'coverImage.png');
+        final jpg = await firebaseStorage.convertToJPG(pickedImage!);
+        String path = '${widget.type}/$docID/${jpg.uri.pathSegments.last}';
+        await firebaseStorage.uploadFile(path, jpg);
+        await firestoreService.setPhotoURL(widget.type, docID, path);
       }
       // if (mounted) Navigator.pop(context);
       if (mounted) {
@@ -145,7 +150,6 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        // edit image
         UploadImageWidget(
           width: 200,
           height: 200,

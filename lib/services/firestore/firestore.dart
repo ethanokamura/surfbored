@@ -20,14 +20,13 @@ class FirestoreService {
   FirestoreService();
 
   Future<void> setPhotoURL(
-    String collectionName,
+    String collection,
     String docID,
-    String filepath,
+    String imgURL,
   ) async {
-    var ref = db.collection(collectionName).doc(docID);
+    var ref = db.collection(collection).doc(docID);
     // save photoURL in user doc
-    await ref.set({'imgURL': '$collectionName/$docID/$filepath'},
-        SetOptions(merge: true));
+    await ref.set({'imgURL': imgURL}, SetOptions(merge: true));
   }
 
   Stream<int> getLikesStream(String collection, String docID) {

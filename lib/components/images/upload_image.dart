@@ -2,11 +2,14 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rando/components/buttons/icon_button.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rando/utils/global.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:rando/utils/methods.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
@@ -40,20 +43,65 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     getImage();
   }
 
-  Future<void> onImageTapped() async {
+  Future selectPhoto() async {
+    await showBottomModal(
+      context,
+      <Widget>[
+        Row(
+          children: [
+            CustomIconButton(
+              icon: Icons.camera_alt_outlined,
+              label: "Camera",
+              inverted: true,
+              size: 40,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.camera);
+              },
+            ),
+            CustomIconButton(
+              icon: Icons.photo_library_outlined,
+              label: "Photo Library",
+              inverted: true,
+              size: 40,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     try {
-      // get image
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      // compress image
+      final XFile? pickedFile = await picker.pickImage(
+        source: source,
+        imageQuality: 50,
+      );
 
-      // check mount before setting state
-      if (image == null || !mounted) return;
+      // error picking file
+      if (pickedFile == null || !mounted) return;
+
+      // loading
       setState(() {
         isLoading = true;
       });
 
+      // crop file
+      var file = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      );
+      if (file == null) return;
+
       // convert image
-      final imageBytes = await image.readAsBytes();
+      final imageBytes = await file.readAsBytes();
+
       // check mount before setting state
       if (!mounted) return;
       setState(() {
@@ -109,7 +157,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     return Column(
       children: [
         GestureDetector(
-          onTap: onImageTapped,
+          onTap: selectPhoto,
           child: Container(
             height: 200,
             width: 200,

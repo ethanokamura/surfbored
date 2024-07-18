@@ -3,21 +3,12 @@ import 'dart:async';
 
 // utils
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:logger/logger.dart';
-import 'package:rando/services/storage.dart';
-import 'package:rando/services/auth.dart';
+import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/models.dart';
 
 // Firestore BoardData Service Provider
-class BoardService {
-  // firestore database reference
-  final FirebaseFirestore db = FirebaseFirestore.instance;
-  // fireabase storage reference
-  final StorageService storage = StorageService();
-  // firestore functions for user auth
-  final AuthService auth = AuthService();
-  // handles pretty printing
-  final Logger logger = Logger();
+class BoardService extends FirestoreService {
+  BoardService() : super();
 
   // create board
   Future<String> createBoard(BoardData board) async {

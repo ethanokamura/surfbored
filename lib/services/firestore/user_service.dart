@@ -1,23 +1,17 @@
 // dart packages
 import 'dart:async';
-import 'package:logger/logger.dart';
 
 // utils
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/board_service.dart';
+import 'package:rando/services/firestore/firestore.dart';
 import 'package:rando/services/models.dart';
 
 // Firestore UserData Service Provider
-class UserService {
-  // firestore database reference
-  final FirebaseFirestore db = FirebaseFirestore.instance;
-  // firestore functions for boards
-  final BoardService boardService = BoardService();
-  // firestore functions for user auth
-  final AuthService auth = AuthService();
-  // handles pretty printing
-  final Logger logger = Logger();
+class UserService extends FirestoreService {
+  UserService() : super();
+
+  BoardService boardService = BoardService();
 
   /// check if the given [username] is unique
   /// [returns] a boolean
@@ -175,7 +169,7 @@ class UserService {
   }
 
   // get a list of the user's liked items by ID
-  Future<List<String>> getUserItemLikes(String userID) async {
+  Future<List<String>> getLikedItems(String userID) async {
     try {
       // get reference from database
       var ref = db.collection('users').doc(userID);
@@ -194,7 +188,7 @@ class UserService {
   }
 
   // finds if the user has liked the given item
-  Future<bool> userLikesItem(String userID, String itemID) async {
+  Future<bool> hasUserLikedItem(String userID, String itemID) async {
     try {
       // get reference from database
       var ref = db.collection('users').doc(userID);

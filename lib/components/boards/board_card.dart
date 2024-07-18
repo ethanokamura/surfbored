@@ -26,7 +26,8 @@ class BoardCard extends StatelessWidget {
         horizontal: null,
         vertical: null,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ImageWidget(
               borderRadius: borderRadius,

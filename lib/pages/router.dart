@@ -1,6 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/pages/main_screen.dart';
+import 'package:rando/pages/home.dart';
 import 'package:rando/pages/reroutes/error.dart';
 import 'package:rando/pages/reroutes/loading.dart';
 
@@ -27,7 +27,7 @@ class RouterWidget extends StatelessWidget {
           return const ErrorScreen();
         } else if (snapshot.hasData) {
           // logged in
-          return const MainScreen();
+          return const HomeScreen();
         } else {
           // not logged in
           return const LoginScreen();

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/like_button.dart';
 import 'package:rando/components/buttons/activity_menu.dart';
@@ -22,9 +23,9 @@ class ActivityWidget extends StatefulWidget {
 }
 
 class _ActivityWidgetState extends State<ActivityWidget> {
-  var user = AuthService().user!;
-  UserService userService = UserService();
-  ItemService itemService = ItemService();
+  late UserService userService;
+  late ItemService itemService;
+  late User user;
   bool isLiked = false;
   String username = '';
   bool isOwner = false;
@@ -33,15 +34,13 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   @override
   void initState() {
     super.initState();
+    userService = UserService();
+    itemService = ItemService();
+    user = AuthService().user!;
     checkLiked();
     checkAuth();
     getUsername();
     getLikedBoard();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   Future<void> getLikedBoard() async {
@@ -56,7 +55,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   }
 
   Future<void> checkLiked() async {
-    bool liked = await userService.userLikesItem(user.uid, widget.item.id);
+    bool liked = await userService.hasUserLikedItem(user.uid, widget.item.id);
     if (mounted) setState(() => isLiked = liked);
   }
 
@@ -82,94 +81,88 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   @override
   Widget build(BuildContext context) {
     double spacing = 15;
-    return StreamBuilder<ItemData>(
-      stream: getItemDataStream(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    // return StreamBuilder<ItemData>(
 
-        if (!snapshot.hasData || snapshot.data == null) {
-          return const Center(child: Text("Item Not Found."));
-        }
-
-        ItemData itemData = snapshot.data!;
-        return Center(
-          child: BlockWidget(
-            inverted: false,
-            horizontal: null,
-            vertical: null,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Center(
+      child: BlockWidget(
+        inverted: false,
+        horizontal: null,
+        vertical: null,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      itemData.title,
-                      style: TextStyle(
-                        color: Theme.of(context).textColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                    ),
-                    ActivityMenuButton(
-                      itemID: itemData.id,
-                      userID: user.uid,
-                      isOwner: isOwner,
-                      imgURL: itemData.imgURL,
-                    ),
-                  ],
-                ),
-                SizedBox(height: spacing),
-                ImageWidget(
-                  borderRadius: borderRadius,
-                  imgURL: itemData.imgURL,
-                  height: 256,
-                  width: double.infinity,
-                ),
-                SizedBox(height: spacing),
                 Text(
-                  itemData.description,
+                  widget.item.title,
                   style: TextStyle(
-                    color: Theme.of(context).subtextColor,
+                    color: Theme.of(context).textColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 24,
                   ),
                 ),
-                SizedBox(height: spacing),
-                TagListWidget(tags: itemData.tags),
-                SizedBox(height: spacing),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    LinkWidget(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProfileScreen(userID: itemData.uid),
-                        ),
-                      ),
-                      text: '@$username',
-                    ),
-                    LikeButton(
-                      likes: itemData.likes,
-                      isLiked: isLiked,
-                      onTap: toggleLike,
-                    ),
-                  ],
+                ActivityMenuButton(
+                  itemID: widget.item.id,
+                  userID: user.uid,
+                  isOwner: isOwner,
+                  imgURL: widget.item.imgURL,
                 ),
               ],
             ),
-          ),
-        );
-      },
+            SizedBox(height: spacing),
+            ImageWidget(
+              borderRadius: borderRadius,
+              imgURL: widget.item.imgURL,
+              height: 256,
+              width: double.infinity,
+            ),
+            SizedBox(height: spacing),
+            Text(
+              widget.item.description,
+              style: TextStyle(
+                color: Theme.of(context).subtextColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            SizedBox(height: spacing),
+            TagListWidget(tags: widget.item.tags),
+            SizedBox(height: spacing),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                LinkWidget(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfileScreen(userID: widget.item.uid),
+                    ),
+                  ),
+                  text: '@$username',
+                ),
+                StreamBuilder<int>(
+                  stream: itemService.getLikesStream('items', widget.item.id),
+                  builder: (context, snapshot) {
+                    int likes = snapshot.data ?? widget.item.likes;
+                    return LikeButton(
+                      likes: likes,
+                      isLiked: isLiked,
+                      onTap: toggleLike,
+                    );
+                  },
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

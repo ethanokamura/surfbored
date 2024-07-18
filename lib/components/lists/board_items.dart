@@ -7,7 +7,7 @@ import 'package:rando/services/models.dart';
 import 'package:rando/services/firestore/board_service.dart';
 
 // components
-import 'package:rando/components/activities/item_card.dart';
+import 'package:rando/components/activities/activity_card.dart';
 
 class BoardItemsWidget extends StatefulWidget {
   final String boardID;

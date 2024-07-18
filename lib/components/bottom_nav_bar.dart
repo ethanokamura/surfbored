@@ -7,12 +7,11 @@ import 'package:rando/utils/theme/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // components
-// import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/components/buttons/icon_button.dart';
 
 // pages
 import 'package:rando/pages/profile/profile.dart';
-import 'package:rando/pages/create.dart';
+import 'package:rando/pages/create/create.dart';
 
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -102,41 +101,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     );
                   },
                 ),
-                // Expanded(
-                //   child: DefualtButton(
-                //     icon: FontAwesomeIcons.mountain,
-                //     text: "Activity",
-                //     inverted: true,
-                //     onTap: () {
-                //       Navigator.pop(context);
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) =>
-                //               const CreateScreen(type: 'items'),
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
-                // const SizedBox(width: 20),
-                // Expanded(
-                //   child: DefualtButton(
-                //     icon: FontAwesomeIcons.list,
-                //     text: "Board",
-                //     inverted: true,
-                //     onTap: () {
-                //       Navigator.pop(context);
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) =>
-                //               const CreateScreen(type: 'boards'),
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
               ],
             )
           ],

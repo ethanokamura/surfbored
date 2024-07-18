@@ -6,7 +6,7 @@ import 'package:rando/services/auth.dart';
 import 'package:rando/services/models.dart';
 
 // components
-import 'package:rando/components/activities/item_card.dart';
+import 'package:rando/components/activities/activity_card.dart';
 import 'package:rando/services/firestore/user_service.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 

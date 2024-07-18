@@ -3,7 +3,7 @@ import 'package:rando/components/buttons/like_button.dart';
 import 'package:rando/components/buttons/activity_menu.dart';
 import 'package:rando/components/block.dart';
 import 'package:rando/components/lists/tag_list.dart';
-import 'package:rando/components/link.dart';
+import 'package:rando/components/buttons/link.dart';
 import 'package:rando/pages/profile/profile.dart';
 import 'package:rando/services/auth.dart';
 import 'package:rando/services/firestore/item_service.dart';

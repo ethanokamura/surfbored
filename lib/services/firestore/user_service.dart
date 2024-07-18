@@ -44,16 +44,17 @@ class UserService extends FirestoreService {
   }
 
   /// save username to user doc
-  Future<void> saveUsername(String uid, String username) async {
+  Future<void> saveUsername(String username) async {
     // get current user and a reference to their firestore doc
-    var userRef = db.collection('users').doc(uid);
-    var usernameRef = db.collection('usernames').doc(uid);
+    var user = auth.user!;
+    var userRef = db.collection('users').doc(user.uid);
+    var usernameRef = db.collection('usernames').doc(user.uid);
     try {
       // create batch
       WriteBatch batch = db.batch();
 
       // save the username in a separate collection for quick lookup
-      batch.set(usernameRef, {'username': username, 'uid': uid});
+      batch.set(usernameRef, {'username': username, 'uid': user.uid});
 
       // save username in user doc
       batch.set(
@@ -71,39 +72,30 @@ class UserService extends FirestoreService {
 
   // create new firestore document for user
   Future<void> createUser(String username) async {
-    // get current user and a reference to their firestore doc
+    // authenticate user
     var user = auth.user!;
-    var userRef = db.collection('users').doc(user.uid);
-    var usernameRef = db.collection('usernames').doc(user.uid);
+    // grab reference from firestore
+    var ref = db.collection('users').doc(user.uid);
     try {
-      WriteBatch batch = db.batch();
-
-      // save the username in a separate collection for quick lookup
-      batch.set(usernameRef, {
+      // set username in usernames collection
+      await db.collection('usernames').doc(user.uid).set({
         'username': username,
         'uid': user.uid,
       });
-
-      // create new UserData object to store userdata
+      // create default data
       UserData data = UserData(
         uid: user.uid,
         username: username,
       );
-
-      // set values for user in firestore
-      batch.set(userRef, data.toJson());
-
-      // create liked board and get ID
+      // set data
+      await ref.set(data.toJson());
+      // create likedItemsBoardID
       String boardID = await boardService.createBoard(BoardData(
         title: "Liked Activities:",
         description: "A collection of activities you have liked!",
       ));
-
-      // set user's likedItemsBoardID to the result
-      batch.update(userRef, {'likedItemsBoardID': boardID});
-
-      // commit changes
-      batch.commit();
+      // update user doc
+      await ref.update({'likedItemsBoardID': boardID});
     } catch (e) {
       logger.e("Error creating user data $e");
     }

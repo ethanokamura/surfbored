@@ -1,5 +1,6 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 
 // utils
 import 'package:rando/services/firestore/user_service.dart';
@@ -77,9 +78,10 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             if (isLoading)
               const CircularProgressIndicator()
             else
-              ElevatedButton(
-                onPressed: submitUsername,
-                child: const Text("Submit"),
+              DefualtButton(
+                inverted: true,
+                onTap: submitUsername,
+                text: "Confirm",
               ),
           ],
         ),

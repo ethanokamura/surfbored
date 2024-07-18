@@ -138,7 +138,8 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                       EditImage(
                         width: 200,
                         height: 200,
-                        itemID: itemData.id,
+                        docID: itemData.id,
+                        collection: 'items',
                         imgURL: itemData.imgURL,
                       ),
                       const SizedBox(height: 20),

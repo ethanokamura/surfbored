@@ -27,7 +27,7 @@ class CreateObjectWidget extends StatefulWidget {
 
 class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   // utility references
-  var user = AuthService().user;
+  var user = AuthService().user!;
   ItemService itemService = ItemService();
   BoardService boardService = BoardService();
   FirestoreService firestoreService = FirestoreService();
@@ -97,7 +97,7 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
         id = await itemService.createItem(ItemData(
           title: titleText,
           description: descriptionText,
-          uid: user!.uid,
+          uid: user.uid,
           tags: tags,
           likes: 0,
         ));
@@ -105,7 +105,7 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
         id = await boardService.createBoard(BoardData(
           title: titleText,
           description: descriptionText,
-          uid: user!.uid,
+          uid: user.uid,
           likes: 0,
         ));
       }

@@ -13,15 +13,17 @@ import 'package:rando/utils/theme/theme.dart';
 
 class EditImage extends StatefulWidget {
   final String imgURL;
-  final String itemID;
+  final String docID;
+  final String collection;
   final double height;
   final double width;
   const EditImage({
     super.key,
-    required this.imgURL,
-    required this.itemID,
-    required this.height,
     required this.width,
+    required this.height,
+    required this.docID,
+    required this.collection,
+    required this.imgURL,
   });
 
   @override
@@ -60,9 +62,15 @@ class _EditImageState extends State<EditImage> {
       // convert image
       final imageBytes = await image.readAsBytes();
 
-      firestoreService.setPhotoURL('items', widget.itemID, 'coverImage.png');
+      firestoreService.setPhotoURL(
+        widget.collection,
+        widget.docID,
+        'coverImage.png',
+      );
       await storage.uploadFile(
-          'items/${widget.itemID}/coverImage.png', imageBytes);
+        '${widget.collection}/${widget.docID}/coverImage.png',
+        imageBytes,
+      );
       setState(() {
         pickedImage = imageBytes;
         isLoading = false;
@@ -121,44 +129,52 @@ class _EditImageState extends State<EditImage> {
           image: pickedImage != null
               ? DecorationImage(
                   fit: BoxFit.cover,
-                  image: Image.memory(
-                    pickedImage!,
-                    fit: BoxFit.cover,
-                  ).image,
+                  image: MemoryImage(pickedImage!),
                 )
               : null,
         ),
         child: Center(
           child: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+              ? loadingWidget(context)
               : pickedImage == null
-                  ? Center(
-                      child: Container(
-                        height: widget.height,
-                        width: widget.width,
-                        decoration: BoxDecoration(
-                          borderRadius: borderRadius,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        child: Center(
-                          child: Container(
-                            height: widget.height / 2,
-                            width: widget.width / 2,
-                            decoration: BoxDecoration(
-                              borderRadius: borderRadius,
-                              image: DecorationImage(
-                                image: AssetImage(
-                                    Theme.of(context).defaultImagePath),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
+                  ? errorWidget(context)
                   : null,
+        ),
+      ),
+    );
+  }
+
+  Widget loadingWidget(BuildContext context) {
+    return Container(
+      height: widget.height,
+      width: widget.width,
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      child: const Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Widget errorWidget(BuildContext context) {
+    return Container(
+      height: widget.height,
+      width: widget.width,
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      child: Center(
+        child: Container(
+          height: widget.height / 4,
+          width: widget.width == double.infinity ? 64 : widget.width / 4,
+          decoration: BoxDecoration(
+            borderRadius: borderRadius,
+            image: DecorationImage(
+              image: AssetImage(Theme.of(context).defaultImagePath),
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
       ),
     );

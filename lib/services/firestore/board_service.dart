@@ -206,7 +206,7 @@ class BoardService extends FirestoreService {
       boards.remove(boardID);
 
       // update user doc
-      batch.update(userRef, {'items': boards, 'likedBoards': likedBoards});
+      batch.update(userRef, {'boards': boards, 'likedBoards': likedBoards});
 
       // commit changes
       batch.commit();

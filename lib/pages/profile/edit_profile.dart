@@ -7,7 +7,7 @@ import 'package:rando/services/models.dart';
 import 'package:rando/services/firestore/user_service.dart';
 
 // components
-import 'package:rando/components/images/edit_pfp.dart';
+import 'package:rando/components/images/edit_image.dart';
 import 'package:rando/components/text/text_box.dart';
 import 'package:rando/utils/methods.dart';
 
@@ -94,9 +94,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      EditProfilePicture(
+                      EditImage(
                         width: 200,
                         height: 200,
+                        collection: 'users',
+                        docID: user.uid,
                         imgURL: userData.imgURL,
                       ),
                       const SizedBox(height: 20),

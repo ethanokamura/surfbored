@@ -1,6 +1,7 @@
 // dart packages
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
 
 // utils
 import 'package:rando/services/firestore/firestore.dart';
@@ -116,7 +117,8 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                       EditImage(
                         width: 200,
                         height: 200,
-                        itemID: boardData.id,
+                        collection: 'boards',
+                        docID: boardData.id,
                         imgURL: boardData.imgURL,
                       ),
                       const SizedBox(height: 20),
@@ -132,6 +134,15 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                         onPressed: () => editField('description'),
                       ),
                       const SizedBox(height: 20),
+                      DefualtButton(
+                        inverted: true,
+                        text: "Delete Board",
+                        onTap: () => boardService.deleteBoard(
+                          boardData.uid,
+                          boardData.id,
+                          boardData.imgURL,
+                        ),
+                      )
                     ],
                   ),
                 ),

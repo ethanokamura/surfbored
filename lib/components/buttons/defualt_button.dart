@@ -49,6 +49,9 @@ class DefualtButton extends StatelessWidget {
                   size: 18,
                 )
               : const SizedBox.shrink(),
+          text != null && icon != null
+              ? const SizedBox(width: 10)
+              : const SizedBox.shrink(),
           text != null
               ? Text(
                   text!,

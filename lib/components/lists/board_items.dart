@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
+import 'package:rando/services/models.dart';
 import 'package:rando/services/firestore/board_service.dart';
 
 // components
@@ -23,14 +24,10 @@ class _BoardItemsWidgetState extends State<BoardItemsWidget> {
 
   var currentUser = AuthService().user;
 
-  Future<List<String>> getItemIds() async {
-    return await boardService.getBoardItemsID(widget.boardID);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: getItemIds(),
+    return StreamBuilder<List<ItemData>>(
+      stream: boardService.readBoardItemStream(widget.boardID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -38,8 +35,8 @@ class _BoardItemsWidgetState extends State<BoardItemsWidget> {
           return Center(child: Text("error: ${snapshot.error.toString()}"));
         } else if (snapshot.hasData) {
           // data found
-          List<String> itemIDs = snapshot.data!;
-          if (itemIDs.isEmpty) {
+          List<ItemData> items = snapshot.data!;
+          if (items.isEmpty) {
             return const Center(
               child: Text("User has not created an activity yet!"),
             );
@@ -47,10 +44,10 @@ class _BoardItemsWidgetState extends State<BoardItemsWidget> {
             return Wrap(
               spacing: 20,
               runSpacing: 20,
-              children: itemIDs.map((itemID) {
+              children: items.map((item) {
                 return SizedBox(
                   width: MediaQuery.of(context).size.width / 2 - 30,
-                  child: ItemCardWidget(itemID: itemID),
+                  child: ItemCardWidget(item: item),
                 );
               }).toList(),
             );

@@ -1,6 +1,5 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/pages/create.dart';
 
 // utils
 import 'package:rando/services/auth.dart';
@@ -8,10 +7,12 @@ import 'package:rando/utils/theme/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // components
-import 'package:rando/components/buttons/defualt_button.dart';
+// import 'package:rando/components/buttons/defualt_button.dart';
+import 'package:rando/components/buttons/icon_button.dart';
 
 // pages
 import 'package:rando/pages/profile/profile.dart';
+import 'package:rando/pages/create.dart';
 
 // ui libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,44 +40,105 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   Future<void> showCreateMenu() async {
-    await showDialog(
+    await showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text(
-          "Create Something:",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Theme.of(context).textColor,
-          ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.only(
+          top: 20,
+          left: 30,
+          right: 30,
+          bottom: 60,
         ),
-        content: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            DefualtButton(
-              icon: FontAwesomeIcons.mountain,
-              text: "Activity",
-              inverted: true,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateScreen(type: 'items'),
-                ),
+            Text(
+              "Create Something:",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).textColor,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            DefualtButton(
-              icon: FontAwesomeIcons.list,
-              text: "Board",
-              inverted: true,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateScreen(type: 'boards'),
+            const SizedBox(height: 20),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                CustomIconButton(
+                  icon: FontAwesomeIcons.mountain,
+                  label: "Activity",
+                  inverted: true,
+                  size: 40,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateScreen(type: 'items'),
+                      ),
+                    );
+                  },
                 ),
-              ),
-            ),
+                const SizedBox(width: 20),
+                CustomIconButton(
+                  icon: FontAwesomeIcons.list,
+                  label: "Board",
+                  inverted: true,
+                  size: 40,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const CreateScreen(type: 'boards'),
+                      ),
+                    );
+                  },
+                ),
+                // Expanded(
+                //   child: DefualtButton(
+                //     icon: FontAwesomeIcons.mountain,
+                //     text: "Activity",
+                //     inverted: true,
+                //     onTap: () {
+                //       Navigator.pop(context);
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) =>
+                //               const CreateScreen(type: 'items'),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
+                // const SizedBox(width: 20),
+                // Expanded(
+                //   child: DefualtButton(
+                //     icon: FontAwesomeIcons.list,
+                //     text: "Board",
+                //     inverted: true,
+                //     onTap: () {
+                //       Navigator.pop(context);
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) =>
+                //               const CreateScreen(type: 'boards'),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
+              ],
+            )
           ],
         ),
       ),

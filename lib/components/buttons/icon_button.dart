@@ -6,10 +6,12 @@ class CustomIconButton extends StatelessWidget {
   final IconData icon;
   final bool inverted;
   final String? label;
+  final double? size;
   final void Function()? onTap;
   const CustomIconButton({
     super.key,
     this.label,
+    this.size,
     required this.icon,
     required this.inverted,
     required this.onTap,
@@ -38,10 +40,19 @@ class CustomIconButton extends StatelessWidget {
             color: inverted
                 ? Theme.of(context).inverseTextColor
                 : Theme.of(context).textColor,
-            size: 18,
+            size: size ?? 15,
           ),
         ),
-        label != null ? Text("$label") : const SizedBox.shrink(),
+        label != null ? const SizedBox(height: 5) : const SizedBox.shrink(),
+        label != null
+            ? Text(
+                "$label",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).textColor,
+                ),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }

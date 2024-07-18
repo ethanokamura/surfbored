@@ -5,21 +5,18 @@ import 'package:rando/services/firestore/item_service.dart';
 import 'package:rando/services/models.dart';
 
 class ActivityScreen extends StatelessWidget {
-  final String itemID;
-  const ActivityScreen({super.key, required this.itemID});
-
-  Future<ItemData> getItemData() async {
-    return await ItemService().getItem(itemID);
-  }
+  final ItemData item;
+  const ActivityScreen({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
+    ItemService itemService = ItemService();
     return Scaffold(
       appBar: AppBar(
-          // title: Text(item.title),
-          ),
-      body: FutureBuilder<ItemData>(
-        future: getItemData(),
+        title: Text(item.title),
+      ),
+      body: StreamBuilder<ItemData>(
+        stream: itemService.getItemStream(item.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

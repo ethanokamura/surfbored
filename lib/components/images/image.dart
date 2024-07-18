@@ -10,12 +10,12 @@ class ImageWidget extends StatefulWidget {
   final BorderRadius borderRadius;
 
   const ImageWidget({
-    Key? key,
+    super.key,
     required this.imgURL,
     required this.height,
     required this.width,
     required this.borderRadius,
-  }) : super(key: key);
+  });
 
   @override
   State<ImageWidget> createState() => _ImageWidgetState();

@@ -14,8 +14,9 @@ import 'package:rando/services/firestore/user_service.dart';
 // components
 import 'package:rando/components/lists/items_list.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
-import 'package:rando/components/images/circle_image.dart';
-// import 'package:rando/components/images/image.dart';
+// import 'package:rando/components/images/circle_image.dart';
+import 'package:rando/components/images/image.dart';
+import 'package:rando/utils/global.dart';
 
 // ui libraries
 import 'package:rando/utils/theme/theme.dart';
@@ -148,10 +149,11 @@ Widget nestedUserProfile(
               ],
             ),
             const SizedBox(width: 20),
-            CircleImageWidget(
+            ImageWidget(
               imgURL: userData.imgURL,
               width: 96,
               height: 96,
+              borderRadius: borderRadius,
             ),
             const SizedBox(width: 20),
             Column(

@@ -25,58 +25,61 @@ class _ItemListWidgetState extends State<ItemListWidget> {
 
   var currentUser = AuthService().user!;
 
-  Future<UserData> getUserData() async {
-    return await userService.getUserData(widget.userID);
+  Future<void> refreshItems() async {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<ItemData>>(
-      stream: userService.readUserItemStream(widget.userID),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text("error: ${snapshot.error.toString()}"));
-        } else if (snapshot.hasData) {
-          // data found
-          List<ItemData> items = snapshot.data!;
-          if (widget.userID == currentUser.uid && items.isEmpty) {
-            return Column(
-              children: [
-                const Text("You have not created any activities yet!"),
-                const SizedBox(height: 15),
-                DefualtButton(
-                  inverted: false,
-                  text: "Create an activity!",
-                  onTap: () => Navigator.pushNamed(context, '/create'),
+    return RefreshIndicator(
+      onRefresh: refreshItems,
+      child: StreamBuilder<List<ItemData>>(
+        stream: userService.readUserItemStream(widget.userID),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("error: ${snapshot.error.toString()}"));
+          } else if (snapshot.hasData) {
+            // data found
+            List<ItemData> items = snapshot.data!;
+            if (widget.userID == currentUser.uid && items.isEmpty) {
+              return ListView(
+                children: [
+                  const Text("You have not created any activities yet!"),
+                  const SizedBox(height: 15),
+                  DefualtButton(
+                    inverted: false,
+                    text: "Create an activity!",
+                    onTap: () => Navigator.pushNamed(context, '/create'),
+                  ),
+                ],
+              );
+            } else if (widget.userID != currentUser.uid && items.isEmpty) {
+              return const Center(
+                child: Text("User has not created an activity yet!"),
+              );
+            } else {
+              return GridView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
                 ),
-              ],
-            );
-          } else if (widget.userID != currentUser.uid && items.isEmpty) {
-            return const Center(
-              child: Text("User has not created an activity yet!"),
-            );
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  ItemData item = items[index];
+                  return ItemCardWidget(item: item);
+                },
+              );
+            }
           } else {
-            return GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-              ),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                ItemData item = items[index];
-                return ItemCardWidget(item: item);
-              },
-            );
+            // data is empty..
+            return const Text("No Lists Found in Firestore. Check Database");
           }
-        } else {
-          // data is empty..
-          return const Text("No Lists Found in Firestore. Check Database");
-        }
-      },
+        },
+      ),
     );
   }
 }

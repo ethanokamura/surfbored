@@ -74,6 +74,15 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     );
   }
 
+  // Future<void> refreshData() async {
+  //   await checkLiked();
+  //   await checkAuth();
+  //   await getUsername();
+  //   await getLikedBoard();
+  //   // trigger reload
+  //   setState(() {});
+  // }
+
   Stream<ItemData> getItemDataStream() {
     return itemService.getItemStream(widget.item.id);
   }

@@ -32,38 +32,38 @@ class _BoardListWidgetState extends State<BoardListWidget> {
   }
 
   Future<void> refreshData() async {
-    await getBoardData();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<BoardData>>(
-      stream: getBoardData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text("error: ${snapshot.error.toString()}"));
-        } else if (snapshot.hasData) {
-          // data found
-          List<BoardData> boards = snapshot.data!;
-          return RefreshIndicator(
-            onRefresh: refreshData,
-            child: ListView.separated(
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 10),
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: boards.length,
-                itemBuilder: (context, index) {
-                  BoardData board = boards[index];
-                  return BoardCard(board: board);
-                }),
-          );
-        } else {
-          // data is empty..
-          return const Text("No Lists Found in Firestore. Check Database");
-        }
-      },
+    return RefreshIndicator(
+      onRefresh: refreshData,
+      child: StreamBuilder<List<BoardData>>(
+        stream: getBoardData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("error: ${snapshot.error.toString()}"));
+          } else if (snapshot.hasData) {
+            // data found
+            List<BoardData> boards = snapshot.data!;
+            return ListView.separated(
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: boards.length,
+              itemBuilder: (context, index) {
+                BoardData board = boards[index];
+                return BoardCard(board: board);
+              },
+            );
+          } else {
+            // data is empty..
+            return const Text("No Lists Found in Firestore. Check Database");
+          }
+        },
+      ),
     );
   }
 }

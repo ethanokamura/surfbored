@@ -9,13 +9,13 @@ import 'dart:math';
 // utils
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rando/pages/main_screen.dart';
 import 'package:rando/services/firestore/user_service.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:rando/utils/global.dart';
 import 'package:logger/logger.dart';
 
 // pages
+import 'package:rando/pages/home.dart';
 import 'package:rando/pages/profile/create_profile.dart';
 
 // implementing firebase auth
@@ -151,7 +151,7 @@ class AuthService {
       if (hasUsername) {
         navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
           MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => const MainScreen()),
+              builder: (BuildContext context) => const HomeScreen()),
         );
       } else {
         navigatorKey.currentState!.pushReplacement<dynamic, Object?>(

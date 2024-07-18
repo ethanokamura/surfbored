@@ -187,4 +187,10 @@ class ItemService {
       throw Exception("error deleting item: $e");
     }
   }
+
+  Future<ItemData> getItem(String itemID) async {
+    var ref = db.collection('items').doc(itemID);
+    var snapshot = await ref.get();
+    return ItemData.fromJson(snapshot.data() ?? {});
+  }
 }

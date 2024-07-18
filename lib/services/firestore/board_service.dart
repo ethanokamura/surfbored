@@ -89,6 +89,13 @@ class BoardService {
     });
   }
 
+  Future<List<String>> getBoardItemsID(String boardID) async {
+    var ref = db.collection('boards').doc(boardID);
+    var snapshot = await ref.get();
+    List<String> items = snapshot['items'];
+    return items.toList();
+  }
+
   Stream<List<BoardData>> getAllBoardStream() {
     return db.collection('boards').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => BoardData.fromFirestore(doc)).toList();

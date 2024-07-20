@@ -71,7 +71,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               );
             },
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 40),
           CustomIconButton(
             icon: FontAwesomeIcons.list,
             label: "Board",

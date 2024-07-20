@@ -1,25 +1,26 @@
 // dart packages
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+// utils
+import 'package:rando/utils/global.dart';
+import 'package:rando/services/auth.dart';
+import 'package:rando/services/models.dart';
+import 'package:rando/services/firestore/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// components
+import 'package:rando/components/lists/items_list.dart';
+import 'package:rando/components/buttons/defualt_button.dart';
+import 'package:rando/components/images/image.dart';
 import 'package:rando/components/anon_wall.dart';
 import 'package:rando/components/lists/board_list.dart';
 import 'package:rando/components/tab_bar/tab.dart';
 import 'package:rando/components/tab_bar/tab_bar.dart';
 
-// utils
-import 'package:rando/services/auth.dart';
-import 'package:rando/services/models.dart';
-import 'package:rando/services/firestore/user_service.dart';
-
-// components
-import 'package:rando/components/lists/items_list.dart';
-import 'package:rando/components/buttons/defualt_button.dart';
-// import 'package:rando/components/images/circle_image.dart';
-import 'package:rando/components/images/image.dart';
-import 'package:rando/utils/global.dart';
-
 // ui libraries
 import 'package:rando/utils/theme/theme.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String userID;
@@ -34,13 +35,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   UserService userService = UserService();
   User currentUser = AuthService().user!;
   bool isCurrentUser = false;
-  String profileUsername = '';
 
   @override
   void initState() {
     super.initState();
     checkAuth();
-    setUsername();
   }
 
   Future<void> checkAuth() async {
@@ -60,11 +59,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> setUsername() async {
-    String username = await userService.getUsername(widget.userID);
-    setState(() => profileUsername = username);
-  }
-
   // Stream to listen for changes in user data
   Stream<UserData> getUserDataStream() {
     return userService.getUserStream(widget.userID);
@@ -73,14 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // backgroundColor: Colors.transparent,
-        title: Text(
-          '@$profileUsername',
-          style: TextStyle(color: Theme.of(context).accentColor),
-        ),
-        backgroundColor: Colors.transparent,
-      ),
       body: currentUser.isAnonymous
           ? const AnonWallWidget(message: "Login To See Your Profile")
           : StreamBuilder<UserData>(
@@ -127,125 +113,168 @@ Widget nestedUserProfile(
   double spacing = 15;
   List<Widget> profileData(BuildContext context) {
     return [
-      Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "${userData.following.length}",
-                  style: const TextStyle(
+      Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              DefualtButton(
+                horizontal: 0,
+                vertical: 0,
+                inverted: false,
+                onTap: () => Navigator.pop(context),
+                icon: CupertinoIcons.back,
+              ),
+              const SizedBox(width: 5),
+              Expanded(
+                child: AutoSizeText(
+                  '@${userData.username}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textDirection: TextDirection.ltr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "following",
-                  style: TextStyle(color: Theme.of(context).subtextColor),
-                ),
-              ],
-            ),
-            const SizedBox(width: 20),
-            ImageWidget(
-              imgURL: userData.imgURL,
-              width: 96,
-              height: 96,
-              borderRadius: borderRadius,
-            ),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              const SizedBox(width: 5),
+              DefualtButton(
+                horizontal: 0,
+                vertical: 0,
+                inverted: false,
+                onTap: () => Navigator.pop(context),
+                icon: CupertinoIcons.gear_alt_fill,
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "${userData.followers.length}",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "${userData.following.length}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "following",
+                      style: TextStyle(color: Theme.of(context).subtextColor),
+                    ),
+                  ],
                 ),
-                Text(
-                  "followers",
-                  style: TextStyle(
-                    color: Theme.of(context).subtextColor,
-                  ),
+                const SizedBox(width: 20),
+                ImageWidget(
+                  imgURL: userData.imgURL,
+                  width: 96,
+                  height: 96,
+                  borderRadius: borderRadius,
+                ),
+                const SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${userData.followers.length}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "followers",
+                      style: TextStyle(
+                        color: Theme.of(context).subtextColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-      SizedBox(height: spacing),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          userData.name != ''
-              ? Text(
-                  userData.name,
-                  style: TextStyle(
-                    color: Theme.of(context).textColor,
-                  ),
+          ),
+          SizedBox(height: spacing),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              userData.name != ''
+                  ? Text(
+                      userData.name,
+                      style: TextStyle(
+                        color: Theme.of(context).textColor,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              userData.website != ''
+                  ? Text(
+                      userData.website,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              userData.bio != ''
+                  ? Text(
+                      userData.bio,
+                      style: TextStyle(
+                        color: Theme.of(context).subtextColor,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ],
+          ),
+          SizedBox(height: spacing),
+          isCurrentUser
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: DefualtButton(
+                        inverted: false,
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/user_settings'),
+                        text: "Edit Profile",
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: DefualtButton(
+                        inverted: false,
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/user_settings'),
+                        text: "Share Profile",
+                      ),
+                    ),
+                  ],
                 )
-              : const SizedBox.shrink(),
-          userData.website != ''
-              ? Text(
-                  userData.website,
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                  ),
-                )
-              : const SizedBox.shrink(),
-          userData.bio != ''
-              ? Text(
-                  userData.bio,
-                  style: TextStyle(
-                    color: Theme.of(context).subtextColor,
-                  ),
-                )
-              : const SizedBox.shrink(),
+              : Row(
+                  children: [
+                    Expanded(
+                      // add follow button
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Follow"),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Message"),
+                      ),
+                    ),
+                  ],
+                ),
+          SizedBox(height: spacing),
         ],
       ),
-      SizedBox(height: spacing),
-      isCurrentUser
-          ? Row(
-              children: [
-                Expanded(
-                  child: DefualtButton(
-                    inverted: false,
-                    onTap: () => Navigator.pushNamed(context, '/user_settings'),
-                    text: "Edit Profile",
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: DefualtButton(
-                    inverted: false,
-                    onTap: () => Navigator.pushNamed(context, '/user_settings'),
-                    text: "Share Profile",
-                  ),
-                ),
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(
-                  // add follow button
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("Follow"),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("Message"),
-                  ),
-                ),
-              ],
-            ),
-      SizedBox(height: spacing),
     ];
   }
 

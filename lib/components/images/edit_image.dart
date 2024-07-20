@@ -1,11 +1,9 @@
 // dart packages
-// import 'dart:io';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/icon_button.dart';
-// import 'package:path/path.dart' as p;
-// import 'package:path_provider/path_provider.dart';
-// import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 // import 'package:image/image.dart' as img;
 
 // utils
@@ -134,9 +132,6 @@ class _EditImageState extends State<EditImage> {
       );
       if (file == null) return;
 
-      // compress image
-      // final compressedImage = await compressImage(file.path, 35);
-
       // convert image
       final imageBytes = await file.readAsBytes();
 
@@ -146,6 +141,10 @@ class _EditImageState extends State<EditImage> {
       // get path
       String path =
           '${widget.collection}/${widget.docID}/${jpgFile.uri.pathSegments.last}';
+
+      // compress image
+      // final compressedImage = await compressImage(jpgFile, path, 35) as File;
+      // await storageService.uploadFile(path, compressedImage);
 
       // upload file and get photo URL
       await storageService.uploadFile(path, jpgFile);
@@ -182,23 +181,17 @@ class _EditImageState extends State<EditImage> {
     }
   }
 
-  // Future<File> compressImage(String path, int quality) async {
-  //   // create new path
-  //   final newPath = p.join(
-  //     (await getTemporaryDirectory()).path,
-  //     '${DateTime.now()}.${p.extension(path)}',
-  //   );
+  Future<XFile> compressImage(File file, String targetPath, int quality) async {
+    // get result
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: quality,
+    );
 
-  //   // get result
-  //   final result = await FlutterImageCompress.compressAndGetFile(
-  //     path,
-  //     newPath,
-  //     quality: quality,
-  //   );
-
-  //   // return result
-  //   return result;
-  // }
+    // return result
+    return result!;
+  }
 
   @override
   void dispose() {

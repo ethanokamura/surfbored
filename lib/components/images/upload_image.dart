@@ -2,7 +2,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rando/components/buttons/icon_button.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
@@ -10,6 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rando/utils/global.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:rando/utils/methods.dart';
+
+// components
+import 'package:rando/components/buttons/icon_button.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';

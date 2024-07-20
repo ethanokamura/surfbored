@@ -24,6 +24,8 @@
   <string>Microphone Access Required</string>
   <key>NSMotionUsageDescription</key>
   <string>Motion Usage Required</string>
+  <key>NSCameraUsageDescription</key>
+  <string>This app requires access to the camera.</string>
   <key>NSPhotoLibraryAddUsageDescription</key>
   <string>Please allow access to photo library so you can easily upload your photos.</string>
   <key>NSPhotoLibraryUsageDescription</key>

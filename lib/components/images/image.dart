@@ -28,15 +28,25 @@ class _ImageWidgetState extends State<ImageWidget> {
   @override
   void initState() {
     super.initState();
-    _imageFuture = _fetchImage();
+    _imageFuture = _fetchImage(widget.imgURL);
   }
 
-  Future<Uint8List?> _fetchImage() async {
-    if (widget.imgURL.isEmpty) {
+  @override
+  void didUpdateWidget(covariant ImageWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imgURL != widget.imgURL) {
+      setState(() {
+        _imageFuture = _fetchImage(widget.imgURL);
+      });
+    }
+  }
+
+  Future<Uint8List?> _fetchImage(String path) async {
+    if (path.isEmpty) {
       return null;
     } else {
       try {
-        return await _storage.getFile(widget.imgURL);
+        return await _storage.getFile(path);
       } catch (e) {
         return null;
       }

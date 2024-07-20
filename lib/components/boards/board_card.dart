@@ -17,7 +17,10 @@ class BoardCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BoardScreen(board: board),
+            builder: (context) => BoardScreen(
+              boardID: board.id,
+              userID: board.uid,
+            ),
           ),
         );
       },

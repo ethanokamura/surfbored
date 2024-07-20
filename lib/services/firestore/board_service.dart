@@ -83,10 +83,24 @@ class BoardService extends FirestoreService {
   }
 
   // get a list of all the items in a board
-  Future<List<ItemData>> readBoardItems(String boardID) async {
+  Future<List<String>> getItemIDs(String boardID) async {
     var boardRef = db.collection('boards').doc(boardID);
     var boardSnapshot = await boardRef.get();
 
+    return List.from(boardSnapshot.data()?['items'] ?? []);
+    // List<String> itemItDs = List.from(boardSnapshot.data()?['items'] ?? []);
+    // var itemRefs = itemIDs.map((id) => db.collection('items').doc(id)).toList();
+    // var itemSnapshots = await Future.wait(itemRefs.map((ref) => ref.get()));
+
+    // return itemSnapshots
+    //     .map((snapshot) => ItemData.fromFirestore(snapshot))
+    //     .toList();
+  }
+
+  // get a list of all the items in a board
+  Future<List<ItemData>> getBoardItems(String boardID) async {
+    var boardRef = db.collection('boards').doc(boardID);
+    var boardSnapshot = await boardRef.get();
     List<String> itemIDs = List.from(boardSnapshot.data()?['items'] ?? []);
     var itemRefs = itemIDs.map((id) => db.collection('items').doc(id)).toList();
     var itemSnapshots = await Future.wait(itemRefs.map((ref) => ref.get()));

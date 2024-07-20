@@ -74,23 +74,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     );
   }
 
-  // Future<void> refreshData() async {
-  //   await checkLiked();
-  //   await checkAuth();
-  //   await getUsername();
-  //   await getLikedBoard();
-  //   // trigger reload
-  //   setState(() {});
-  // }
-
-  Stream<ItemData> getItemDataStream() {
-    return itemService.getItemStream(widget.item.id);
-  }
-
   @override
   Widget build(BuildContext context) {
     double spacing = 15;
-    // return StreamBuilder<ItemData>(
 
     return Center(
       child: BlockWidget(
@@ -131,7 +117,6 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               height: 256,
               width: double.infinity,
             ),
-            SizedBox(height: spacing),
             Text(
               widget.item.description,
               style: TextStyle(

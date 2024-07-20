@@ -74,7 +74,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
                 pickImage(ImageSource.camera);
               },
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 40),
             CustomIconButton(
               icon: Icons.photo_library_outlined,
               label: "Library",

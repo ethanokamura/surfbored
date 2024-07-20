@@ -40,6 +40,9 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   // images
   Uint8List? pickedImage;
 
+  // loader
+  bool isLoading = false;
+
   // Placeholder data for new item
   String titleText = 'title';
   String descriptionText = 'description';
@@ -95,6 +98,9 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
 
   // post data to firebase and pop screen
   void createItem() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       // create a new post to get the itemID
       if (widget.type == 'items') {
@@ -121,6 +127,9 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
         await firebaseStorage.uploadFile(path, jpg);
         await firestoreService.setPhotoURL(widget.type, docID, path);
       }
+      setState(() {
+        isLoading = false;
+      });
       // if (mounted) Navigator.pop(context);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -148,54 +157,56 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        UploadImageWidget(
-          width: 200,
-          height: 200,
-          imgURL: '',
-          onImagePicked: (image) {
-            setState(() {
-              pickedImage = image;
-            });
-          },
-        ),
-        const SizedBox(height: 20),
-        // edit title
-        MyInputField(
-          label: "title",
-          text: titleText,
-          onPressed: () => editField("title"),
-        ),
-        const SizedBox(height: 20),
-        // edit description
-        MyInputField(
-          label: "info",
-          text: descriptionText,
-          onPressed: () => editField("description"),
-        ),
-        const SizedBox(height: 20),
-        // edit tags
-        if (widget.type == 'items')
-          Column(
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView(
             children: [
-              MyInputField(
-                label: "tags",
-                text: tagsText,
-                onPressed: () => editField("tags"),
+              UploadImageWidget(
+                width: 200,
+                height: 200,
+                imgURL: '',
+                onImagePicked: (image) {
+                  setState(() {
+                    pickedImage = image;
+                  });
+                },
               ),
               const SizedBox(height: 20),
-              TagListWidget(tags: tags),
+              // edit title
+              MyInputField(
+                label: "title",
+                text: titleText,
+                onPressed: () => editField("title"),
+              ),
+              const SizedBox(height: 20),
+              // edit description
+              MyInputField(
+                label: "info",
+                text: descriptionText,
+                onPressed: () => editField("description"),
+              ),
+              const SizedBox(height: 20),
+              // edit tags
+              if (widget.type == 'items')
+                Column(
+                  children: [
+                    MyInputField(
+                      label: "tags",
+                      text: tagsText,
+                      onPressed: () => editField("tags"),
+                    ),
+                    const SizedBox(height: 20),
+                    TagListWidget(tags: tags),
+                  ],
+                ),
+              const SizedBox(height: 20),
+              // edit post
+              DefualtButton(
+                inverted: true,
+                onTap: createItem,
+                text: "Create",
+              )
             ],
-          ),
-        const SizedBox(height: 20),
-        // edit post
-        DefualtButton(
-          inverted: true,
-          onTap: createItem,
-          text: "Create",
-        )
-      ],
-    );
+          );
   }
 }

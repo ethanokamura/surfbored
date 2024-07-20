@@ -49,7 +49,20 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     await showBottomModal(
       context,
       <Widget>[
+        Text(
+          "Select Media:",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).textColor,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 20),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: [
             CustomIconButton(
               icon: Icons.camera_alt_outlined,
@@ -61,9 +74,10 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
                 pickImage(ImageSource.camera);
               },
             ),
+            const SizedBox(width: 20),
             CustomIconButton(
               icon: Icons.photo_library_outlined,
-              label: "Photo Library",
+              label: "Library",
               inverted: true,
               size: 40,
               onTap: () {

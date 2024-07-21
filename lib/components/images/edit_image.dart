@@ -1,29 +1,33 @@
 // dart packages
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/icon_button.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-// import 'package:image/image.dart' as img;
+import 'package:rando/components/images/image.dart';
 
 // utils
-import 'package:rando/services/firestore/firestore.dart';
-import 'package:rando/services/storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:rando/utils/global.dart';
 import 'package:rando/utils/methods.dart';
+import 'package:rando/services/storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:rando/services/firestore/firestore.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+
+// components
+// import 'package:rando/components/images/image.dart';
+import 'package:rando/components/buttons/icon_button.dart';
 
 // ui
 import 'package:rando/utils/theme/theme.dart';
 
 class EditImage extends StatefulWidget {
-  final String imgURL;
+  final String? imgURL;
   final String docID;
   final String collection;
   final double height;
   final double width;
-  final Function(Uint8List file) onFileChanged;
+  final Function(String url) onFileChanged;
   const EditImage({
     super.key,
     required this.width,
@@ -40,41 +44,41 @@ class EditImage extends StatefulWidget {
 
 class _EditImageState extends State<EditImage> {
   // variables
-  StorageService storageService = StorageService();
+  StorageService storage = StorageService();
   FirestoreService firestoreService = FirestoreService();
-  Uint8List? pickedImage;
-  bool isLoading = true;
-
   final ImagePicker picker = ImagePicker();
+
+  Uint8List? pickedImage;
   String? imageURL;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    print(widget.imgURL);
-    getImage();
+    getImageURL(widget.imgURL);
   }
 
-  Future<void> getImage() async {
-    if (widget.imgURL == '') {
+  Future<void> getImageURL(String? path) async {
+    if (path == null) {
       setState(() {
-        pickedImage = null;
-        isLoading = false;
+        imageURL = null;
       });
     } else {
-      try {
-        final imageBytes = await storageService.getFile(widget.imgURL);
-        setState(() {
-          pickedImage = imageBytes;
-          isLoading = false;
-        });
-      } catch (e) {
-        setState(() {
-          pickedImage = null;
-          isLoading = false;
-        });
+      if (path.isNotEmpty) {
+        try {
+          setState(() {
+            imageURL = path;
+          });
+        } catch (e) {
+          setState(() {
+            imageURL = null;
+          });
+        }
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future selectPhoto() async {
@@ -139,48 +143,49 @@ class _EditImageState extends State<EditImage> {
         isLoading = true;
       });
 
+      // get original filename
+      final filename = pickedFile.path.split('/').last;
+
       // crop file
-      var file = await ImageCropper().cropImage(
+      var croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       );
-      if (file == null) return;
 
-      // convert image
-      final imageBytes = await file.readAsBytes();
-
-      // convert to jpg
-      final jpgFile = await storageService.convertToJPG(imageBytes);
-
-      // get path
-      String path =
-          '${widget.collection}/${widget.docID}/${jpgFile.uri.pathSegments.last}';
+      if (croppedFile == null) return;
 
       // compress image
-      // final compressedImage = await compressImage(jpgFile, path, 35) as File;
-      // await storageService.uploadFile(path, compressedImage);
+      final compressedImage = await compressImage(File(croppedFile.path));
 
-      // upload file and get photo URL
-      await storageService.uploadFile(path, jpgFile);
+      print("in edit screen, $filename has been compressed");
 
-      // set photo url to firestore document
-      await firestoreService.setPhotoURL(
+      // failed compression
+      if (compressedImage == null) throw Exception("Image compression failed");
+
+      // get path
+      String path = '${widget.collection}/${widget.docID}/$filename';
+
+      print("in edit screen, uploading compressed image at path $path");
+
+      // upload image
+      final uploadURL = await firestoreService.uploadImage(
+        compressedImage,
+        path,
         widget.collection,
         widget.docID,
-        path,
       );
+
+      if (uploadURL == null) throw Exception("error uploading");
 
       // set state
       setState(() {
-        imageURL = path;
-        pickedImage = imageBytes;
+        imageURL = uploadURL;
+        pickedImage = compressedImage.readAsBytesSync();
         isLoading = false;
       });
 
       // return new fileURL
-      widget.onFileChanged(imageBytes);
-
-      // await uploadFile(file.path);
+      widget.onFileChanged(uploadURL);
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -195,21 +200,31 @@ class _EditImageState extends State<EditImage> {
     }
   }
 
-  Future<XFile> compressImage(File file, String targetPath, int quality) async {
+  Future<File?> compressImage(File file) async {
+    // get path
+    final filePath = file.absolute.path;
+    final lastIndex = filePath.lastIndexOf('.');
+    final outPath = '${filePath.substring(0, lastIndex)}_compressed.jpg';
     // get result
-    final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: quality,
-    );
-
-    // return result
-    return result!;
+    try {
+      final result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        outPath,
+        quality: 70,
+      );
+      // return result
+      if (result != null) return File(result.path);
+      print('compression failed: result is null');
+      return null;
+    } catch (e) {
+      print("compression error: $e");
+      return null;
+    }
   }
 
   @override
   void dispose() {
-    storageService.cancelOperation();
+    storage.cancelOperation();
     super.dispose();
   }
 
@@ -217,60 +232,11 @@ class _EditImageState extends State<EditImage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: selectPhoto,
-      child: Container(
+      child: ImageWidget(
         height: widget.height,
         width: widget.width,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-          image: pickedImage != null
-              ? DecorationImage(
-                  fit: BoxFit.cover,
-                  image: MemoryImage(pickedImage!),
-                )
-              : null,
-        ),
-        child: Center(
-          child: isLoading
-              ? loadingWidget(context)
-              : pickedImage == null
-                  ? errorWidget(context)
-                  : null,
-        ),
-      ),
-    );
-  }
-
-  Widget loadingWidget(BuildContext context) {
-    return Container(
-      height: widget.height,
-      width: widget.width,
-      decoration: BoxDecoration(
+        imgURL: imageURL,
         borderRadius: borderRadius,
-      ),
-      child: const Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  Widget errorWidget(BuildContext context) {
-    return Container(
-      height: widget.height,
-      width: widget.width,
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        color: Theme.of(context).colorScheme.primary,
-      ),
-      child: Center(
-        child: Container(
-          height: widget.height / 4,
-          width: widget.width == double.infinity ? 64 : widget.width / 4,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            image: DecorationImage(
-              image: AssetImage(Theme.of(context).defaultImagePath),
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
       ),
     );
   }

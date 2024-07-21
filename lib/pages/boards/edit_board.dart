@@ -1,5 +1,4 @@
 // dart packages
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 
@@ -29,9 +28,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
   FirestoreService firestoreService = FirestoreService();
 
   // images
-  String imgURL = '';
-  Uint8List? pickedImage;
-  late Uint8List imgBytes;
+  String? imgURL;
 
   // text controller
   final textController = TextEditingController();
@@ -87,29 +84,6 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
     }
   }
 
-  void saveImage() async {
-    // upload image to firebase storage
-    if (pickedImage != null) {
-      // convert to jpg
-      final file = await firebaseStorage.convertToJPG(imgBytes);
-
-      // get path
-      String path = 'items/${widget.boardID}/${file.uri.pathSegments.last}';
-
-      // upload file and get photo URL
-      await firebaseStorage.uploadFile(path, file);
-
-      // set photo url to firestore document
-      await firestoreService.setPhotoURL(
-        'items',
-        widget.boardID,
-        path,
-      );
-
-      setState(() => imgURL = path);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,9 +121,9 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                         imgURL: imgURL,
                         collection: 'boards',
                         docID: boardData.id,
-                        onFileChanged: (imgBytes) {
+                        onFileChanged: (url) {
                           setState(() {
-                            this.imgBytes = imgBytes;
+                            imgURL = url;
                           });
                         },
                       ),

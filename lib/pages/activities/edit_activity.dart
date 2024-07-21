@@ -1,5 +1,4 @@
 // dart packages
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 // utils
@@ -29,9 +28,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
   FirestoreService firestoreService = FirestoreService();
 
   // images
-  String imgURL = '';
-  Uint8List? pickedImage;
-  late Uint8List imgBytes;
+  String? imgURL;
 
   // variables
   List<String> tags = [];
@@ -146,9 +143,9 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                         imgURL: imgURL,
                         collection: 'items',
                         docID: itemData.id,
-                        onFileChanged: (imgBytes) {
+                        onFileChanged: (url) {
                           setState(() {
-                            this.imgBytes = imgBytes;
+                            imgURL = url;
                           });
                         },
                       ),

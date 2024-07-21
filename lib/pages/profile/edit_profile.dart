@@ -1,6 +1,4 @@
 // dart packages
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 
 // utils
@@ -35,8 +33,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // images
   String imgURL = '';
-  Uint8List? pickedImage;
-  late Uint8List imgBytes;
 
   // Placeholder data for new item
   String usernameText = 'username';
@@ -113,12 +109,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       EditImage(
                         width: 200,
                         height: 200,
-                        imgURL: imgURL,
+                        imgURL: userData.imgURL,
                         collection: 'users',
                         docID: user.uid,
-                        onFileChanged: (imgBytes) {
+                        onFileChanged: (url) {
                           setState(() {
-                            this.imgBytes = imgBytes;
+                            imgURL = url;
                           });
                         },
                       ),

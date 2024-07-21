@@ -23,12 +23,10 @@ class StorageService {
   /// Upload A File
   /// [filepath] the path where the file is located
   /// [file] the file that needs to be uploaded
-  Future<String> uploadFile(String filePath, File file) async {
+  Future<String> uploadFile(String filepath, File file) async {
     try {
       // assign an upload task var to the new task
-      uploadTask = ref.child(filePath).putFile(file);
-      // make sure upload task succeeds
-      if (uploadTask == null) throw Exception("Upload Task is null.");
+      uploadTask = ref.child(filepath).putFile(file);
       // get snapshot when the task is complete
       final snapshot = await uploadTask!.whenComplete(() => {});
       // download the snapshot
@@ -60,6 +58,30 @@ class StorageService {
       logger.e("unkown error: $e");
     }
     return null;
+  }
+
+  /// Read A File
+  /// [filepath] the path where the file is located
+  Future<String> getFileURL(String filepath) async {
+    try {
+      // get reference to the file at the given filepath
+      final imageRef = ref.child(filepath);
+      // return found data
+      final url = await imageRef.getDownloadURL();
+      // success
+      logger.i("file url retrieved: $url");
+      return url;
+    } on FirebaseException catch (e) {
+      // handle errors
+      if (e.code == 'object-not-found') {
+        logger.w("No object exists at the desired reference");
+      } else {
+        logger.e("could not get file. $e");
+      }
+    } catch (e) {
+      logger.e("unkown error: $e");
+    }
+    return '';
   }
 
   /// Delete A File

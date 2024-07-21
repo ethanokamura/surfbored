@@ -1,14 +1,13 @@
-import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/services/storage.dart';
+// import 'package:rando/services/storage.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ImageWidget extends StatefulWidget {
-  final String imgURL;
+  final String? imgURL;
   final double height;
   final double width;
   final BorderRadius borderRadius;
-
   const ImageWidget({
     super.key,
     required this.imgURL,
@@ -22,52 +21,45 @@ class ImageWidget extends StatefulWidget {
 }
 
 class _ImageWidgetState extends State<ImageWidget> {
-  late Future<Uint8List?> _imageFuture;
-  final StorageService _storage = StorageService();
+  String? imageURL;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _imageFuture = _fetchImage(widget.imgURL);
+    getImageURL(widget.imgURL);
   }
 
-  @override
-  void didUpdateWidget(covariant ImageWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.imgURL != widget.imgURL) {
+  Future<void> getImageURL(String? path) async {
+    if (path == null) {
       setState(() {
-        _imageFuture = _fetchImage(widget.imgURL);
+        imageURL = null;
       });
-    }
-  }
-
-  Future<Uint8List?> _fetchImage(String path) async {
-    if (path.isEmpty) {
-      return null;
     } else {
-      try {
-        return await _storage.getFile(path);
-      } catch (e) {
-        return null;
+      if (path.isNotEmpty) {
+        try {
+          setState(() {
+            imageURL = path;
+          });
+        } catch (e) {
+          setState(() {
+            imageURL = null;
+          });
+        }
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Uint8List?>(
-      future: _imageFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return loadingWidget(context);
-        }
-        if (!snapshot.hasData || snapshot.data == null) {
-          return errorWidget(context);
-        }
-
-        return imageWidget(snapshot.data!);
-      },
-    );
+    return isLoading
+        ? loadingWidget(context)
+        : imageURL != null
+            ? imageWidget(imageURL!)
+            : errorWidget(context);
   }
 
   Widget loadingWidget(BuildContext context) {
@@ -76,7 +68,6 @@ class _ImageWidgetState extends State<ImageWidget> {
       width: widget.width,
       decoration: BoxDecoration(
         borderRadius: widget.borderRadius,
-        color: Theme.of(context).colorScheme.primary,
       ),
       child: const Center(child: CircularProgressIndicator()),
     );
@@ -106,16 +97,21 @@ class _ImageWidgetState extends State<ImageWidget> {
     );
   }
 
-  Widget imageWidget(Uint8List image) {
-    return Container(
-      height: widget.height,
-      width: widget.width,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: widget.borderRadius,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: MemoryImage(image),
+  Widget imageWidget(String data) {
+    return CachedNetworkImage(
+      imageUrl: data,
+      placeholder: (context, url) => loadingWidget(context),
+      errorWidget: (context, url, error) => errorWidget(context),
+      imageBuilder: (context, imageProvider) => Container(
+        height: widget.height,
+        width: widget.width,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: widget.borderRadius,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: imageProvider,
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 // dart packages
 import 'dart:async';
+import 'dart:io';
 
 // utils
 import 'package:logger/logger.dart';
@@ -19,14 +20,23 @@ class FirestoreService {
 
   FirestoreService();
 
-  Future<void> setPhotoURL(
+  Future<String?> uploadImage(
+    File file,
+    String path,
     String collection,
     String docID,
-    String imgURL,
   ) async {
-    var ref = db.collection(collection).doc(docID);
-    // save photoURL in user doc
-    await ref.set({'imgURL': imgURL}, SetOptions(merge: true));
+    try {
+      // get firestore ref
+      var ref = db.collection(collection).doc(docID);
+      // get photoURL
+      String url = await storage.uploadFile(path, file);
+      // save photoURL in user doc
+      await ref.update({'imgURL': url});
+      return url;
+    } catch (e) {
+      return null;
+    }
   }
 
   Stream<int> getLikesStream(String collection, String docID) {

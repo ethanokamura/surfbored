@@ -1,7 +1,10 @@
 // dart packages
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:rando/components/images/image.dart';
+// import 'package:rando/components/images/image.dart';
 
 // utils
 import 'package:rando/services/storage.dart';
@@ -17,8 +20,8 @@ import 'package:rando/components/buttons/icon_button.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class UploadImageWidget extends StatefulWidget {
-  final Function(Uint8List imageBytes) onImagePicked;
-  final String imgURL;
+  final Function(File file, String filename) onFileChanged;
+  final String? imgURL;
   final double height;
   final double width;
   const UploadImageWidget({
@@ -26,7 +29,7 @@ class UploadImageWidget extends StatefulWidget {
     required this.imgURL,
     required this.height,
     required this.width,
-    required this.onImagePicked,
+    required this.onFileChanged,
   });
 
   @override
@@ -36,13 +39,21 @@ class UploadImageWidget extends StatefulWidget {
 class _UploadImageWidgetState extends State<UploadImageWidget> {
   // variables
   StorageService storage = StorageService();
+  final ImagePicker picker = ImagePicker();
   Uint8List? pickedImage;
+  String? imageURL;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    getImage();
+    getImageURL(widget.imgURL);
+  }
+
+  @override
+  void dispose() {
+    storage.cancelOperation();
+    super.dispose();
   }
 
   Future selectPhoto() async {
@@ -91,8 +102,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     );
   }
 
-  Future<void> pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
+  Future pickImage(ImageSource source) async {
     try {
       // compress image
       final XFile? pickedFile = await picker.pickImage(
@@ -108,24 +118,31 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
         isLoading = true;
       });
 
+      // get original filename
+      final filename = pickedFile.path.split('/').last;
+
       // crop file
-      var file = await ImageCropper().cropImage(
+      var croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       );
-      if (file == null) return;
+      if (croppedFile == null) return;
 
-      // convert image
-      final imageBytes = await file.readAsBytes();
+      // compress image
+      final compressedImage = await compressImage(File(croppedFile.path));
+
+      // failed compression
+      // if (compressedImage == null) throw Exception("Image compression failed");
 
       // check mount before setting state
       if (!mounted) return;
       setState(() {
-        pickedImage = imageBytes;
+        pickedImage = compressedImage.readAsBytesSync();
         isLoading = false;
       });
+
       // return image bytes
-      widget.onImagePicked(imageBytes);
+      widget.onFileChanged(compressedImage, filename);
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -140,96 +157,54 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     }
   }
 
-  Future<void> getImage() async {
-    if (widget.imgURL == '') {
-      setState(() {
-        pickedImage = null;
-        isLoading = false;
-      });
-    } else {
-      try {
-        final imageBytes = await storage.getFile(widget.imgURL);
-        setState(() {
-          pickedImage = imageBytes;
-          isLoading = false;
-        });
-      } catch (e) {
-        setState(() {
-          pickedImage = null;
-          isLoading = false;
-        });
-      }
-    }
+  Future<File> compressImage(File file) async {
+    // get path
+    final filePath = file.absolute.path;
+    final lastIndex = filePath.lastIndexOf('.');
+    final outPath = '${filePath.substring(0, lastIndex)}_compressed.jpg';
+    // get result
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      outPath,
+      quality: 70,
+    );
+    // return result
+    return File(result!.path);
   }
 
-  @override
-  void dispose() {
-    storage.cancelOperation(); // Example: Cancel any ongoing storage operations
-    super.dispose();
+  Future<void> getImageURL(String? path) async {
+    if (path == null) {
+      setState(() {
+        imageURL = null;
+      });
+    } else {
+      if (path.isNotEmpty) {
+        try {
+          setState(() {
+            imageURL = path;
+          });
+        } catch (e) {
+          setState(() {
+            imageURL = null;
+          });
+        }
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: selectPhoto,
-          child: Container(
-            height: 200,
-            width: 200,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              image: pickedImage != null
-                  ? DecorationImage(
-                      fit: BoxFit.cover,
-                      image: Image.memory(
-                        pickedImage!,
-                        fit: BoxFit.cover,
-                      ).image,
-                    )
-                  : null,
-            ),
-            child: Center(
-              child: isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : pickedImage == null
-                      ? Center(
-                          child: Container(
-                            height: widget.height,
-                            width: widget.width,
-                            decoration: BoxDecoration(
-                              borderRadius: borderRadius,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            child: Center(
-                              child: Container(
-                                height: widget.height / 2,
-                                width: widget.width / 2,
-                                decoration: BoxDecoration(
-                                  borderRadius: borderRadius,
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        Theme.of(context).defaultImagePath),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      : null,
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        pickedImage == null
-            ? const Center(
-                child: Text("(Tap my face to upload a picture!)"),
-              )
-            : const SizedBox.shrink(),
-      ],
+    return GestureDetector(
+      onTap: selectPhoto,
+      child: ImageWidget(
+        height: widget.height,
+        width: widget.width,
+        imgURL: imageURL,
+        borderRadius: borderRadius,
+      ),
     );
   }
 }

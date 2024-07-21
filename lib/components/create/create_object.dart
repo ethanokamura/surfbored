@@ -1,4 +1,5 @@
 // dart packages
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:rando/components/images/upload_image.dart';
@@ -49,7 +50,10 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   String tagsText = 'tags';
   List<String> tags = [];
   String docID = '';
-  String imgURL = '';
+  String? imgURL;
+
+  File? imageFile;
+  String? filename;
 
   @override
   void initState() {
@@ -120,12 +124,15 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
         ));
       }
       // upload image to firebase storage
-      if (pickedImage != null) {
+      if (imageFile != null && filename != null) {
         // Save the converted image
-        final jpg = await firebaseStorage.convertToJPG(pickedImage!);
-        String path = '${widget.type}/$docID/${jpg.uri.pathSegments.last}';
-        await firebaseStorage.uploadFile(path, jpg);
-        await firestoreService.setPhotoURL(widget.type, docID, path);
+        String path = '${widget.type}/$docID/$filename';
+        await firestoreService.uploadImage(
+          imageFile!,
+          path,
+          widget.type,
+          docID,
+        );
       }
       setState(() {
         isLoading = false;
@@ -164,10 +171,11 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
               UploadImageWidget(
                 width: 200,
                 height: 200,
-                imgURL: '',
-                onImagePicked: (image) {
+                imgURL: imgURL,
+                onFileChanged: (file, filename) {
                   setState(() {
-                    pickedImage = image;
+                    imageFile = file;
+                    this.filename = filename;
                   });
                 },
               ),

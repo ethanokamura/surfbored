@@ -20,7 +20,7 @@ import 'package:rando/pages/profile/create_profile.dart';
 
 // implementing firebase auth
 class AuthService {
-  final Logger logger = Logger();
+  static final Logger _logger = Logger();
 
   // stream of current user's data (async)
   // used when we want to detect auth state change but timing is unknown
@@ -29,6 +29,7 @@ class AuthService {
   // event in which we need the current auth state (sync)
   // gives user a way to create records
   final User? user = FirebaseAuth.instance.currentUser;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // anonymous firebase login
   Future<void> anonLogin() async {
@@ -61,13 +62,68 @@ class AuthService {
       } else {
         errorMessage = 'Error: ${e.message}';
       }
-      logger.e(errorMessage);
+      _logger.e(errorMessage);
+    }
+  }
+
+  /// By default, Firebase will not re-send a new SMS message if it has been recently sent.
+  /// You can however override this behavior by re-calling the verifyPhoneNumber method
+  /// with the resend token to the forceResendingToken argument.
+  /// If successful, the SMS message will be resent.
+
+  // static String _verificationId = '';
+
+  // firebase sign in with phone
+  Future<void> verifyPhone({
+    required String phoneNumber,
+    required void Function(PhoneAuthCredential) verificationCompleted,
+    required void Function(FirebaseAuthException) verificationFailed,
+    required void Function(String, int?) codeSent,
+    required void Function(String) codeAutoRetrievalTimeout,
+  }) async {
+    try {
+      _logger.i("user entered number $phoneNumber waiting on verification");
+      await _auth.verifyPhoneNumber(
+        phoneNumber: "+1$phoneNumber",
+        timeout: const Duration(seconds: 30),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      );
+      _logger.i("$phoneNumber verified");
+    } catch (e) {
+      // catch error
+      _logger.e("Error verifying phone number $e");
+    }
+  }
+
+  Future<void> signInWithOTP(String otp, String? verificationId) async {
+    final credential = PhoneAuthProvider.credential(
+      verificationId: verificationId!,
+      smsCode: otp,
+    );
+    try {
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      await routeUser();
+      _logger.i("Successfully signed in UID: ${userCredential.user?.uid}");
+    } on FirebaseAuthException catch (e) {
+      _logger.e(e.message.toString());
+    } catch (e) {
+      _logger.e(e.toString());
     }
   }
 
   // sign out
-  Future<void> signOut() async {
+  static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  // check auth
+  static Future<bool> isSignedIn() async {
+    var user = AuthService().user;
+    return user != null;
   }
 
   // google firebase login
@@ -90,7 +146,7 @@ class AuthService {
       await routeUser();
     } on FirebaseAuthException catch (e) {
       // handle error
-      logger.e("error: $e");
+      _logger.e("error: $e");
     }
   }
 
@@ -161,7 +217,7 @@ class AuthService {
       }
     } else {
       // handle case where user is null (possibly show a login screen)
-      logger.e("user is null");
+      _logger.e("user is null");
     }
   }
 }

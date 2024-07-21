@@ -14,7 +14,7 @@ class UserSettingsScreen extends StatelessWidget {
 
   // logout user
   void logOut(BuildContext context) async {
-    await AuthService().signOut();
+    await AuthService.signOut();
     // reset navigation stack
     if (context.mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);

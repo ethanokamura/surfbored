@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/block.dart';
 import 'package:rando/components/buttons/check_box.dart';
 import 'package:rando/components/images/image.dart';
-import 'package:rando/services/firestore/board_service.dart';
-import 'package:rando/services/models.dart';
+import 'package:rando/utils/data/firestore/board_service.dart';
+import 'package:rando/utils/data/models.dart';
 import 'package:rando/utils/global.dart';
 import 'package:rando/utils/theme/theme.dart';
 

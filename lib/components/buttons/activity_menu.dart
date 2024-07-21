@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rando/pages/activities/add_to_board.dart';
 import 'package:rando/pages/activities/edit_activity.dart';
-import 'package:rando/services/firestore/item_service.dart';
+import 'package:rando/utils/data/firestore/item_service.dart';
 
 /// [TODO]
 /// add share

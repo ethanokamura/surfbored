@@ -4,8 +4,8 @@ import 'dart:io';
 
 // utils
 import 'package:logger/logger.dart';
-import 'package:rando/services/storage.dart';
-import 'package:rando/services/auth.dart';
+import 'package:rando/utils/data/firebase/storage.dart';
+import 'package:rando/utils/data/firestore/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {

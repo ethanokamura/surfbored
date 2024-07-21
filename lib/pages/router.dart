@@ -5,7 +5,7 @@ import 'package:rando/pages/reroutes/error.dart';
 import 'package:rando/pages/reroutes/loading.dart';
 
 // utils
-import 'package:rando/services/auth.dart';
+import 'package:rando/utils/data/firestore/auth_service.dart';
 
 // pages
 import 'package:rando/pages/login.dart';

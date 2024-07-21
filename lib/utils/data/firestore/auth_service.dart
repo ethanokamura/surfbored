@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // utils
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:rando/services/firestore/user_service.dart';
+import 'package:rando/utils/data/firestore/user_service.dart';
 import 'package:rando/utils/global.dart';
 import 'package:logger/logger.dart';
 

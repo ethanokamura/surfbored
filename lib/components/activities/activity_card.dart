@@ -3,7 +3,7 @@ import 'package:rando/components/block.dart';
 // import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/pages/activities/activity.dart';
-import 'package:rando/services/models.dart';
+import 'package:rando/utils/data/models.dart';
 import 'package:rando/utils/theme/theme.dart';
 
 class ItemCardWidget extends StatelessWidget {

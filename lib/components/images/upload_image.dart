@@ -7,7 +7,7 @@ import 'package:rando/components/images/image.dart';
 // import 'package:rando/components/images/image.dart';
 
 // utils
-import 'package:rando/services/storage.dart';
+import 'package:rando/utils/data/firebase/storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rando/utils/global.dart';
 import 'package:image_cropper/image_cropper.dart';

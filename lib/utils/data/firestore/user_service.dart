@@ -3,9 +3,9 @@ import 'dart:async';
 
 // utils
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rando/services/firestore/board_service.dart';
-import 'package:rando/services/firestore/firestore.dart';
-import 'package:rando/services/models.dart';
+import 'package:rando/utils/data/firestore/board_service.dart';
+import 'package:rando/utils/data/firestore/firestore.dart';
+import 'package:rando/utils/data/models.dart';
 
 // Firestore UserData Service Provider
 class UserService extends FirestoreService {

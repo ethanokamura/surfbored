@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // utils
-import 'package:rando/services/firestore/firestore.dart';
-import 'package:rando/services/firestore/item_service.dart';
-import 'package:rando/services/models.dart';
-import 'package:rando/services/storage.dart';
+import 'package:rando/utils/data/firestore/firestore.dart';
+import 'package:rando/utils/data/firestore/item_service.dart';
+import 'package:rando/utils/data/models.dart';
+import 'package:rando/utils/data/firebase/storage.dart';
 import 'package:rando/utils/methods.dart';
 
 // components

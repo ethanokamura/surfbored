@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
-import 'package:rando/services/auth.dart';
+import 'package:rando/utils/data/firestore/auth_service.dart';
 
 class AnonWallWidget extends StatelessWidget {
   final String message;

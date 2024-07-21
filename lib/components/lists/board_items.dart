@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // utils
-import 'package:rando/services/auth.dart';
-import 'package:rando/services/models.dart';
-import 'package:rando/services/firestore/board_service.dart';
+import 'package:rando/utils/data/firestore/auth_service.dart';
+import 'package:rando/utils/data/models.dart';
+import 'package:rando/utils/data/firestore/board_service.dart';
 
 // components
 import 'package:rando/components/activities/activity_card.dart';

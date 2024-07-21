@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 
 // utils
-import 'package:rando/services/firestore/user_service.dart';
+import 'package:rando/utils/data/firestore/user_service.dart';
 
 class CreateProfilePage extends StatefulWidget {
   const CreateProfilePage({super.key});

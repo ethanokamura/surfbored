@@ -8,10 +8,10 @@ import 'package:rando/components/images/image.dart';
 // utils
 import 'package:rando/utils/global.dart';
 import 'package:rando/utils/methods.dart';
-import 'package:rando/services/storage.dart';
+import 'package:rando/utils/data/firebase/storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:rando/services/firestore/firestore.dart';
+import 'package:rando/utils/data/firestore/firestore.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 // components

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rando/components/create/create_object.dart';
+import 'package:rando/pages/create/create_object.dart';
 // import 'package:rando/components/tab_bar/tab.dart';
 // import 'package:rando/components/tab_bar/tab_bar.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/bottom_nav_bar.dart';
 
 // utils
-import 'package:rando/services/auth.dart';
+import 'package:rando/utils/data/firestore/auth_service.dart';
 
 // components
 import 'package:rando/components/buttons/defualt_button.dart';

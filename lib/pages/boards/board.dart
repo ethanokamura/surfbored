@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 import 'package:rando/components/images/image.dart';
 import 'package:rando/components/lists/board_items.dart';
-import 'package:rando/pages/boards/activity_feed.dart';
+import 'package:rando/pages/boards/shuffle_items.dart';
 import 'package:rando/pages/boards/edit_board.dart';
-import 'package:rando/services/firestore/board_service.dart';
-import 'package:rando/services/firestore/user_service.dart';
-import 'package:rando/services/models.dart';
+import 'package:rando/utils/data/firestore/board_service.dart';
+import 'package:rando/utils/data/firestore/user_service.dart';
+import 'package:rando/utils/data/models.dart';
 import 'package:rando/utils/global.dart';
 import 'package:rando/utils/theme/theme.dart';
 
@@ -174,7 +174,7 @@ Widget buildBoardScreen(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ActivityFeedScreen(boardID: boardData.id),
+                            ShuffleItemScreen(boardID: boardData.id),
                       ),
                     ),
                     text: "Shuffle",

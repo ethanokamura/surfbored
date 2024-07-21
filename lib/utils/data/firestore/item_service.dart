@@ -3,8 +3,8 @@ import 'dart:async';
 
 // utils
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rando/services/firestore/firestore.dart';
-import 'package:rando/services/models.dart';
+import 'package:rando/utils/data/firestore/firestore.dart';
+import 'package:rando/utils/data/models.dart';
 
 // Firestore ItemData Service Provider
 class ItemService extends FirestoreService {

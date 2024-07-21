@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rando/components/activities/activity.dart';
-import 'package:rando/services/firestore/item_service.dart';
-import 'package:rando/services/models.dart';
+import 'package:rando/utils/data/firestore/item_service.dart';
+import 'package:rando/utils/data/models.dart';
 
 class ActivityFeedWidget extends StatefulWidget {
   const ActivityFeedWidget({super.key});

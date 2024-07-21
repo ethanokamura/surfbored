@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:rando/components/buttons/defualt_button.dart';
 
 // utils
-import 'package:rando/services/firestore/firestore.dart';
-import 'package:rando/services/models.dart';
-import 'package:rando/services/storage.dart';
+import 'package:rando/utils/data/firestore/firestore.dart';
+import 'package:rando/utils/data/models.dart';
+import 'package:rando/utils/data/firebase/storage.dart';
 import 'package:rando/utils/methods.dart';
-import 'package:rando/services/firestore/board_service.dart';
+import 'package:rando/utils/data/firestore/board_service.dart';
 
 // components
 import 'package:rando/components/images/edit_image.dart';

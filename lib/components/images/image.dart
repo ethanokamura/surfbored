@@ -30,6 +30,16 @@ class _ImageWidgetState extends State<ImageWidget> {
     getImageURL(widget.imgURL);
   }
 
+  // invoked when the parent widget rebuilds
+  // passes a new instance of the widget to the existing state object
+  @override
+  void didUpdateWidget(covariant ImageWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imgURL != widget.imgURL) {
+      getImageURL(widget.imgURL);
+    }
+  }
+
   Future<void> getImageURL(String? path) async {
     if (path == null) {
       setState(() {

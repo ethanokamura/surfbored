@@ -111,18 +111,22 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               ],
             ),
             SizedBox(height: spacing),
-            ImageWidget(
-              borderRadius: borderRadius,
-              imgURL: widget.item.imgURL,
-              height: 256,
-              width: double.infinity,
+            Hero(
+              tag: widget.item.imgURL,
+              child: ImageWidget(
+                borderRadius: borderRadius,
+                imgURL: widget.item.imgURL,
+                height: 256,
+                width: double.infinity,
+              ),
             ),
+            const SizedBox(height: 20),
             Text(
               widget.item.description,
               style: TextStyle(
                 color: Theme.of(context).subtextColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 18,
               ),
             ),
             SizedBox(height: spacing),

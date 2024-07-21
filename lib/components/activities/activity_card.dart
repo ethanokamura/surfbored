@@ -32,12 +32,16 @@ class ItemCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
-              child: ImageWidget(
-                imgURL: item.imgURL,
-                height: 128,
-                width: double.infinity,
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+              child: Hero(
+                tag: item.imgURL,
+                child: ImageWidget(
+                  imgURL: item.imgURL,
+                  height: 128,
+                  width: double.infinity,
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5)),
+                ),
               ),
             ),
             Padding(

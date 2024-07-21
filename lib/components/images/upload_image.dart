@@ -199,12 +199,14 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: selectPhoto,
-      child: ImageWidget(
-        height: widget.height,
-        width: widget.width,
-        imgURL: imageURL,
-        borderRadius: borderRadius,
-      ),
+      child: pickedImage != null
+          ? Image.memory(pickedImage!)
+          : ImageWidget(
+              height: widget.height,
+              width: widget.width,
+              imgURL: imageURL,
+              borderRadius: borderRadius,
+            ),
     );
   }
 }

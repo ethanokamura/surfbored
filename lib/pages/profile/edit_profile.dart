@@ -2,16 +2,16 @@
 import 'package:flutter/material.dart';
 
 // utils
-import 'package:rando/utils/data/firestore/auth_service.dart';
-import 'package:rando/utils/data/firestore/firestore.dart';
-import 'package:rando/utils/data/models.dart';
-import 'package:rando/utils/data/firestore/user_service.dart';
+import 'package:rando/core/services/auth_service.dart';
+import 'package:rando/core/services/firestore.dart';
+import 'package:rando/core/models/models.dart';
+import 'package:rando/core/services/user_service.dart';
 
 // components
-import 'package:rando/components/images/edit_image.dart';
-import 'package:rando/components/text/text_box.dart';
-import 'package:rando/utils/data/firebase/storage.dart';
-import 'package:rando/utils/methods.dart';
+import 'package:rando/shared/images/edit_image.dart';
+import 'package:rando/shared/widgets/text/text_box.dart';
+import 'package:rando/core/services/storage_service.dart';
+import 'package:rando/core/utils/methods.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});

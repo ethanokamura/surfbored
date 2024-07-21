@@ -6,12 +6,12 @@ import 'package:provider/provider.dart';
 
 // firebase packages
 import 'package:firebase_core/firebase_core.dart';
-import 'package:rando/utils/global.dart';
+import 'package:rando/config/global.dart';
 import 'firebase_options.dart';
 
 // utils
-import 'package:rando/utils/routes.dart';
-import 'package:rando/utils/theme/theme_provider.dart';
+import 'package:rando/config/routes.dart';
+import 'package:rando/core/providers/theme_provider.dart';
 
 // env for security
 import 'package:flutter_dotenv/flutter_dotenv.dart';

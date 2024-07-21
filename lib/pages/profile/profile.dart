@@ -2,23 +2,23 @@
 import 'package:flutter/material.dart';
 
 // utils
-import 'package:rando/utils/global.dart';
-import 'package:rando/utils/data/firestore/auth_service.dart';
-import 'package:rando/utils/data/models.dart';
-import 'package:rando/utils/data/firestore/user_service.dart';
+import 'package:rando/config/global.dart';
+import 'package:rando/core/services/auth_service.dart';
+import 'package:rando/core/models/models.dart';
+import 'package:rando/core/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // components
-import 'package:rando/components/lists/items_list.dart';
-import 'package:rando/components/buttons/defualt_button.dart';
-import 'package:rando/components/images/image.dart';
-import 'package:rando/components/anon_wall.dart';
-import 'package:rando/components/lists/board_list.dart';
-import 'package:rando/components/tab_bar/tab.dart';
-import 'package:rando/components/tab_bar/tab_bar.dart';
+import 'package:rando/pages/profile/activities/items_list.dart';
+import 'package:rando/shared/widgets/buttons/defualt_button.dart';
+import 'package:rando/shared/images/image.dart';
+import 'package:rando/pages/reroutes/anon_wall.dart';
+import 'package:rando/pages/profile/boards/board_list.dart';
+import 'package:rando/pages/profile/tab_bar/tab.dart';
+import 'package:rando/pages/profile/tab_bar/tab_bar.dart';
 
 // ui libraries
-import 'package:rando/utils/theme/theme.dart';
+import 'package:rando/config/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 

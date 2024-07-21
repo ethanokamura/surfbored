@@ -1,16 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/defualt_button.dart';
-import 'package:rando/components/images/image.dart';
-import 'package:rando/components/lists/board_items.dart';
-import 'package:rando/pages/boards/shuffle_items.dart';
-import 'package:rando/pages/boards/edit_board.dart';
-import 'package:rando/utils/data/firestore/board_service.dart';
-import 'package:rando/utils/data/firestore/user_service.dart';
-import 'package:rando/utils/data/models.dart';
-import 'package:rando/utils/global.dart';
-import 'package:rando/utils/theme/theme.dart';
+import 'package:rando/shared/widgets/buttons/defualt_button.dart';
+import 'package:rando/shared/images/image.dart';
+import 'package:rando/pages/boards/widgets/board_items.dart';
+import 'package:rando/pages/boards/shuffle/shuffle_items.dart';
+import 'package:rando/pages/boards/edit/edit_board.dart';
+import 'package:rando/core/services/board_service.dart';
+import 'package:rando/core/services/user_service.dart';
+import 'package:rando/core/models/models.dart';
+import 'package:rando/config/global.dart';
+import 'package:rando/config/theme.dart';
 
 class BoardScreen extends StatefulWidget {
   final String boardID;

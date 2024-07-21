@@ -1,37 +1,34 @@
 // dart packages
 import 'package:flutter/material.dart';
+import 'package:rando/shared/widgets/buttons/defualt_button.dart';
 
 // utils
 import 'package:rando/core/services/firestore.dart';
-import 'package:rando/core/services/item_service.dart';
 import 'package:rando/core/models/models.dart';
 import 'package:rando/core/services/storage_service.dart';
 import 'package:rando/core/utils/methods.dart';
+import 'package:rando/core/services/board_service.dart';
 
 // components
-import 'package:rando/shared/widgets/tags/tag_list.dart';
 import 'package:rando/shared/images/edit_image.dart';
 import 'package:rando/shared/widgets/text/text_box.dart';
 
-class EditActivityScreen extends StatefulWidget {
-  final String itemID;
-  const EditActivityScreen({super.key, required this.itemID});
+class EditBoardScreen extends StatefulWidget {
+  final String boardID;
+  const EditBoardScreen({super.key, required this.boardID});
 
   @override
-  State<EditActivityScreen> createState() => _EditActivityScreenState();
+  State<EditBoardScreen> createState() => _EditBoardScreenState();
 }
 
-class _EditActivityScreenState extends State<EditActivityScreen> {
+class _EditBoardScreenState extends State<EditBoardScreen> {
   // utility references
-  ItemService itemService = ItemService();
+  BoardService boardService = BoardService();
   StorageService firebaseStorage = StorageService();
   FirestoreService firestoreService = FirestoreService();
 
   // images
   String? imgURL;
-
-  // variables
-  List<String> tags = [];
 
   // text controller
   final textController = TextEditingController();
@@ -47,12 +44,6 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
     textController.dispose();
     firebaseStorage.cancelOperation();
     super.dispose();
-  }
-
-  // create list of tags
-  List<String> createTags(String tagList) {
-    tags = tagList.split(' ');
-    return tags;
   }
 
   // dynamic input length maximum
@@ -72,19 +63,11 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
       );
       // update item data
       if (textController.text.trim().isNotEmpty) {
-        // create tags if applicable
-        if (field == "tags") tags = createTags(textController.text);
         // update in firestore
         await firestoreService.db
-            .collection('items')
-            .doc(widget.itemID)
+            .collection('boards')
+            .doc(widget.boardID)
             .update({field: textController.text});
-        if (field == 'tags') {
-          await firestoreService.db
-              .collection('items')
-              .doc(widget.itemID)
-              .update({'tags': tags});
-        }
       }
       // if (mounted) Navigator.pop(context);
       if (mounted) {
@@ -101,18 +84,14 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
     }
   }
 
-  void deleteItem(String userID, String itemID, String imgPath) async {
-    await itemService.deleteItem(userID, itemID, imgPath);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Item'),
       ),
-      body: StreamBuilder<ItemData>(
-        stream: itemService.getItemStream(widget.itemID),
+      body: StreamBuilder<BoardData>(
+        stream: boardService.getBoardStream(widget.boardID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // loading
@@ -126,9 +105,8 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
             );
           } else if (snapshot.hasData) {
             // has data
-            ItemData itemData = snapshot.data!;
-            imgURL = itemData.imgURL;
-            tags = itemData.tags;
+            BoardData boardData = snapshot.data!;
+            imgURL = boardData.imgURL;
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -141,8 +119,8 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                         width: 200,
                         height: 200,
                         imgURL: imgURL,
-                        collection: 'items',
-                        docID: itemData.id,
+                        collection: 'boards',
+                        docID: boardData.id,
                         onFileChanged: (url) {
                           setState(() {
                             imgURL = url;
@@ -151,24 +129,26 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                       ),
                       const SizedBox(height: 20),
                       MyTextBox(
-                        text: itemData.title,
+                        text: boardData.title,
                         label: "title",
                         onPressed: () => editField('title'),
                       ),
                       const SizedBox(height: 20),
                       MyTextBox(
-                        text: itemData.description,
+                        text: boardData.description,
                         label: "description",
                         onPressed: () => editField('description'),
                       ),
                       const SizedBox(height: 20),
-                      MyTextBox(
-                        text: "tags",
-                        label: "tags",
-                        onPressed: () => editField('tags'),
-                      ),
-                      const SizedBox(height: 20),
-                      TagListWidget(tags: tags),
+                      DefualtButton(
+                        inverted: true,
+                        text: "Delete Board",
+                        onTap: () => boardService.deleteBoard(
+                          boardData.uid,
+                          boardData.id,
+                          boardData.imgURL,
+                        ),
+                      )
                     ],
                   ),
                 ),

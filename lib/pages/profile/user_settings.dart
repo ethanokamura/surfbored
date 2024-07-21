@@ -1,13 +1,13 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/components/buttons/defualt_button.dart';
+import 'package:rando/shared/widgets/buttons/defualt_button.dart';
 
 // utils
-import 'package:rando/utils/data/firestore/auth_service.dart';
+import 'package:rando/core/services/auth_service.dart';
 
 // ui
 import 'package:provider/provider.dart';
-import 'package:rando/utils/theme/theme_provider.dart';
+import 'package:rando/core/providers/theme_provider.dart';
 
 class UserSettingsScreen extends StatelessWidget {
   const UserSettingsScreen({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rando/components/activities/activity.dart';
+import 'package:rando/shared/activity.dart';
 // import 'package:rando/components/buttons/defualt_button.dart';
 // import 'package:rando/services/firestore/item_service.dart';
-import 'package:rando/utils/data/models.dart';
+import 'package:rando/core/models/models.dart';
 
 class ActivityScreen extends StatelessWidget {
   final ItemData item;

@@ -1,14 +1,14 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/pages/home.dart';
+import 'package:rando/pages/home/home.dart';
 import 'package:rando/pages/reroutes/error.dart';
 import 'package:rando/pages/reroutes/loading.dart';
 
 // utils
-import 'package:rando/utils/data/firestore/auth_service.dart';
+import 'package:rando/core/services/auth_service.dart';
 
 // pages
-import 'package:rando/pages/login.dart';
+import 'package:rando/pages/authentication/login.dart';
 
 // show topics if logged in otherwise show log in page
 class RouterWidget extends StatelessWidget {

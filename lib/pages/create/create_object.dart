@@ -2,21 +2,21 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:rando/components/images/upload_image.dart';
+import 'package:rando/shared/images/upload_image.dart';
 
 // utils
-import 'package:rando/utils/data/firestore/auth_service.dart';
-import 'package:rando/utils/data/firestore/board_service.dart';
-import 'package:rando/utils/data/firestore/firestore.dart';
-import 'package:rando/utils/data/firestore/item_service.dart';
-import 'package:rando/utils/data/models.dart';
-import 'package:rando/utils/data/firebase/storage.dart';
-import 'package:rando/utils/methods.dart';
+import 'package:rando/core/services/auth_service.dart';
+import 'package:rando/core/services/board_service.dart';
+import 'package:rando/core/services/firestore.dart';
+import 'package:rando/core/services/item_service.dart';
+import 'package:rando/core/models/models.dart';
+import 'package:rando/core/services/storage_service.dart';
+import 'package:rando/core/utils/methods.dart';
 
 // components
-import 'package:rando/components/lists/tag_list.dart';
-import 'package:rando/components/text/input_field.dart';
-import 'package:rando/components/buttons/defualt_button.dart';
+import 'package:rando/shared/widgets/tags/tag_list.dart';
+import 'package:rando/shared/widgets/text/input_field.dart';
+import 'package:rando/shared/widgets/buttons/defualt_button.dart';
 
 class CreateObjectWidget extends StatefulWidget {
   final String type;

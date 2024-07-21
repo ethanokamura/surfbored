@@ -1,16 +1,9 @@
 // dart packages
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
-import 'dart:math';
 
 // utils
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rando/services/firestore/user_service.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:rando/utils/global.dart';
 import 'package:logger/logger.dart';
 
@@ -20,16 +13,106 @@ import 'package:rando/pages/profile/create_profile.dart';
 
 // implementing firebase auth
 class AuthService {
-  static final Logger _logger = Logger();
+  // firestore authentication reference
+  static final FirebaseAuth auth = FirebaseAuth.instance;
 
   // stream of current user's data (async)
   // used when we want to detect auth state change but timing is unknown
-  final Stream<User?> userStream = FirebaseAuth.instance.authStateChanges();
+  final Stream<User?> userStream = auth.authStateChanges();
 
   // event in which we need the current auth state (sync)
   // gives user a way to create records
-  final User? user = FirebaseAuth.instance.currentUser;
-  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  final User? user = auth.currentUser;
+
+  // helps log messages
+  static final Logger _logger = Logger();
+
+  // sign in with phone
+  Future<void> verifyPhone({
+    required String phoneNumber,
+    required void Function(PhoneAuthCredential) verificationCompleted,
+    required void Function(FirebaseAuthException) verificationFailed,
+    required void Function(String, int?) codeSent,
+    required void Function(String) codeAutoRetrievalTimeout,
+  }) async {
+    try {
+      _logger.i("user entered number $phoneNumber waiting on verification");
+      await auth.verifyPhoneNumber(
+        phoneNumber: "+1$phoneNumber",
+        timeout: const Duration(seconds: 30),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      );
+      _logger.i("$phoneNumber verified");
+    } catch (e) {
+      // catch error
+      _logger.e("Error verifying phone number $e");
+    }
+  }
+
+  // sign in with OTP
+  Future<void> signInWithOTP(String otp, String? verificationId) async {
+    final credential = PhoneAuthProvider.credential(
+      verificationId: verificationId!,
+      smsCode: otp,
+    );
+    try {
+      final UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+      await routeUser();
+      _logger.i("Successfully signed in UID: ${userCredential.user?.uid}");
+    } on FirebaseAuthException catch (e) {
+      _logger.e(e.message.toString());
+    } catch (e) {
+      _logger.e(e.toString());
+    }
+  }
+
+  // sign out
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  // check auth
+  static Future<bool> isSignedIn() async {
+    var user = AuthService().user;
+    return user != null;
+  }
+
+  // Route user based on username existence
+  Future<void> routeUser() async {
+    final bool hasUsername = await UserService().userHasUsername();
+    if (user != null) {
+      if (hasUsername) {
+        navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
+          MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) => const HomeScreen(),
+          ),
+        );
+      } else {
+        navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
+          MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) => const CreateProfilePage(),
+          ),
+        );
+      }
+    } else {
+      // handle case where user is null (possibly show a login screen)
+      _logger.e("user is null");
+    }
+  }
+}
+
+/*
+
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
+import 'dart:math';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
   // anonymous firebase login
   Future<void> anonLogin() async {
@@ -66,65 +149,6 @@ class AuthService {
     }
   }
 
-  /// By default, Firebase will not re-send a new SMS message if it has been recently sent.
-  /// You can however override this behavior by re-calling the verifyPhoneNumber method
-  /// with the resend token to the forceResendingToken argument.
-  /// If successful, the SMS message will be resent.
-
-  // static String _verificationId = '';
-
-  // firebase sign in with phone
-  Future<void> verifyPhone({
-    required String phoneNumber,
-    required void Function(PhoneAuthCredential) verificationCompleted,
-    required void Function(FirebaseAuthException) verificationFailed,
-    required void Function(String, int?) codeSent,
-    required void Function(String) codeAutoRetrievalTimeout,
-  }) async {
-    try {
-      _logger.i("user entered number $phoneNumber waiting on verification");
-      await _auth.verifyPhoneNumber(
-        phoneNumber: "+1$phoneNumber",
-        timeout: const Duration(seconds: 30),
-        verificationCompleted: verificationCompleted,
-        verificationFailed: verificationFailed,
-        codeSent: codeSent,
-        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-      );
-      _logger.i("$phoneNumber verified");
-    } catch (e) {
-      // catch error
-      _logger.e("Error verifying phone number $e");
-    }
-  }
-
-  Future<void> signInWithOTP(String otp, String? verificationId) async {
-    final credential = PhoneAuthProvider.credential(
-      verificationId: verificationId!,
-      smsCode: otp,
-    );
-    try {
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-      await routeUser();
-      _logger.i("Successfully signed in UID: ${userCredential.user?.uid}");
-    } on FirebaseAuthException catch (e) {
-      _logger.e(e.message.toString());
-    } catch (e) {
-      _logger.e(e.toString());
-    }
-  }
-
-  // sign out
-  static Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
-  // check auth
-  static Future<bool> isSignedIn() async {
-    var user = AuthService().user;
-    return user != null;
-  }
 
   // google firebase login
   Future<void> googleLogin() async {
@@ -199,25 +223,4 @@ class AuthService {
     return userCredential;
   }
 
-  // Route user based on username existence
-  Future<void> routeUser() async {
-    final bool hasUsername = await UserService().userHasUsername();
-    final User? user = AuthService().user;
-    if (user != null) {
-      if (hasUsername) {
-        navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
-          MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => const HomeScreen()),
-        );
-      } else {
-        navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
-          MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => const CreateProfilePage()),
-        );
-      }
-    } else {
-      // handle case where user is null (possibly show a login screen)
-      _logger.e("user is null");
-    }
-  }
-}
+*/

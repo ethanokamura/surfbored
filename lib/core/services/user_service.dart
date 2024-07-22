@@ -120,6 +120,30 @@ class UserService extends FirestoreService {
     });
   }
 
+  // update specific user field
+  Future<void> updateUserField(String userID, String field, String data) async {
+    if (field == 'username') {
+      await saveUsername(data);
+    } else {
+      await db.collection('users').doc(userID).update({field: data});
+    }
+  }
+
+  // update profile picture
+  Future<void> setPhotoURL(
+    String userID,
+    String photoURL,
+  ) async {
+    try {
+      // get firestore ref
+      var ref = db.collection('users').doc(userID);
+      // save photoURL in user doc
+      await ref.update({'imgURL': photoURL});
+    } catch (e) {
+      logger.e("could not update user photoURL: $e");
+    }
+  }
+
   // return a stream of the given user's activites from firestore
   Stream<List<ItemData>> readUserItemStream(String userID) {
     // get reference from database

@@ -3,13 +3,13 @@ import 'package:rando/shared/widgets/buttons/defualt_button.dart';
 import 'package:rando/config/theme.dart';
 
 // global method to edit a text field
-Future<void> editTextField(
+Future<String?> editTextField(
   BuildContext context,
   String field,
   int maxLength,
   TextEditingController textController,
 ) async {
-  await showDialog(
+  return await showDialog<String>(
     context: context,
     builder: (context) => AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -41,7 +41,7 @@ Future<void> editTextField(
       actions: [
         Row(
           children: [
-            //cancel
+            // Cancel
             Expanded(
               child: DefualtButton(
                 inverted: true,
@@ -50,7 +50,7 @@ Future<void> editTextField(
               ),
             ),
             const SizedBox(width: 20),
-            // save
+            // Save
             Expanded(
               child: DefualtButton(
                 inverted: true,

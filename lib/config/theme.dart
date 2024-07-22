@@ -1,11 +1,20 @@
 // dart packages
 import 'package:flutter/material.dart';
 
+// utils
+import 'package:rando/config/strings.dart';
+
 // ui libraries
 import 'package:google_fonts/google_fonts.dart';
 
+// constants
+const double _defaultPadding = 20;
+const BorderRadius _borderRadius = BorderRadius.all(Radius.circular(10));
+const String _defaultDarkImage = AppStrings.darkModeIcon;
+const String _defaultLightImage = AppStrings.lightModeIcon;
+
 // defines custom colors for the app
-class CustomTheme {
+class CustomColors {
   // dark mode
   static Color darkAccent = const Color.fromRGBO(97, 175, 239, 1);
   static Color darkBackground = const Color.fromRGBO(29, 32, 37, 1);
@@ -27,89 +36,71 @@ class CustomTheme {
   static Color inverseLightTextColor = const Color.fromRGBO(220, 220, 220, 1);
 }
 
-// default image config
-class ImageConfig {
-  static String defaultDarkImage = 'assets/images/dark_mode_face.png';
-  static String defaultLightImage = 'assets/images/light_mode_face.png';
-}
-
-// show different image based on brightness mode
-extension ImageConfigData on ThemeData {
-  String get defaultImagePath {
-    return brightness == Brightness.dark
-        ? ImageConfig.defaultDarkImage
-        : ImageConfig.defaultLightImage;
-  }
-}
-
 // create custom themes that adapt to user brightness mode
 extension CustomThemeData on ThemeData {
+  /// [defaultPadding]
+  /// Default padding for the app
+  double get defaultPadding => _defaultPadding;
+
+  /// [borderRadius]
+  /// Default border radius for the app
+  BorderRadius get borderRadius => _borderRadius;
+
+  /// [defaultImagePath]
+  /// Show different images based on brightness mode
+  String get defaultImagePath =>
+      brightness == Brightness.dark ? _defaultDarkImage : _defaultLightImage;
+
   /// [accentColor]
   /// Gives the signature look to the app
-  Color get accentColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkAccent
-        : CustomTheme.lightAccent;
-  }
+  Color get accentColor => brightness == Brightness.dark
+      ? CustomColors.darkAccent
+      : CustomColors.lightAccent;
 
   /// [backgroundColor]
   /// Used for scaffolds
   /// the main background color for the app
-  Color get backgroundColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkBackground
-        : CustomTheme.lightBackground;
-  }
+  Color get backgroundColor => brightness == Brightness.dark
+      ? CustomColors.darkBackground
+      : CustomColors.lightBackground;
 
   /// [surfaceColor]
   /// The main color of all widgets on the page
   /// Most common color in the app
-  Color get surfaceColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkSurface
-        : CustomTheme.lightSurface;
-  }
+  Color get surfaceColor => brightness == Brightness.dark
+      ? CustomColors.darkSurface
+      : CustomColors.lightSurface;
 
   /// [primaryColor]
   /// Sits on top of surface colored containers / widgets
   /// Secondary surface
-  Color get primaryColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkPrimary
-        : CustomTheme.lightPrimary;
-  }
+  Color get primaryColor => brightness == Brightness.dark
+      ? CustomColors.darkPrimary
+      : CustomColors.lightPrimary;
 
   /// [textColor]
   /// Default text color for the app
-  Color get textColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkTextColor
-        : CustomTheme.lightTextColor;
-  }
+  Color get textColor => brightness == Brightness.dark
+      ? CustomColors.darkTextColor
+      : CustomColors.lightTextColor;
 
   /// [subtextColor]
   /// Secondary text color. ie used for descriptions
-  Color get subtextColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkSubtextColor
-        : CustomTheme.lightSubtextColor;
-  }
+  Color get subtextColor => brightness == Brightness.dark
+      ? CustomColors.darkSubtextColor
+      : CustomColors.lightSubtextColor;
 
   /// [hintTextColor]
   /// Tertiary color for text. rarely used
-  Color get hintTextColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.darkSubtextColor
-        : CustomTheme.lightSubtextColor;
-  }
+  Color get hintTextColor => brightness == Brightness.dark
+      ? CustomColors.darkSubtextColor
+      : CustomColors.lightSubtextColor;
 
   /// [inverseTextColor]
   /// Used on backgrounds with the accent color
-  Color get inverseTextColor {
-    return brightness == Brightness.dark
-        ? CustomTheme.inverseDarkTextColor
-        : CustomTheme.inverseLightTextColor;
-  }
+  Color get inverseTextColor => brightness == Brightness.dark
+      ? CustomColors.inverseDarkTextColor
+      : CustomColors.inverseLightTextColor;
 }
 
 // Dark Mode
@@ -121,47 +112,47 @@ ThemeData darkMode = ThemeData(
   fontFamily: GoogleFonts.rubik().fontFamily,
 
   // app background color
-  scaffoldBackgroundColor: CustomTheme.darkBackground,
+  scaffoldBackgroundColor: CustomColors.darkBackground,
 
   // misc colors
   shadowColor: Colors.black87,
 
   // custom color scheme
   colorScheme: ColorScheme.dark(
-    surface: CustomTheme.darkSurface,
-    onSurface: CustomTheme.darkTextColor,
-    primary: CustomTheme.darkPrimary,
-    onPrimary: CustomTheme.darkTextColor,
+    surface: CustomColors.darkSurface,
+    onSurface: CustomColors.darkTextColor,
+    primary: CustomColors.darkPrimary,
+    onPrimary: CustomColors.darkTextColor,
   ),
 
   // default text themes
   textTheme: TextTheme(
     bodyLarge: TextStyle(
       fontSize: 18,
-      color: CustomTheme.darkTextColor,
+      color: CustomColors.darkTextColor,
     ),
     bodyMedium: TextStyle(
       fontSize: 16,
-      color: CustomTheme.darkTextColor,
+      color: CustomColors.darkTextColor,
     ),
     bodySmall: TextStyle(
       fontSize: 14,
-      color: CustomTheme.darkTextColor,
+      color: CustomColors.darkTextColor,
     ),
     titleLarge: TextStyle(
       fontSize: 26,
       fontWeight: FontWeight.w900,
-      color: CustomTheme.darkTextColor,
+      color: CustomColors.darkTextColor,
     ),
     titleMedium: TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.bold,
-      color: CustomTheme.darkTextColor,
+      color: CustomColors.darkTextColor,
     ),
     titleSmall: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
-      color: CustomTheme.darkTextColor,
+      color: CustomColors.darkTextColor,
     ),
   ),
 );
@@ -175,47 +166,47 @@ ThemeData lightMode = ThemeData(
   fontFamily: GoogleFonts.rubik().fontFamily,
 
   // app background color
-  scaffoldBackgroundColor: CustomTheme.lightBackground,
+  scaffoldBackgroundColor: CustomColors.lightBackground,
 
   // default shadow color
   shadowColor: Colors.black87,
 
   // custom color scheme
   colorScheme: ColorScheme.light(
-    surface: CustomTheme.lightSurface,
-    onSurface: CustomTheme.lightTextColor,
-    primary: CustomTheme.lightPrimary,
-    onPrimary: CustomTheme.lightTextColor,
+    surface: CustomColors.lightSurface,
+    onSurface: CustomColors.lightTextColor,
+    primary: CustomColors.lightPrimary,
+    onPrimary: CustomColors.lightTextColor,
   ),
 
   // default text themes
   textTheme: TextTheme(
     bodyLarge: TextStyle(
       fontSize: 18,
-      color: CustomTheme.lightTextColor,
+      color: CustomColors.lightTextColor,
     ),
     bodyMedium: TextStyle(
       fontSize: 16,
-      color: CustomTheme.lightTextColor,
+      color: CustomColors.lightTextColor,
     ),
     bodySmall: TextStyle(
       fontSize: 14,
-      color: CustomTheme.lightTextColor,
+      color: CustomColors.lightTextColor,
     ),
     titleLarge: TextStyle(
       fontSize: 26,
       fontWeight: FontWeight.w900,
-      color: CustomTheme.lightTextColor,
+      color: CustomColors.lightTextColor,
     ),
     titleMedium: TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.bold,
-      color: CustomTheme.lightTextColor,
+      color: CustomColors.lightTextColor,
     ),
     titleSmall: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
-      color: CustomTheme.lightTextColor,
+      color: CustomColors.lightTextColor,
     ),
   ),
 );

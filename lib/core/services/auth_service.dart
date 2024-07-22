@@ -8,8 +8,8 @@ import 'package:rando/config/global.dart';
 import 'package:logger/logger.dart';
 
 // pages
-import 'package:rando/pages/home/home.dart';
-import 'package:rando/pages/authentication/register.dart';
+import 'package:rando/pages/home/view/home_page.dart';
+import 'package:rando/pages/authentication/register/register_user.dart';
 
 // implementing firebase auth
 class AuthService {
@@ -71,12 +71,12 @@ class AuthService {
   }
 
   // sign out
-  static Future<void> signOut() async {
+  Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
   }
 
   // check auth
-  static Future<bool> isSignedIn() async {
+  Future<bool> isSignedIn() async {
     var user = AuthService().user;
     return user != null;
   }
@@ -88,13 +88,13 @@ class AuthService {
       if (hasUsername) {
         navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
           MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => const HomeScreen(),
+            builder: (BuildContext context) => const HomePage(),
           ),
         );
       } else {
         navigatorKey.currentState!.pushReplacement<dynamic, Object?>(
           MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => const CreateProfilePage(),
+            builder: (BuildContext context) => const RegisterUserScreen(),
           ),
         );
       }

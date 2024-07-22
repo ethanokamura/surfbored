@@ -10,7 +10,7 @@ import 'package:rando/core/services/auth_service.dart';
 import 'package:rando/shared/widgets/buttons/defualt_button.dart';
 
 // pages
-import 'package:rando/pages/profile/profile.dart';
+import 'package:rando/pages/profile/view/profile_page.dart';
 
 // ui
 import 'package:rando/config/theme.dart';
@@ -50,7 +50,7 @@ class HomeBody extends StatelessWidget {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfileScreen(
+                      builder: (context) => ProfilePage(
                         userID: AuthService().user!.uid,
                       ),
                     ),

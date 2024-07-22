@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/core/services/auth_service.dart';
 
 // pages
-import 'package:rando/pages/profile/profile.dart';
+import 'package:rando/pages/profile/view/profile_page.dart';
 import 'package:rando/pages/home/view/create_modal.dart';
 
 // ui libraries
@@ -45,7 +45,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfileScreen(userID: userID),
+          builder: (context) => ProfilePage(userID: userID),
         ),
       );
     }

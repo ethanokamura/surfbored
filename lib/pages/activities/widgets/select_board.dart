@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rando/shared/containers/block.dart';
-import 'package:rando/pages/activities/add/widgets/check_box.dart';
+import 'package:rando/pages/activities/widgets/check_box.dart';
 import 'package:rando/shared/images/image.dart';
 import 'package:rando/core/services/board_service.dart';
 import 'package:rando/core/models/models.dart';

@@ -7,7 +7,7 @@ import 'package:rando/core/models/models.dart';
 import 'package:rando/core/services/user_service.dart';
 
 // components
-import 'package:rando/pages/activities/add/widgets/select_board.dart';
+import 'package:rando/pages/activities/widgets/select_board.dart';
 
 class AddToBoardScreen extends StatefulWidget {
   final String userID;

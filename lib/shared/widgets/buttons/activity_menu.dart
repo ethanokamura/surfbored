@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/activities/add/add_to_board.dart';
-import 'package:rando/pages/activities/edit/edit_activity.dart';
+import 'package:rando/pages/activities/view/add_to_board.dart';
+import 'package:rando/pages/activities/view/edit_activity.dart';
 import 'package:rando/core/services/item_service.dart';
 
 /// [TODO]

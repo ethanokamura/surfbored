@@ -5,7 +5,7 @@ import 'package:rando/shared/widgets/buttons/activity_menu.dart';
 import 'package:rando/shared/containers/block.dart';
 import 'package:rando/shared/widgets/tags/tag_list.dart';
 import 'package:rando/shared/widgets/buttons/link.dart';
-import 'package:rando/pages/profile/profile.dart';
+import 'package:rando/pages/profile/view/profile_page.dart';
 import 'package:rando/core/services/auth_service.dart';
 import 'package:rando/core/services/item_service.dart';
 import 'package:rando/core/models/models.dart';
@@ -141,7 +141,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          ProfileScreen(userID: widget.item.uid),
+                          ProfilePage(userID: widget.item.uid),
                     ),
                   ),
                   text: '@$username',

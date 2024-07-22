@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rando/shared/containers/block.dart';
-// import 'package:rando/components/containers/tag_list.dart';
 import 'package:rando/shared/images/image.dart';
-import 'package:rando/pages/activities/activity.dart';
+import 'package:rando/pages/activities/view/activity_page.dart';
 import 'package:rando/core/models/models.dart';
 import 'package:rando/config/theme.dart';
 
@@ -17,7 +16,7 @@ class ItemCardWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ActivityScreen(item: item),
+            builder: (context) => ActivityPage(item: item),
           ),
         );
       },

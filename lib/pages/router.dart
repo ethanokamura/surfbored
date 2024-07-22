@@ -1,14 +1,14 @@
 // dart packages
 import 'package:flutter/material.dart';
-import 'package:rando/pages/home/home.dart';
-import 'package:rando/pages/reroutes/error.dart';
-import 'package:rando/pages/reroutes/loading.dart';
 
 // utils
 import 'package:rando/core/services/auth_service.dart';
 
 // pages
-import 'package:rando/pages/authentication/login.dart';
+import 'package:rando/pages/authentication/login/login.dart';
+import 'package:rando/pages/home/view/home_page.dart';
+import 'package:rando/pages/reroutes/error.dart';
+import 'package:rando/pages/reroutes/loading.dart';
 
 // show topics if logged in otherwise show log in page
 class RouterWidget extends StatelessWidget {
@@ -27,7 +27,7 @@ class RouterWidget extends StatelessWidget {
           return const ErrorScreen();
         } else if (snapshot.hasData) {
           // logged in
-          return const HomeScreen();
+          return const HomePage();
         } else {
           // not logged in
           return const LoginScreen();

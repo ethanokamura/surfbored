@@ -5,14 +5,14 @@ import 'package:rando/shared/widgets/buttons/defualt_button.dart';
 // utils
 import 'package:rando/core/services/user_service.dart';
 
-class CreateProfilePage extends StatefulWidget {
-  const CreateProfilePage({super.key});
+class RegisterUserScreen extends StatefulWidget {
+  const RegisterUserScreen({super.key});
 
   @override
-  State<CreateProfilePage> createState() => _CreateProfilePageState();
+  State<RegisterUserScreen> createState() => _RegisterUserScreenState();
 }
 
-class _CreateProfilePageState extends State<CreateProfilePage> {
+class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final TextEditingController textController = TextEditingController();
   final UserService userService = UserService();
   bool isLoading = false;

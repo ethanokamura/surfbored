@@ -1,0 +1,24 @@
+name: items_repository
+description: Items repository.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  api_client:
+    path: ../api_client
+  app_core:
+    path: ../app_core
+  boards_repository:
+    path: ../boards_repository
+  flutter:
+    sdk: flutter
+  user_repository:
+    path: ../user_repository
+
+dev_dependencies:
+  build_runner: ^2.4.11
+  json_serializable: ^6.8.0
+  very_good_analysis: ^5.1.0

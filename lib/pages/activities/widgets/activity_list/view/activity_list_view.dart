@@ -14,7 +14,9 @@ class ActivityList extends StatelessWidget {
       create: (context) => ItemCubit(
         itemsRepository: context.read<ItemsRepository>(),
         userRepository: context.read<UserRepository>(),
-      )..streamUserItems(userID),
+      )..streamUserItems(userID).listen((state) {
+          context.read<ItemCubit>();
+        }),
       child: BlocBuilder<ItemCubit, ItemState>(
         builder: (context, state) {
           if (state is UserItemsLoading) {

@@ -33,76 +33,86 @@ class ItemCard extends StatelessWidget {
             );
           } else {
             final item = snapshot.data!;
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) => Activity(itemID: item.id),
-                  ),
-                );
-              },
-              child: CustomContainer(
-                inverted: false,
-                horizontal: 0,
-                vertical: 0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: Hero(
-                        tag: item.photoURL!,
-                        child: ImageWidget(
-                          photoURL: item.photoURL,
-                          height: 128,
-                          width: double.infinity,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            topRight: Radius.circular(5),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            item.title,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).textColor,
-                              overflow: TextOverflow.ellipsis,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            item.description,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).subtextColor,
-                              overflow: TextOverflow.ellipsis,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // TagListWidget(tags: item.tags),
-                  ],
-                ),
-              ),
-            );
+            return ItemCardView(item: item);
           }
         },
+      ),
+    );
+  }
+}
+
+class ItemCardView extends StatelessWidget {
+  const ItemCardView({required this.item, super.key});
+  final Item item;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute<dynamic>(
+            builder: (context) => Activity(itemID: item.id),
+          ),
+        );
+      },
+      child: CustomContainer(
+        inverted: false,
+        horizontal: 0,
+        vertical: 0,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Hero(
+                tag: item.photoURL!,
+                child: ImageWidget(
+                  photoURL: item.photoURL,
+                  height: 128,
+                  width: double.infinity,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    topRight: Radius.circular(5),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    item.title,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).textColor,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    item.description,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).subtextColor,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // TagListWidget(tags: item.tags),
+          ],
+        ),
       ),
     );
   }

@@ -24,31 +24,25 @@ class ItemCubit extends Cubit<ItemState> {
   }
 
   Future<Item> fetchItem(String itemID) async {
-    emit(ItemLoading());
     try {
-      final item = await itemsRepository.readItem(itemID);
-      emit(ItemLoaded(item: item));
-      return item;
+      final board = await itemsRepository.readItem(itemID);
+      return board;
     } catch (e) {
-      emit(ItemError(message: 'Failed to fetch item.'));
+      ItemError(message: 'error fetching board: $e');
       return Item.empty;
     }
   }
 
   Stream<ItemState> streamItem(String itemID) async* {
-    yield ItemLoading();
-    await for (final snapshot in itemsRepository.readItemStream(itemID)) {
-      yield ItemLoaded(item: snapshot);
-    }
-    // emit(ItemLoading());
-    // itemsRepository.readItemStream(itemID).listen(
-    //   (snapshot) {
-    //     emit(ItemLoaded(item: snapshot));
-    //   },
-    //   onError: (dynamic error) {
-    //     emit(ItemError(message: 'failed to load items: $error'));
-    //   },
-    // );
+    emit(ItemLoading());
+    itemsRepository.readItemStream(itemID).listen(
+      (snapshot) {
+        emit(ItemLoaded(item: snapshot));
+      },
+      onError: (dynamic error) {
+        emit(ItemError(message: 'failed to load items: $error'));
+      },
+    );
   }
 
   Stream<ItemState> streamUserItems(String userID) async* {

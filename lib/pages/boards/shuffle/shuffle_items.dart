@@ -1,117 +1,107 @@
+import 'package:app_ui/app_ui.dart';
+import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/shared/activity.dart';
-import 'package:rando/shared/widgets/buttons/defualt_button.dart';
-import 'package:rando/core/services/board_service.dart';
-import 'package:rando/core/models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rando/pages/activities/widgets/activity/activity.dart';
+import 'package:rando/pages/boards/cubit/board_cubit.dart';
+import 'package:user_repository/user_repository.dart'; // Adjust import according to your actual path
 
-class ShuffleItemScreen extends StatefulWidget {
+class ShuffleItemScreen extends StatelessWidget {
+  const ShuffleItemScreen({required this.boardID, super.key});
   final String boardID;
-  const ShuffleItemScreen({super.key, required this.boardID});
-
-  @override
-  State<ShuffleItemScreen> createState() => _ShuffleItemScreenState();
-}
-
-class _ShuffleItemScreenState extends State<ShuffleItemScreen> {
-  int index = 0;
-  List<ItemData> items = [];
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    loadActivityList();
-  }
-
-  Future<void> loadActivityList() async {
-    try {
-      List<ItemData> itemList =
-          await BoardService().getBoardItems(widget.boardID);
-      itemList.shuffle();
-      setState(() {
-        items = itemList;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    }
+  static MaterialPage<void> page({required String boardID}) {
+    return MaterialPage<void>(
+      child: ShuffleItemScreen(boardID: boardID),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(widget.boardID),
-                  const CircularProgressIndicator(),
-                ],
-              ),
-            )
-          : index < items.length
-              ? SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ActivityWidget(item: items[index]),
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: DefualtButton(
-                                  inverted: true,
-                                  text: "Select",
-                                  onTap: () {},
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: DefualtButton(
-                                  inverted: false,
-                                  text: "Skip",
-                                  onTap: () {
-                                    setState(() => index++);
-                                  },
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text("No more items!"),
-                        const SizedBox(height: 20),
-                        DefualtButton(
-                          text: "Return",
-                          inverted: true,
-                          onTap: () => Navigator.pop(context),
-                        )
-                      ],
-                    ),
-                  ),
+    return BlocProvider(
+      create: (context) => BoardCubit(
+        boardsRepository: context.read<BoardsRepository>(),
+        userRepository: context.read<UserRepository>(),
+      )..shuffleItemList(boardID),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Shuffle Items')),
+        body: BlocBuilder<BoardCubit, BoardState>(
+          builder: (context, state) {
+            if (state is BoardLoading) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(boardID),
+                    const CircularProgressIndicator(),
+                  ],
                 ),
+              );
+            } else if (state is BoardItemsLoaded) {
+              final items = state.items;
+              int index = context.select((BoardCubit cubit) => cubit.index);
+              return index < items.length
+                  ? SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(defaultPadding),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Activity(itemID: items[index]),
+                              const VerticalSpacer(),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ActionButton(
+                                      inverted: true,
+                                      text: 'Select',
+                                      onTap: () {
+                                        // Handle selection logic here
+                                      },
+                                    ),
+                                  ),
+                                  const HorizontalSpacer(),
+                                  Expanded(
+                                    child: ActionButton(
+                                      inverted: false,
+                                      text: 'Skip',
+                                      onTap: () {
+                                        context.read<BoardCubit>().skipItem();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(defaultPadding),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('No more items!'),
+                            const VerticalSpacer(),
+                            ActionButton(
+                              text: 'Return',
+                              inverted: true,
+                              onTap: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+            } else if (state is BoardError) {
+              return Center(child: Text(state.message));
+            } else {
+              return const Center(child: Text('Unknown state'));
+            }
+          },
+        ),
+      ),
     );
   }
 }

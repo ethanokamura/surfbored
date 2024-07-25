@@ -1,40 +1,36 @@
-// dart packages
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:app_ui/app_ui.dart';
+import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/shared/images/upload_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:items_repository/items_repository.dart';
+import 'package:rando/pages/create/cubit/create_cubit.dart';
+import 'package:user_repository/user_repository.dart';
 
-// utils
-import 'package:rando/core/services/auth_service.dart';
-import 'package:rando/core/services/board_service.dart';
-import 'package:rando/core/services/firestore.dart';
-import 'package:rando/core/services/item_service.dart';
-import 'package:rando/core/models/models.dart';
-import 'package:rando/core/services/storage_service.dart';
-import 'package:rando/core/utils/methods.dart';
-
-// components
-import 'package:rando/shared/widgets/tags/tag_list.dart';
-import 'package:rando/shared/widgets/text/input_field.dart';
-import 'package:rando/shared/widgets/buttons/defualt_button.dart';
-
-class CreateObjectWidget extends StatefulWidget {
+class CreateObject extends StatelessWidget {
+  const CreateObject({required this.type, super.key});
   final String type;
-  const CreateObjectWidget({super.key, required this.type});
-
   @override
-  State<CreateObjectWidget> createState() => _CreateObjectWidgetState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => CreateCubit(
+        boardsRepository: context.read<BoardsRepository>(),
+        itemsRepository: context.read<ItemsRepository>(),
+      ),
+      child: CreateObjectView(type: type),
+    );
+  }
 }
 
-class _CreateObjectWidgetState extends State<CreateObjectWidget> {
-  // utility references
-  var user = AuthService().user!;
-  ItemService itemService = ItemService();
-  BoardService boardService = BoardService();
-  StorageService storageService = StorageService();
-  FirestoreService firestoreService = FirestoreService();
-  StorageService firebaseStorage = StorageService();
+class CreateObjectView extends StatefulWidget {
+  const CreateObjectView({required this.type, super.key});
+  final String type;
+  @override
+  State<CreateObjectView> createState() => _CreateObjectViewState();
+}
 
+class _CreateObjectViewState extends State<CreateObjectView> {
   // text controller
   final textController = TextEditingController();
 
@@ -56,35 +52,123 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
   String? filename;
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    return BlocConsumer<CreateCubit, CreateState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          setState(() => isLoading = true);
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          if (state.successMessage != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.successMessage!)),
+            );
+            Navigator.pop(context);
+          }
+          if (state.errorMessage != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage!)),
+            );
+          }
+        }
+      },
+      builder: (context, state) {
+        return isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView(
+                children: [
+                  UploadImageWidget(
+                    width: 200,
+                    height: 200,
+                    imgURL: imgURL,
+                    onFileChanged: (file, filename) {
+                      setState(() {
+                        imageFile = file;
+                        this.filename = filename;
+                      });
+                    },
+                  ),
+                  const VerticalSpacer(),
+
+                  // edit title
+                  CustomInputField(
+                    label: 'title',
+                    text: titleText,
+                    onPressed: () => editField('title'),
+                  ),
+                  const VerticalSpacer(),
+
+                  // edit description
+                  CustomInputField(
+                    label: 'info',
+                    text: descriptionText,
+                    onPressed: () => editField('description'),
+                  ),
+                  const VerticalSpacer(),
+
+                  // edit tags
+                  if (widget.type == 'items')
+                    Column(
+                      children: [
+                        CustomInputField(
+                          label: 'tags',
+                          text: tagsText,
+                          onPressed: () => editField('tags'),
+                        ),
+                        const VerticalSpacer(),
+                        TagListWidget(tags: tags),
+                      ],
+                    ),
+                  const VerticalSpacer(),
+
+                  // edit post
+                  ActionButton(
+                    inverted: true,
+                    onTap: () {
+                      context.read<CreateCubit>().createItem(
+                            userID: UserRepository().getCurrentUserID(),
+                            type: widget.type,
+                            title: titleText,
+                            description: descriptionText,
+                            tags: tags,
+                            imageFile: imageFile,
+                            filename: filename,
+                          );
+                    },
+                    text: 'Create',
+                  ),
+                ],
+              );
+      },
+    );
   }
 
   // create list of tags
   List<String> createTags(String tagList) {
-    tags = tagList.split(' ');
-    return tags;
+    return tagList.split(' ');
   }
 
   // dynamic input length maximum
   int maxInputLength(String field) {
-    if (field == "title") return 20;
-    if (field == "description") return 150;
+    if (field == 'title') return 30;
+    if (field == 'description') return 150;
     return 50;
   }
 
   Future<void> editField(String field) async {
-    if (field == "title" && field != titleText) {
+    if (field == 'title' && field != titleText) {
       textController.text = titleText;
-    } else if (field == "description" && field != descriptionText) {
+    } else if (field == 'description' && field != descriptionText) {
       textController.text = descriptionText;
-    } else if (field == "tags" && field != tagsText) {
+    } else if (field == 'tags' && field != tagsText) {
       textController.text = tagsText;
     }
     await editTextField(context, field, maxInputLength(field), textController);
     // update field
     if (textController.text.trim().isNotEmpty) {
-      if (field == "tags") {
+      if (field == 'tags') {
         tags = createTags(textController.text);
       }
       setState(() {
@@ -98,124 +182,5 @@ class _CreateObjectWidgetState extends State<CreateObjectWidget> {
       });
       textController.clear();
     }
-  }
-
-  // post data to firebase and pop screen
-  void createItem() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      // create a new post to get the itemID
-      if (widget.type == 'items') {
-        docID = await itemService.createItem(ItemData(
-          title: titleText,
-          description: descriptionText,
-          uid: user.uid,
-          tags: tags,
-          likes: 0,
-        ));
-      } else if (widget.type == 'boards') {
-        docID = await boardService.createBoard(BoardData(
-          title: titleText,
-          description: descriptionText,
-          uid: user.uid,
-          likes: 0,
-        ));
-      }
-      // upload image to firebase storage
-      if (imageFile != null && filename != null) {
-        // Save the converted image
-        String path = '${widget.type}/$docID/$filename';
-        await firestoreService.uploadImage(
-          imageFile!,
-          path,
-          widget.type,
-          docID,
-        );
-      }
-      setState(() {
-        isLoading = false;
-      });
-      // if (mounted) Navigator.pop(context);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("$titleText Created!")),
-        );
-
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("Failed to create item. Please try again.")),
-        );
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    // Dispose controllers
-    textController.dispose();
-    firebaseStorage.cancelOperation();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : ListView(
-            children: [
-              UploadImageWidget(
-                width: 200,
-                height: 200,
-                imgURL: imgURL,
-                onFileChanged: (file, filename) {
-                  setState(() {
-                    imageFile = file;
-                    this.filename = filename;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              // edit title
-              MyInputField(
-                label: "title",
-                text: titleText,
-                onPressed: () => editField("title"),
-              ),
-              const SizedBox(height: 20),
-              // edit description
-              MyInputField(
-                label: "info",
-                text: descriptionText,
-                onPressed: () => editField("description"),
-              ),
-              const SizedBox(height: 20),
-              // edit tags
-              if (widget.type == 'items')
-                Column(
-                  children: [
-                    MyInputField(
-                      label: "tags",
-                      text: tagsText,
-                      onPressed: () => editField("tags"),
-                    ),
-                    const SizedBox(height: 20),
-                    TagListWidget(tags: tags),
-                  ],
-                ),
-              const SizedBox(height: 20),
-              // edit post
-              DefualtButton(
-                inverted: true,
-                onTap: createItem,
-                text: "Create",
-              )
-            ],
-          );
   }
 }

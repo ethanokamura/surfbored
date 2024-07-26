@@ -1,5 +1,8 @@
+// import 'package:app_ui/app_ui.dart';
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/activities/widgets/activity/activity.dart';
+
+import 'package:rando/pages/activities/shared/activity/activity.dart';
 
 class ActivityPage extends StatelessWidget {
   const ActivityPage({required this.itemID, super.key});
@@ -16,13 +19,13 @@ class ActivityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Item Details')),
+      appBar: AppBar(
+        title: const Text('Activity Screen'),
+      ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: Activity(itemID: itemID),
-          ),
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Activity(itemID: itemID),
         ),
       ),
     );

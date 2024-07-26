@@ -1,5 +1,6 @@
 // dart packages
 import 'package:app_ui/app_ui.dart';
+import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:items_repository/items_repository.dart';
@@ -25,6 +26,7 @@ class EditActivityPage extends StatelessWidget {
         create: (_) => ItemCubit(
           itemsRepository: context.read<ItemsRepository>(),
           userRepository: context.read<UserRepository>(),
+          boardsRepository: context.read<BoardsRepository>(),
         )..streamItem(itemID),
         child: BlocBuilder<ItemCubit, ItemState>(
           builder: (context, state) {

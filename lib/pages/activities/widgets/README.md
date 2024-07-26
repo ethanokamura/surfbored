@@ -1,1 +1,0 @@
-Helper widgets for activity views

@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/activities/widgets/activity/activity.dart';
+import 'package:rando/pages/activities/shared/activity/activity.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
 import 'package:user_repository/user_repository.dart'; // Adjust import according to your actual path
 
@@ -38,7 +38,7 @@ class ShuffleItemScreen extends StatelessWidget {
               );
             } else if (state is BoardItemsLoaded) {
               final items = state.items;
-              int index = context.select((BoardCubit cubit) => cubit.index);
+              final index = context.select((BoardCubit cubit) => cubit.index);
               return index < items.length
                   ? SafeArea(
                       child: Padding(

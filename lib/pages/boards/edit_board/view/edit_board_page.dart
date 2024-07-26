@@ -25,9 +25,7 @@ class EditBoardPage extends StatelessWidget {
         create: (_) => BoardCubit(
           boardsRepository: context.read<BoardsRepository>(),
           userRepository: context.read<UserRepository>(),
-        )..streamBoard(boardID).listen((state) {
-            context.read<BoardCubit>();
-          }),
+        )..streamBoard(boardID),
         child: BlocBuilder<BoardCubit, BoardState>(
           builder: (context, state) {
             if (state is BoardLoading) {

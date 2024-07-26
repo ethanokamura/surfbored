@@ -29,6 +29,22 @@ class BoardsRepository {
       return null;
     }
   }
+
+  // check if user has liked an item
+  Future<bool> hasItem(String boardID, String itemID) async {
+    try {
+      // get document from database
+      final doc = await _firestore.getBoardDoc(boardID);
+      if (doc.exists) {
+        // return board
+        final boardData = Board.fromJson(doc.data()!);
+        return boardData.hasItem(itemID: itemID);
+      }
+      return false;
+    } on FirebaseException {
+      throw UserFailure.fromGetUser();
+    }
+  }
 }
 
 extension Create on BoardsRepository {
@@ -135,20 +151,20 @@ extension Read on BoardsRepository {
     }
   }
 
-  // check included items
-  Future<bool> boardIncludesItem(String boardID, String itemID) async {
-    try {
-      // get board data
-      final doc = await _firestore.getBoardDoc(boardID);
-      if (!doc.exists) return false;
-      final data = Board.fromJson(doc.data()!);
-      // check if the board contains item
-      return data.items.contains(itemID);
-    } on FirebaseException {
-      // return failure
-      throw BoardFailure.fromGetBoard();
-    }
-  }
+  // // check included items
+  // Future<bool> boardIncludesItem(String boardID, String itemID) async {
+  //   try {
+  //     // get board data
+  //     final doc = await _firestore.getBoardDoc(boardID);
+  //     if (!doc.exists) return false;
+  //     final data = Board.fromJson(doc.data()!);
+  //     // check if the board contains item
+  //     return data.items.contains(itemID);
+  //   } on FirebaseException {
+  //     // return failure
+  //     throw BoardFailure.fromGetBoard();
+  //   }
+  // }
 }
 
 extension Update on BoardsRepository {
@@ -170,7 +186,7 @@ extension Update on BoardsRepository {
     try {
       // update based on if the board is selected
       await _firestore.updateBoardDoc(boardID, {
-        'items': isSelected
+        'items': !isSelected
             ? FieldValue.arrayUnion([itemID])
             : FieldValue.arrayRemove([itemID]),
       });

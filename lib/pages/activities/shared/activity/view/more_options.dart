@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/activities/add_activity/add_activity.dart';
+import 'package:rando/pages/boards/shared/add_activity/add_activity.dart';
 
 enum Options {
   manage,

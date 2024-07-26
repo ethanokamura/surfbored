@@ -48,8 +48,8 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
       boardsCollection().doc(boardID);
   Future<DocumentSnapshot<Map<String, dynamic>>> getBoardDoc(String boardID) =>
       boardDoc(boardID).get();
-  Future<void> updateBoardDoc(String itemID, Map<String, dynamic> data) =>
-      boardDoc(itemID).update(data);
-  Future<void> setBoardDoc(String itemID, Map<String, dynamic> data) =>
-      boardDoc(itemID).set(data);
+  Future<void> updateBoardDoc(String boardID, Map<String, dynamic> data) =>
+      boardDoc(boardID).update(data);
+  Future<void> setBoardDoc(String boardID, Map<String, dynamic> data) =>
+      boardDoc(boardID).set(data);
 }

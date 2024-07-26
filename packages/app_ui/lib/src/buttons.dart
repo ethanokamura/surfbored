@@ -155,6 +155,24 @@ class LikeButton extends StatelessWidget {
   }
 }
 
+class CheckBox extends StatelessWidget {
+  const CheckBox({
+    required this.isSelected,
+    super.key,
+  });
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      isSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank,
+      color: isSelected
+          ? Theme.of(context).accentColor
+          : Theme.of(context).backgroundColor,
+    );
+  }
+}
+
 class LinkWidget extends StatelessWidget {
   const LinkWidget({
     required this.text,
@@ -174,29 +192,6 @@ class LinkWidget extends StatelessWidget {
         style: TextStyle(
           color: Theme.of(context).accentColor,
         ),
-      ),
-    );
-  }
-}
-
-class CheckBox extends StatelessWidget {
-  const CheckBox({
-    required this.isSelected,
-    required this.onTap,
-    super.key,
-  });
-  final void Function()? onTap;
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Icon(
-        isSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank,
-        color: isSelected
-            ? Theme.of(context).accentColor
-            : Theme.of(context).backgroundColor,
       ),
     );
   }

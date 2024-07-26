@@ -113,6 +113,20 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
+  Future<void> toggleItemSelection(
+    String boardID,
+    String itemID, {
+    required bool isSelected,
+  }) async {
+    await boardsRepository.updateBoardItems(
+      boardID: boardID,
+      itemID: itemID,
+      isSelected: isSelected,
+    );
+    final updatedBoard = await fetchBoard(boardID);
+    emit(BoardLoaded(board: updatedBoard));
+  }
+
   Future<void> deleteBoard(
     String userID,
     String boardID,

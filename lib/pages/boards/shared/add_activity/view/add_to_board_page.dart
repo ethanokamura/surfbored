@@ -2,11 +2,11 @@ import 'package:app_ui/app_ui.dart';
 import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/activities/add_activity/cubit/add_activity_cubit.dart';
-import 'package:rando/pages/activities/add_activity/views/select_board.dart';
+import 'package:rando/pages/boards/cubit/board_cubit.dart';
+import 'package:rando/pages/boards/shared/select_board/select_board.dart';
 import 'package:user_repository/user_repository.dart';
 
-class AddToBoardPage extends StatefulWidget {
+class AddToBoardPage extends StatelessWidget {
   const AddToBoardPage({
     required this.userID,
     required this.itemID,
@@ -24,11 +24,6 @@ class AddToBoardPage extends StatefulWidget {
   }
 
   @override
-  State<AddToBoardPage> createState() => _AddToBoardPageState();
-}
-
-class _AddToBoardPageState extends State<AddToBoardPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -42,17 +37,17 @@ class _AddToBoardPageState extends State<AddToBoardPage> {
         child: Padding(
           padding: const EdgeInsets.all(defaultPadding),
           child: BlocProvider(
-            create: (context) => AddActivityCubit(
+            create: (context) => BoardCubit(
               boardsRepository: context.read<BoardsRepository>(),
               userRepository: context.read<UserRepository>(),
-            )..streamUserBoards(widget.userID),
-            child: BlocBuilder<AddActivityCubit, AddActivityState>(
+            )..streamUserBoards(userID),
+            child: BlocBuilder<BoardCubit, BoardState>(
               builder: (context, state) {
                 if (state is BoardLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is BoardError) {
                   return Center(child: Text('Error: ${state.message}'));
-                } else if (state is BoardsLoaded) {
+                } else if (state is UserBoardsLoaded) {
                   final boards = state.boards;
                   return ListView.separated(
                     separatorBuilder: (context, index) =>
@@ -61,7 +56,7 @@ class _AddToBoardPageState extends State<AddToBoardPage> {
                     itemBuilder: (context, index) {
                       final boardID = boards[index];
                       return SelectBoardCard(
-                        itemID: widget.itemID,
+                        itemID: itemID,
                         boardID: boardID,
                       );
                     },

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:rando/pages/activities/activity_page/activity_page.dart';
-import 'package:rando/pages/activities/add_activity/add_activity.dart';
 import 'package:rando/pages/activities/edit_activity/edit_activity.dart';
 import 'package:rando/pages/authentication/register_user.dart';
 import 'package:rando/pages/boards/board/board.dart';
 import 'package:rando/pages/boards/edit_board/edit_board.dart';
+import 'package:rando/pages/boards/shared/add_activity/add_activity.dart';
 import 'package:rando/pages/create/create.dart';
 import 'package:rando/pages/home/home.dart';
 import 'package:rando/pages/inbox/inbox.dart';

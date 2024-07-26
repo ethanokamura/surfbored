@@ -46,7 +46,7 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  Stream<BoardState> streamBoard(String boardID) async* {
+  void streamBoard(String boardID) {
     emit(BoardLoading());
     boardsRepository.readBoardStream(boardID).listen(
       (snapshot) {
@@ -58,26 +58,14 @@ class BoardCubit extends Cubit<BoardState> {
     );
   }
 
-  Stream<BoardState> streamBoardItems(String boardID) async* {
-    emit(BoardLoading());
-    boardsRepository.readBoardItemStream(boardID).listen(
-      (snapshot) {
-        emit(BoardItemsLoaded(items: snapshot));
-      },
-      onError: (dynamic error) {
-        emit(BoardError(message: 'failed to load items: $error'));
-      },
-    );
-  }
-
-  Stream<BoardState> streamUserBoards(String userID) async* {
+  void streamUserBoards(String userID) {
     emit(UserBoardsLoading());
     userRepository.readUserBoardStream(userID).listen(
       (snapshot) {
         emit(UserBoardsLoaded(boards: snapshot));
       },
       onError: (dynamic error) {
-        emit(BoardError(message: 'failed to load items: $error'));
+        emit(BoardError(message: 'failed to load boards: $error'));
       },
     );
   }
@@ -107,7 +95,11 @@ class BoardCubit extends Cubit<BoardState> {
     await boardsRepository.updateField(boardID, field, data);
   }
 
-  Future<void> toggleLike(String userID, String boardID, bool isLiked) async {
+  Future<void> toggleLike(
+    String userID,
+    String boardID, {
+    required bool isLiked,
+  }) async {
     try {
       await boardsRepository.updateBoardLikes(
         userID: userID,

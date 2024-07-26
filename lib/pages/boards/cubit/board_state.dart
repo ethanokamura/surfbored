@@ -9,6 +9,8 @@ class BoardInitial extends BoardState {}
 
 class BoardLoading extends BoardState {}
 
+class BoardItemsLoading extends BoardState {}
+
 class UserBoardsLoading extends BoardState {}
 
 class BoardDeleted extends BoardState {}

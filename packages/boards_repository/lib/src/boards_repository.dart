@@ -29,7 +29,9 @@ class BoardsRepository {
       return null;
     }
   }
+}
 
+extension Create on BoardsRepository {
   // create a board
   Future<String> createBoard(Board board, String userID) async {
     try {
@@ -62,7 +64,9 @@ class BoardsRepository {
       throw BoardFailure.fromCreateBoard();
     }
   }
+}
 
+extension Read on BoardsRepository {
   // get board document
   Future<Board> readBoard(String boardID) async {
     try {
@@ -145,7 +149,9 @@ class BoardsRepository {
       throw BoardFailure.fromGetBoard();
     }
   }
+}
 
+extension Update on BoardsRepository {
   // update specific user field
   Future<void> updateField(String boardID, String field, String data) async {
     try {
@@ -228,7 +234,9 @@ class BoardsRepository {
       throw BoardFailure.fromUpdateBoard();
     }
   }
+}
 
+extension Delete on BoardsRepository {
   // delete item:
   // we need to delete the item at all reference points
   Future<void> deleteBoard(

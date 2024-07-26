@@ -60,7 +60,7 @@ class BoardCubit extends Cubit<BoardState> {
 
   void streamUserBoards(String userID) {
     emit(UserBoardsLoading());
-    userRepository.readUserBoardStream(userID).listen(
+    userRepository.getUserBoardStream(userID).listen(
       (snapshot) {
         emit(UserBoardsLoaded(boards: snapshot));
       },

@@ -62,7 +62,7 @@ class ItemCubit extends Cubit<ItemState> {
 
   void streamUserItems(String userID) {
     emit(ItemsLoading());
-    userRepository.readUserItemStream(userID).listen(
+    userRepository.getUserItemStream(userID).listen(
       (snapshot) {
         emit(ItemsLoaded(items: snapshot));
       },

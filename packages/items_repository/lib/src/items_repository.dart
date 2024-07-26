@@ -31,7 +31,9 @@ class ItemsRepository {
       return null;
     }
   }
+}
 
+extension Create on ItemsRepository {
   // create an item
   Future<String> createItem(Item item, String userID) async {
     try {
@@ -64,7 +66,9 @@ class ItemsRepository {
       throw ItemFailure.fromCreateItem();
     }
   }
+}
 
+extension Read on ItemsRepository {
   // get item document
   Future<Item> readItem(String itemID) async {
     try {
@@ -112,7 +116,9 @@ class ItemsRepository {
       throw ItemFailure.fromGetItem();
     }
   }
+}
 
+extension Update on ItemsRepository {
   // update specific user field
   Future<void> updateField(String itemID, String field, String data) async {
     try {
@@ -187,7 +193,9 @@ class ItemsRepository {
       throw ItemFailure.fromUpdateItem();
     }
   }
+}
 
+extension Delete on ItemsRepository {
   // delete item:
   // we need to delete the item at all reference points
   Future<void> deleteItem(String userID, String itemID, String photoURL) async {

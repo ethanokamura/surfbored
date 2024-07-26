@@ -8,7 +8,7 @@ enum AppStatus {
   // main
   home,
   search,
-  notifications,
+  inbox,
   create,
   // profile
   profile,

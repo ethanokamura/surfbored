@@ -4,7 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
 // import 'package:rando/pages/create/create.dart';
 
-enum NavBarItem { home, search, create, notifications, profile }
+enum NavBarItem { home, search, create, inbox, profile }
+
+// class NavigationCubit extends Cubit<NavigationState> {
+//   MainNavigationCubit() : super(MainNavigationState.home);
+
+//   void goToHome() => emit(MainNavigationState.home);
+//   void goToProfile() => emit(MainNavigationState.profile);
+//   void goToCreate() => emit(MainNavigationState.create);
+//   void goToSearch() => emit(MainNavigationState.search);
+// }
 
 extension NavBarItemExtensions on NavBarItem {
   bool get isHome => this == NavBarItem.home;
@@ -61,7 +70,7 @@ class BottomNavBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search, size: 20),
+          icon: Icon(FontAwesomeIcons.magnifyingGlass, size: 20),
           label: 'search',
         ),
         BottomNavigationBarItem(
@@ -69,8 +78,8 @@ class BottomNavBar extends StatelessWidget {
           label: 'Create',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.noteSticky, size: 20),
-          label: 'Notifications',
+          icon: Icon(FontAwesomeIcons.inbox, size: 20),
+          label: 'Inbox',
         ),
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.user, size: 20),

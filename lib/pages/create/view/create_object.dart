@@ -46,7 +46,7 @@ class _CreateObjectViewState extends State<CreateObjectView> {
   String tagsText = 'tags';
   List<String> tags = [];
   String docID = '';
-  String? imgURL;
+  String? photoURL;
 
   File? imageFile;
   String? filename;
@@ -82,7 +82,7 @@ class _CreateObjectViewState extends State<CreateObjectView> {
                   UploadImageWidget(
                     width: 200,
                     height: 200,
-                    imgURL: imgURL,
+                    photoURL: photoURL,
                     onFileChanged: (file, filename) {
                       setState(() {
                         imageFile = file;

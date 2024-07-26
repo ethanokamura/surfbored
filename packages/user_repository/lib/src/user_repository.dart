@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:api_client/api_client.dart' as firebase show User;
 import 'package:api_client/api_client.dart' hide User;
 import 'package:app_core/app_core.dart';
@@ -8,11 +10,14 @@ class UserRepository {
   UserRepository({
     FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firestore,
+    FirebaseStorage? storage,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        _storage = storage ?? FirebaseStorage.instance,
         _firestore = firestore ?? FirebaseFirestore.instance {
     _user = _firebaseAuth.authUserChanges(_firestore);
   }
 
+  final FirebaseStorage _storage;
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
 
@@ -129,18 +134,34 @@ class UserRepository {
     }
   }
 
-  // update profile picture
-  Future<void> setPhotoURL(
+  // upload image
+  Future<String?> uploadImage(
+    File file,
     String userID,
-    String photoURL,
   ) async {
     try {
-      // save photoURL in user doc
-      await _firestore.updateUserDoc(userID, {'photoURL': photoURL});
-    } on FirebaseException {
-      throw UserFailure.fromUpdateUser();
+      // upload to firebase
+      final url = await _storage.uploadFile('users/$userID/', file);
+      // save photoURL to document
+      await _firestore.updateUserDoc(userID, {'photoURL': url});
+      return url;
+    } catch (e) {
+      return null;
     }
   }
+
+  // // update profile picture
+  // Future<void> setPhotoURL(
+  //   String userID,
+  //   String photoURL,
+  // ) async {
+  //   try {
+  //     // save photoURL in user doc
+  //     await _firestore.updateUserDoc(userID, {'photoURL': photoURL});
+  //   } on FirebaseException {
+  //     throw UserFailure.fromUpdateUser();
+  //   }
+  // }
 
   // check if the current user is the provided user
   bool isCurrentUser(String userID) {

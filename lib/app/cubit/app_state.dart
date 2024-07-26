@@ -10,17 +10,7 @@ enum AppStatus {
   search,
   inbox,
   create,
-  // profile
   profile,
-  profileSettings,
-  editProfile,
-  // activities
-  activity,
-  editActivity,
-  addActivity,
-  // boards
-  board,
-  editBoard,
 }
 
 extension AppStatusExtensions on AppStatus {

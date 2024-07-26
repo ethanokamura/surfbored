@@ -2,11 +2,16 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
+import 'package:rando/pages/profile/edit_profile/edit_profile.dart';
 
 class ProfileSettingsPage extends StatelessWidget {
-  const ProfileSettingsPage({super.key});
-  static Page<dynamic> page() =>
-      const MaterialPage<void>(child: ProfileSettingsPage());
+  const ProfileSettingsPage({required this.userID, super.key});
+  final String userID;
+  static MaterialPage<void> page({required String userID}) {
+    return MaterialPage<void>(
+      child: ProfileSettingsPage(userID: userID),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +38,12 @@ class ProfileSettingsPage extends StatelessWidget {
                 ),
                 ActionButton(
                   inverted: false,
-                  onTap: () {
-                    Navigator.pushNamed(context, '/edit_profile');
-                  },
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute<dynamic>(
+                      builder: (context) => EditProfilePage(userID: userID),
+                    ),
+                  ),
                   text: 'Edit Profile',
                 ),
                 ActionButton(

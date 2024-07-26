@@ -1,10 +1,10 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:rando/pages/activities/shared/activity_list/activity_list.dart';
 import 'package:rando/pages/boards/shared/board_list/board_list.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
+import 'package:rando/pages/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -251,9 +251,11 @@ class MyProfileButtons extends StatelessWidget {
         Expanded(
           child: ActionButton(
             inverted: false,
-            onTap: () => context.read<AppCubit>().updateStatus(
-              AppStatus.editProfile,
-              parameters: {'userID': userID},
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (context) => ProfileSettingsPage(userID: userID),
+              ),
             ),
             text: 'Edit Profile',
           ),

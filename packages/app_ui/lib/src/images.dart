@@ -38,7 +38,7 @@ class EditImage extends StatefulWidget {
 class _EditImageState extends State<EditImage> {
   final ImagePicker picker = ImagePicker();
   Uint8List? pickedImage;
-  String? imageURL;
+  String? photoURL;
   bool isLoading = true;
 
   @override
@@ -50,17 +50,17 @@ class _EditImageState extends State<EditImage> {
   Future<void> getImageURL(String? path) async {
     if (path == null) {
       setState(() {
-        imageURL = null;
+        photoURL = null;
       });
     } else {
       if (path.isNotEmpty) {
         try {
           setState(() {
-            imageURL = path;
+            photoURL = path;
           });
         } catch (e) {
           setState(() {
-            imageURL = null;
+            photoURL = null;
           });
         }
       }
@@ -158,7 +158,7 @@ class _EditImageState extends State<EditImage> {
 
       // set state
       setState(() {
-        imageURL = uploadURL;
+        photoURL = uploadURL;
         pickedImage = compressedImage.readAsBytesSync();
         isLoading = false;
       });
@@ -206,7 +206,7 @@ class _EditImageState extends State<EditImage> {
       child: ImageWidget(
         height: widget.height,
         width: widget.width,
-        photoURL: imageURL,
+        photoURL: photoURL,
         borderRadius: defaultBorderRadius,
       ),
     );
@@ -215,7 +215,7 @@ class _EditImageState extends State<EditImage> {
 
 class UploadImageWidget extends StatefulWidget {
   const UploadImageWidget({
-    required this.imgURL,
+    required this.photoURL,
     required this.height,
     required this.width,
     required this.onFileChanged,
@@ -223,7 +223,7 @@ class UploadImageWidget extends StatefulWidget {
   });
 
   final dynamic Function(File file, String filename) onFileChanged;
-  final String? imgURL;
+  final String? photoURL;
   final double height;
   final double width;
 
@@ -235,13 +235,13 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
   // variables
   final ImagePicker picker = ImagePicker();
   Uint8List? pickedImage;
-  String? imageURL;
+  String? photoURL;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    getImageURL(widget.imgURL);
+    getImageURL(widget.photoURL);
   }
 
   Future<void> selectPhoto() async {
@@ -361,17 +361,17 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
   Future<void> getImageURL(String? path) async {
     if (path == null) {
       setState(() {
-        imageURL = null;
+        photoURL = null;
       });
     } else {
       if (path.isNotEmpty) {
         try {
           setState(() {
-            imageURL = path;
+            photoURL = path;
           });
         } catch (e) {
           setState(() {
-            imageURL = null;
+            photoURL = null;
           });
         }
       }
@@ -390,7 +390,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
           : ImageWidget(
               height: widget.height,
               width: widget.width,
-              photoURL: imageURL,
+              photoURL: photoURL,
               borderRadius: defaultBorderRadius,
             ),
     );
@@ -416,7 +416,7 @@ class ImageWidget extends StatefulWidget {
 }
 
 class _ImageWidgetState extends State<ImageWidget> {
-  String? imageURL;
+  String? photoURL;
   bool isLoading = true;
 
   @override
@@ -438,17 +438,17 @@ class _ImageWidgetState extends State<ImageWidget> {
   Future<void> getImageURL(String? path) async {
     if (path == null) {
       setState(() {
-        imageURL = null;
+        photoURL = null;
       });
     } else {
       if (path.isNotEmpty) {
         try {
           setState(() {
-            imageURL = path;
+            photoURL = path;
           });
         } catch (e) {
           setState(() {
-            imageURL = null;
+            photoURL = null;
           });
         }
       }
@@ -462,8 +462,8 @@ class _ImageWidgetState extends State<ImageWidget> {
   Widget build(BuildContext context) {
     return isLoading
         ? loadingWidget(context)
-        : imageURL != null
-            ? imageWidget(imageURL!)
+        : photoURL != null
+            ? imageWidget(photoURL!)
             : errorWidget(context);
   }
 

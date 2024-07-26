@@ -1,19 +1,9 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/app/cubit/app_cubit.dart';
-// import 'package:rando/pages/create/create.dart';
+import 'package:rando/pages/create/create.dart';
 
 enum NavBarItem { home, search, create, inbox, profile }
-
-// class NavigationCubit extends Cubit<NavigationState> {
-//   MainNavigationCubit() : super(MainNavigationState.home);
-
-//   void goToHome() => emit(MainNavigationState.home);
-//   void goToProfile() => emit(MainNavigationState.profile);
-//   void goToCreate() => emit(MainNavigationState.create);
-//   void goToSearch() => emit(MainNavigationState.search);
-// }
 
 extension NavBarItemExtensions on NavBarItem {
   bool get isHome => this == NavBarItem.home;
@@ -90,7 +80,7 @@ class BottomNavBar extends StatelessWidget {
   }
 
   Future<void> showCreateModal(BuildContext currentContext) async {
-    String? choice;
+    late String choice;
     await showBottomModal(
       currentContext,
       <Widget>[
@@ -131,14 +121,14 @@ class BottomNavBar extends StatelessWidget {
           ],
         ),
       ],
-    ) as String?;
-    print(choice);
-    if (choice == null) return;
+    );
 
     if (currentContext.mounted) {
-      currentContext.read<AppCubit>().updateStatus(
-        AppStatus.create,
-        parameters: {'type': choice},
+      await Navigator.push(
+        currentContext,
+        MaterialPageRoute<Page<dynamic>>(
+          builder: (context) => CreatePage(type: choice),
+        ),
       );
     }
   }

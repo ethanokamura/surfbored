@@ -35,13 +35,8 @@ class HomeBody extends StatelessWidget {
       children: [
         const FeedPage(),
         const SearchPage(),
+        const Center(child: Text('Create')),
         const InboxPage(),
-        // search
-
-        // CreateView(),
-
-        // notifications
-
         ProfilePage(userID: userID),
       ],
     );

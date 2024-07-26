@@ -116,7 +116,7 @@ class BoardsRepository {
   }
 
   // stream board items
-  Stream<List<String>> readBoardItemStream(String boardID) {
+  Stream<List<String>> readItemsStream(String boardID) {
     try {
       return _firestore.boardDoc(boardID).snapshots().map((snapshot) {
         if (snapshot.exists) {

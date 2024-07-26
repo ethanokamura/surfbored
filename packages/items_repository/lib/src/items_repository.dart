@@ -155,7 +155,7 @@ class ItemsRepository {
       final boardItems = await BoardsRepository().readItems(boardID);
 
       // update item documents based on isLiked value
-      if (isLiked) {
+      if (!isLiked) {
         // update item doc
         batch.update(itemRef, {
           'likedBy': FieldValue.arrayUnion([userID]),

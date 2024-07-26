@@ -309,17 +309,15 @@ class UserRepository {
   // stream user items
   Stream<List<String>> readUserItemStream(String userID) {
     try {
-      return _firestore.userDoc(userID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          final data = model.User.fromJson(snapshot.data()!);
+      return _firestore.userDoc(userID).snapshots().map((doc) {
+        if (doc.exists) {
+          final data = model.User.fromJson(doc.data()!);
           return data.items;
         } else {
           throw Exception('items not found');
         }
-      }).handleError((error) {
-        throw UserFailure.fromGetUser();
       });
-    } catch (error) {
+    } on FirebaseException {
       throw UserFailure.fromGetUser();
     }
   }

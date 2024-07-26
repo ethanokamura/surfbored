@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:boards_repository/boards_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:items_repository/items_repository.dart';
 import 'package:user_repository/user_repository.dart';
@@ -10,10 +11,12 @@ class ItemCubit extends Cubit<ItemState> {
   ItemCubit({
     required this.itemsRepository,
     required this.userRepository,
+    required this.boardsRepository,
   }) : super(ItemInitial());
 
   final ItemsRepository itemsRepository;
   final UserRepository userRepository;
+  final BoardsRepository boardsRepository;
 
   bool isOwner(String itemUserID, String currentUserID) {
     return itemUserID == currentUserID;
@@ -25,15 +28,15 @@ class ItemCubit extends Cubit<ItemState> {
 
   Future<Item> fetchItem(String itemID) async {
     try {
-      final board = await itemsRepository.readItem(itemID);
-      return board;
+      final item = await itemsRepository.readItem(itemID);
+      return item;
     } catch (e) {
       ItemError(message: 'error fetching board: $e');
       return Item.empty;
     }
   }
 
-  Stream<ItemState> streamItem(String itemID) async* {
+  void streamItem(String itemID) {
     emit(ItemLoading());
     itemsRepository.readItemStream(itemID).listen(
       (snapshot) {
@@ -45,11 +48,23 @@ class ItemCubit extends Cubit<ItemState> {
     );
   }
 
-  Stream<ItemState> streamUserItems(String userID) async* {
-    emit(UserItemsLoading());
+  void streamBoardItems(String boardID) {
+    emit(ItemsLoading());
+    boardsRepository.readItemsStream(boardID).listen(
+      (snapshot) {
+        emit(ItemsLoaded(items: snapshot));
+      },
+      onError: (dynamic error) {
+        emit(ItemError(message: 'failed to stream items $error'));
+      },
+    );
+  }
+
+  void streamUserItems(String userID) {
+    emit(ItemsLoading());
     userRepository.readUserItemStream(userID).listen(
       (snapshot) {
-        emit(UserItemsLoaded(items: snapshot));
+        emit(ItemsLoaded(items: snapshot));
       },
       onError: (dynamic error) {
         emit(ItemError(message: 'failed to load items: $error'));
@@ -61,14 +76,18 @@ class ItemCubit extends Cubit<ItemState> {
     await itemsRepository.updateField(itemID, field, data);
   }
 
-  Future<void> toggleLike(String userID, String itemID, bool isLiked) async {
+  Future<void> toggleLike(
+    String userID,
+    String itemID, {
+    required bool isLiked,
+  }) async {
     await itemsRepository.updateItemLikes(
       userID: userID,
       itemID: itemID,
       isLiked: isLiked,
     );
-    await fetchItem(itemID);
-    emit(ItemLiked(liked: isLiked));
+    final updatedItem = await fetchItem(itemID);
+    emit(ItemLoaded(item: updatedItem));
   }
 
   Future<void> deleteItem(String userID, String itemID, String photoURL) async {

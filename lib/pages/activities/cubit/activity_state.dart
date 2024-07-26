@@ -9,7 +9,7 @@ class ItemInitial extends ItemState {}
 
 class ItemLoading extends ItemState {}
 
-class UserItemsLoading extends ItemState {}
+class ItemsLoading extends ItemState {}
 
 class ItemDeleted extends ItemState {}
 
@@ -29,8 +29,8 @@ class ItemLoaded extends ItemState {
   List<Object?> get props => [item];
 }
 
-class UserItemsLoaded extends ItemState {
-  UserItemsLoaded({required this.items});
+class ItemsLoaded extends ItemState {
+  ItemsLoaded({required this.items});
   final List<String> items;
 
   @override

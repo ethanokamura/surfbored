@@ -1,8 +1,9 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/activities/widgets/activity_list/activity_list.dart';
-import 'package:rando/pages/boards/widgets/board_list/board_list.dart';
+import 'package:rando/app/cubit/app_cubit.dart';
+import 'package:rando/pages/activities/shared/activity_list/activity_list.dart';
+import 'package:rando/pages/boards/shared/board_list/board_list.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -77,7 +78,7 @@ class ProfileView extends StatelessWidget {
                             child: UserDetails(user: user),
                           ),
                           if (isCurrent)
-                            const MyProfileButtons()
+                            MyProfileButtons(userID: user.uid)
                           else
                             const DefaultProfileButtons(),
                         ],
@@ -241,8 +242,8 @@ class UserDetails extends StatelessWidget {
 }
 
 class MyProfileButtons extends StatelessWidget {
-  const MyProfileButtons({super.key});
-
+  const MyProfileButtons({required this.userID, super.key});
+  final String userID;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -250,7 +251,10 @@ class MyProfileButtons extends StatelessWidget {
         Expanded(
           child: ActionButton(
             inverted: false,
-            onTap: () => Navigator.pushNamed(context, '/user_settings'),
+            onTap: () => context.read<AppCubit>().updateStatus(
+              AppStatus.editProfile,
+              parameters: {'userID': userID},
+            ),
             text: 'Edit Profile',
           ),
         ),

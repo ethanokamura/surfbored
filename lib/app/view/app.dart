@@ -54,27 +54,32 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (context) => AppStrings.appTitle,
-      theme: darkMode,
-      debugShowCheckedModeBanner: false,
-      home: BlocListener<AppCubit, AppState>(
-        listenWhen: (_, current) => current.isFailure,
-        listener: (context, state) {
-          return switch (state.failure) {
-            AuthUserChangesFailure() =>
-              context.showSnackBar(AppStrings.authFailure),
-            SignOutFailure() => context.showSnackBar(AppStrings.authFailure),
-            _ => context.showSnackBar(AppStrings.unknownFailure),
-          };
-        },
-        child: FlowBuilder<AppState>(
-          onGeneratePages: generateAppPages,
-          state: context.select<AppCubit, AppState>(
-            (cubit) => cubit.state,
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        return MaterialApp(
+          onGenerateTitle: (context) => AppStrings.appTitle,
+          theme: context.read<ThemeCubit>().themeData,
+          debugShowCheckedModeBanner: false,
+          home: BlocListener<AppCubit, AppState>(
+            listenWhen: (_, current) => current.isFailure,
+            listener: (context, state) {
+              return switch (state.failure) {
+                AuthUserChangesFailure() =>
+                  context.showSnackBar(AppStrings.authFailure),
+                SignOutFailure() =>
+                  context.showSnackBar(AppStrings.authFailure),
+                _ => context.showSnackBar(AppStrings.unknownFailure),
+              };
+            },
+            child: FlowBuilder<AppState>(
+              onGeneratePages: generateAppPages,
+              state: context.select<AppCubit, AppState>(
+                (cubit) => cubit.state,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -15,6 +15,7 @@ class ProfileSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.read<ThemeCubit>().isDarkMode;
     return Scaffold(
       appBar: AppBar(title: const Text('User Settings')),
       body: SafeArea(
@@ -24,17 +25,17 @@ class ProfileSettingsPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                BlocBuilder<ThemeCubit, ThemeData>(
-                  builder: (context, theme) {
-                    final isDarkMode = theme.brightness == Brightness.dark;
-                    return SwitchListTile(
-                      title: const Text('Dark Mode'),
-                      value: isDarkMode,
-                      onChanged: (value) {
-                        context.read<ThemeCubit>().toggleTheme();
-                      },
-                    );
-                  },
+                // SwitchListTile(
+                //   title: Text(isDarkMode ? 'Dark Mode' : 'Light Mode'),
+                //   value: isDarkMode,
+                //   onChanged: (value) {
+                //     context.read<ThemeCubit>().toggleTheme();
+                //   },
+                // ),
+                ActionButton(
+                  text: 'Theme: ${isDarkMode ? 'Dark Mode' : 'Light Mode'}',
+                  inverted: false,
+                  onTap: () => context.read<ThemeCubit>().toggleTheme(),
                 ),
                 ActionButton(
                   inverted: false,

@@ -13,7 +13,7 @@ class UserCubit extends Cubit<UserState> {
   void streamItems(String userID) {
     emit(state.fromUserLoading());
     try {
-      _userRepository.getUserItemStream(userID).listen(
+      _userRepository.streamItems(userID).listen(
         (snapshot) {
           emit(state.fromListLoaded(snapshot));
         },
@@ -29,7 +29,7 @@ class UserCubit extends Cubit<UserState> {
   void streamBoards(String userID) {
     emit(state.fromUserLoading());
     try {
-      _userRepository.getUserBoardStream(userID).listen(
+      _userRepository.streamBoards(userID).listen(
         (snapshot) {
           emit(state.fromListLoaded(snapshot));
         },

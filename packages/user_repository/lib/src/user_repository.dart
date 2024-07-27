@@ -150,19 +150,6 @@ class UserRepository {
     }
   }
 
-  // // update profile picture
-  // Future<void> setPhotoURL(
-  //   String userID,
-  //   String photoURL,
-  // ) async {
-  //   try {
-  //     // save photoURL in user doc
-  //     await _firestore.updateUserDoc(userID, {'photoURL': photoURL});
-  //   } on FirebaseException {
-  //     throw UserFailure.fromUpdateUser();
-  //   }
-  // }
-
   // check if the current user is the provided user
   bool isCurrentUser(String userID) {
     return user.uid == userID;
@@ -282,7 +269,7 @@ extension Create on UserRepository {
 }
 
 extension GetData on UserRepository {
-  // get user's boards
+  // get boards list
   Future<List<String>> getBoards(String userID) async {
     try {
       // get user doc
@@ -298,39 +285,7 @@ extension GetData on UserRepository {
     }
   }
 
-  // stream item data
-  Stream<List<String>> getBoardsStream(String userID) {
-    try {
-      return _firestore.userDoc(userID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          final data = model.User.fromJson(snapshot.data()!);
-          return data.boards;
-        } else {
-          throw Exception('Item not found');
-        }
-      });
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // get user's boards
-  Future<List<String>> getLikedBoards(String userID) async {
-    try {
-      // get user doc
-      final doc = await _firestore.getUserDoc(userID);
-      // return empty if the doc does not exist
-      if (!doc.exists) return [];
-      // get user data
-      final userData = model.User.fromJson(doc.data()!);
-      // return the user's liked boards
-      return userData.likedBoards;
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // get user's items
+  // get item list
   Future<List<String>> getItems(String userID) async {
     try {
       // get user doc
@@ -346,15 +301,15 @@ extension GetData on UserRepository {
     }
   }
 
-  // stream user items
-  Stream<List<String>> getUserItemStream(String userID) {
+  // stream board  list
+  Stream<List<String>> streamBoards(String userID) {
     try {
-      return _firestore.userDoc(userID).snapshots().map((doc) {
-        if (doc.exists) {
-          final data = model.User.fromJson(doc.data()!);
-          return data.items;
+      return _firestore.userDoc(userID).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          final data = model.User.fromJson(snapshot.data()!);
+          return data.boards;
         } else {
-          throw Exception('items not found');
+          throw Exception('Item not found');
         }
       });
     } on FirebaseException {
@@ -362,15 +317,15 @@ extension GetData on UserRepository {
     }
   }
 
-  // stream user boards
-  Stream<List<String>> getUserBoardStream(String userID) {
+  // stream items list
+  Stream<List<String>> streamItems(String userID) {
     try {
-      return _firestore.userDoc(userID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          final data = model.User.fromJson(snapshot.data()!);
-          return data.boards;
+      return _firestore.userDoc(userID).snapshots().map((doc) {
+        if (doc.exists) {
+          final data = model.User.fromJson(doc.data()!);
+          return data.items;
         } else {
-          throw Exception('boards not found');
+          throw Exception('items not found');
         }
       });
     } on FirebaseException {
@@ -389,6 +344,22 @@ extension GetData on UserRepository {
       final userData = model.User.fromJson(doc.data()!);
       // return the user's liked items
       return userData.items;
+    } on FirebaseException {
+      throw UserFailure.fromGetUser();
+    }
+  }
+
+  // get user's boards
+  Future<List<String>> getLikedBoards(String userID) async {
+    try {
+      // get user doc
+      final doc = await _firestore.getUserDoc(userID);
+      // return empty if the doc does not exist
+      if (!doc.exists) return [];
+      // get user data
+      final userData = model.User.fromJson(doc.data()!);
+      // return the user's liked boards
+      return userData.likedBoards;
     } on FirebaseException {
       throw UserFailure.fromGetUser();
     }

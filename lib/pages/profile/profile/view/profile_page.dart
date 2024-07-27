@@ -1,9 +1,9 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/profile/profile/view/activity_list/activity_list.dart';
-import 'package:rando/pages/boards/shared/board_list/board_list.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
+import 'package:rando/pages/profile/profile/view/activity_list_view.dart';
+import 'package:rando/pages/profile/profile/view/board_list.dart';
 import 'package:rando/pages/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -88,22 +88,24 @@ class ProfileView extends StatelessWidget {
                 ),
               ];
             },
-            body: Column(
-              children: [
-                const VerticalSpacer(),
-                const ProfileTabBar(),
-                const SizedBox(height: defaultSpacing),
-                Expanded(
-                  child: TabBarView(
-                    // These are the contents of the tab views, below the tabs.
+            body: user.uid.isNotEmpty
+                ? Column(
                     children: [
-                      ActivityList(userID: user.uid),
-                      BoardsList(userID: user.uid),
+                      const VerticalSpacer(),
+                      const ProfileTabBar(),
+                      const SizedBox(height: defaultSpacing),
+                      Expanded(
+                        child: TabBarView(
+                          // These are the contents of the tab views, below the tabs.
+                          children: [
+                            ActivityList(userID: user.uid),
+                            BoardsList(userID: user.uid),
+                          ],
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              ],
-            ),
+                  )
+                : const Center(child: CircularProgressIndicator()),
           ),
         ),
       ),

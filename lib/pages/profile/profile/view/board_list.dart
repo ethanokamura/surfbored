@@ -1,9 +1,8 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/boards/cubit/board_cubit.dart';
-import 'package:rando/pages/boards/shared/board_card/board_card.dart';
+import 'package:rando/pages/boards/boards.dart';
+import 'package:rando/pages/profile/profile/cubit/user_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardsList extends StatelessWidget {
@@ -12,11 +11,10 @@ class BoardsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BoardCubit(
-        boardsRepository: context.read<BoardsRepository>(),
+      create: (context) => UserCubit(
         userRepository: context.read<UserRepository>(),
-      )..streamUserBoards(userID),
-      child: BlocBuilder<BoardCubit, BoardState>(
+      )..streamBoards(userID),
+      child: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/activities/shared/activity_grid/activity_grid.dart';
+import 'package:rando/pages/activities/activities.dart';
 import 'package:rando/pages/profile/profile/cubit/user_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 

@@ -1,7 +1,8 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/create/create.dart';
+import 'package:rando/pages/activities/create_activity/create_activity.dart';
+import 'package:rando/pages/boards/create_board/create_board.dart';
 
 enum NavBarItem { home, search, create, inbox, profile }
 
@@ -128,12 +129,19 @@ class BottomNavBar extends StatelessWidget {
       return;
     } else {
       if (currentContext.mounted) {
-        await Navigator.push(
-          currentContext,
-          MaterialPageRoute<Page<dynamic>>(
-            builder: (context) => CreatePage(type: choice!),
-          ),
-        );
+        choice! == 'items'
+            ? await Navigator.push(
+                currentContext,
+                MaterialPageRoute<Page<dynamic>>(
+                  builder: (context) => const CreateActivityPage(),
+                ),
+              )
+            : await Navigator.push(
+                currentContext,
+                MaterialPageRoute<Page<dynamic>>(
+                  builder: (context) => const CreateBoardPage(),
+                ),
+              );
       }
     }
   }

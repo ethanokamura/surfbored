@@ -15,6 +15,7 @@ dependencies:
     path: ../boards_repository
   flutter:
     sdk: flutter
+  json_annotation: ^4.9.0
   user_repository:
     path: ../user_repository
 

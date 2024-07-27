@@ -22,17 +22,11 @@ class Board extends Equatable {
   factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);
 
   // data fields
-  @JsonKey(defaultValue: '')
   final String id;
-  @JsonKey(defaultValue: '')
   final String uid;
-  @JsonKey(defaultValue: '')
   final String? photoURL;
-  @JsonKey(defaultValue: '')
   final String title;
-  @JsonKey(defaultValue: '')
   final String description;
-  @JsonKey(defaultValue: 0)
   final int likes;
   final List<String> likedBy;
   final List<String> items;

@@ -24,22 +24,6 @@ extension FirebaseStorageExtensions on FirebaseStorage {
     }
   }
 
-  /// Read A File
-  /// [filepath] the path where the file is located
-  // Future<String> getFileURL(String filepath) async {
-  //   try {
-  //     // get reference to the file at the given filepath
-  //     final imageRef = ref.child(filepath);
-  //     // return found data
-  //     final url = await imageRef.getDownloadURL();
-  //     // success
-  //     return url;
-  //   } on FirebaseException {
-  //     // handle errors
-  //     throw Exception('Error getting file URL');
-  //   }
-  // }
-
   /// Delete A File
   /// [filepath] the path where the file is located
   Future<void> deleteFile(String filepath) async {

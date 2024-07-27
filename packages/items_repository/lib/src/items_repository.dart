@@ -19,13 +19,14 @@ class ItemsRepository {
   // upload image
   Future<String?> uploadImage(
     File file,
-    String docID,
+    String doc,
   ) async {
     try {
       // upload to firebase
-      final url = await _storage.uploadFile('items/$docID/', file);
+      final url =
+          await _storage.uploadFile('items/$doc/cover_image.jpeg', file);
       // save photoURL to document
-      await _firestore.updateItemDoc(docID, {'photoURL': url});
+      await _firestore.updateItemDoc(doc, {'photoURL': url});
       return url;
     } catch (e) {
       return null;
@@ -55,7 +56,7 @@ extension Create on ItemsRepository {
         final newItem = item.toJson();
         newItem['id'] = itemRef.id;
         newItem['uid'] = userID;
-        newItem['createdAt'] = DateTime.now().millisecondsSinceEpoch;
+        newItem['createdAt'] = Timestamp.now();
 
         // preform writes
         transaction.set(itemRef, newItem);
@@ -76,8 +77,9 @@ extension Read on ItemsRepository {
       // get document from database
       final doc = await _firestore.getItemDoc(itemID);
       if (doc.exists) {
+        final data = doc.data();
         // return board
-        return Item.fromJson(doc.data()!);
+        return Item.fromJson(data!);
       } else {
         // return empty board if document DNE
         return Item.empty;
@@ -218,7 +220,9 @@ extension Delete on ItemsRepository {
       }
 
       // delete image
-      if (photoURL.isNotEmpty) await _storage.deleteFile(photoURL);
+      if (photoURL.isNotEmpty) {
+        await _storage.deleteFile('items/$itemID/cover_image.jpeg');
+      }
 
       // delete item ref
       batch.delete(itemRef);
@@ -245,7 +249,6 @@ extension Delete on ItemsRepository {
         'items': user.items,
         'likedItems': user.likedItems,
       });
-
       // commit changes
       await batch.commit();
     } on FirebaseException {

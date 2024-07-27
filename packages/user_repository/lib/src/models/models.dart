@@ -35,15 +35,10 @@ class User extends Equatable {
 
   // data fields
   final String uid;
-  @JsonKey(defaultValue: '')
   final String username;
-  @JsonKey(defaultValue: '')
   final String name;
-  @JsonKey(defaultValue: '')
   final String? photoURL;
-  @JsonKey(defaultValue: '')
   final String bio;
-  @JsonKey(defaultValue: '')
   final String website;
   final List<String> followers;
   final List<String> following;
@@ -51,7 +46,6 @@ class User extends Equatable {
   final List<String> boards;
   final List<String> likedItems;
   final List<String> likedBoards;
-  @JsonKey(defaultValue: '')
   final String likedItemsBoardID;
   @timestamp
   final DateTime? lastSignInAt;

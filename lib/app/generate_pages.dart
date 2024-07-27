@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:rando/pages/authentication/register_user.dart';
-import 'package:rando/pages/create/create.dart';
 import 'package:rando/pages/home/home.dart';
 import 'package:rando/pages/inbox/inbox.dart';
 import 'package:rando/pages/login/login.dart';
@@ -24,7 +23,7 @@ List<Page<dynamic>> generateAppPages(
     case AppStatus.search:
       return [SearchPage.page()];
     case AppStatus.create:
-      return [CreatePage.page(type: state.parameters['type'] as String)];
+    // do nothing
     case AppStatus.inbox:
       return [InboxPage.page()];
     case AppStatus.profile:

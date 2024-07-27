@@ -29,7 +29,7 @@ class Activity extends StatelessWidget {
               final item = state.item;
               return ActivityWidget(item: item);
             } else if (state.isEmpty) {
-              return const Center(child: Text('This board is empty.'));
+              return const Center(child: Text('This item is empty.'));
             } else {
               return const Center(child: Text('Something went wrong'));
             }
@@ -85,7 +85,7 @@ class ActivityWidget extends StatelessWidget {
                     );
                   },
                   onDelete: () {
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
                     context.read<ItemCubit>().deleteItem(
                           item.uid,
                           item.id,

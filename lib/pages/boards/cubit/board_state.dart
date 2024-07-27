@@ -1,6 +1,15 @@
 part of 'board_cubit.dart';
 
-enum BoardStatus { initial, loading, empty, loaded, deleted, failure }
+enum BoardStatus {
+  initial,
+  loading,
+  empty,
+  loaded,
+  deleted,
+  created,
+  creating,
+  failure,
+}
 
 final class BoardState extends Equatable {
   const BoardState._({
@@ -55,6 +64,8 @@ extension BoardStateExtensions on BoardState {
   bool get isLoaded => status == BoardStatus.loaded;
   bool get isLoading => status == BoardStatus.loading;
   bool get isFailure => status == BoardStatus.failure;
+  bool get isCreated => status == BoardStatus.created;
+  bool get isCreating => status == BoardStatus.creating;
   bool get canIncrement => index < items.length - 1;
   bool get canDecrement => index > 0;
 }

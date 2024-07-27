@@ -7,10 +7,10 @@ part of 'models.dart';
 // **************************************************************************
 
 Board _$BoardFromJson(Map<String, dynamic> json) => Board(
-      uid: json['uid'] as String? ?? '',
-      title: json['title'] as String? ?? '',
+      uid: json['uid'] as String,
+      title: json['title'] as String,
       id: json['id'] as String? ?? '',
-      photoURL: json['photoURL'] as String? ?? '',
+      photoURL: json['photoURL'] as String?,
       description: json['description'] as String? ?? '',
       likes: (json['likes'] as num?)?.toInt() ?? 0,
       likedBy: (json['likedBy'] as List<dynamic>?)

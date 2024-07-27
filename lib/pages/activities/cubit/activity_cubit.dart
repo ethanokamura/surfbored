@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 // import 'package:items_repository/items_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -79,6 +81,34 @@ class ItemCubit extends Cubit<ItemState> {
     }
   }
 
+  Future<void> createItem({
+    required String userID,
+    required String title,
+    required String description,
+    required List<String> tags,
+    required File? imageFile,
+  }) async {
+    emit(state.fromItemCreating());
+    try {
+      final docID = await _itemsRepository.createItem(
+        Item(
+          title: title,
+          description: description,
+          uid: 'userId', // Replace with actual user ID
+          tags: tags,
+        ),
+        userID,
+      );
+      if (imageFile != null) {
+        await _itemsRepository.uploadImage(imageFile, docID);
+      }
+      emit(state.fromItemCreated());
+      await getItem(docID);
+    } on ItemFailure catch (failure) {
+      emit(state.fromItemFailure(failure));
+    }
+  }
+
   Future<void> deleteItem(
     String userID,
     String itemID,
@@ -100,15 +130,14 @@ extension _ItemStateExtensions on ItemState {
 
   ItemState fromItemDeleted() => copyWith(status: ItemStatus.deleted);
 
+  ItemState fromItemCreating() => copyWith(status: ItemStatus.creating);
+
+  ItemState fromItemCreated() => copyWith(status: ItemStatus.created);
+
   ItemState fromItemLoaded(Item item) => copyWith(
         status: ItemStatus.loaded,
         item: item,
       );
-
-  // ItemState fromListLoaded(List<String> items) => copyWith(
-  //       status: ItemStatus.loaded,
-  //       items: items,
-  //     );
 
   ItemState fromItemToggle({required bool liked}) => copyWith(
         status: ItemStatus.loaded,

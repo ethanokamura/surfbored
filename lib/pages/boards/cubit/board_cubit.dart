@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:boards_repository/boards_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -181,6 +183,32 @@ class BoardCubit extends Cubit<BoardState> {
     emit(state.copyWith(index: newIndex));
   }
 
+  Future<void> createBoard({
+    required String userID,
+    required String title,
+    required String description,
+    required File? imageFile,
+  }) async {
+    emit(state.fromBoardCreating());
+    try {
+      final docID = await _boardsRepository.createBoard(
+        Board(
+          title: title,
+          description: description,
+          uid: 'userId', // Replace with actual user ID
+        ),
+        userID,
+      );
+      if (imageFile != null) {
+        await _boardsRepository.uploadImage(imageFile, docID);
+      }
+      emit(state.fromBoardCreated());
+      await getBoard(docID);
+    } on BoardFailure catch (failure) {
+      emit(state.fromBoardFailure(failure));
+    }
+  }
+
   Future<void> deleteBoard(
     String userID,
     String boardID,
@@ -201,6 +229,10 @@ extension _BoardStateExtensions on BoardState {
   BoardState fromBoardEmpty() => copyWith(status: BoardStatus.empty);
 
   BoardState fromBoardDeleted() => copyWith(status: BoardStatus.deleted);
+
+  BoardState fromBoardCreating() => copyWith(status: BoardStatus.creating);
+
+  BoardState fromBoardCreated() => copyWith(status: BoardStatus.created);
 
   BoardState fromBoardLoaded(Board board) => copyWith(
         status: BoardStatus.loaded,

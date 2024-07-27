@@ -137,13 +137,14 @@ class UserRepository {
   // upload image
   Future<String?> uploadImage(
     File file,
-    String userID,
+    String doc,
   ) async {
     try {
       // upload to firebase
-      final url = await _storage.uploadFile('users/$userID/', file);
+      final url =
+          await _storage.uploadFile('users/$doc/cover_image.jpeg', file);
       // save photoURL to document
-      await _firestore.updateUserDoc(userID, {'photoURL': url});
+      await _firestore.updateUserDoc(doc, {'photoURL': url});
       return url;
     } catch (e) {
       return null;

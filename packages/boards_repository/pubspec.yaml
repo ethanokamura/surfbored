@@ -13,6 +13,7 @@ dependencies:
     path: ../app_core
   flutter:
     sdk: flutter
+  json_annotation: ^4.9.0
   user_repository:
     path: ../user_repository
 

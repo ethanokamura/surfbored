@@ -17,13 +17,14 @@ class BoardsRepository {
   // upload image
   Future<String?> uploadImage(
     File file,
-    String docID,
+    String doc,
   ) async {
     try {
       // upload to firebase
-      final url = await _storage.uploadFile('boards/$docID/', file);
+      final url =
+          await _storage.uploadFile('boards/$doc/cover_image.jpeg', file);
       // save photoURL to document
-      await _firestore.updateBoardDoc(docID, {'photoURL': url});
+      await _firestore.updateBoardDoc(doc, {'photoURL': url});
       return url;
     } catch (e) {
       return null;
@@ -69,7 +70,7 @@ extension Create on BoardsRepository {
         final newBoard = board.toJson();
         newBoard['id'] = boardRef.id;
         newBoard['uid'] = userID;
-        newBoard['createdAt'] = DateTime.now().millisecondsSinceEpoch;
+        newBoard['createdAt'] = Timestamp.now();
 
         // preform writes
         transaction.set(boardRef, newBoard);
@@ -279,7 +280,9 @@ extension Delete on BoardsRepository {
       }
 
       // delete image
-      if (photoURL.isNotEmpty) await _storage.deleteFile(photoURL);
+      if (photoURL.isNotEmpty) {
+        await _storage.deleteFile('boards/$boardID/cover_image.jpeg');
+      }
 
       // delete item ref
       batch.delete(boardRef);

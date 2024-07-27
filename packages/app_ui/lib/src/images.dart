@@ -130,9 +130,6 @@ class _EditImageState extends State<EditImage> {
         isLoading = true;
       });
 
-      // get original filename
-      final filename = pickedFile.path.split('/').last;
-
       // crop file
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
@@ -148,7 +145,7 @@ class _EditImageState extends State<EditImage> {
       if (compressedImage == null) throw Exception('Image compression failed');
 
       // get path
-      final path = '${widget.collection}/${widget.docID}/$filename';
+      final path = '${widget.collection}/${widget.docID}/cover_image.jpeg';
 
       // upload image
       final uploadURL = await FirebaseStorage.instance.uploadFile(
@@ -222,7 +219,7 @@ class UploadImageWidget extends StatefulWidget {
     super.key,
   });
 
-  final dynamic Function(File file, String filename) onFileChanged;
+  final dynamic Function(File file) onFileChanged;
   final String? photoURL;
   final double height;
   final double width;
@@ -304,9 +301,6 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
         isLoading = true;
       });
 
-      // get original filename
-      final filename = pickedFile.path.split('/').last;
-
       // crop file
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
@@ -328,7 +322,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
       });
 
       // return image bytes
-      widget.onFileChanged(compressedImage, filename);
+      widget.onFileChanged(compressedImage);
     } catch (e) {
       if (mounted) {
         setState(() {

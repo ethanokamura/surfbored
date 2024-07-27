@@ -66,12 +66,13 @@ extension Create on BoardsRepository {
         });
 
         // prepare data for the new board
-        final newItemData = board.toJson();
-        newItemData['id'] = boardRef.id;
-        newItemData['uid'] = userID;
+        final newBoard = board.toJson();
+        newBoard['id'] = boardRef.id;
+        newBoard['uid'] = userID;
+        newBoard['createdAt'] = DateTime.now().millisecondsSinceEpoch;
 
         // preform writes
-        transaction.set(boardRef, newItemData);
+        transaction.set(boardRef, newBoard);
 
         // return id
         return boardRef.id;

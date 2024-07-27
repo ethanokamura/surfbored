@@ -55,6 +55,7 @@ extension Create on ItemsRepository {
         final newItem = item.toJson();
         newItem['id'] = itemRef.id;
         newItem['uid'] = userID;
+        newItem['createdAt'] = DateTime.now().millisecondsSinceEpoch;
 
         // preform writes
         transaction.set(itemRef, newItem);

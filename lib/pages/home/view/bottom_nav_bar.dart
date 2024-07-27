@@ -80,7 +80,7 @@ class BottomNavBar extends StatelessWidget {
   }
 
   Future<void> showCreateModal(BuildContext currentContext) async {
-    late String choice;
+    String? choice;
     await showBottomModal(
       currentContext,
       <Widget>[
@@ -122,14 +122,17 @@ class BottomNavBar extends StatelessWidget {
         ),
       ],
     );
-
-    if (currentContext.mounted) {
-      await Navigator.push(
-        currentContext,
-        MaterialPageRoute<Page<dynamic>>(
-          builder: (context) => CreatePage(type: choice),
-        ),
-      );
+    if (choice == null) {
+      return;
+    } else {
+      if (currentContext.mounted) {
+        await Navigator.push(
+          currentContext,
+          MaterialPageRoute<Page<dynamic>>(
+            builder: (context) => CreatePage(type: choice!),
+          ),
+        );
+      }
     }
   }
 }

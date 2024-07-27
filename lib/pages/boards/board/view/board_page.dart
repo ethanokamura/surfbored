@@ -2,8 +2,6 @@ import 'package:app_ui/app_ui.dart';
 import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:items_repository/items_repository.dart';
-import 'package:rando/pages/activities/activities.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
 import 'package:rando/pages/boards/edit_board/edit_board.dart';
 import 'package:rando/pages/boards/shared/board_activities/board_activities.dart';
@@ -29,16 +27,16 @@ class BoardPage extends StatelessWidget {
       child: Scaffold(
         body: BlocBuilder<BoardCubit, BoardState>(
           builder: (context, state) {
-            if (state is BoardLoading) {
+            if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is BoardLoaded) {
+            } else if (state.isLoaded) {
               final board = state.board;
               final user = context.read<BoardCubit>().getUser();
               return BoardPageView(board: board, user: user);
-            } else if (state is BoardError) {
-              return Center(child: Text(state.message));
+            } else if (state.isEmpty) {
+              return const Center(child: Text('This board is empty.'));
             } else {
-              return const Center(child: Text('Unknown state'));
+              return const Center(child: Text('Something went wrong'));
             }
           },
         ),
@@ -62,11 +60,10 @@ class BoardPageView extends StatelessWidget {
           user.uid,
         );
     return BlocProvider(
-      create: (context) => ItemCubit(
-        itemsRepository: context.read<ItemsRepository>(),
+      create: (context) => BoardCubit(
         userRepository: context.read<UserRepository>(),
         boardsRepository: context.read<BoardsRepository>(),
-      )..streamBoardItems(board.id),
+      )..fetchBoardItems(board.id),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -222,7 +219,6 @@ class BoardButtons extends StatelessWidget {
   final User user;
   @override
   Widget build(BuildContext context) {
-    final likedByUser = user.hasLikedBoard(boardID: board.id);
     return Row(
       children: [
         if (isOwner)
@@ -240,14 +236,10 @@ class BoardButtons extends StatelessWidget {
           )
         else
           Expanded(
-            child: LikeButton(
-              likes: board.likes,
-              isLiked: likedByUser,
-              onTap: () => context.read<BoardCubit>().toggleLike(
-                    user.uid,
-                    board.id,
-                    isLiked: likedByUser,
-                  ),
+            child: ActionButton(
+              inverted: false,
+              onTap: () {},
+              text: 'Save Board',
             ),
           ),
         const HorizontalSpacer(),

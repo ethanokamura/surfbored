@@ -1,11 +1,11 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:items_repository/items_repository.dart';
-import 'package:rando/pages/activities//cubit/activity_cubit.dart';
+import 'package:rando/pages/activities/cubit/activity_cubit.dart';
 import 'package:rando/pages/activities/edit_activity/edit_activity.dart';
 import 'package:rando/pages/activities/shared/activity/view/more_options.dart';
+import 'package:rando/pages/activities/shared/like_button/like_button.dart';
 import 'package:rando/pages/profile/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -18,20 +18,20 @@ class Activity extends StatelessWidget {
       create: (context) => ItemCubit(
         itemsRepository: context.read<ItemsRepository>(),
         userRepository: context.read<UserRepository>(),
-        boardsRepository: context.read<BoardsRepository>(),
+        // boardsRepository: context.read<BoardsRepository>(),
       )..streamItem(itemID),
       child: SafeArea(
         child: BlocBuilder<ItemCubit, ItemState>(
           builder: (context, state) {
-            if (state is ItemLoading) {
+            if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is ItemLoaded) {
+            } else if (state.isLoaded) {
               final item = state.item;
               return ActivityWidget(item: item);
-            } else if (state is ItemError) {
-              return Center(child: Text(state.message));
+            } else if (state.isEmpty) {
+              return const Center(child: Text('This board is empty.'));
             } else {
-              return const Center(child: Text('Unknown state'));
+              return const Center(child: Text('Something went wrong'));
             }
           },
         ),
@@ -51,6 +51,7 @@ class ActivityWidget extends StatelessWidget {
           user.uid,
         );
     final likedByUser = user.hasLikedItem(itemID: item.id);
+
     return Center(
       child: CustomContainer(
         inverted: false,
@@ -130,11 +131,10 @@ class ActivityWidget extends StatelessWidget {
                   text: '@${user.username}',
                 ),
                 LikeButton(
+                  userID: user.uid,
+                  itemID: item.id,
                   likes: item.likes,
                   isLiked: likedByUser,
-                  onTap: () => context
-                      .read<ItemCubit>()
-                      .toggleLike(user.uid, item.id, isLiked: likedByUser),
                 ),
               ],
             ),

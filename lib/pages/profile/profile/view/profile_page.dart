@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/activities/shared/activity_list/activity_list.dart';
+import 'package:rando/pages/profile/profile/view/activity_list/activity_list.dart';
 import 'package:rando/pages/boards/shared/board_list/board_list.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
 import 'package:rando/pages/profile/profile_settings/profile_settings.dart';

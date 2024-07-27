@@ -43,12 +43,10 @@ class AddToBoardPage extends StatelessWidget {
             )..streamUserBoards(userID),
             child: BlocBuilder<BoardCubit, BoardState>(
               builder: (context, state) {
-                if (state is BoardLoading) {
+                if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state is BoardError) {
-                  return Center(child: Text('Error: ${state.message}'));
-                } else if (state is UserBoardsLoaded) {
-                  final boards = state.boards;
+                } else if (state.isLoaded) {
+                  final boards = state.items;
                   return ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 10),
@@ -61,8 +59,10 @@ class AddToBoardPage extends StatelessWidget {
                       );
                     },
                   );
+                } else if (state.isFailure) {
+                  return const Center(child: Text('Failure Loading Board'));
                 } else {
-                  return const Text('No Lists Found. Check Database.');
+                  return const Center(child: Text('Unknown state'));
                 }
               },
             ),

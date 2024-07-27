@@ -16,24 +16,18 @@ class BoardCard extends StatelessWidget {
       create: (context) => BoardCubit(
         boardsRepository: context.read<BoardsRepository>(),
         userRepository: context.read<UserRepository>(),
-      ),
-      child: FutureBuilder<Board>(
-        future: context.read<BoardCubit>().fetchBoard(boardID),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      )..getBoard(boardID),
+      child: BlocBuilder<BoardCubit, BoardState>(
+        builder: (context, state) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return const CustomContainer(
-              inverted: false,
-              horizontal: null,
-              vertical: null,
-              child: Text('Empty Board!'),
-            );
-          } else {
-            final board = snapshot.data!;
+          } else if (state.isLoaded) {
+            final board = state.board;
             return BoardCardView(board: board);
+          } else if (state.isEmpty) {
+            return const Center(child: Text('This board is empty.'));
+          } else {
+            return const Center(child: Text('Something went wrong'));
           }
         },
       ),

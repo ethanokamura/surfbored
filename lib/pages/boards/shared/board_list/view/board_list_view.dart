@@ -18,18 +18,15 @@ class BoardsList extends StatelessWidget {
       )..streamUserBoards(userID),
       child: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
-          if (state is UserBoardsLoading) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is BoardError) {
-            return Center(child: Text('Error: ${state.message}'));
-          } else if (state is UserBoardsLoaded) {
-            final boards = state.boards;
+          } else if (state.isLoaded) {
+            final boards = state.items;
             return BoardListView(boards: boards);
+          } else if (state.isEmpty) {
+            return const Center(child: Text('This board is empty.'));
           } else {
-            return const Text(
-              'No Boards Found. Check Database.',
-              textAlign: TextAlign.center,
-            );
+            return const Center(child: Text('Something went wrong'));
           }
         },
       ),

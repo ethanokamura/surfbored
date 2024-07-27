@@ -1,56 +1,60 @@
 part of 'board_cubit.dart';
 
-abstract class BoardState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+enum BoardStatus { initial, loading, empty, loaded, deleted, failure }
 
-class BoardInitial extends BoardState {}
+final class BoardState extends Equatable {
+  const BoardState._({
+    this.status = BoardStatus.initial,
+    this.board = Board.empty,
+    this.items = const [],
+    this.failure = BoardFailure.empty,
+    this.selected = false,
+    this.index = 0,
+  });
 
-class BoardLoading extends BoardState {}
+  const BoardState.initial() : this._();
 
-class BoardItemsLoading extends BoardState {}
-
-class UserBoardsLoading extends BoardState {}
-
-class BoardDeleted extends BoardState {}
-
-class BoardLiked extends BoardState {
-  BoardLiked({required this.liked});
-  final bool liked;
-
-  @override
-  List<Object?> get props => [liked];
-}
-
-class BoardLoaded extends BoardState {
-  BoardLoaded({required this.board});
+  final BoardStatus status;
   final Board board;
-
-  @override
-  List<Object?> get props => [board];
-}
-
-class UserBoardsLoaded extends BoardState {
-  UserBoardsLoaded({required this.boards});
-  final List<String> boards;
-
-  @override
-  List<Object?> get props => [boards];
-}
-
-class BoardItemsLoaded extends BoardState {
-  BoardItemsLoaded({required this.items});
   final List<String> items;
+  final BoardFailure failure;
+  final bool selected;
+  final int index;
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [
+        status,
+        board,
+        items,
+        failure,
+        selected,
+        index,
+      ];
+
+  BoardState copyWith({
+    BoardStatus? status,
+    Board? board,
+    List<String>? items,
+    BoardFailure? failure,
+    bool? selected,
+    int? index,
+  }) {
+    return BoardState._(
+      status: status ?? this.status,
+      board: board ?? this.board,
+      items: items ?? this.items,
+      failure: failure ?? this.failure,
+      selected: selected ?? this.selected,
+      index: index ?? this.index,
+    );
+  }
 }
 
-class BoardError extends BoardState {
-  BoardError({required this.message});
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
+extension BoardStateExtensions on BoardState {
+  bool get isEmpty => status == BoardStatus.empty;
+  bool get isLoaded => status == BoardStatus.loaded;
+  bool get isLoading => status == BoardStatus.loading;
+  bool get isFailure => status == BoardStatus.failure;
+  bool get canIncrement => index < items.length - 1;
+  bool get canDecrement => index > 0;
 }

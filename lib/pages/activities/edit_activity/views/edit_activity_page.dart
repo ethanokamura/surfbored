@@ -1,6 +1,6 @@
 // dart packages
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+// import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:items_repository/items_repository.dart';
@@ -26,18 +26,18 @@ class EditActivityPage extends StatelessWidget {
         create: (_) => ItemCubit(
           itemsRepository: context.read<ItemsRepository>(),
           userRepository: context.read<UserRepository>(),
-          boardsRepository: context.read<BoardsRepository>(),
+          // boardsRepository: context.read<BoardsRepository>(),
         )..streamItem(itemID),
         child: BlocBuilder<ItemCubit, ItemState>(
           builder: (context, state) {
-            if (state is ItemLoading) {
+            if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is ItemLoaded) {
+            } else if (state.isLoaded) {
               return EditView(item: state.item);
-            } else if (state is ItemError) {
-              return Center(child: Text(state.message));
+            } else if (state.isEmpty) {
+              return const Center(child: Text('This board is empty.'));
             } else {
-              return const Center(child: Text('Unknown state'));
+              return const Center(child: Text('Something went wrong'));
             }
           },
         ),

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:boards_repository/boards_repository.dart';
+// import 'package:items_repository/items_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:items_repository/items_repository.dart';
 import 'package:user_repository/user_repository.dart';
@@ -9,93 +9,114 @@ part 'activity_state.dart';
 
 class ItemCubit extends Cubit<ItemState> {
   ItemCubit({
-    required this.itemsRepository,
-    required this.userRepository,
-    required this.boardsRepository,
-  }) : super(ItemInitial());
+    required ItemsRepository itemsRepository,
+    required UserRepository userRepository,
+  })  : _itemsRepository = itemsRepository,
+        _userRepository = userRepository,
+        super(const ItemState.initial());
 
-  final ItemsRepository itemsRepository;
-  final UserRepository userRepository;
-  final BoardsRepository boardsRepository;
+  final ItemsRepository _itemsRepository;
+  final UserRepository _userRepository;
 
   bool isOwner(String itemUserID, String currentUserID) {
     return itemUserID == currentUserID;
   }
 
   User getUser() {
-    return userRepository.getCurrentUser();
+    return _userRepository.getCurrentUser();
   }
 
-  Future<Item> fetchItem(String itemID) async {
+  Future<void> getItem(String itemID) async {
+    emit(state.fromItemLoading());
     try {
-      final item = await itemsRepository.readItem(itemID);
-      return item;
-    } catch (e) {
-      ItemError(message: 'error fetching board: $e');
-      return Item.empty;
+      final item = await _itemsRepository.readItem(itemID);
+      if (item.isEmpty) {
+        emit(state.fromItemEmpty());
+        return;
+      }
+      emit(state.fromItemLoaded(item));
+    } on ItemFailure catch (failure) {
+      emit(state.fromItemFailure(failure));
     }
   }
 
   void streamItem(String itemID) {
-    emit(ItemLoading());
-    itemsRepository.readItemStream(itemID).listen(
-      (snapshot) {
-        emit(ItemLoaded(item: snapshot));
-      },
-      onError: (dynamic error) {
-        emit(ItemError(message: 'failed to load items: $error'));
-      },
-    );
-  }
-
-  void streamBoardItems(String boardID) {
-    emit(ItemsLoading());
-    boardsRepository.readItemsStream(boardID).listen(
-      (snapshot) {
-        emit(ItemsLoaded(items: snapshot));
-      },
-      onError: (dynamic error) {
-        emit(ItemError(message: 'failed to stream items $error'));
-      },
-    );
-  }
-
-  void streamUserItems(String userID) {
-    emit(ItemsLoading());
-    userRepository.getUserItemStream(userID).listen(
-      (snapshot) {
-        emit(ItemsLoaded(items: snapshot));
-      },
-      onError: (dynamic error) {
-        emit(ItemError(message: 'failed to load items: $error'));
-      },
-    );
+    emit(state.fromItemLoading());
+    try {
+      _itemsRepository.readItemStream(itemID).listen(
+        (snapshot) {
+          emit(state.fromItemLoaded(snapshot));
+        },
+        onError: (dynamic error) {
+          emit(state.fromItemFailure(ItemFailure.fromGetItem()));
+        },
+      );
+    } on ItemFailure catch (failure) {
+      emit(state.fromItemFailure(failure));
+    }
   }
 
   Future<void> editField(String itemID, String field, String data) async {
-    await itemsRepository.updateField(itemID, field, data);
+    await _itemsRepository.updateField(itemID, field, data);
   }
 
   Future<void> toggleLike(
     String userID,
     String itemID, {
-    required bool isLiked,
+    required bool liked,
   }) async {
-    await itemsRepository.updateItemLikes(
-      userID: userID,
-      itemID: itemID,
-      isLiked: isLiked,
-    );
-    final updatedItem = await fetchItem(itemID);
-    emit(ItemLoaded(item: updatedItem));
-  }
-
-  Future<void> deleteItem(String userID, String itemID, String photoURL) async {
+    emit(state.fromItemLoading());
     try {
-      await itemsRepository.deleteItem(userID, itemID, photoURL);
-      emit(ItemDeleted());
-    } catch (e) {
-      emit(ItemError(message: 'failed to delete item'));
+      await _itemsRepository.updateItemLikes(
+        userID: userID,
+        itemID: itemID,
+        isLiked: liked,
+      );
+      await getItem(itemID);
+      emit(state.fromItemToggle(liked: liked));
+    } on ItemFailure catch (failure) {
+      emit(state.fromItemFailure(failure));
     }
   }
+
+  Future<void> deleteItem(
+    String userID,
+    String itemID,
+    String photoURL,
+  ) async {
+    try {
+      await _itemsRepository.deleteItem(userID, itemID, photoURL);
+      emit(state.fromItemDeleted());
+    } on ItemFailure catch (failure) {
+      emit(state.fromItemFailure(failure));
+    }
+  }
+}
+
+extension _ItemStateExtensions on ItemState {
+  ItemState fromItemLoading() => copyWith(status: ItemStatus.loading);
+
+  ItemState fromItemEmpty() => copyWith(status: ItemStatus.empty);
+
+  ItemState fromItemDeleted() => copyWith(status: ItemStatus.deleted);
+
+  ItemState fromItemLoaded(Item item) => copyWith(
+        status: ItemStatus.loaded,
+        item: item,
+      );
+
+  // ItemState fromListLoaded(List<String> items) => copyWith(
+  //       status: ItemStatus.loaded,
+  //       items: items,
+  //     );
+
+  ItemState fromItemToggle({required bool liked}) => copyWith(
+        status: ItemStatus.loaded,
+        liked: liked,
+      );
+
+  ItemState fromItemFailure(ItemFailure failure) => copyWith(
+        status: ItemStatus.failure,
+        failure: failure,
+      );
 }

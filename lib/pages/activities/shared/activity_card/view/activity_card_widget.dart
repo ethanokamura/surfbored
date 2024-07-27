@@ -1,5 +1,4 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:items_repository/items_repository.dart';
@@ -17,25 +16,18 @@ class ItemCard extends StatelessWidget {
       create: (context) => ItemCubit(
         itemsRepository: context.read<ItemsRepository>(),
         userRepository: context.read<UserRepository>(),
-        boardsRepository: context.read<BoardsRepository>(),
-      ),
-      child: FutureBuilder<Item>(
-        future: context.read<ItemCubit>().fetchItem(itemID),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      )..getItem(itemID),
+      child: BlocBuilder<ItemCubit, ItemState>(
+        builder: (context, state) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return const CustomContainer(
-              inverted: false,
-              horizontal: null,
-              vertical: null,
-              child: Text('Empty Item!'),
-            );
-          } else {
-            final item = snapshot.data!;
+          } else if (state.isLoaded) {
+            final item = state.item;
             return ItemCardView(item: item);
+          } else if (state.isEmpty) {
+            return const Center(child: Text('This board is empty.'));
+          } else {
+            return const Center(child: Text('Something went wrong'));
           }
         },
       ),

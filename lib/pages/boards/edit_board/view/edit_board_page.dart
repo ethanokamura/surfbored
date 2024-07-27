@@ -28,14 +28,14 @@ class EditBoardPage extends StatelessWidget {
         )..streamBoard(boardID),
         child: BlocBuilder<BoardCubit, BoardState>(
           builder: (context, state) {
-            if (state is BoardLoading) {
+            if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is BoardLoaded) {
+            } else if (state.isLoaded) {
               return EditView(board: state.board);
-            } else if (state is BoardError) {
-              return Center(child: Text(state.message));
+            } else if (state.isEmpty) {
+              return const Center(child: Text('This board is empty.'));
             } else {
-              return const Center(child: Text('Unknown state'));
+              return const Center(child: Text('Something went wrong'));
             }
           },
         ),

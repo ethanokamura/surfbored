@@ -1,21 +1,19 @@
-import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/activities/activities.dart';
-import 'package:rando/pages/boards/cubit/board_cubit.dart';
+import 'package:rando/pages/activities/shared/activity_grid/activity_grid.dart';
+import 'package:rando/pages/profile/profile/cubit/user_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
-class BoardActivities extends StatelessWidget {
-  const BoardActivities({required this.boardID, super.key});
-  final String boardID;
+class ActivityList extends StatelessWidget {
+  const ActivityList({required this.userID, super.key});
+  final String userID;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BoardCubit(
-        boardsRepository: context.read<BoardsRepository>(),
+      create: (context) => UserCubit(
         userRepository: context.read<UserRepository>(),
-      )..streamItems(boardID),
-      child: BlocBuilder<BoardCubit, BoardState>(
+      )..streamItems(userID),
+      child: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());

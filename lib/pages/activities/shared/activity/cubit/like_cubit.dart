@@ -18,7 +18,7 @@ class LikeCubit extends Cubit<LikeState> {
       await _itemsRepository.updateItemLikes(
         userID: userID,
         itemID: itemID,
-        isLiked: !liked,
+        isLiked: liked,
       );
       emit(LikeSuccess(isLiked: !liked));
     } catch (e) {

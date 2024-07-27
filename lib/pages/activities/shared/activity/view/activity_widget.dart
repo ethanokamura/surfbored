@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:items_repository/items_repository.dart';
 import 'package:rando/pages/activities/cubit/activity_cubit.dart';
 import 'package:rando/pages/activities/edit_activity/edit_activity.dart';
+import 'package:rando/pages/activities/shared/activity/cubit/like_cubit.dart';
 import 'package:rando/pages/activities/shared/activity/view/more_options.dart';
-import 'package:rando/pages/activities/shared/like_button/like_button.dart';
 import 'package:rando/pages/profile/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -50,7 +50,6 @@ class ActivityWidget extends StatelessWidget {
           item.uid,
           user.uid,
         );
-    final likedByUser = user.hasLikedItem(itemID: item.id);
 
     return Center(
       child: CustomContainer(
@@ -130,11 +129,35 @@ class ActivityWidget extends StatelessWidget {
                   ),
                   text: '@${user.username}',
                 ),
-                LikeButton(
-                  userID: user.uid,
-                  itemID: item.id,
-                  likes: item.likes,
-                  isLiked: likedByUser,
+                BlocProvider(
+                  create: (context) =>
+                      LikeCubit(context.read<ItemsRepository>()),
+                  child: BlocBuilder<LikeCubit, LikeState>(
+                    builder: (context, state) {
+                      // var likes = item.likes;
+                      // var likedByUser =
+                      // if (state is LikeLoading) {
+                      // } else if (state is LikeSuccess) {
+                      //   likedByUser
+                      // }
+                      var isCurrentlyLiked = user.hasLikedItem(itemID: item.id);
+
+                      if (state is LikeLoading) {
+                        // Show a loading indicator in the button if needed
+                      } else if (state is LikeSuccess) {
+                        isCurrentlyLiked = state.isLiked;
+                      }
+                      return LikeButton(
+                        onTap: () => context.read<LikeCubit>().toggleLike(
+                              user.uid,
+                              item.id,
+                              liked: isCurrentlyLiked,
+                            ),
+                        isLiked: isCurrentlyLiked,
+                        likes: item.likes,
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

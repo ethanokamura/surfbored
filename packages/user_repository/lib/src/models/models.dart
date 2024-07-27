@@ -20,7 +20,7 @@ class User extends Equatable {
     this.likedItems = const [],
     this.likedBoards = const [],
     this.likedItemsBoardID = '',
-    this.createdAt,
+    this.lastSignInAt,
   });
 
   // factory constructor
@@ -30,7 +30,7 @@ class User extends Equatable {
   factory User.fromFirebaseUser(firebase.User firebaseUser) => User(
         uid: firebaseUser.uid,
         photoURL: firebaseUser.photoURL ?? '',
-        createdAt: DateTime.now(),
+        lastSignInAt: DateTime.now(),
       );
 
   // data fields
@@ -54,7 +54,7 @@ class User extends Equatable {
   @JsonKey(defaultValue: '')
   final String likedItemsBoardID;
   @timestamp
-  final DateTime? createdAt;
+  final DateTime? lastSignInAt;
 
   static const empty = User(uid: '');
 
@@ -73,7 +73,7 @@ class User extends Equatable {
         likedItems,
         likedBoards,
         likedItemsBoardID,
-        createdAt,
+        lastSignInAt,
       ];
 
   // method for converting an instance to JSON

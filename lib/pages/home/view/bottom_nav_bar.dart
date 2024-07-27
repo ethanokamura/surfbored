@@ -54,6 +54,8 @@ class BottomNavBar extends StatelessWidget {
           .select((NavBarController controller) => controller.item.index),
       selectedItemColor: Theme.of(context).accentColor,
       backgroundColor: Theme.of(context).colorScheme.surface,
+      showSelectedLabels: true,
+      showUnselectedLabels: false,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.house, size: 20),
@@ -61,7 +63,7 @@ class BottomNavBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.magnifyingGlass, size: 20),
-          label: 'search',
+          label: 'Search',
         ),
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.plus, size: 20),

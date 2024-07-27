@@ -33,7 +33,6 @@ class Item extends Equatable {
   final DateTime? createdAt;
 
   static const empty = Item(
-    id: '',
     uid: '',
     title: '',
   );

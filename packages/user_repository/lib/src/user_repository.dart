@@ -372,8 +372,17 @@ extension Update on UserRepository {
     if (firebaseUser == null) {
       return;
     }
+    final uid = firebaseUser.uid;
     final user = model.User.fromFirebaseUser(firebaseUser);
-    await _firestore.setUserDoc(user.uid, user.toJson());
+    return _firestore.userDoc(uid).set(
+          user.toJson(),
+          SetOptions(
+            mergeFields: [
+              'uid',
+              'lastSignInAt',
+            ],
+          ),
+        );
   }
 
   // update specific user field

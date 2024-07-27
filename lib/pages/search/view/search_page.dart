@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatelessWidget {
@@ -6,6 +7,57 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 25,
+                right: 25,
+                bottom: 20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: CustomContainer(
+                      inverted: false,
+                      horizontal: null,
+                      vertical: null,
+                      child: Text(
+                        'Search',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                  ),
+                  const HorizontalSpacer(),
+                  ActionButton(
+                    inverted: false,
+                    onTap: () {},
+                    icon: FontAwesomeIcons.magnifyingGlass,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Container(
+                  height: 64,
+                  width: 64,
+                  decoration: BoxDecoration(
+                    borderRadius: defaultBorderRadius,
+                    image: DecorationImage(
+                      image: AssetImage(Theme.of(context).defaultImagePath),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

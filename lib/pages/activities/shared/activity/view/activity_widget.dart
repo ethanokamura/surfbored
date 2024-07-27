@@ -10,38 +10,7 @@ import 'package:rando/pages/profile/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class Activity extends StatelessWidget {
-  const Activity({required this.itemID, super.key});
-  final String itemID;
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ItemCubit(
-        itemsRepository: context.read<ItemsRepository>(),
-        userRepository: context.read<UserRepository>(),
-        // boardsRepository: context.read<BoardsRepository>(),
-      )..streamItem(itemID),
-      child: SafeArea(
-        child: BlocBuilder<ItemCubit, ItemState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.isLoaded) {
-              final item = state.item;
-              return ActivityWidget(item: item);
-            } else if (state.isEmpty) {
-              return const Center(child: Text('This item is empty.'));
-            } else {
-              return const Center(child: Text('Something went wrong'));
-            }
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class ActivityWidget extends StatelessWidget {
-  const ActivityWidget({required this.item, super.key});
+  const Activity({required this.item, super.key});
   final Item item;
   @override
   Widget build(BuildContext context) {
@@ -51,7 +20,7 @@ class ActivityWidget extends StatelessWidget {
           user.uid,
         );
 
-    return Center(
+    return Flexible(
       child: CustomContainer(
         inverted: false,
         horizontal: null,

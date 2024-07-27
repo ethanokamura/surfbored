@@ -15,7 +15,7 @@ final class ItemState extends Equatable {
   const ItemState._({
     this.status = ItemStatus.initial,
     this.item = Item.empty,
-    // this.items = const [],
+    this.items = const [],
     this.failure = ItemFailure.empty,
     this.liked = false,
   });
@@ -24,6 +24,7 @@ final class ItemState extends Equatable {
 
   final ItemStatus status;
   final Item item;
+  final List<Item> items;
   final ItemFailure failure;
   final bool liked;
 
@@ -31,6 +32,7 @@ final class ItemState extends Equatable {
   List<Object?> get props => [
         status,
         item,
+        items,
         failure,
         liked,
       ];
@@ -38,13 +40,14 @@ final class ItemState extends Equatable {
   ItemState copyWith({
     ItemStatus? status,
     Item? item,
+    List<Item>? items,
     ItemFailure? failure,
     bool? liked,
   }) {
     return ItemState._(
       status: status ?? this.status,
       item: item ?? this.item,
-      // items: items ?? this.items,
+      items: items ?? this.items,
       failure: failure ?? this.failure,
       liked: liked ?? this.liked,
     );

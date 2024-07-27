@@ -58,6 +58,22 @@ class ItemCubit extends Cubit<ItemState> {
     }
   }
 
+  void streamAllItems() {
+    emit(state.fromItemsLoading());
+    try {
+      _itemsRepository.streamItems().listen(
+        (items) {
+          emit(state.fromItemsLoaded(items));
+        },
+        onError: (dynamic error) {
+          emit(state.fromItemFailure(ItemFailure.fromGetItem()));
+        },
+      );
+    } on ItemFailure catch (failure) {
+      emit(state.fromItemFailure(failure));
+    }
+  }
+
   Future<void> editField(String itemID, String field, String data) async {
     await _itemsRepository.updateField(itemID, field, data);
   }
@@ -126,6 +142,8 @@ class ItemCubit extends Cubit<ItemState> {
 extension _ItemStateExtensions on ItemState {
   ItemState fromItemLoading() => copyWith(status: ItemStatus.loading);
 
+  ItemState fromItemsLoading() => copyWith(status: ItemStatus.loading);
+
   ItemState fromItemEmpty() => copyWith(status: ItemStatus.empty);
 
   ItemState fromItemDeleted() => copyWith(status: ItemStatus.deleted);
@@ -137,6 +155,11 @@ extension _ItemStateExtensions on ItemState {
   ItemState fromItemLoaded(Item item) => copyWith(
         status: ItemStatus.loaded,
         item: item,
+      );
+
+  ItemState fromItemsLoaded(List<Item> items) => copyWith(
+        status: ItemStatus.loaded,
+        items: items,
       );
 
   ItemState fromItemToggle({required bool liked}) => copyWith(

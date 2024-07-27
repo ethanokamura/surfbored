@@ -93,7 +93,7 @@ class ProfileView extends StatelessWidget {
                     children: [
                       const VerticalSpacer(),
                       const ProfileTabBar(),
-                      const SizedBox(height: defaultSpacing),
+                      const VerticalSpacer(),
                       Expanded(
                         child: TabBarView(
                           // These are the contents of the tab views, below the tabs.

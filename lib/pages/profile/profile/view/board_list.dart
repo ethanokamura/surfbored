@@ -39,6 +39,7 @@ class BoardListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      padding: const EdgeInsets.only(bottom: defaultPadding),
       separatorBuilder: (context, index) => const VerticalSpacer(),
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: boards.length,

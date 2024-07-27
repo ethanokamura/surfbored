@@ -101,6 +101,35 @@ extension Read on ItemsRepository {
     });
   }
 
+  // stream items
+  Stream<List<Item>> streamItems() {
+    try {
+      return _firestore
+          .itemsCollection()
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) {
+        try {
+          return snapshot.docs
+              .map((doc) {
+                try {
+                  return Item.fromJson(doc.data());
+                } catch (error) {
+                  return null;
+                }
+              })
+              .whereType<Item>()
+              .toList();
+        } catch (error) {
+          return [];
+        }
+      });
+    } on FirebaseException {
+      // return failure
+      throw ItemFailure.fromGetItem();
+    }
+  }
+
   // get item likes
   Future<int> readLikes(String itemID) async {
     try {

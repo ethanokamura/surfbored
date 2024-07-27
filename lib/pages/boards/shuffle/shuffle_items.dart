@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:boards_repository/boards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/activities/shared/activity/activity.dart';
+import 'package:rando/pages/activities/shared/activity_wrapper/activity_wrapper.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -59,7 +59,7 @@ class ShowItems extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Activity(itemID: items[state.index]),
+              ActivityWrapper(itemID: items[state.index]),
               const VerticalSpacer(),
               Row(
                 children: [

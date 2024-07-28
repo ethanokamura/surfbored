@@ -58,46 +58,51 @@ class ProfileHeader extends StatelessWidget {
   final bool isCurrent;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ImageWidget(
-          photoURL: user.photoURL,
-          width: 96,
-          height: 96,
-          borderRadius: defaultBorderRadius,
-        ),
-        const HorizontalSpacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Expanded(
-            Text(
-              user.name,
-              style: TextStyle(
-                color: Theme.of(context).textColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+    return CustomContainer(
+      inverted: false,
+      horizontal: null,
+      vertical: null,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ImageWidget(
+            photoURL: user.photoURL,
+            width: 96,
+            height: 96,
+            borderRadius: defaultBorderRadius,
+          ),
+          const HorizontalSpacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Expanded(
+              Text(
+                user.name,
+                style: TextStyle(
+                  color: Theme.of(context).textColor,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Text(
-              '(he/him)',
-              style: TextStyle(
-                color: Theme.of(context).subtextColor,
-                fontSize: 12,
+              Text(
+                '(he/him)',
+                style: TextStyle(
+                  color: Theme.of(context).subtextColor,
+                  fontSize: 12,
+                ),
               ),
-            ),
-            const VerticalSpacer(),
-            Text(
-              'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
-              style: TextStyle(
-                color: Theme.of(context).subtextColor,
-                fontSize: 16,
+              const VerticalSpacer(),
+              Text(
+                'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
+                style: TextStyle(
+                  color: Theme.of(context).subtextColor,
+                  fontSize: 16,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

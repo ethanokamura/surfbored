@@ -70,7 +70,7 @@ Future<dynamic> showActivityModal(
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
         Padding(

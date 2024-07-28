@@ -8,29 +8,83 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      top: false,
-      child: Column(
-        children: [
-          MySearchBar(
-            onTap: () {},
-          ),
-          Expanded(
-            child: Center(
-              child: Container(
-                height: 64,
-                width: 64,
-                decoration: BoxDecoration(
-                  borderRadius: defaultBorderRadius,
-                  image: DecorationImage(
-                    image: AssetImage(Theme.of(context).defaultImagePath),
-                    fit: BoxFit.contain,
-                  ),
+    return Scaffold(
+      body: DefaultTabController(
+        length: 3,
+        child: CustomPageView(
+          top: false,
+          child: Column(
+            children: [
+              MySearchBar(onTap: () {}),
+              const VerticalSpacer(),
+              const SearchResultTabBar(),
+              const VerticalSpacer(),
+              const Expanded(
+                child: TabBarView(
+                  children: [
+                    CustomPlaceholder(),
+                    CustomPlaceholder(),
+                    CustomPlaceholder(),
+                  ],
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SearchResultTabBar extends StatelessWidget {
+  const SearchResultTabBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CustomTabBarWidget(
+      tabs: [
+        CustomTabWidget(
+          child: Icon(
+            // Icons.photo_library_outlined,
+            Icons.photo_library_outlined,
+            size: 20,
+          ),
+        ),
+        CustomTabWidget(
+          child: Icon(
+            Icons.list,
+            size: 20,
+          ),
+        ),
+        CustomTabWidget(
+          child: Icon(
+            Icons.people_alt_outlined,
+            size: 20,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomPlaceholder extends StatelessWidget {
+  const CustomPlaceholder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Center(
+        child: Container(
+          height: 64,
+          width: 64,
+          decoration: BoxDecoration(
+            borderRadius: defaultBorderRadius,
+            image: DecorationImage(
+              image: AssetImage(Theme.of(context).defaultImagePath),
+              fit: BoxFit.contain,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

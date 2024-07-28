@@ -23,7 +23,12 @@ class SelectBoardCard extends StatelessWidget {
       child: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const CustomContainer(
+              inverted: false,
+              horizontal: null,
+              vertical: null,
+              child: CircularProgressIndicator(),
+            );
           } else if (state.isLoaded) {
             final board = state.board;
             return SelectBoardCardView(board: board, itemID: itemID);

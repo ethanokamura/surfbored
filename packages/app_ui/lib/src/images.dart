@@ -516,3 +516,129 @@ class _ImageWidgetState extends State<ImageWidget> {
     );
   }
 }
+
+class CircleImageWidget extends StatefulWidget {
+  const CircleImageWidget({
+    required this.borderRadius,
+    required this.photoURL,
+    required this.height,
+    required this.width,
+    super.key,
+  });
+
+  final String? photoURL;
+  final double height;
+  final double width;
+  final BorderRadius borderRadius;
+
+  @override
+  State<CircleImageWidget> createState() => _CircleImageWidgetState();
+}
+
+class _CircleImageWidgetState extends State<CircleImageWidget> {
+  String? photoURL;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getImageURL(widget.photoURL);
+  }
+
+  // invoked when the parent widget rebuilds
+  // passes a new instance of the widget to the existing state object
+  @override
+  void didUpdateWidget(covariant CircleImageWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.photoURL != widget.photoURL) {
+      getImageURL(widget.photoURL);
+    }
+  }
+
+  Future<void> getImageURL(String? path) async {
+    if (path == null) {
+      setState(() {
+        photoURL = null;
+      });
+    } else {
+      if (path.isNotEmpty) {
+        try {
+          setState(() {
+            photoURL = path;
+          });
+        } catch (e) {
+          setState(() {
+            photoURL = null;
+          });
+        }
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? loadingWidget(context)
+        : photoURL != null
+            ? imageWidget(photoURL!)
+            : errorWidget(context);
+  }
+
+  Widget loadingWidget(BuildContext context) {
+    return Container(
+      height: widget.height,
+      width: widget.width,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+      ),
+      child: const Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Widget errorWidget(BuildContext context) {
+    return Container(
+      height: widget.height,
+      width: widget.width,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      child: Center(
+        child: Container(
+          height: widget.height / 4,
+          width: widget.width == double.infinity ? 64 : widget.width / 4,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: AssetImage(Theme.of(context).defaultImagePath),
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget imageWidget(String data) {
+    return CachedNetworkImage(
+      imageUrl: data,
+      placeholder: (context, url) => loadingWidget(context),
+      errorWidget: (context, url, error) => errorWidget(context),
+      imageBuilder: (context, imageProvider) => Container(
+        height: widget.height,
+        width: widget.width,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: imageProvider,
+          ),
+        ),
+      ),
+    );
+  }
+}

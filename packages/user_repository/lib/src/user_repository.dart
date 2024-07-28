@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:api_client/api_client.dart' as firebase show User;
 import 'package:api_client/api_client.dart' hide User;
 import 'package:app_core/app_core.dart';
@@ -252,6 +251,7 @@ extension Create on UserRepository {
 
       // set data
       await ref.set(data.toJson());
+      await ref.set({'memberSince': Timestamp.now()});
 
       // // create likedItemsBoardID
       // final boardID = await boardService.createBoard(

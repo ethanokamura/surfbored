@@ -38,6 +38,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           const [],
       likedItemsBoardID: json['likedItemsBoardID'] as String? ?? '',
       lastSignInAt: timestamp.fromJson(json['lastSignInAt']),
+      memberSince: timestamp.fromJson(json['memberSince']),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) {
@@ -63,6 +64,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
   val['likedItems'] = instance.likedItems;
   val['likedBoards'] = instance.likedBoards;
   val['likedItemsBoardID'] = instance.likedItemsBoardID;
+  writeNotNull('memberSince', timestamp.toJson(instance.memberSince));
   writeNotNull('lastSignInAt', timestamp.toJson(instance.lastSignInAt));
   return val;
 }

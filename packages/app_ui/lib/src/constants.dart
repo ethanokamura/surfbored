@@ -1,5 +1,7 @@
 // dart packages
+// import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 // constants
 const double defaultPadding = 20;
@@ -26,4 +28,17 @@ class AppStrings {
       'Failed signing in with phone.';
   static const String anonSignInFailureMessage =
       'Failed signing in anonymously.';
+}
+
+class DateFormatter {
+  static String formatTimestamp(DateTime dateTime) {
+    // Convert Timestamp to DateTime
+    // final dateTime = timestamp.toDate();
+
+    // Define the format
+    final dateFormat = DateFormat('MMMM dd, yyyy');
+
+    // Format the DateTime to a String
+    return dateFormat.format(dateTime);
+  }
 }

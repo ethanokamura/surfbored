@@ -2,31 +2,8 @@ import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 
-class TagWidget extends StatelessWidget {
-  const TagWidget({required this.tag, super.key});
-  final String tag;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomContainer(
-      inverted: true,
-      horizontal: 10,
-      vertical: 0,
-      child: Text(
-        tag,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: Theme.of(context).inverseTextColor,
-          fontSize: 14,
-        ),
-      ),
-    );
-  }
-}
-
-class TagListWidget extends StatelessWidget {
-  const TagListWidget({required this.tags, super.key});
+class TagList extends StatelessWidget {
+  const TagList({required this.tags, super.key});
   final List<String> tags;
 
   @override
@@ -35,8 +12,53 @@ class TagListWidget extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: tags.map((item) {
-        return TagWidget(tag: item);
+        return Tag(tag: item);
       }).toList(),
+    );
+  }
+}
+
+class Tag extends StatelessWidget {
+  const Tag({required this.tag, super.key});
+  final String tag;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 5,
+      color: Theme.of(context).colorScheme.primary,
+      shadowColor: Theme.of(context).shadowColor,
+      borderRadius: const BorderRadius.all(Radius.circular(5)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        child: Text(
+          tag,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Theme.of(context).textColor,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomPageView extends StatelessWidget {
+  const CustomPageView({required this.child, super.key});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+        child: child,
+      ),
     );
   }
 }

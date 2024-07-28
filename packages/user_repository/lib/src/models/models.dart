@@ -21,6 +21,7 @@ class User extends Equatable {
     this.likedBoards = const [],
     this.likedItemsBoardID = '',
     this.lastSignInAt,
+    this.memberSince,
   });
 
   // factory constructor
@@ -48,6 +49,8 @@ class User extends Equatable {
   final List<String> likedBoards;
   final String likedItemsBoardID;
   @timestamp
+  final DateTime? memberSince;
+  @timestamp
   final DateTime? lastSignInAt;
 
   static const empty = User(uid: '');
@@ -68,6 +71,7 @@ class User extends Equatable {
         likedBoards,
         likedItemsBoardID,
         lastSignInAt,
+        memberSince,
       ];
 
   // method for converting an instance to JSON

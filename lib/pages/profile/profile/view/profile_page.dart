@@ -59,6 +59,7 @@ class ProfileBuilder extends StatelessWidget {
       length: 2,
       child: Scaffold(
         body: CustomPageView(
+          top: false,
           child: NestedScrollView(
             headerSliverBuilder: (context, _) {
               return [

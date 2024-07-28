@@ -49,14 +49,19 @@ class Tag extends StatelessWidget {
 }
 
 class CustomPageView extends StatelessWidget {
-  const CustomPageView({required this.child, super.key});
+  const CustomPageView({required this.child, required this.top, super.key});
   final Widget child;
+  final bool top;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+        padding: EdgeInsets.only(
+          left: defaultPadding,
+          right: defaultPadding,
+          top: (top == true) ? defaultPadding : 0,
+        ),
         child: child,
       ),
     );

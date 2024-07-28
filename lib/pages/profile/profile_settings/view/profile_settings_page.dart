@@ -19,6 +19,7 @@ class ProfileSettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('User Settings')),
       body: CustomPageView(
+        top: false,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,

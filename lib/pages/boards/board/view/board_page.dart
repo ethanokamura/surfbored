@@ -65,6 +65,7 @@ class BoardPageView extends StatelessWidget {
         boardsRepository: context.read<BoardsRepository>(),
       )..fetchBoardItems(board.id),
       child: CustomPageView(
+        top: false,
         child: NestedScrollView(
           headerSliverBuilder: (context, _) {
             return [

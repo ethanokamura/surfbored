@@ -27,27 +27,26 @@ class ActivityPage extends StatelessWidget {
         title: const Text('Activity Screen'),
       ),
       body: CustomPageView(
+        top: false,
         child: BlocProvider(
           create: (context) => ItemCubit(
             itemsRepository: context.read<ItemsRepository>(),
             userRepository: context.read<UserRepository>(),
             // boardsRepository: context.read<BoardsRepository>(),
           )..streamItem(itemID),
-          child: SafeArea(
-            child: BlocBuilder<ItemCubit, ItemState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state.isLoaded) {
-                  final item = state.item;
-                  return Activity(item: item);
-                } else if (state.isEmpty) {
-                  return const Center(child: Text('This item is empty.'));
-                } else {
-                  return const Center(child: Text('Something went wrong'));
-                }
-              },
-            ),
+          child: BlocBuilder<ItemCubit, ItemState>(
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state.isLoaded) {
+                final item = state.item;
+                return Center(child: Activity(item: item));
+              } else if (state.isEmpty) {
+                return const Center(child: Text('This item is empty.'));
+              } else {
+                return const Center(child: Text('Something went wrong'));
+              }
+            },
           ),
         ),
       ),

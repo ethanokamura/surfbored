@@ -17,6 +17,7 @@ class RegisterUser extends StatelessWidget {
         title: const Text('Create Username'),
       ),
       body: CustomPageView(
+        top: true,
         child: Column(
           children: [
             CustomTextBox(

@@ -39,8 +39,9 @@ class EditProfile extends StatelessWidget {
   final User user;
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: CustomPageView(
+        top: true,
         child: Column(
           children: [
             EditImage(

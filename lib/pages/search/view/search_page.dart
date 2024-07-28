@@ -8,6 +8,7 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
+      top: false,
       child: Column(
         children: [
           Row(

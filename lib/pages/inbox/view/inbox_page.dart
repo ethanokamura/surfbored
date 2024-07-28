@@ -8,35 +8,13 @@ class InboxPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inbox'),
+      ),
       body: CustomPageView(
+        top: false,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 25,
-                right: 25,
-                bottom: 20,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // ActionButton(
-                  //   inverted: false,
-                  //   onTap: () {},
-                  //   icon: Icons.person,
-                  // ),
-                  Text(
-                    'Inbox',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  // ActionButton(
-                  //   inverted: false,
-                  //   onTap: () {},
-                  //   icon: Icons.add,
-                  // ),
-                ],
-              ),
-            ),
             Expanded(
               child: Center(
                 child: Container(

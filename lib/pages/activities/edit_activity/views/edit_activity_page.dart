@@ -52,6 +52,7 @@ class EditView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
+      top: true,
       child: SingleChildScrollView(
         child: Column(
           children: [

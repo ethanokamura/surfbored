@@ -17,6 +17,7 @@ class CreateActivityPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Create An Activity!')),
       body: CustomPageView(
+        top: true,
         child: BlocProvider(
           create: (context) => ItemCubit(
             userRepository: context.read<UserRepository>(),

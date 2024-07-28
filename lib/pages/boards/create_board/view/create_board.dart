@@ -17,6 +17,7 @@ class CreateBoardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Create A Board!')),
       body: CustomPageView(
+        top: true,
         child: BlocProvider(
           create: (context) => BoardCubit(
             userRepository: context.read<UserRepository>(),

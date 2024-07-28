@@ -51,6 +51,7 @@ class ShowItems extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = state.items;
     return CustomPageView(
+      top: false,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

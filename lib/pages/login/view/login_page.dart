@@ -16,6 +16,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomPageView(
+        top: false,
         child: BlocProvider(
           create: (_) => LoginCubit(
             userRepository: context.read<UserRepository>(),

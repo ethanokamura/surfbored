@@ -13,15 +13,12 @@ class FeedPage extends StatelessWidget {
         title: const Text('Activity Feed'),
         actions: [
           IconButton(
+            icon: const Icon(FontAwesomeIcons.solidPaperPlane),
             onPressed: () {},
-            icon: const Icon(
-              FontAwesomeIcons.solidPaperPlane,
-              size: 20,
-            ),
           ),
         ],
       ),
-      body: const CustomPageView(child: ActivityFeed()),
+      body: const CustomPageView(top: false, child: ActivityFeed()),
     );
   }
 }

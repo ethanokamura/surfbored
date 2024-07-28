@@ -67,6 +67,63 @@ class ActionButton extends StatelessWidget {
   }
 }
 
+class SecondaryButton extends StatelessWidget {
+  const SecondaryButton({
+    required this.onTap,
+    super.key,
+    this.icon,
+    this.text,
+    this.vertical,
+    this.horizontal,
+  });
+
+  final IconData? icon;
+  final String? text;
+  final double? vertical;
+  final double? horizontal;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = ElevatedButton.styleFrom(
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontal == null ? 15 : horizontal!,
+        vertical: vertical == null ? 10 : vertical!,
+      ),
+      elevation: 10,
+      shadowColor: Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+    );
+    return ElevatedButton(
+      onPressed: onTap,
+      style: style,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null)
+            Icon(
+              icon,
+              color: Theme.of(context).textColor,
+              size: 18,
+            ),
+          if (text != null && icon != null) const SizedBox(width: 10),
+          if (text != null)
+            Text(
+              text!,
+              style: TextStyle(
+                color: Theme.of(context).textColor,
+                letterSpacing: 1.5,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class ActionIconButton extends StatelessWidget {
   const ActionIconButton({
     required this.icon,

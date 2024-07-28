@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:rando/pages/search/view/search_bar.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -11,27 +12,8 @@ class SearchPage extends StatelessWidget {
       top: false,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: CustomContainer(
-                  inverted: false,
-                  horizontal: null,
-                  vertical: null,
-                  child: Text(
-                    'Search',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-              ),
-              const HorizontalSpacer(),
-              ActionButton(
-                inverted: false,
-                onTap: () {},
-                icon: FontAwesomeIcons.magnifyingGlass,
-              ),
-            ],
+          MySearchBar(
+            onTap: () {},
           ),
           Expanded(
             child: Center(

@@ -27,54 +27,58 @@ class Activity extends StatelessWidget {
         vertical: null,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Stack(
               children: [
-                Text(
-                  item.title,
-                  style: TextStyle(
-                    color: Theme.of(context).textColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
+                ImageWidget(
+                  borderRadius: defaultBorderRadius,
+                  photoURL: item.photoURL,
+                  height: 256,
+                  width: double.infinity,
                 ),
-                MoreOptions(
-                  itemID: item.id,
-                  userID: item.uid,
-                  isOwner: isOwner,
-                  imgURL: item.photoURL.toString(),
-                  onEdit: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (context) => EditActivityPage(itemID: item.id),
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      MoreOptions(
+                        itemID: item.id,
+                        userID: item.uid,
+                        isOwner: isOwner,
+                        imgURL: item.photoURL.toString(),
+                        onEdit: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<dynamic>(
+                              builder: (context) =>
+                                  EditActivityPage(itemID: item.id),
+                            ),
+                          );
+                        },
+                        onDelete: () {
+                          // Navigator.pop(context);
+                          context.read<ItemCubit>().deleteItem(
+                                item.uid,
+                                item.id,
+                                item.photoURL.toString(),
+                              );
+                        },
                       ),
-                    );
-                  },
-                  onDelete: () {
-                    // Navigator.pop(context);
-                    context.read<ItemCubit>().deleteItem(
-                          item.uid,
-                          item.id,
-                          item.photoURL.toString(),
-                        );
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: defaultSpacing),
-            Hero(
-              tag: item.photoURL.toString(),
-              child: ImageWidget(
-                borderRadius: defaultBorderRadius,
-                photoURL: item.photoURL,
-                height: 256,
-                width: double.infinity,
+            const VerticalSpacer(),
+            Text(
+              item.title,
+              style: TextStyle(
+                color: Theme.of(context).textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
               ),
             ),
-            const SizedBox(height: 20),
             Text(
               item.description,
               style: TextStyle(
@@ -83,9 +87,9 @@ class Activity extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
-            const SizedBox(height: defaultSpacing),
+            const VerticalSpacer(),
             TagList(tags: item.tags),
-            const SizedBox(height: defaultSpacing),
+            const VerticalSpacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

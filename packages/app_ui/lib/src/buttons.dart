@@ -212,7 +212,8 @@ class LikeButton extends StatelessWidget {
                 isLiked ? Icons.favorite : Icons.favorite_border,
                 color: isLiked
                     ? Theme.of(context).accentColor
-                    : Theme.of(context).backgroundColor,
+                    : Theme.of(context).textColor,
+                size: 20,
               ),
               const SizedBox(width: 10),
               Text('$likes likes'),

@@ -14,7 +14,7 @@ abstract class CustomColors {
   static const Color inverseDarkTextColor = Color.fromRGBO(29, 32, 37, 1);
 
   // light mode
-  static const Color lightAccent = Color.fromRGBO(123, 97, 239, 1);
+  static const Color lightAccent = Color.fromRGBO(127, 101, 239, 1);
   static const Color lightBackground = Color.fromRGBO(220, 230, 230, 1);
   static const Color lightSurface = Color.fromRGBO(240, 250, 250, 1);
   static const Color lightPrimary = Color.fromRGBO(210, 220, 220, 1);

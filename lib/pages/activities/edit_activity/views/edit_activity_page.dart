@@ -51,80 +51,77 @@ class EditView extends StatelessWidget {
   final Item item;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              EditImage(
-                width: 200,
-                height: 200,
-                photoURL: item.photoURL,
-                collection: 'users',
-                docID: item.uid,
-                onFileChanged: (url) {
-                  context.read<ItemCubit>().editField(item.id, 'photoURL', url);
-                },
-              ),
-              const VerticalSpacer(),
-              CustomTextBox(
-                text: item.title,
-                label: 'title',
-                onPressed: () async {
-                  final newValue = await editTextField(
-                    context,
-                    'title',
-                    30,
-                    TextEditingController(),
-                  );
-                  if (newValue != null && context.mounted) {
-                    await context
-                        .read<ItemCubit>()
-                        .editField(item.id, 'title', newValue);
-                  }
-                },
-              ),
-              const VerticalSpacer(),
-              CustomTextBox(
-                text: item.description,
-                label: 'description',
-                onPressed: () async {
-                  final newValue = await editTextField(
-                    context,
-                    'description',
-                    150,
-                    TextEditingController(),
-                  );
-                  if (newValue != null && context.mounted) {
-                    await context
-                        .read<ItemCubit>()
-                        .editField(item.id, 'description', newValue);
-                  }
-                },
-              ),
-              const VerticalSpacer(),
-              CustomTextBox(
-                text: 'tags',
-                label: 'tags',
-                onPressed: () async {
-                  final newValue = await editTextField(
-                    context,
-                    'tags',
-                    50,
-                    TextEditingController(),
-                  );
-                  if (newValue != null && context.mounted) {
-                    await context
-                        .read<ItemCubit>()
-                        .editField(item.id, 'tags', newValue);
-                  }
-                },
-              ),
-              const VerticalSpacer(),
-              TagListWidget(tags: item.tags),
-            ],
-          ),
+    return CustomPageView(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            EditImage(
+              width: 200,
+              height: 200,
+              photoURL: item.photoURL,
+              collection: 'users',
+              docID: item.uid,
+              onFileChanged: (url) {
+                context.read<ItemCubit>().editField(item.id, 'photoURL', url);
+              },
+            ),
+            const VerticalSpacer(),
+            CustomTextBox(
+              text: item.title,
+              label: 'title',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'title',
+                  30,
+                  TextEditingController(),
+                );
+                if (newValue != null && context.mounted) {
+                  await context
+                      .read<ItemCubit>()
+                      .editField(item.id, 'title', newValue);
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            CustomTextBox(
+              text: item.description,
+              label: 'description',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'description',
+                  150,
+                  TextEditingController(),
+                );
+                if (newValue != null && context.mounted) {
+                  await context
+                      .read<ItemCubit>()
+                      .editField(item.id, 'description', newValue);
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            CustomTextBox(
+              text: 'tags',
+              label: 'tags',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'tags',
+                  50,
+                  TextEditingController(),
+                );
+                if (newValue != null && context.mounted) {
+                  await context
+                      .read<ItemCubit>()
+                      .editField(item.id, 'tags', newValue);
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            TagList(tags: item.tags),
+          ],
         ),
       ),
     );

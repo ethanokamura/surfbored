@@ -15,8 +15,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+      body: CustomPageView(
         child: BlocProvider(
           create: (_) => LoginCubit(
             userRepository: context.read<UserRepository>(),

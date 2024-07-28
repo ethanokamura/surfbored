@@ -16,8 +16,7 @@ class RegisterUser extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Create Username'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+      body: CustomPageView(
         child: Column(
           children: [
             CustomTextBox(

@@ -8,7 +8,7 @@ class InboxPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: CustomPageView(
         child: Column(
           children: [
             Padding(

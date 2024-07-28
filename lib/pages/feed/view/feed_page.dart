@@ -21,12 +21,7 @@ class FeedPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-          child: ActivityFeed(),
-        ),
-      ),
+      body: const CustomPageView(child: ActivityFeed()),
     );
   }
 }

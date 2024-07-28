@@ -84,7 +84,7 @@ class Activity extends StatelessWidget {
               ),
             ),
             const SizedBox(height: defaultSpacing),
-            TagListWidget(tags: item.tags),
+            TagList(tags: item.tags),
             const SizedBox(height: defaultSpacing),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

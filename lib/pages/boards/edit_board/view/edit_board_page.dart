@@ -49,72 +49,67 @@ class EditView extends StatelessWidget {
   final Board board;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              EditImage(
-                width: 200,
-                height: 200,
-                photoURL: board.photoURL,
-                collection: 'users',
-                docID: board.uid,
-                onFileChanged: (url) {
-                  context
+    return CustomPageView(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            EditImage(
+              width: 200,
+              height: 200,
+              photoURL: board.photoURL,
+              collection: 'users',
+              docID: board.uid,
+              onFileChanged: (url) {
+                context.read<BoardCubit>().editField(board.id, 'photoURL', url);
+              },
+            ),
+            const VerticalSpacer(),
+            CustomTextBox(
+              text: board.title,
+              label: 'title',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'title',
+                  30,
+                  TextEditingController(),
+                );
+                if (newValue != null && context.mounted) {
+                  await context
                       .read<BoardCubit>()
-                      .editField(board.id, 'photoURL', url);
-                },
-              ),
-              const VerticalSpacer(),
-              CustomTextBox(
-                text: board.title,
-                label: 'title',
-                onPressed: () async {
-                  final newValue = await editTextField(
-                    context,
-                    'title',
-                    30,
-                    TextEditingController(),
-                  );
-                  if (newValue != null && context.mounted) {
-                    await context
-                        .read<BoardCubit>()
-                        .editField(board.id, 'title', newValue);
-                  }
-                },
-              ),
-              const VerticalSpacer(),
-              CustomTextBox(
-                text: board.description,
-                label: 'description',
-                onPressed: () async {
-                  final newValue = await editTextField(
-                    context,
-                    'description',
-                    150,
-                    TextEditingController(),
-                  );
-                  if (newValue != null && context.mounted) {
-                    await context
-                        .read<BoardCubit>()
-                        .editField(board.id, 'description', newValue);
-                  }
-                },
-              ),
-              const VerticalSpacer(),
-              ActionButton(
-                inverted: true,
-                text: 'Delete Board',
-                onTap: () => context.read<BoardCubit>().deleteBoard(
-                      board.uid,
-                      board.id,
-                      board.photoURL!,
-                    ),
-              ),
-            ],
-          ),
+                      .editField(board.id, 'title', newValue);
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            CustomTextBox(
+              text: board.description,
+              label: 'description',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'description',
+                  150,
+                  TextEditingController(),
+                );
+                if (newValue != null && context.mounted) {
+                  await context
+                      .read<BoardCubit>()
+                      .editField(board.id, 'description', newValue);
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            ActionButton(
+              inverted: true,
+              text: 'Delete Board',
+              onTap: () => context.read<BoardCubit>().deleteBoard(
+                    board.uid,
+                    board.id,
+                    board.photoURL!,
+                  ),
+            ),
+          ],
         ),
       ),
     );

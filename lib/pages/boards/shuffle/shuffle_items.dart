@@ -50,46 +50,41 @@ class ShowItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = state.items;
-    print('Current index: ${state.index}');
-    print('Current item ID: ${items[state.index]}');
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ActivityWrapper(itemID: items[state.index]),
-              const VerticalSpacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: ActionButton(
-                      inverted: false,
-                      text: 'Last',
-                      onTap: () {
-                        if (state.canDecrement) {
-                          context.read<BoardCubit>().decrementIndex();
-                        }
-                      },
-                    ),
+    return CustomPageView(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ActivityWrapper(itemID: items[state.index]),
+            const VerticalSpacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: ActionButton(
+                    inverted: false,
+                    text: 'Last',
+                    onTap: () {
+                      if (state.canDecrement) {
+                        context.read<BoardCubit>().decrementIndex();
+                      }
+                    },
                   ),
-                  const HorizontalSpacer(),
-                  Expanded(
-                    child: ActionButton(
-                      inverted: true,
-                      text: 'Next',
-                      onTap: () {
-                        if (state.canIncrement) {
-                          context.read<BoardCubit>().incrementIndex();
-                        }
-                      },
-                    ),
+                ),
+                const HorizontalSpacer(),
+                Expanded(
+                  child: ActionButton(
+                    inverted: true,
+                    text: 'Next',
+                    onTap: () {
+                      if (state.canIncrement) {
+                        context.read<BoardCubit>().incrementIndex();
+                      }
+                    },
                   ),
-                ],
-              )
-            ],
-          ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );

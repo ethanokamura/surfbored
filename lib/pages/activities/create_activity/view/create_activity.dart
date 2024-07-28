@@ -16,16 +16,13 @@ class CreateActivityPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create An Activity!')),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: BlocProvider(
-            create: (context) => ItemCubit(
-              userRepository: context.read<UserRepository>(),
-              itemsRepository: context.read<ItemsRepository>(),
-            ),
-            child: const CreateActivity(),
+      body: CustomPageView(
+        child: BlocProvider(
+          create: (context) => ItemCubit(
+            userRepository: context.read<UserRepository>(),
+            itemsRepository: context.read<ItemsRepository>(),
           ),
+          child: const CreateActivity(),
         ),
       ),
     );
@@ -108,7 +105,7 @@ class _CreateActivityState extends State<CreateActivity> {
                     onPressed: () => editField('tags'),
                   ),
                   const VerticalSpacer(),
-                  TagListWidget(tags: tags),
+                  TagList(tags: tags),
                 ],
               ),
               const VerticalSpacer(),

@@ -1,4 +1,4 @@
-package perfectline.io.rando
+package io.perfectline.rando
 
 import io.flutter.embedding.android.FlutterActivity
 

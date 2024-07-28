@@ -64,6 +64,12 @@ class UserRepository {
     return model.User.fromFirebaseUser(firebaseUser);
   }
 
+  // figure out if user exists
+  Future<bool> doesUserExist(String userID) async {
+    final docSnapshot = await _firestore.getUserDoc(userID);
+    return docSnapshot.exists;
+  }
+
   /// gets generic [watchUser] emmision
   Stream<model.User> watchUserByID(String userID) {
     return _firestore.userDoc(userID).snapshots().map(

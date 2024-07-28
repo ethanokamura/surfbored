@@ -31,11 +31,16 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
-  void _onUserChanged(User user) {
+  Future<void> _onUserChanged(User user) async {
     if (user.isEmpty) {
       emit(const AppState.unauthenticated());
     } else if (state.isUnauthenticated) {
-      emit(AppState.newlyAuthenticated(user));
+      final userExists = await _userRepository.doesUserExist(user.uid);
+      if (userExists) {
+        emit(AppState.authenticated(user));
+      } else {
+        emit(AppState.newlyAuthenticated(user));
+      }
     } else {
       emit(AppState.authenticated(user));
     }

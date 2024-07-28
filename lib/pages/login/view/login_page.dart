@@ -46,7 +46,6 @@ class LoginContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const FlutterLogo(size: 150),
           const Center(
             child: Text(
               'Locals Only',
@@ -91,11 +90,13 @@ class _PhoneSignInState extends State<PhoneSignIn> {
   bool _codeSent = false;
   String? _verificationId;
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (_codeSent)
+        if (!_codeSent)
           TextField(
             controller: _phoneController,
             keyboardType: TextInputType.phone,
@@ -112,10 +113,12 @@ class _PhoneSignInState extends State<PhoneSignIn> {
             ),
           ),
         const SizedBox(height: 16),
-        PhoneSignInButton(
+        SignInButton(
           inverted: true,
           onTap: () async {
             if (!_codeSent) {
+              setState(() => isLoading = true);
+
               await context.read<LoginCubit>().signInWithPhone(
                     phoneNumber: _phoneController.text.trim(),
                     verificationCompleted: (credential) async {
@@ -131,6 +134,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                       setState(() {
                         _verificationId = verificationId;
                         _codeSent = true;
+                        _phoneController.clear();
                       });
                     },
                     codeAutoRetrievalTimeout: (String verificationId) {
@@ -139,84 +143,23 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                       });
                     },
                   );
+              setState(() => isLoading = false);
             } else {
+              setState(() => isLoading = true);
               await context.read<LoginCubit>().signInWithOTP(
                     _codeController.text.trim(),
                     _verificationId,
                   );
+              setState(() => isLoading = false);
             }
           },
-          text: context.watch<LoginCubit>().state.isVerifyingWithPhone
+          text: isLoading
               ? 'Loading'
               : !_codeSent
                   ? 'Send Code'
                   : 'Sign In',
         ),
       ],
-    );
-  }
-}
-
-class PhoneSignInButton extends StatelessWidget {
-  const PhoneSignInButton({
-    required this.inverted,
-    required this.onTap,
-    super.key,
-    this.icon,
-    this.text,
-    this.vertical,
-    this.horizontal,
-  });
-
-  final IconData? icon;
-  final bool inverted;
-  final String? text;
-  final double? vertical;
-  final double? horizontal;
-  final Future<void> Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontal == null ? 15 : horizontal!,
-          vertical: vertical == null ? 10 : vertical!,
-        ),
-        elevation: 10,
-        shadowColor: Colors.black,
-        backgroundColor: inverted
-            ? Theme.of(context).accentColor
-            : Theme.of(context).colorScheme.surface,
-        shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (icon != null)
-            Icon(
-              icon,
-              color: inverted
-                  ? Theme.of(context).inverseTextColor
-                  : Theme.of(context).textColor,
-              size: 18,
-            ),
-          if (text != null && icon != null) const SizedBox(width: 10),
-          if (text != null)
-            Text(
-              text!,
-              style: TextStyle(
-                color: inverted
-                    ? Theme.of(context).inverseTextColor
-                    : Theme.of(context).textColor,
-                letterSpacing: 1.5,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
@@ -230,9 +173,10 @@ class AnonymousSignInButton extends StatelessWidget {
       (cubit) => cubit.state.isSigningInAnonymously,
     );
     return SignInButton(
+      inverted: false,
       text: AppStrings.guestText,
       processing: isSigningInAnonymously,
-      onPressed: isSigningInAnonymously
+      onTap: isSigningInAnonymously
           ? null
           : () => context.read<LoginCubit>().signInAnonymously(),
     );
@@ -242,44 +186,23 @@ class AnonymousSignInButton extends StatelessWidget {
 class SignInButton extends StatelessWidget {
   const SignInButton({
     required this.text,
-    required this.onPressed,
-    super.key,
-    this.icon,
-    this.color,
+    required this.onTap,
+    required this.inverted,
     this.processing = false,
+    super.key,
   });
 
   final String text;
-  final IconData? icon;
-  final Color? color;
   final bool processing;
-  final VoidCallback? onPressed;
+  final bool inverted;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final style = TextButton.styleFrom(
-      backgroundColor: color,
-    );
-    final child = AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      child: processing
-          ? const CircularProgressIndicator()
-          : Text(
-              text.toUpperCase(),
-              textAlign: TextAlign.center,
-            ),
-    );
-    if (icon != null) {
-      return TextButton.icon(
-        style: style,
-        icon: Icon(icon),
-        onPressed: onPressed,
-        label: Expanded(child: child),
-      );
-    }
-    return TextButton(
-      onPressed: onPressed,
-      child: child,
+    return ActionButton(
+      inverted: inverted,
+      onTap: onTap,
+      text: processing ? 'Loading' : text,
     );
   }
 }

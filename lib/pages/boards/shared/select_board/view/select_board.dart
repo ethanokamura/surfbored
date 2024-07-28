@@ -19,16 +19,11 @@ class SelectBoardCard extends StatelessWidget {
       create: (context) => BoardCubit(
         boardsRepository: context.read<BoardsRepository>(),
         userRepository: context.read<UserRepository>(),
-      )..streamBoard(boardID),
+      )..getBoard(boardID),
       child: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const CustomContainer(
-              inverted: false,
-              horizontal: null,
-              vertical: null,
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final board = state.board;
             return SelectBoardCardView(board: board, itemID: itemID);

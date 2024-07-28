@@ -136,7 +136,7 @@ class BoardCubit extends Cubit<BoardState> {
         boardID: boardID,
         isLiked: isSelected,
       );
-      await getBoard(boardID);
+      // await getBoard(boardID);
       emit(state.fromBoardToggle(selected: isSelected));
     } on BoardFailure catch (failure) {
       emit(state.fromBoardFailure(failure));

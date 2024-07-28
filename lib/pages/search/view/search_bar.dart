@@ -10,6 +10,10 @@ class MySearchBar extends StatelessWidget {
       shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(borderRadius: defaultBorderRadius),
       ),
+      hintText: 'Find something new',
+      hintStyle: WidgetStatePropertyAll(
+        TextStyle(color: Theme.of(context).subtextColor),
+      ),
       trailing: [
         ActionIconButton(
           icon: FontAwesomeIcons.magnifyingGlass,

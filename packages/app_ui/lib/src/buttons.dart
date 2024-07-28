@@ -139,17 +139,29 @@ class LikeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Row(
-        children: [
-          Icon(
-            isLiked ? Icons.favorite : Icons.favorite_border,
-            color: isLiked
-                ? Theme.of(context).accentColor
-                : Theme.of(context).backgroundColor,
+      child: Material(
+        elevation: 5,
+        color: Theme.of(context).colorScheme.primary,
+        shadowColor: Theme.of(context).shadowColor,
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 5,
           ),
-          const SizedBox(width: 10),
-          Text('$likes likes'),
-        ],
+          child: Row(
+            children: [
+              Icon(
+                isLiked ? Icons.favorite : Icons.favorite_border,
+                color: isLiked
+                    ? Theme.of(context).accentColor
+                    : Theme.of(context).backgroundColor,
+              ),
+              const SizedBox(width: 10),
+              Text('$likes likes'),
+            ],
+          ),
+        ),
       ),
     );
   }

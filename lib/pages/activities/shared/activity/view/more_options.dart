@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rando/pages/boards/shared/add_activity/add_activity.dart';
@@ -29,7 +30,15 @@ class MoreOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = ElevatedButton.styleFrom(
+      padding: const EdgeInsets.all(8),
+      elevation: 10,
+      shadowColor: Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+    );
     return PopupMenuButton<Options>(
+      style: style,
       itemBuilder: (BuildContext context) => [
         // add activity to a board
         const PopupMenuItem(

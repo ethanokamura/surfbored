@@ -2,7 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:items_repository/items_repository.dart';
-import 'package:rando/pages/activities/activity_page/activity_page.dart';
+// import 'package:rando/pages/activities/activity_page/activity_page.dart';
+import 'package:rando/pages/activities/bottom_sheet.dart';
 import 'package:rando/pages/activities/cubit/activity_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -43,12 +44,13 @@ class ItemCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute<dynamic>(
-            builder: (context) => ActivityPage(itemID: item.id),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute<dynamic>(
+        //     builder: (context) => ActivityPage(itemID: item.id),
+        //   ),
+        // );
+        showActivityModal(context, item);
       },
       child: CustomContainer(
         inverted: false,

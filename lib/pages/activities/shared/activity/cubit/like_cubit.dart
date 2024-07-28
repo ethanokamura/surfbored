@@ -15,12 +15,12 @@ class LikeCubit extends Cubit<LikeState> {
   }) async {
     try {
       emit(LikeLoading());
-      await _itemsRepository.updateItemLikes(
+      final updatedLikes = await _itemsRepository.updateItemLikes(
         userID: userID,
         itemID: itemID,
         isLiked: liked,
       );
-      emit(LikeSuccess(isLiked: !liked));
+      emit(LikeSuccess(isLiked: !liked, likes: updatedLikes));
     } catch (e) {
       emit(LikeFailure(message: e.toString()));
     }

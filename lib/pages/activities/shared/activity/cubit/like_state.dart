@@ -12,11 +12,11 @@ class LikeInitial extends LikeState {}
 class LikeLoading extends LikeState {}
 
 class LikeSuccess extends LikeState {
-  const LikeSuccess({required this.isLiked});
+  const LikeSuccess({required this.isLiked, required this.likes});
   final bool isLiked;
-
+  final int likes;
   @override
-  List<Object?> get props => [isLiked];
+  List<Object?> get props => [isLiked, likes];
 }
 
 class LikeFailure extends LikeState {

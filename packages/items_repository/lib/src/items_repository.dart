@@ -162,7 +162,7 @@ extension Update on ItemsRepository {
 
   // update liked items
   // using batch to handle updating user, item, and board docs at the same time
-  Future<void> updateItemLikes({
+  Future<int> updateItemLikes({
     required String userID,
     required String itemID,
     required bool isLiked,
@@ -221,6 +221,8 @@ extension Update on ItemsRepository {
 
       // commit changes
       await batch.commit();
+
+      return readLikes(itemID);
     } on FirebaseException {
       throw ItemFailure.fromUpdateItem();
     }

@@ -103,18 +103,13 @@ class Activity extends StatelessWidget {
                       LikeCubit(context.read<ItemsRepository>()),
                   child: BlocBuilder<LikeCubit, LikeState>(
                     builder: (context, state) {
-                      // var likes = item.likes;
-                      // var likedByUser =
-                      // if (state is LikeLoading) {
-                      // } else if (state is LikeSuccess) {
-                      //   likedByUser
-                      // }
                       var isCurrentlyLiked = user.hasLikedItem(itemID: item.id);
-
+                      var likes = item.likes;
                       if (state is LikeLoading) {
                         // Show a loading indicator in the button if needed
                       } else if (state is LikeSuccess) {
                         isCurrentlyLiked = state.isLiked;
+                        likes = state.likes;
                       }
                       return LikeButton(
                         onTap: () => context.read<LikeCubit>().toggleLike(
@@ -123,7 +118,7 @@ class Activity extends StatelessWidget {
                               liked: isCurrentlyLiked,
                             ),
                         isLiked: isCurrentlyLiked,
-                        likes: item.likes,
+                        likes: likes,
                       );
                     },
                   ),

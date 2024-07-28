@@ -130,6 +130,7 @@ class ItemCubit extends Cubit<ItemState> {
     String itemID,
     String photoURL,
   ) async {
+    emit(state.fromItemLoading());
     try {
       await _itemsRepository.deleteItem(userID, itemID, photoURL);
       emit(state.fromItemDeleted());

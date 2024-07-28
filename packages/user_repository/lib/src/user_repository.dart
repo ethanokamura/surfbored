@@ -233,7 +233,7 @@ extension Username on UserRepository {
 
 extension Create on UserRepository {
   // create new firestore document for user
-  Future<void> createUser(String username) async {
+  Future<String> createUser(String username) async {
     // authenticate user
     final ref = _firestore.userDoc(user.uid);
     try {
@@ -252,15 +252,7 @@ extension Create on UserRepository {
       // set data
       await ref.set(data.toJson());
       await ref.set({'memberSince': Timestamp.now()});
-
-      // // create likedItemsBoardID
-      // final boardID = await boardService.createBoard(
-      //   BoardData(
-      //     title: 'Liked Activities:',
-      //     description: 'A collection of activities you have liked!',
-      //   ),
-      // );
-
+      return user.uid;
       // // update user doc
       // await ref.update({'likedItemsBoardID': boardID});
     } on FirebaseException {

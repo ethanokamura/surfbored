@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
 import 'package:rando/pages/profile/profile/view/activity_list_view.dart';
 import 'package:rando/pages/profile/profile/view/board_list.dart';
-import 'package:rando/pages/profile/profile_settings/profile_settings.dart';
+import 'package:rando/pages/profile/profile/view/helpers.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -37,10 +37,8 @@ class _ProfilePageState extends State<ProfilePage>
       ),
       child: BlocBuilder<ProfileCubit, User>(
         builder: (context, user) {
-          return ProfileView(
-            user: user,
-            isCurrent: context.read<UserRepository>().isCurrentUser(user.uid),
-          );
+          if (!user.isEmpty) return ProfileBuilder(user: user);
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -50,61 +48,29 @@ class _ProfilePageState extends State<ProfilePage>
   bool get wantKeepAlive => true;
 }
 
-class ProfileView extends StatelessWidget {
-  const ProfileView({required this.user, required this.isCurrent, super.key});
+class ProfileBuilder extends StatelessWidget {
+  const ProfileBuilder({required this.user, super.key});
   final User user;
-  final bool isCurrent;
 
   @override
   Widget build(BuildContext context) {
+    final isCurrent = context.read<UserRepository>().isCurrentUser(user.uid);
     return DefaultTabController(
       length: 2,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+      child: Scaffold(
+        body: CustomPageView(
           child: NestedScrollView(
             headerSliverBuilder: (context, _) {
-              // These are the slivers that show up in the "outer" scroll view.
               return [
                 SliverList(
                   delegate: SliverChildListDelegate(
-                    <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          TopBar(username: user.username),
-                          Padding(
-                            padding: const EdgeInsets.all(defaultPadding),
-                            child: UserDetails(user: user),
-                          ),
-                          if (isCurrent)
-                            MyProfileButtons(userID: user.uid)
-                          else
-                            const DefaultProfileButtons(),
-                        ],
-                      ),
-                    ],
+                    <Widget>[_buildProfileHeader(context, user, isCurrent)],
                   ),
                 ),
               ];
             },
             body: user.uid.isNotEmpty
-                ? Column(
-                    children: [
-                      const VerticalSpacer(),
-                      const ProfileTabBar(),
-                      const VerticalSpacer(),
-                      Expanded(
-                        child: TabBarView(
-                          // These are the contents of the tab views, below the tabs.
-                          children: [
-                            ActivityList(userID: user.uid),
-                            BoardsList(userID: user.uid),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
+                ? _buildProfileContent(context, user.uid)
                 : const Center(child: CircularProgressIndicator()),
           ),
         ),
@@ -113,216 +79,47 @@ class ProfileView extends StatelessWidget {
   }
 }
 
-class TopBar extends StatelessWidget {
-  const TopBar({required this.username, super.key});
-  final String username;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
+Widget _buildProfileHeader(BuildContext context, User user, bool isCurrent) {
+  return Padding(
+    padding: const EdgeInsets.only(
+      bottom: defaultPadding,
+    ),
+    child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ActionButton(
-          horizontal: 0,
-          vertical: 0,
-          inverted: false,
-          onTap: () => Navigator.pop(context),
-          icon: Icons.arrow_back_ios_new_sharp,
-        ),
-        const SizedBox(width: 5),
-        Expanded(
-          child: AutoSizeText(
-            '@$username',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textDirection: TextDirection.ltr,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        const SizedBox(width: 5),
-        ActionButton(
-          horizontal: 0,
-          vertical: 0,
-          inverted: false,
-          onTap: () => Navigator.pop(context),
-          icon: Icons.settings,
-        ),
+        TopBar(user: user),
+        const VerticalSpacer(),
+        ProfileHeader(user: user, isCurrent: isCurrent),
+        const VerticalSpacer(),
+        About(bio: user.bio),
+        const VerticalSpacer(),
+        const Interests(),
+        const VerticalSpacer(),
+        Friends(friends: user.followers),
+        const VerticalSpacer(),
+        if (isCurrent)
+          MyProfileButtons(userID: user.uid)
+        else
+          const DefaultProfileButtons(),
       ],
-    );
-  }
+    ),
+  );
 }
 
-class UserDetails extends StatelessWidget {
-  const UserDetails({required this.user, super.key});
-  final User user;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: defaultPadding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '${user.following.length}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'following',
-                    style: TextStyle(color: Theme.of(context).subtextColor),
-                  ),
-                ],
-              ),
-              const HorizontalSpacer(),
-              ImageWidget(
-                photoURL: user.photoURL,
-                width: 96,
-                height: 96,
-                borderRadius: defaultBorderRadius,
-              ),
-              const HorizontalSpacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${user.followers.length}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'followers',
-                    style: TextStyle(
-                      color: Theme.of(context).subtextColor,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const VerticalSpacer(),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+Widget _buildProfileContent(BuildContext context, String userID) {
+  return Column(
+    children: [
+      const ProfileTabBar(),
+      const VerticalSpacer(),
+      Expanded(
+        child: TabBarView(
           children: [
-            if (user.name.isNotEmpty)
-              Text(
-                user.name,
-                style: TextStyle(
-                  color: Theme.of(context).textColor,
-                ),
-              ),
-            if (user.website.isNotEmpty)
-              Text(
-                user.website,
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            if (user.bio.isNotEmpty)
-              Text(
-                user.bio,
-                style: TextStyle(
-                  color: Theme.of(context).subtextColor,
-                ),
-              ),
+            ActivityList(userID: userID),
+            BoardsList(userID: userID),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class MyProfileButtons extends StatelessWidget {
-  const MyProfileButtons({required this.userID, super.key});
-  final String userID;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ActionButton(
-            inverted: false,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (context) => ProfileSettingsPage(userID: userID),
-              ),
-            ),
-            text: 'Edit Profile',
-          ),
-        ),
-        const HorizontalSpacer(),
-        Expanded(
-          child: ActionButton(
-            inverted: false,
-            onTap: () => Navigator.pushNamed(context, '/user_settings'),
-            text: 'Share Profile',
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class DefaultProfileButtons extends StatelessWidget {
-  const DefaultProfileButtons({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          // add follow button
-          child: ActionButton(
-            inverted: false,
-            onTap: () {},
-            text: 'Follow',
-          ),
-        ),
-        const HorizontalSpacer(),
-        Expanded(
-          child: ActionButton(
-            inverted: false,
-            onTap: () {},
-            text: 'Message',
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ProfileTabBar extends StatelessWidget {
-  const ProfileTabBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const CustomTabBarWidget(
-      tabs: [
-        CustomTabWidget(
-          child: Icon(
-            Icons.photo_library_outlined,
-            size: 20,
-          ),
-        ),
-        CustomTabWidget(
-          child: Icon(
-            Icons.list,
-            size: 20,
-          ),
-        ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }

@@ -311,9 +311,6 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
       // compress image
       final compressedImage = await compressImage(File(croppedFile.path));
 
-      // failed compression
-      // if (compressedImage == null) throw Exception("Image compression failed");
-
       // check mount before setting state
       if (!mounted) return;
       setState(() {

@@ -173,13 +173,11 @@ class BoardCubit extends Cubit<BoardState> {
 
   void incrementIndex() {
     final newIndex = state.index + 1;
-    print('Incrementing index to: $newIndex');
     emit(state.copyWith(index: newIndex));
   }
 
   void decrementIndex() {
     final newIndex = state.index - 1;
-    print('Decrementing index to: $newIndex');
     emit(state.copyWith(index: newIndex));
   }
 

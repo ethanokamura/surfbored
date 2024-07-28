@@ -8,7 +8,6 @@ export 'package:google_fonts/google_fonts.dart';
 export 'src/buttons.dart';
 export 'src/colors.dart';
 export 'src/constants.dart';
-export 'src/cubit/theme_cubit.dart';
 export 'src/extensions.dart';
 export 'src/images.dart';
 export 'src/pop_ups.dart';

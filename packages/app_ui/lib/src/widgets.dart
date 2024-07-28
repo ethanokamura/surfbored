@@ -48,26 +48,6 @@ class Tag extends StatelessWidget {
   }
 }
 
-class CustomPageView extends StatelessWidget {
-  const CustomPageView({required this.child, required this.top, super.key});
-  final Widget child;
-  final bool top;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: defaultPadding,
-          right: defaultPadding,
-          top: (top == true) ? defaultPadding : 0,
-        ),
-        child: child,
-      ),
-    );
-  }
-}
-
 class CustomContainer extends StatelessWidget {
   const CustomContainer({
     required this.inverted,
@@ -243,6 +223,59 @@ class CustomTabBarWidget extends StatelessWidget {
         labelColor: Theme.of(context).textColor,
         unselectedLabelColor: Theme.of(context).subtextColor,
         tabs: tabs,
+      ),
+    );
+  }
+}
+
+class CustomPageView extends StatelessWidget {
+  const CustomPageView({
+    required this.body,
+    required this.top,
+    this.appBar,
+    super.key,
+  });
+  final Widget body;
+  final bool top;
+  final AppBar? appBar;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: appBar,
+      body: Stack(
+        children: [
+          const ScreenGradient(),
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: defaultPadding,
+                right: defaultPadding,
+                top: (top == true) ? defaultPadding : 0,
+              ),
+              child: body,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ScreenGradient extends StatelessWidget {
+  const ScreenGradient({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 500,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
       ),
     );
   }

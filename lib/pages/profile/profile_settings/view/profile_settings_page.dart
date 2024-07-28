@@ -16,43 +16,44 @@ class ProfileSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.read<ThemeCubit>().isDarkMode;
-    return Scaffold(
-      appBar: AppBar(title: const Text('User Settings')),
-      body: CustomPageView(
-        top: false,
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // SwitchListTile(
-              //   title: Text(isDarkMode ? 'Dark Mode' : 'Light Mode'),
-              //   value: isDarkMode,
-              //   onChanged: (value) {
-              //     context.read<ThemeCubit>().toggleTheme();
-              //   },
-              // ),
-              ActionButton(
-                text: 'Theme: ${isDarkMode ? 'Dark Mode' : 'Light Mode'}',
-                inverted: false,
-                onTap: () => context.read<ThemeCubit>().toggleTheme(),
-              ),
-              ActionButton(
-                inverted: false,
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) => EditProfilePage(userID: userID),
-                  ),
+    return CustomPageView(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('User Settings'),
+      ),
+      top: false,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // SwitchListTile(
+            //   title: Text(isDarkMode ? 'Dark Mode' : 'Light Mode'),
+            //   value: isDarkMode,
+            //   onChanged: (value) {
+            //     context.read<ThemeCubit>().toggleTheme();
+            //   },
+            // ),
+            ActionButton(
+              text: 'Theme: ${isDarkMode ? 'Dark Mode' : 'Light Mode'}',
+              inverted: false,
+              onTap: () => context.read<ThemeCubit>().toggleTheme(),
+            ),
+            ActionButton(
+              inverted: false,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (context) => EditProfilePage(userID: userID),
                 ),
-                text: 'Edit Profile',
               ),
-              ActionButton(
-                inverted: false,
-                onTap: context.read<AppCubit>().logOut,
-                text: 'Logout',
-              ),
-            ],
-          ),
+              text: 'Edit Profile',
+            ),
+            ActionButton(
+              inverted: false,
+              onTap: context.read<AppCubit>().logOut,
+              text: 'Logout',
+            ),
+          ],
         ),
       ),
     );

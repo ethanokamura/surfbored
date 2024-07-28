@@ -22,32 +22,31 @@ class ActivityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomPageView(
+      top: false,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Activity Screen'),
       ),
-      body: CustomPageView(
-        top: false,
-        child: BlocProvider(
-          create: (context) => ItemCubit(
-            itemsRepository: context.read<ItemsRepository>(),
-            userRepository: context.read<UserRepository>(),
-            // boardsRepository: context.read<BoardsRepository>(),
-          )..streamItem(itemID),
-          child: BlocBuilder<ItemCubit, ItemState>(
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state.isLoaded) {
-                final item = state.item;
-                return Center(child: Activity(item: item));
-              } else if (state.isEmpty) {
-                return const Center(child: Text('This item is empty.'));
-              } else {
-                return const Center(child: Text('Something went wrong'));
-              }
-            },
-          ),
+      body: BlocProvider(
+        create: (context) => ItemCubit(
+          itemsRepository: context.read<ItemsRepository>(),
+          userRepository: context.read<UserRepository>(),
+          // boardsRepository: context.read<BoardsRepository>(),
+        )..streamItem(itemID),
+        child: BlocBuilder<ItemCubit, ItemState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state.isLoaded) {
+              final item = state.item;
+              return Center(child: Activity(item: item));
+            } else if (state.isEmpty) {
+              return const Center(child: Text('This item is empty.'));
+            } else {
+              return const Center(child: Text('Something went wrong'));
+            }
+          },
         ),
       ),
     );

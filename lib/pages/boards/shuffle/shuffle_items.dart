@@ -22,8 +22,12 @@ class ShuffleItemScreen extends StatelessWidget {
         boardsRepository: context.read<BoardsRepository>(),
         userRepository: context.read<UserRepository>(),
       )..shuffleItemList(boardID),
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Shuffle Items')),
+      child: CustomPageView(
+        top: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: const Text('Shuffle Items'),
+        ),
         body: BlocBuilder<BoardCubit, BoardState>(
           builder: (context, state) {
             if (state.isLoading) {
@@ -50,43 +54,40 @@ class ShowItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = state.items;
-    return CustomPageView(
-      top: false,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ActivityWrapper(itemID: items[state.index]),
-            const VerticalSpacer(),
-            Row(
-              children: [
-                Expanded(
-                  child: ActionButton(
-                    inverted: false,
-                    text: 'Last',
-                    onTap: () {
-                      if (state.canDecrement) {
-                        context.read<BoardCubit>().decrementIndex();
-                      }
-                    },
-                  ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ActivityWrapper(itemID: items[state.index]),
+          const VerticalSpacer(),
+          Row(
+            children: [
+              Expanded(
+                child: ActionButton(
+                  inverted: false,
+                  text: 'Last',
+                  onTap: () {
+                    if (state.canDecrement) {
+                      context.read<BoardCubit>().decrementIndex();
+                    }
+                  },
                 ),
-                const HorizontalSpacer(),
-                Expanded(
-                  child: ActionButton(
-                    inverted: true,
-                    text: 'Next',
-                    onTap: () {
-                      if (state.canIncrement) {
-                        context.read<BoardCubit>().incrementIndex();
-                      }
-                    },
-                  ),
+              ),
+              const HorizontalSpacer(),
+              Expanded(
+                child: ActionButton(
+                  inverted: true,
+                  text: 'Next',
+                  onTap: () {
+                    if (state.canIncrement) {
+                      context.read<BoardCubit>().incrementIndex();
+                    }
+                  },
                 ),
-              ],
-            )
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -7,31 +7,30 @@ class InboxPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomPageView(
+      top: false,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Inbox'),
       ),
-      body: CustomPageView(
-        top: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: Container(
-                  height: 64,
-                  width: 64,
-                  decoration: BoxDecoration(
-                    borderRadius: defaultBorderRadius,
-                    image: DecorationImage(
-                      image: AssetImage(Theme.of(context).defaultImagePath),
-                      fit: BoxFit.contain,
-                    ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Container(
+                height: 64,
+                width: 64,
+                decoration: BoxDecoration(
+                  borderRadius: defaultBorderRadius,
+                  image: DecorationImage(
+                    image: AssetImage(Theme.of(context).defaultImagePath),
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

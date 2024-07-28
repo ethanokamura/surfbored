@@ -14,17 +14,18 @@ class CreateBoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Create A Board!')),
-      body: CustomPageView(
-        top: true,
-        child: BlocProvider(
-          create: (context) => BoardCubit(
-            userRepository: context.read<UserRepository>(),
-            boardsRepository: context.read<BoardsRepository>(),
-          ),
-          child: const CreateBoard(),
+    return CustomPageView(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Create A Board!'),
+      ),
+      top: true,
+      body: BlocProvider(
+        create: (context) => BoardCubit(
+          userRepository: context.read<UserRepository>(),
+          boardsRepository: context.read<BoardsRepository>(),
         ),
+        child: const CreateBoard(),
       ),
     );
   }

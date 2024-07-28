@@ -14,17 +14,18 @@ class CreateActivityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Create An Activity!')),
-      body: CustomPageView(
-        top: true,
-        child: BlocProvider(
-          create: (context) => ItemCubit(
-            userRepository: context.read<UserRepository>(),
-            itemsRepository: context.read<ItemsRepository>(),
-          ),
-          child: const CreateActivity(),
+    return CustomPageView(
+      top: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Create An Activity!'),
+      ),
+      body: BlocProvider(
+        create: (context) => ItemCubit(
+          userRepository: context.read<UserRepository>(),
+          itemsRepository: context.read<ItemsRepository>(),
         ),
+        child: const CreateActivity(),
       ),
     );
   }

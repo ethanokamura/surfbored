@@ -27,6 +27,7 @@ class AddToBoardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Add Activity To A Board'),
       ),
       floatingActionButton: FloatingActionButton(

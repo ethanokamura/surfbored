@@ -8,28 +8,26 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomPageView(
+      top: false,
       body: DefaultTabController(
         length: 3,
-        child: CustomPageView(
-          top: false,
-          child: Column(
-            children: [
-              MySearchBar(onTap: () {}),
-              const VerticalSpacer(),
-              const SearchResultTabBar(),
-              const VerticalSpacer(),
-              const Expanded(
-                child: TabBarView(
-                  children: [
-                    CustomPlaceholder(),
-                    CustomPlaceholder(),
-                    CustomPlaceholder(),
-                  ],
-                ),
+        child: Column(
+          children: [
+            MySearchBar(onTap: () {}),
+            const VerticalSpacer(),
+            const SearchResultTabBar(),
+            const VerticalSpacer(),
+            const Expanded(
+              child: TabBarView(
+                children: [
+                  CustomPlaceholder(),
+                  CustomPlaceholder(),
+                  CustomPlaceholder(),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

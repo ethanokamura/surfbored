@@ -24,7 +24,8 @@ class BoardPage extends StatelessWidget {
         boardsRepository: context.read<BoardsRepository>(),
         userRepository: context.read<UserRepository>(),
       )..streamBoard(boardID),
-      child: Scaffold(
+      child: CustomPageView(
+        top: false,
         body: BlocBuilder<BoardCubit, BoardState>(
           builder: (context, state) {
             if (state.isLoading) {
@@ -64,53 +65,50 @@ class BoardPageView extends StatelessWidget {
         userRepository: context.read<UserRepository>(),
         boardsRepository: context.read<BoardsRepository>(),
       )..fetchBoardItems(board.id),
-      child: CustomPageView(
-        top: false,
-        child: NestedScrollView(
-          headerSliverBuilder: (context, _) {
-            return [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TopBar(title: board.title),
-                        const VerticalSpacer(),
-                        ImageWidget(
-                          borderRadius: defaultBorderRadius,
-                          photoURL: board.photoURL,
-                          height: 256,
-                          width: double.infinity,
-                        ),
-                        const VerticalSpacer(),
-                        BoardDetails(
-                          title: board.description,
-                          description: board.description,
-                          username: user.username,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+      child: NestedScrollView(
+        headerSliverBuilder: (context, _) {
+          return [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TopBar(title: board.title),
+                      const VerticalSpacer(),
+                      ImageWidget(
+                        borderRadius: defaultBorderRadius,
+                        photoURL: board.photoURL,
+                        height: 256,
+                        width: double.infinity,
+                      ),
+                      const VerticalSpacer(),
+                      BoardDetails(
+                        title: board.description,
+                        description: board.description,
+                        username: user.username,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ];
-          },
-          body: Column(
-            children: [
-              const VerticalSpacer(),
-              BoardButtons(
-                isOwner: isOwner,
-                user: user,
-                board: board,
-              ),
-              const VerticalSpacer(),
-              Flexible(
-                child: BoardActivities(boardID: board.id),
-              ),
-            ],
-          ),
+            ),
+          ];
+        },
+        body: Column(
+          children: [
+            const VerticalSpacer(),
+            BoardButtons(
+              isOwner: isOwner,
+              user: user,
+              board: board,
+            ),
+            const VerticalSpacer(),
+            Flexible(
+              child: BoardActivities(boardID: board.id),
+            ),
+          ],
         ),
       ),
     );

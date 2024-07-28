@@ -12,41 +12,40 @@ class RegisterUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomPageView(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Create Username'),
       ),
-      body: CustomPageView(
-        top: true,
-        child: Column(
-          children: [
-            CustomTextBox(
-              text: 'username',
-              label: 'username',
-              onPressed: () async {
-                final newValue = await editTextField(
-                  context,
-                  'title',
-                  30,
-                  TextEditingController(),
-                );
-                if (newValue != null && context.mounted) {
-                  final isUnique =
-                      await UserRepository().isUsernameUnique(newValue);
-                  if (isUnique) await UserRepository().createUser(newValue);
-                }
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ActionButton(
-              inverted: true,
-              onTap: () {},
-              text: 'Confirm',
-            ),
-          ],
-        ),
+      top: true,
+      body: Column(
+        children: [
+          CustomTextBox(
+            text: 'username',
+            label: 'username',
+            onPressed: () async {
+              final newValue = await editTextField(
+                context,
+                'title',
+                30,
+                TextEditingController(),
+              );
+              if (newValue != null && context.mounted) {
+                final isUnique =
+                    await UserRepository().isUsernameUnique(newValue);
+                if (isUnique) await UserRepository().createUser(newValue);
+              }
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ActionButton(
+            inverted: true,
+            onTap: () {},
+            text: 'Confirm',
+          ),
+        ],
       ),
     );
   }

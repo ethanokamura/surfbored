@@ -57,23 +57,21 @@ class ProfileBuilder extends StatelessWidget {
     final isCurrent = context.read<UserRepository>().isCurrentUser(user.uid);
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        body: CustomPageView(
-          top: false,
-          child: NestedScrollView(
-            headerSliverBuilder: (context, _) {
-              return [
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    <Widget>[_buildProfileHeader(context, user, isCurrent)],
-                  ),
+      child: CustomPageView(
+        top: false,
+        body: NestedScrollView(
+          headerSliverBuilder: (context, _) {
+            return [
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  <Widget>[_buildProfileHeader(context, user, isCurrent)],
                 ),
-              ];
-            },
-            body: user.uid.isNotEmpty
-                ? _buildProfileContent(context, user.uid)
-                : const Center(child: CircularProgressIndicator()),
-          ),
+              ),
+            ];
+          },
+          body: user.uid.isNotEmpty
+              ? _buildProfileContent(context, user.uid)
+              : const Center(child: CircularProgressIndicator()),
         ),
       ),
     );

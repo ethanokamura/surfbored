@@ -8,8 +8,10 @@ class FeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomPageView(
+      top: false,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Activity Feed'),
         actions: [
           IconButton(
@@ -18,7 +20,7 @@ class FeedPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const CustomPageView(top: false, child: ActivityFeed()),
+      body: const ActivityFeed(),
     );
   }
 }

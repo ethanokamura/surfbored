@@ -5,7 +5,6 @@ enum ItemStatus {
   loading,
   empty,
   loaded,
-  deleted,
   created,
   creating,
   failure,

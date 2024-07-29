@@ -6,8 +6,13 @@ import 'package:rando/pages/activities/shared/activity/activity.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ActivityWrapper extends StatelessWidget {
-  const ActivityWrapper({required this.itemID, super.key});
+  const ActivityWrapper({
+    required this.onRefresh,
+    required this.itemID,
+    super.key,
+  });
   final String itemID;
+  final void Function() onRefresh;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

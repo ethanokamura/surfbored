@@ -2,14 +2,15 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:items_repository/items_repository.dart';
-// import 'package:rando/pages/activities/activity_page/activity_page.dart';
 import 'package:rando/pages/activities/bottom_sheet.dart';
 import 'package:rando/pages/activities/cubit/activity_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
-class ItemCard extends StatelessWidget {
-  const ItemCard({required this.itemID, super.key});
+class ActivityCard extends StatelessWidget {
+  const ActivityCard(
+      {required this.onRefresh, required this.itemID, super.key});
   final String itemID;
+  final void Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +25,9 @@ class ItemCard extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final item = state.item;
-            return ItemCardView(item: item);
+            return ItemCardView(item: item, onRefresh: onRefresh);
           } else if (state.isEmpty) {
-            return const Center(child: Text('This board is empty.'));
+            return const Center(child: Text('This item is empty.'));
           } else {
             return const Center(child: Text('Something went wrong'));
           }
@@ -37,21 +38,19 @@ class ItemCard extends StatelessWidget {
 }
 
 class ItemCardView extends StatelessWidget {
-  const ItemCardView({required this.item, super.key});
+  const ItemCardView({required this.onRefresh, required this.item, super.key});
   final Item item;
+  final void Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute<dynamic>(
-        //     builder: (context) => ActivityPage(itemID: item.id),
-        //   ),
-        // );
-        showActivityModal(context, item);
-      },
+      onTap: () => showActivityModal(
+        context,
+        item,
+        context.read<ItemCubit>(),
+        onRefresh,
+      ),
       child: CustomContainer(
         inverted: false,
         horizontal: 0,

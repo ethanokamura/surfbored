@@ -116,11 +116,9 @@ class MoreOptions extends StatelessWidget {
             break;
           // edit activity
           case Options.edit:
-            Navigator.pop(context);
             onEdit();
           // delete activity
           case Options.delete:
-            Navigator.pop(context);
             onDelete();
         }
       },

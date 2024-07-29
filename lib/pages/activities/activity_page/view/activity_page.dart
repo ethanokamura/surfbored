@@ -40,7 +40,9 @@ class ActivityPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             } else if (state.isLoaded) {
               final item = state.item;
-              return Center(child: Activity(item: item));
+              return Center(
+                child: Activity(item: item),
+              );
             } else if (state.isEmpty) {
               return const Center(child: Text('This item is empty.'));
             } else {

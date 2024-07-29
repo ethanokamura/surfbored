@@ -56,9 +56,8 @@ class Activity extends StatelessWidget {
                             ),
                           );
                         },
-                        onDelete: () {
-                          // Navigator.pop(context);
-                          context.read<ItemCubit>().deleteItem(
+                        onDelete: () async {
+                          await context.read<ItemCubit>().deleteItem(
                                 item.uid,
                                 item.id,
                                 item.photoURL.toString(),

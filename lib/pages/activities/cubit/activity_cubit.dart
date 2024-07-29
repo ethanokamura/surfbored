@@ -90,7 +90,6 @@ class ItemCubit extends Cubit<ItemState> {
         itemID: itemID,
         isLiked: liked,
       );
-      await getItem(itemID);
       emit(state.fromItemToggle(liked: liked));
     } on ItemFailure catch (failure) {
       emit(state.fromItemFailure(failure));
@@ -119,7 +118,6 @@ class ItemCubit extends Cubit<ItemState> {
         await _itemsRepository.uploadImage(imageFile, docID);
       }
       emit(state.fromItemCreated());
-      await getItem(docID);
     } on ItemFailure catch (failure) {
       emit(state.fromItemFailure(failure));
     }
@@ -133,7 +131,8 @@ class ItemCubit extends Cubit<ItemState> {
     emit(state.fromItemLoading());
     try {
       await _itemsRepository.deleteItem(userID, itemID, photoURL);
-      emit(state.fromItemDeleted());
+
+      emit(state.fromItemInitial());
     } on ItemFailure catch (failure) {
       emit(state.fromItemFailure(failure));
     }
@@ -141,13 +140,13 @@ class ItemCubit extends Cubit<ItemState> {
 }
 
 extension _ItemStateExtensions on ItemState {
+  ItemState fromItemInitial() => copyWith(status: ItemStatus.initial);
+
   ItemState fromItemLoading() => copyWith(status: ItemStatus.loading);
 
   ItemState fromItemsLoading() => copyWith(status: ItemStatus.loading);
 
   ItemState fromItemEmpty() => copyWith(status: ItemStatus.empty);
-
-  ItemState fromItemDeleted() => copyWith(status: ItemStatus.deleted);
 
   ItemState fromItemCreating() => copyWith(status: ItemStatus.creating);
 

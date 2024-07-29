@@ -12,12 +12,14 @@ import 'package:user_repository/user_repository.dart';
 Future<dynamic> showActivityModal(
   BuildContext context,
   Item item,
+  ItemCubit itemCubit,
+  void Function() onRefresh,
 ) async {
-  final user = context.read<ItemCubit>().getUser();
-  final isOwner = context.read<ItemCubit>().isOwner(
-        item.uid,
-        user.uid,
-      );
+  final user = itemCubit.getUser();
+  final isOwner = itemCubit.isOwner(
+    item.uid,
+    user.uid,
+  );
   await showModalBottomSheet<void>(
     context: context,
     backgroundColor: Theme.of(context).colorScheme.surface,
@@ -53,13 +55,17 @@ Future<dynamic> showActivityModal(
                         ),
                       );
                     },
-                    onDelete: () {
-                      // Navigator.pop(context);
-                      context.read<ItemCubit>().deleteItem(
-                            item.uid,
-                            item.id,
-                            item.photoURL.toString(),
-                          );
+                    onDelete: () async {
+                      await itemCubit.deleteItem(
+                        item.uid,
+                        item.id,
+                        item.photoURL.toString(),
+                      );
+                      if (context.mounted) Navigator.pop(context);
+                      await Future<dynamic>.delayed(
+                        const Duration(milliseconds: 300),
+                      );
+                      onRefresh();
                     },
                   ),
                   ActionIconButton(

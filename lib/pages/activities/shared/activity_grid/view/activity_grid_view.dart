@@ -3,8 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:rando/pages/activities/activities.dart';
 
 class ActivityGrid extends StatelessWidget {
-  const ActivityGrid({required this.items, super.key});
+  const ActivityGrid({required this.onRefresh, required this.items, super.key});
   final List<String> items;
+  final void Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,10 @@ class ActivityGrid extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final itemID = items[index];
-        return ItemCard(itemID: itemID);
+        return ActivityCard(
+          itemID: itemID,
+          onRefresh: onRefresh,
+        );
       },
     );
   }

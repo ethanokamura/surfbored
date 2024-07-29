@@ -19,7 +19,14 @@ class ActivityList extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final items = state.items;
-            return ActivityGrid(items: items);
+            return ActivityGrid(
+              items: items,
+              onRefresh: () {
+                context
+                    .read<UserCubit>()
+                    .streamItems(userID); // Refresh the items
+              },
+            );
           } else if (state.isEmpty) {
             return const Center(child: Text('Item is empty.'));
           } else {

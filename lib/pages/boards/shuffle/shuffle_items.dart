@@ -58,7 +58,10 @@ class ShowItems extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ActivityWrapper(itemID: items[state.index]),
+          ActivityWrapper(
+            itemID: items[state.index],
+            onRefresh: () => Navigator.pop(context),
+          ),
           const VerticalSpacer(),
           Row(
             children: [

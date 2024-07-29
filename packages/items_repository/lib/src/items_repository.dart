@@ -112,11 +112,7 @@ extension Read on ItemsRepository {
         try {
           return snapshot.docs
               .map((doc) {
-                try {
-                  return Item.fromJson(doc.data());
-                } catch (error) {
-                  return null;
-                }
+                return Item.fromJson(doc.data());
               })
               .whereType<Item>()
               .toList();
@@ -250,14 +246,15 @@ extension Delete on ItemsRepository {
         throw Exception('Data does not exists!');
       }
 
+      print('item exists');
       // delete image
       if (photoURL.isNotEmpty) {
         await _storage.deleteFile('items/$itemID/cover_image.jpeg');
       }
-
+      print('deleted image');
       // delete item ref
       batch.delete(itemRef);
-
+      print('deleted item');
       // find all boards that contain the item
       final boardsSnapshot = await _firestore
           .boardsCollection()
@@ -272,6 +269,8 @@ extension Delete on ItemsRepository {
         batch.update(boardDoc.reference, {'items': boardItems});
       }
 
+      print('removed item from boards');
+
       final user = await UserRepository().getUserById(userID);
       user.likedItems.remove(itemID);
       user.items.remove(itemID);
@@ -280,6 +279,8 @@ extension Delete on ItemsRepository {
         'items': user.items,
         'likedItems': user.likedItems,
       });
+      print('removed item from user doc');
+
       // commit changes
       await batch.commit();
     } on FirebaseException {

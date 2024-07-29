@@ -106,7 +106,7 @@ class _RegisterUserState extends State<RegisterUser> {
                   final likedBoardID = await BoardRepository().createBoard(
                     Board(
                       uid: uid,
-                      title: 'Liked Activities:',
+                      title: 'Liked Activities',
                       description: 'A collection of activities you have liked!',
                     ),
                     uid,

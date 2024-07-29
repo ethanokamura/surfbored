@@ -39,4 +39,8 @@ class ProfileCubit extends Cubit<User> {
   Future<void> editField(String field, String data) async {
     await _userRepository.updateField(_userID, field, data);
   }
+
+  // Future<void> refreshUser(String userID) {
+
+  // }
 }

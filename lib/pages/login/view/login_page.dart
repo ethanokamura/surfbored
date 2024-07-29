@@ -133,8 +133,10 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                             // print('verification failed');
                             context.showSnackBar('Error Verifying. Try Again.');
                           },
-                          codeSent: (String verificationId,
-                              [forceResendingToken]) {
+                          codeSent: (
+                            String verificationId, [
+                            forceResendingToken,
+                          ]) {
                             setState(() {
                               _verificationId = verificationId;
                               _codeSent = true;

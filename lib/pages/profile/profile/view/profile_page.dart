@@ -2,9 +2,9 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
-import 'package:rando/pages/profile/profile/view/post_list_view.dart';
 import 'package:rando/pages/profile/profile/view/board_list.dart';
 import 'package:rando/pages/profile/profile/view/helpers.dart';
+import 'package:rando/pages/profile/profile/view/post_list_view.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -60,65 +60,52 @@ class ProfileBuilder extends StatelessWidget {
       child: CustomPageView(
         top: false,
         body: NestedScrollView(
-          headerSliverBuilder: (context, _) {
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverList(
                 delegate: SliverChildListDelegate(
-                  <Widget>[_buildProfileHeader(context, user, isCurrent)],
+                  <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: defaultPadding,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TopBar(user: user),
+                          const VerticalSpacer(),
+                          ProfileHeader(user: user, isCurrent: isCurrent),
+                          const VerticalSpacer(),
+                          About(user: user),
+                          const VerticalSpacer(),
+                          const Interests(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ];
           },
           body: user.uid.isNotEmpty
-              ? _buildProfileContent(context, user.uid)
+              ? Column(
+                  children: [
+                    const ProfileTabBar(),
+                    const VerticalSpacer(),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          PostList(userID: user.uid),
+                          BoardsList(userID: user.uid),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
               : const Center(child: CircularProgressIndicator()),
         ),
       ),
     );
   }
-}
-
-Widget _buildProfileHeader(BuildContext context, User user, bool isCurrent) {
-  return Padding(
-    padding: const EdgeInsets.only(
-      bottom: defaultPadding,
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        TopBar(user: user),
-        const VerticalSpacer(),
-        ProfileHeader(user: user, isCurrent: isCurrent),
-        const VerticalSpacer(),
-        About(user: user),
-        const VerticalSpacer(),
-        const Interests(),
-        // const VerticalSpacer(),
-        // Friends(friends: user.friends),
-        // const VerticalSpacer(),
-        // if (isCurrent)
-        //   MyProfileButtons(userID: user.uid)
-        // else
-        //   const DefaultProfileButtons(),
-      ],
-    ),
-  );
-}
-
-Widget _buildProfileContent(BuildContext context, String userID) {
-  return Column(
-    children: [
-      const ProfileTabBar(),
-      const VerticalSpacer(),
-      Expanded(
-        child: TabBarView(
-          children: [
-            PostList(userID: userID),
-            BoardsList(userID: userID),
-          ],
-        ),
-      ),
-    ],
-  );
 }

@@ -22,9 +22,7 @@ class PostList extends StatelessWidget {
             return PostsGrid(
               posts: posts,
               onRefresh: () async {
-                context
-                    .read<UserCubit>()
-                    .streamPosts(userID); // Refresh the posts
+                context.read<UserCubit>().streamPosts(userID);
               },
             );
           } else if (state.isEmpty) {

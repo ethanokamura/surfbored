@@ -13,13 +13,13 @@ Future<dynamic> showPostModal(
   BuildContext context,
   Post post,
   PostCubit postCubit,
-  void Function() onRefresh,
 ) async {
   final user = context.read<UserRepository>().fetchCurrentUser();
   final isOwner = postCubit.isOwner(
     post.uid,
     user.uid,
   );
+
   await showModalBottomSheet<void>(
     context: context,
     backgroundColor: Theme.of(context).colorScheme.surface,
@@ -31,7 +31,10 @@ Future<dynamic> showPostModal(
         Stack(
           children: [
             ImageWidget(
-              borderRadius: defaultBorderRadius,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(defaultRadius),
+                topRight: Radius.circular(defaultRadius),
+              ),
               photoURL: post.photoURL,
               height: 256,
               width: double.infinity,
@@ -61,10 +64,6 @@ Future<dynamic> showPostModal(
                         post.photoURL.toString(),
                       );
                       if (context.mounted) Navigator.pop(context);
-                      await Future<dynamic>.delayed(
-                        const Duration(milliseconds: 300),
-                      );
-                      onRefresh();
                     },
                   ),
                   ActionIconButton(

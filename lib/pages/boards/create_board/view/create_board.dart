@@ -122,7 +122,7 @@ class _CreateBoardState extends State<CreateBoard> {
   int maxInputLength(String field) {
     switch (field) {
       case 'title':
-        return 30;
+        return 40;
       case 'description':
         return 150;
       default:

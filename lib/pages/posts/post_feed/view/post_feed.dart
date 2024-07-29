@@ -24,15 +24,18 @@ class PostFeed extends StatelessWidget {
             return const Center(child: Text('Something went wrong.'));
           } else if (state.status == PostStatus.loaded) {
             final posts = state.posts;
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-              separatorBuilder: (context, index) => const VerticalSpacer(),
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return PostView(post: post);
-              },
+            return RefreshIndicator(
+              onRefresh: () async => context.read<PostCubit>().streamAllPosts(),
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+                separatorBuilder: (context, index) => const VerticalSpacer(),
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: posts.length,
+                itemBuilder: (context, index) {
+                  final post = posts[index];
+                  return PostView(post: post);
+                },
+              ),
             );
           } else {
             return const Center(child: Text('Something went wrong'));

@@ -6,9 +6,8 @@ import 'package:rando/pages/posts/bottom_sheet.dart';
 import 'package:rando/pages/posts/cubit/activity_cubit.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({required this.onRefresh, required this.postID, super.key});
+  const PostCard({required this.postID, super.key});
   final String postID;
-  final void Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class PostCard extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final post = state.post;
-            return PostCardView(post: post, onRefresh: onRefresh);
+            return PostCardView(post: post);
           } else if (state.isEmpty) {
             return const Center(child: Text('This post is empty.'));
           } else {
@@ -35,9 +34,8 @@ class PostCard extends StatelessWidget {
 }
 
 class PostCardView extends StatelessWidget {
-  const PostCardView({required this.onRefresh, required this.post, super.key});
+  const PostCardView({required this.post, super.key});
   final Post post;
-  final void Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,6 @@ class PostCardView extends StatelessWidget {
         context,
         post,
         context.read<PostCubit>(),
-        onRefresh,
       ),
       child: CustomContainer(
         inverted: false,

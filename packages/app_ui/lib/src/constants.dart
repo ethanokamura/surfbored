@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 const double defaultPadding = 20;
 const double defaultSpacing = 20;
 const double defaultElevation = 3;
-const BorderRadius defaultBorderRadius = BorderRadius.all(Radius.circular(10));
+const double defaultRadius = 10;
+const BorderRadius defaultBorderRadius =
+    BorderRadius.all(Radius.circular(defaultRadius));
 const String defaultDarkImage = AppStrings.darkModeIcon;
 const String defaultLightImage = AppStrings.lightModeIcon;
 

@@ -4,8 +4,8 @@ import 'package:rando/pages/posts/posts.dart';
 import 'package:rando/pages/profile/profile/cubit/user_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
-class ActivityList extends StatelessWidget {
-  const ActivityList({required this.userID, super.key});
+class PostList extends StatelessWidget {
+  const PostList({required this.userID, super.key});
   final String userID;
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ActivityList extends StatelessWidget {
             final posts = state.posts;
             return PostsGrid(
               posts: posts,
-              onRefresh: () {
+              onRefresh: () async {
                 context
                     .read<UserCubit>()
                     .streamPosts(userID); // Refresh the posts

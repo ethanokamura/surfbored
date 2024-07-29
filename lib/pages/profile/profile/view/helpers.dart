@@ -58,58 +58,59 @@ class ProfileHeader extends StatelessWidget {
   final bool isCurrent;
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      inverted: false,
-      horizontal: null,
-      vertical: null,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ImageWidget(
-            photoURL: user.photoURL,
-            width: 96,
-            height: 96,
-            borderRadius: defaultBorderRadius,
-          ),
-          const HorizontalSpacer(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Expanded(
-              Text(
-                user.name,
-                style: TextStyle(
-                  color: Theme.of(context).textColor,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ImageWidget(
+          photoURL: user.photoURL,
+          width: 96,
+          height: 96,
+          borderRadius: defaultBorderRadius,
+        ),
+        const HorizontalSpacer(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              user.name,
+              style: TextStyle(
+                color: Theme.of(context).textColor,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                '(he/him)',
-                style: TextStyle(
-                  color: Theme.of(context).subtextColor,
-                  fontSize: 12,
+            ),
+            Row(
+              children: [
+                Text(
+                  '${user.friends.length}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const VerticalSpacer(),
-              Text(
-                'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
-                style: TextStyle(
-                  color: Theme.of(context).subtextColor,
-                  fontSize: 16,
+                const SizedBox(width: 5),
+                Text(
+                  'friends',
+                  style: TextStyle(color: Theme.of(context).subtextColor),
                 ),
+              ],
+            ),
+            Text(
+              'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
+              style: TextStyle(
+                color: Theme.of(context).subtextColor,
+                fontSize: 14,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
 
 class About extends StatelessWidget {
-  const About({required this.bio, super.key});
-  final String bio;
+  const About({required this.user, super.key});
+  final User user;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -120,14 +121,14 @@ class About extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About Me',
+            'about me',
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Theme.of(context).subtextColor,
             ),
           ),
           Text(
-            bio,
+            user.bio,
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Theme.of(context).textColor,
@@ -160,7 +161,7 @@ class Interests extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Interests',
+            'interests',
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Theme.of(context).subtextColor,

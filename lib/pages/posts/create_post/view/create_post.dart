@@ -145,7 +145,7 @@ class _CreateActivityState extends State<CreateActivity> {
   int maxInputLength(String field) {
     switch (field) {
       case 'title':
-        return 30;
+        return 40;
       case 'description':
         return 150;
       default:

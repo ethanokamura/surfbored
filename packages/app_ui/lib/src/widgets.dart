@@ -96,48 +96,48 @@ class CustomInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      // mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          label,
-          style: const TextStyle(
+          '$label:',
+          style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.normal,
+            color: Theme.of(context).subtextColor,
           ),
         ),
         const HorizontalSpacer(),
-        Expanded(
-          child: CustomContainer(
-            inverted: false,
-            horizontal: null,
-            vertical: 0,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      text,
-                      overflow: TextOverflow.clip,
-                    ),
+        CustomContainer(
+          inverted: false,
+          horizontal: null,
+          vertical: 0,
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    text,
+                    overflow: TextOverflow.clip,
                   ),
                 ),
-                IconButton(
-                  onPressed: onPressed,
-                  icon: Icon(
-                    Icons.edit,
-                    color: Theme.of(context).accentColor,
-                  ),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  // splashColor: Colors.transparent,
-                  // highlightColor: Colors.transparent,
-                  tooltip: 'Edit',
-                  iconSize: 20,
+              ),
+              IconButton(
+                onPressed: onPressed,
+                icon: Icon(
+                  Icons.edit,
+                  color: Theme.of(context).accentColor,
                 ),
-              ],
-            ),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                // splashColor: Colors.transparent,
+                // highlightColor: Colors.transparent,
+                tooltip: 'Edit',
+                iconSize: 20,
+              ),
+            ],
           ),
         ),
       ],

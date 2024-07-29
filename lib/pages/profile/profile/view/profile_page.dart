@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
-import 'package:rando/pages/profile/profile/view/activity_list_view.dart';
+import 'package:rando/pages/profile/profile/view/post_list_view.dart';
 import 'package:rando/pages/profile/profile/view/board_list.dart';
 import 'package:rando/pages/profile/profile/view/helpers.dart';
 import 'package:user_repository/user_repository.dart';
@@ -91,16 +91,16 @@ Widget _buildProfileHeader(BuildContext context, User user, bool isCurrent) {
         const VerticalSpacer(),
         ProfileHeader(user: user, isCurrent: isCurrent),
         const VerticalSpacer(),
-        About(bio: user.bio),
+        About(user: user),
         const VerticalSpacer(),
         const Interests(),
-        const VerticalSpacer(),
-        Friends(friends: user.friends),
-        const VerticalSpacer(),
-        if (isCurrent)
-          MyProfileButtons(userID: user.uid)
-        else
-          const DefaultProfileButtons(),
+        // const VerticalSpacer(),
+        // Friends(friends: user.friends),
+        // const VerticalSpacer(),
+        // if (isCurrent)
+        //   MyProfileButtons(userID: user.uid)
+        // else
+        //   const DefaultProfileButtons(),
       ],
     ),
   );
@@ -114,7 +114,7 @@ Widget _buildProfileContent(BuildContext context, String userID) {
       Expanded(
         child: TabBarView(
           children: [
-            ActivityList(userID: userID),
+            PostList(userID: userID),
             BoardsList(userID: userID),
           ],
         ),

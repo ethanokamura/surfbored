@@ -1,8 +1,8 @@
 import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/posts/posts.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
+import 'package:rando/pages/posts/posts.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardActivities extends StatelessWidget {
@@ -23,7 +23,7 @@ class BoardActivities extends StatelessWidget {
             final posts = state.posts;
             return PostsGrid(
               posts: posts,
-              onRefresh: () {
+              onRefresh: () async {
                 context
                     .read<BoardCubit>()
                     .streamPosts(boardID); // Refresh the posts

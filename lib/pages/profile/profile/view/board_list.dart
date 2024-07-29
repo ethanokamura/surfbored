@@ -20,7 +20,11 @@ class BoardsList extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final boards = state.posts;
-            return BoardListView(boards: boards);
+            return BoardListView(
+              boards: boards,
+              onRefresh: () async =>
+                  context.read<UserCubit>().streamBoards(userID),
+            );
           } else if (state.isEmpty) {
             return const Center(child: Text('This board is empty.'));
           } else {
@@ -33,20 +37,27 @@ class BoardsList extends StatelessWidget {
 }
 
 class BoardListView extends StatelessWidget {
-  const BoardListView({required this.boards, super.key});
+  const BoardListView({
+    required this.onRefresh,
+    required this.boards,
+    super.key,
+  });
   final List<String> boards;
-
+  final Future<void> Function() onRefresh;
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.only(bottom: defaultPadding),
-      separatorBuilder: (context, index) => const VerticalSpacer(),
-      physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: boards.length,
-      itemBuilder: (context, index) {
-        final boardID = boards[index];
-        return BoardCard(boardID: boardID);
-      },
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: ListView.separated(
+        padding: const EdgeInsets.only(bottom: defaultPadding),
+        separatorBuilder: (context, index) => const VerticalSpacer(),
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: boards.length,
+        itemBuilder: (context, index) {
+          final boardID = boards[index];
+          return BoardCard(boardID: boardID);
+        },
+      ),
     );
   }
 }

@@ -76,7 +76,7 @@ class PostView extends StatelessWidget {
               style: TextStyle(
                 color: Theme.of(context).textColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: 22,
               ),
             ),
             Text(
@@ -84,7 +84,7 @@ class PostView extends StatelessWidget {
               style: TextStyle(
                 color: Theme.of(context).subtextColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 16,
               ),
             ),
             const VerticalSpacer(),

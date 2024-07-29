@@ -73,6 +73,7 @@ class BoardPageView extends StatelessWidget {
                 <Widget>[
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TopBar(title: board.title),
@@ -85,7 +86,7 @@ class BoardPageView extends StatelessWidget {
                       ),
                       const VerticalSpacer(),
                       BoardDetails(
-                        title: board.description,
+                        title: board.title,
                         description: board.description,
                         username: user.username,
                       ),
@@ -171,7 +172,6 @@ class BoardDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -183,15 +183,15 @@ class BoardDetails extends StatelessWidget {
           ),
         ),
         Text(
-          '@$username',
-          style: TextStyle(
-            color: Theme.of(context).accentColor,
-          ),
-        ),
-        Text(
           description,
           style: TextStyle(
             color: Theme.of(context).subtextColor,
+          ),
+        ),
+        Text(
+          '@$username',
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
           ),
         ),
       ],

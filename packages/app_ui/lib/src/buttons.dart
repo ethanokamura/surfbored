@@ -27,7 +27,7 @@ class ActionButton extends StatelessWidget {
         horizontal: horizontal == null ? 15 : horizontal!,
         vertical: vertical == null ? 10 : vertical!,
       ),
-      elevation: 10,
+      elevation: defaultElevation,
       shadowColor: Colors.black,
       backgroundColor: inverted
           ? Theme.of(context).accentColor
@@ -90,7 +90,7 @@ class SecondaryButton extends StatelessWidget {
         horizontal: horizontal == null ? 15 : horizontal!,
         vertical: vertical == null ? 10 : vertical!,
       ),
-      elevation: 10,
+      elevation: defaultElevation,
       shadowColor: Colors.black,
       backgroundColor: Theme.of(context).colorScheme.primary,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
@@ -143,7 +143,7 @@ class ActionIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = ElevatedButton.styleFrom(
       padding: const EdgeInsets.all(10),
-      elevation: 10,
+      elevation: defaultElevation,
       shadowColor: Colors.black,
       backgroundColor: inverted
           ? Theme.of(context).accentColor
@@ -197,7 +197,7 @@ class LikeButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Material(
-        elevation: 5,
+        elevation: defaultElevation,
         color: Theme.of(context).colorScheme.primary,
         shadowColor: Theme.of(context).shadowColor,
         borderRadius: const BorderRadius.all(Radius.circular(5)),

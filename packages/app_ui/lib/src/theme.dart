@@ -60,6 +60,18 @@ extension CustomThemeData on ThemeData {
   Color get inverseTextColor => brightness == Brightness.dark
       ? CustomColors.inverseDarkTextColor
       : CustomColors.inverseLightTextColor;
+
+  /// [backgroundGradientStart]
+  /// Used on scaffold gradients
+  Color get backgroundGradientStart => brightness == Brightness.dark
+      ? CustomColors.darkGradientStart
+      : CustomColors.lightGradientStart;
+
+  /// [backgroundGradientEnd]
+  /// Used on scaffold gradients
+  Color get backgroundGradientEnd => brightness == Brightness.dark
+      ? CustomColors.darkGradientEnd
+      : CustomColors.lightGradientEnd;
 }
 
 // Dark Mode
@@ -74,7 +86,7 @@ ThemeData darkMode = ThemeData(
   scaffoldBackgroundColor: CustomColors.darkBackground,
 
   // misc colors
-  shadowColor: Colors.black87,
+  shadowColor: Colors.black,
 
   // custom color scheme
   colorScheme: const ColorScheme.dark(
@@ -128,7 +140,7 @@ ThemeData lightMode = ThemeData(
   scaffoldBackgroundColor: CustomColors.lightBackground,
 
   // default shadow color
-  shadowColor: Colors.black87,
+  shadowColor: Colors.black,
 
   // custom color scheme
   colorScheme: const ColorScheme.light(

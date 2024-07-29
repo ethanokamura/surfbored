@@ -32,7 +32,7 @@ class MoreOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = ElevatedButton.styleFrom(
       padding: const EdgeInsets.all(8),
-      elevation: 10,
+      elevation: defaultElevation,
       shadowColor: Colors.black,
       backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),

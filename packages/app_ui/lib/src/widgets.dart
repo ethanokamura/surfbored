@@ -25,7 +25,7 @@ class Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 5,
+      elevation: defaultElevation,
       color: Theme.of(context).colorScheme.primary,
       shadowColor: Theme.of(context).shadowColor,
       borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -65,7 +65,7 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 5,
+      elevation: defaultElevation,
       color: inverted == true
           ? Theme.of(context).accentColor
           : Theme.of(context).colorScheme.surface,
@@ -244,20 +244,27 @@ class CustomPageView extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: appBar,
-      body: Stack(
-        children: [
-          const ScreenGradient(),
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: defaultPadding,
-                right: defaultPadding,
-                top: (top == true) ? defaultPadding : 0,
-              ),
-              child: body,
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).backgroundGradientStart,
+              Theme.of(context).backgroundGradientEnd,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-        ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: defaultPadding,
+              right: defaultPadding,
+              top: (top == true) ? defaultPadding : 0,
+            ),
+            child: body,
+          ),
+        ),
       ),
     );
   }
@@ -269,10 +276,12 @@ class ScreenGradient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+          colors: [
+            Theme.of(context).backgroundGradientStart,
+            Theme.of(context).backgroundGradientEnd,
+          ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),

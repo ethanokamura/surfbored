@@ -7,6 +7,7 @@ enum PostStatus {
   loaded,
   created,
   creating,
+  deleted,
   failure,
 }
 
@@ -60,4 +61,5 @@ extension BoardStateExtensions on PostState {
   bool get isFailure => status == PostStatus.failure;
   bool get isCreated => status == PostStatus.created;
   bool get isCreating => status == PostStatus.creating;
+  bool get isDeleted => status == PostStatus.deleted;
 }

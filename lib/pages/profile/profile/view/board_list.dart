@@ -48,15 +48,19 @@ class BoardListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: ListView.separated(
-        padding: const EdgeInsets.only(bottom: defaultPadding),
-        separatorBuilder: (context, index) => const VerticalSpacer(),
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: boards.length,
-        itemBuilder: (context, index) {
-          final boardID = boards[index];
-          return BoardCard(boardID: boardID);
-        },
+      child: Column(
+        children: [
+          ListView.separated(
+            padding: const EdgeInsets.only(bottom: defaultPadding),
+            separatorBuilder: (context, index) => const VerticalSpacer(),
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: boards.length,
+            itemBuilder: (context, index) {
+              final boardID = boards[index];
+              return BoardCard(boardID: boardID);
+            },
+          ),
+        ],
       ),
     );
   }

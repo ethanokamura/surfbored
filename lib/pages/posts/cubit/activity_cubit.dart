@@ -125,6 +125,7 @@ class PostCubit extends Cubit<PostState> {
       await _postRepository.deletePost(userID, postID, photoURL);
 
       emit(state.fromPostInitial());
+      emit(state.fromPostDeleted());
     } on PostFailure catch (failure) {
       emit(state.fromPostFailure(failure));
     }
@@ -143,6 +144,8 @@ extension _PostStateExtensions on PostState {
   PostState fromPostCreating() => copyWith(status: PostStatus.creating);
 
   PostState fromPostCreated() => copyWith(status: PostStatus.created);
+
+  PostState fromPostDeleted() => copyWith(status: PostStatus.deleted);
 
   PostState fromPostLoaded(Post post) => copyWith(
         status: PostStatus.loaded,

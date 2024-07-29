@@ -24,6 +24,8 @@ class PostCard extends StatelessWidget {
             return PostCardView(post: post);
           } else if (state.isEmpty) {
             return const Center(child: Text('This post is empty.'));
+          } else if (state.isDeleted) {
+            return const Center(child: Text('Post was deleted.'));
           } else {
             return const Center(child: Text('Something went wrong'));
           }

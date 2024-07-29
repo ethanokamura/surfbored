@@ -15,9 +15,11 @@ List<Page<dynamic>> generateAppPages(
     case AppStatus.unauthenticated:
       return [LoginPage.page()];
     case AppStatus.newlyAuthenticated:
-      return [RegisterUser.page()];
+      return [HomePage.page()];
     case AppStatus.authenticated:
       return [HomePage.page()];
+    case AppStatus.needsRegistration:
+      return [RegisterUser.page()];
     case AppStatus.home:
       return [HomePage.page()];
     case AppStatus.search:

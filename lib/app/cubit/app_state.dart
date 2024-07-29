@@ -4,6 +4,7 @@ enum AppStatus {
   unauthenticated,
   newlyAuthenticated,
   authenticated,
+  needsRegistration,
   failure,
   // main
   home,
@@ -39,6 +40,12 @@ final class AppState extends Equatable {
   const AppState.authenticated(User user)
       : this._(
           status: AppStatus.authenticated,
+          user: user,
+        );
+
+  const AppState.needsRegistration(User user)
+      : this._(
+          status: AppStatus.needsRegistration,
           user: user,
         );
 

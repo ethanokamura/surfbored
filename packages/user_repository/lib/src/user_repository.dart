@@ -38,12 +38,12 @@ class UserRepository {
 
   // get current user's ID
   String fetchCurrentUserID() {
-    return user.uid;
+    return _firebaseAuth.currentUser!.uid;
   }
 
   // check if the current user is the provided user
   bool isCurrentUser(String userID) {
-    return user.uid == userID;
+    return _firebaseAuth.currentUser!.uid == userID;
   }
 
   // figure out if user exists
@@ -191,28 +191,17 @@ extension Username on UserRepository {
 
 extension Create on UserRepository {
   // create new firestore document for user
-  Future<String> createUser(String username) async {
+  Future<void> createUser(String userID, model.User newUser) async {
     // authenticate user
-    final ref = _firestore.userDoc(user.uid);
     try {
       // set username in usernames collection
-      await _firestore.setUsernameDoc(user.uid, {
-        'username': username,
-        'uid': user.uid,
+      await _firestore.setUsernameDoc(userID, {
+        'username': newUser.username,
+        'uid': userID,
       });
-
-      // create default data
-      final data = model.User(
-        uid: user.uid,
-        username: username,
-      );
-
       // set data
-      await ref.set(data.toJson());
-      await ref.set({'memberSince': Timestamp.now()});
-      return user.uid;
-      // // update user doc
-      // await ref.update({'likedPostsBoardID': boardID});
+      await _firestore.setUserDoc(userID, newUser.toJson());
+      await _firestore.setUserDoc(userID, {'memberSince': Timestamp.now()});
     } on FirebaseException {
       throw UserFailure.fromCreateUser();
     }

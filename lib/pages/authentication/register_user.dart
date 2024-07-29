@@ -4,7 +4,7 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:user_repository/user_repository.dart';
 
-class RegisterUser extends StatelessWidget {
+class RegisterUser extends StatefulWidget {
   const RegisterUser._();
   static Page<dynamic> page() => const MaterialPage<void>(
         key: ValueKey('register_page'),
@@ -12,51 +12,110 @@ class RegisterUser extends StatelessWidget {
       );
 
   @override
+  State<RegisterUser> createState() => _RegisterUserState();
+}
+
+class _RegisterUserState extends State<RegisterUser> {
+  String username = '';
+  String name = '';
+  String bio = '';
+  @override
   Widget build(BuildContext context) {
+    final uid = UserRepository().fetchCurrentUserID();
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text('Create Username'),
       ),
       top: true,
-      body: Column(
-        children: [
-          CustomTextBox(
-            text: 'username',
-            label: 'username',
-            onPressed: () async {
-              final newValue = await editTextField(
-                context,
-                'title',
-                30,
-                TextEditingController(),
-              );
-              if (newValue != null && context.mounted) {
-                final isUnique =
-                    await UserRepository().isUsernameUnique(newValue);
-                if (isUnique) {
-                  final userID = await UserRepository().createUser(newValue);
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('* required fields'),
+            const VerticalSpacer(),
+            CustomInputField(
+              label: 'Username*',
+              text: username != '' ? username : 'username',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'Username',
+                  30,
+                  TextEditingController(),
+                );
+                if (newValue != null &&
+                    newValue.trim() != '' &&
+                    context.mounted) {
+                  final isUnique =
+                      await UserRepository().isUsernameUnique(newValue);
+                  if (isUnique) {
+                    setState(() => username = newValue);
+                  }
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            CustomInputField(
+              label: 'Name',
+              text: name != '' ? name : 'Name',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'Name',
+                  30,
+                  TextEditingController(),
+                );
+                if (newValue != null &&
+                    newValue.trim() != '' &&
+                    context.mounted) {
+                  setState(() => name = newValue);
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            CustomInputField(
+              label: 'Bio',
+              text: bio != '' ? bio : 'Bio',
+              onPressed: () async {
+                final newValue = await editTextField(
+                  context,
+                  'Bio',
+                  150,
+                  TextEditingController(),
+                );
+                if (newValue != null &&
+                    newValue.trim() != '' &&
+                    context.mounted) {
+                  setState(() => bio = newValue);
+                }
+              },
+            ),
+            const VerticalSpacer(),
+            if (username != '')
+              ActionButton(
+                inverted: true,
+                onTap: () async {
+                  final user = User(
+                    uid: uid,
+                    username: username,
+                    name: name,
+                    bio: bio,
+                  );
+                  await UserRepository().createUser(uid, user);
                   await BoardRepository().createBoard(
                     Board(
-                      uid: userID,
+                      uid: uid,
                       title: 'Liked Activities:',
                       description: 'A collection of activities you have liked!',
                     ),
-                    userID,
+                    uid,
                   );
-                }
-              }
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          ActionButton(
-            inverted: true,
-            onTap: () {},
-            text: 'Confirm',
-          ),
-        ],
+                },
+                text: 'Confirm',
+              ),
+          ],
+        ),
       ),
     );
   }

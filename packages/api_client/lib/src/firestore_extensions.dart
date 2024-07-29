@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:api_client/api_client.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 extension FirebaseFirestoreExtensions on FirebaseFirestore {
   String createId() => collection('_').doc().id;
@@ -27,7 +26,7 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
     }
   }
 
-  Future<void> _processQueryInBatches(
+  Future<void> processQueryInBatches(
     Query query,
     WriteBatch batch,
     void Function(DocumentSnapshot) processDoc,
@@ -37,7 +36,7 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
       processDoc(doc);
     }
     if (snapshot.docs.length == 500) {
-      await _processQueryInBatches(
+      await processQueryInBatches(
         query.startAfterDocument(snapshot.docs.last),
         batch,
         processDoc,

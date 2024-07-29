@@ -214,7 +214,7 @@ extension Delete on PostRepository {
           .where('posts', arrayContains: postID)
           .limit(batchSize);
 
-      await _firestore._processQueryInBatches(boardsQuery, batch, (boardDoc) {
+      await _firestore.processQueryInBatches(boardsQuery, batch, (boardDoc) {
         batch.update(boardDoc.reference, {
           'posts': FieldValue.arrayRemove([postID]),
         });
@@ -226,7 +226,7 @@ extension Delete on PostRepository {
           .where('likedPosts', arrayContains: postID)
           .limit(batchSize);
 
-      await _firestore._processQueryInBatches(usersQuery, batch, (userDoc) {
+      await _firestore.processQueryInBatches(usersQuery, batch, (userDoc) {
         batch.update(userDoc.reference, {
           'likedPosts': FieldValue.arrayRemove([postID]),
         });

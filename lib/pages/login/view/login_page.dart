@@ -94,73 +94,76 @@ class _PhoneSignInState extends State<PhoneSignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (!_codeSent)
-          TextField(
-            controller: _phoneController,
-            keyboardType: TextInputType.phone,
-            decoration: const InputDecoration(
-              labelText: 'Phone Number',
-            ),
-          )
-        else
-          TextField(
-            controller: _codeController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Verification Code',
-            ),
-          ),
-        const SizedBox(height: 16),
-        SignInButton(
-          inverted: true,
-          onTap: () async {
-            if (!_codeSent) {
-              setState(() => isLoading = true);
-
-              await context.read<LoginCubit>().signInWithPhone(
-                    phoneNumber: _phoneController.text.trim(),
-                    verificationCompleted: (credential) async {
-                      await context.read<LoginCubit>().signInWithOTP(
-                            _codeController.text.trim(),
-                            _verificationId,
-                          );
-                    },
-                    verificationFailed: (exception) {
-                      // Error handling is managed by BlocListener
-                    },
-                    codeSent: (String verificationId, [forceResendingToken]) {
-                      setState(() {
-                        _verificationId = verificationId;
-                        _codeSent = true;
-                        _phoneController.clear();
-                      });
-                    },
-                    codeAutoRetrievalTimeout: (String verificationId) {
-                      setState(() {
-                        _verificationId = verificationId;
-                      });
-                    },
-                  );
-              setState(() => isLoading = false);
-            } else {
-              setState(() => isLoading = true);
-              await context.read<LoginCubit>().signInWithOTP(
-                    _codeController.text.trim(),
-                    _verificationId,
-                  );
-              setState(() => isLoading = false);
-            }
-          },
-          text: isLoading
-              ? 'Loading'
-              : !_codeSent
-                  ? 'Send Code'
-                  : 'Sign In',
-        ),
-      ],
-    );
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            children: [
+              if (!_codeSent)
+                TextField(
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                  ),
+                )
+              else
+                TextField(
+                  controller: _codeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Verification Code',
+                  ),
+                ),
+              const SizedBox(height: 16),
+              SignInButton(
+                inverted: true,
+                onTap: () async {
+                  setState(() => isLoading = true);
+                  if (!_codeSent) {
+                    await context.read<LoginCubit>().signInWithPhone(
+                          phoneNumber: _phoneController.text.trim(),
+                          verificationCompleted: (credential) async {
+                            await context.read<LoginCubit>().signInWithOTP(
+                                  _codeController.text.trim(),
+                                  _verificationId,
+                                );
+                          },
+                          verificationFailed: (exception) {
+                            // Error handling is managed by BlocListener
+                            // print('verification failed');
+                            context.showSnackBar('Error Verifying. Try Again.');
+                          },
+                          codeSent: (String verificationId,
+                              [forceResendingToken]) {
+                            setState(() {
+                              _verificationId = verificationId;
+                              _codeSent = true;
+                              _phoneController.clear();
+                            });
+                          },
+                          codeAutoRetrievalTimeout: (String verificationId) {
+                            setState(() {
+                              _verificationId = verificationId;
+                            });
+                          },
+                        );
+                    setState(() => isLoading = false);
+                  } else {
+                    await context.read<LoginCubit>().signInWithOTP(
+                          _codeController.text.trim(),
+                          _verificationId,
+                        );
+                    setState(() => isLoading = false);
+                  }
+                },
+                text: isLoading
+                    ? 'Loading'
+                    : !_codeSent
+                        ? 'Send Code'
+                        : 'Sign In',
+              ),
+            ],
+          );
   }
 }
 

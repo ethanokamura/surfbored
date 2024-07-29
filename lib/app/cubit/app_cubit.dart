@@ -35,14 +35,19 @@ class AppCubit extends Cubit<AppState> {
     if (user.isEmpty) {
       emit(const AppState.unauthenticated());
     } else if (state.isUnauthenticated) {
-      final userExists = await _userRepository.doesUserExist(user.uid);
-      if (userExists) {
-        emit(AppState.authenticated(user));
-      } else {
-        emit(AppState.newlyAuthenticated(user));
-      }
+      await checkUserRegistration(user);
     } else {
       emit(AppState.authenticated(user));
+    }
+  }
+
+  Future<void> checkUserRegistration(User user) async {
+    // Assuming you have a method to get the user document
+    final hasUsername = await _userRepository.userHasUsername();
+    if (hasUsername) {
+      emit(AppState.newlyAuthenticated(user));
+    } else {
+      emit(AppState.needsRegistration(user));
     }
   }
 

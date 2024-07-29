@@ -58,7 +58,7 @@ class PostCubit extends Cubit<PostState> {
           emit(state.fromPostsLoaded(posts));
         },
         onError: (dynamic error) {
-          emit(state.fromPostFailure(PostFailure.fromGetPost()));
+          emit(state.fromPostEmpty());
         },
       );
     } on PostFailure catch (failure) {

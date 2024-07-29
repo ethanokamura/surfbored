@@ -230,7 +230,7 @@ extension Delete on BoardRepository {
           .where('boards', arrayContains: boardID)
           .limit(batchSize);
 
-      await _firestore._processQueryInBatches(boardsQuery, batch, (boardDoc) {
+      await _firestore.processQueryInBatches(boardsQuery, batch, (boardDoc) {
         batch.update(boardDoc.reference, {
           'boards': FieldValue.arrayRemove([boardID]),
         });
@@ -242,7 +242,7 @@ extension Delete on BoardRepository {
           .where('savedBoards', arrayContains: boardID)
           .limit(batchSize);
 
-      await _firestore._processQueryInBatches(usersQuery, batch, (userDoc) {
+      await _firestore.processQueryInBatches(usersQuery, batch, (userDoc) {
         batch.update(userDoc.reference, {
           'savedBoards': FieldValue.arrayRemove([boardID]),
         });
@@ -254,7 +254,7 @@ extension Delete on BoardRepository {
           .where('boards', arrayContains: boardID)
           .limit(batchSize);
 
-      await _firestore._processQueryInBatches(usersQuery, batch, (userDoc) {
+      await _firestore.processQueryInBatches(usersQuery, batch, (userDoc) {
         batch.update(userDoc.reference, {
           'boards': FieldValue.arrayRemove([boardID]),
         });

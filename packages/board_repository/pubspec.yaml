@@ -1,5 +1,5 @@
-name: items_repository
-description: Items repository.
+name: board_repository
+description: Board repository.
 version: 1.0.0+1
 publish_to: none
 
@@ -11,8 +11,6 @@ dependencies:
     path: ../api_client
   app_core:
     path: ../app_core
-  boards_repository:
-    path: ../boards_repository
   flutter:
     sdk: flutter
   json_annotation: ^4.9.0

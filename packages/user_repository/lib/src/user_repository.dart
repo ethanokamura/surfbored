@@ -161,11 +161,11 @@ class UserRepository {
     return user.uid == userID;
   }
 
-  // check if user has liked an item
-  Future<bool> hasLikedItem(String userID, String itemID) async {
+  // check if user has liked an post
+  Future<bool> hasLikedPost(String userID, String postID) async {
     try {
       final userData = await getUserById(userID);
-      return userData.hasLikedItem(itemID: itemID);
+      return userData.hasLikedPost(postID: postID);
     } on FirebaseException {
       throw UserFailure.fromGetUser();
     }
@@ -260,7 +260,7 @@ extension Create on UserRepository {
       await ref.set({'memberSince': Timestamp.now()});
       return user.uid;
       // // update user doc
-      // await ref.update({'likedItemsBoardID': boardID});
+      // await ref.update({'likedPostsBoardID': boardID});
     } on FirebaseException {
       throw UserFailure.fromCreateUser();
     }
@@ -284,8 +284,8 @@ extension GetData on UserRepository {
     }
   }
 
-  // get item list
-  Future<List<String>> getItems(String userID) async {
+  // get post list
+  Future<List<String>> getPosts(String userID) async {
     try {
       // get user doc
       final doc = await _firestore.getUserDoc(userID);
@@ -293,8 +293,8 @@ extension GetData on UserRepository {
       if (!doc.exists) return [];
       // get user data
       final userData = model.User.fromJson(doc.data()!);
-      // return the user's items
-      return userData.items;
+      // return the user's posts
+      return userData.posts;
     } on FirebaseException {
       throw UserFailure.fromGetUser();
     }
@@ -308,7 +308,7 @@ extension GetData on UserRepository {
           final data = model.User.fromJson(snapshot.data()!);
           return data.boards;
         } else {
-          throw Exception('Item not found');
+          throw Exception('Post not found');
         }
       });
     } on FirebaseException {
@@ -316,15 +316,15 @@ extension GetData on UserRepository {
     }
   }
 
-  // stream items list
-  Stream<List<String>> streamItems(String userID) {
+  // stream posts list
+  Stream<List<String>> streamPosts(String userID) {
     try {
       return _firestore.userDoc(userID).snapshots().map((doc) {
         if (doc.exists) {
           final data = model.User.fromJson(doc.data()!);
-          return data.items;
+          return data.posts;
         } else {
-          throw Exception('items not found');
+          throw Exception('posts not found');
         }
       });
     } on FirebaseException {
@@ -332,8 +332,8 @@ extension GetData on UserRepository {
     }
   }
 
-  // get user's liked items
-  Future<List<String>> getLikedItems(String userID) async {
+  // get user's liked posts
+  Future<List<String>> getLikedPosts(String userID) async {
     try {
       // get user doc
       final doc = await _firestore.getUserDoc(userID);
@@ -341,8 +341,8 @@ extension GetData on UserRepository {
       if (!doc.exists) return [];
       // get user data
       final userData = model.User.fromJson(doc.data()!);
-      // return the user's liked items
-      return userData.items;
+      // return the user's liked posts
+      return userData.posts;
     } on FirebaseException {
       throw UserFailure.fromGetUser();
     }
@@ -358,7 +358,7 @@ extension GetData on UserRepository {
       // get user data
       final userData = model.User.fromJson(doc.data()!);
       // return the user's liked boards
-      return userData.likedBoards;
+      return userData.savedBoards;
     } on FirebaseException {
       throw UserFailure.fromGetUser();
     }

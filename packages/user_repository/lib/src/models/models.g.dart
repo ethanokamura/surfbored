@@ -12,31 +12,26 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       username: json['username'] as String? ?? '',
       name: json['name'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
-      website: json['website'] as String? ?? '',
-      followers: (json['followers'] as List<dynamic>?)
+      friends: (json['friends'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      following: (json['following'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      items:
-          (json['items'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      posts:
+          (json['posts'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
       boards: (json['boards'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      likedItems: (json['likedItems'] as List<dynamic>?)
+      likedPosts: (json['likedPosts'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      likedBoards: (json['likedBoards'] as List<dynamic>?)
+      savedBoards: (json['savedBoards'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      likedItemsBoardID: json['likedItemsBoardID'] as String? ?? '',
+      likedPostsBoardID: json['likedPostsBoardID'] as String? ?? '',
       lastSignInAt: timestamp.fromJson(json['lastSignInAt']),
       memberSince: timestamp.fromJson(json['memberSince']),
     );
@@ -56,14 +51,12 @@ Map<String, dynamic> _$UserToJson(User instance) {
 
   writeNotNull('photoURL', instance.photoURL);
   val['bio'] = instance.bio;
-  val['website'] = instance.website;
-  val['followers'] = instance.followers;
-  val['following'] = instance.following;
-  val['items'] = instance.items;
+  val['friends'] = instance.friends;
+  val['posts'] = instance.posts;
   val['boards'] = instance.boards;
-  val['likedItems'] = instance.likedItems;
-  val['likedBoards'] = instance.likedBoards;
-  val['likedItemsBoardID'] = instance.likedItemsBoardID;
+  val['likedPosts'] = instance.likedPosts;
+  val['savedBoards'] = instance.savedBoards;
+  val['likedPostsBoardID'] = instance.likedPostsBoardID;
   writeNotNull('memberSince', timestamp.toJson(instance.memberSince));
   writeNotNull('lastSignInAt', timestamp.toJson(instance.lastSignInAt));
   return val;

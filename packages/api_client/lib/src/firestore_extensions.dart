@@ -29,17 +29,17 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
   Future<void> setUsernameDoc(String userID, Map<String, dynamic> data) =>
       usernameDoc(userID).set(data);
 
-  // items
-  CollectionReference<Map<String, dynamic>> itemsCollection() =>
-      collection('items');
-  DocumentReference<Map<String, dynamic>> itemDoc(String itemID) =>
-      itemsCollection().doc(itemID);
-  Future<DocumentSnapshot<Map<String, dynamic>>> getItemDoc(String itemID) =>
-      itemDoc(itemID).get();
-  Future<void> updateItemDoc(String itemID, Map<String, dynamic> data) =>
-      itemDoc(itemID).update(data);
-  Future<void> setItemDoc(String itemID, Map<String, dynamic> data) =>
-      itemDoc(itemID).set(data);
+  // posts
+  CollectionReference<Map<String, dynamic>> postsCollection() =>
+      collection('posts');
+  DocumentReference<Map<String, dynamic>> postDoc(String postID) =>
+      postsCollection().doc(postID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getPostDoc(String postID) =>
+      postDoc(postID).get();
+  Future<void> updatePostDoc(String postID, Map<String, dynamic> data) =>
+      postDoc(postID).update(data);
+  Future<void> setPostDoc(String postID, Map<String, dynamic> data) =>
+      postDoc(postID).set(data);
 
   // boards
   CollectionReference<Map<String, dynamic>> boardsCollection() =>

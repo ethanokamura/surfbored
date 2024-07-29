@@ -12,14 +12,12 @@ class User extends Equatable {
     this.username = '',
     this.name = '',
     this.bio = '',
-    this.website = '',
-    this.followers = const [],
-    this.following = const [],
-    this.items = const [],
+    this.friends = const [],
+    this.posts = const [],
     this.boards = const [],
-    this.likedItems = const [],
-    this.likedBoards = const [],
-    this.likedItemsBoardID = '',
+    this.likedPosts = const [],
+    this.savedBoards = const [],
+    this.likedPostsBoardID = '',
     this.lastSignInAt,
     this.memberSince,
   });
@@ -40,14 +38,12 @@ class User extends Equatable {
   final String name;
   final String? photoURL;
   final String bio;
-  final String website;
-  final List<String> followers;
-  final List<String> following;
-  final List<String> items;
+  final List<String> friends;
+  final List<String> posts;
   final List<String> boards;
-  final List<String> likedItems;
-  final List<String> likedBoards;
-  final String likedItemsBoardID;
+  final List<String> likedPosts;
+  final List<String> savedBoards;
+  final String likedPostsBoardID;
   @timestamp
   final DateTime? memberSince;
   @timestamp
@@ -62,14 +58,12 @@ class User extends Equatable {
         name,
         photoURL,
         bio,
-        website,
-        followers,
-        following,
-        items,
+        friends,
+        posts,
         boards,
-        likedItems,
-        likedBoards,
-        likedItemsBoardID,
+        likedPosts,
+        savedBoards,
+        likedPostsBoardID,
         lastSignInAt,
         memberSince,
       ];
@@ -80,13 +74,11 @@ class User extends Equatable {
 
 extension UserExtensions on User {
   bool get isEmpty => this == User.empty;
-  int totalFollowers() => followers.length;
-  int totalFollowing() => following.length;
+  int totalFriends() => friends.length;
   bool get hasUsername => username != '';
 
-  bool hasLikedItem({required String itemID}) => likedItems.contains(itemID);
-  bool hasLikedBoard({required String boardID}) =>
-      likedBoards.contains(boardID);
-  bool isFollowingUser({required String userID}) => following.contains(userID);
-  bool isFollowedByUser({required String userID}) => followers.contains(userID);
+  bool hasLikedPost({required String postID}) => likedPosts.contains(postID);
+  bool hasSavedBoard({required String boardID}) =>
+      savedBoards.contains(boardID);
+  bool hasFriend({required String userID}) => friends.contains(userID);
 }

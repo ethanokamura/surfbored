@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:api_client/api_client.dart';
-import 'package:boards_repository/src/failures.dart';
-import 'package:boards_repository/src/models/models.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
-class BoardsRepository {
-  BoardsRepository({
+class BoardRepository {
+  BoardRepository({
     FirebaseFirestore? firestore,
     FirebaseStorage? storage,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
@@ -31,15 +30,15 @@ class BoardsRepository {
     }
   }
 
-  // check if user has liked an item
-  Future<bool> hasItem(String boardID, String itemID) async {
+  // check if user has liked an post
+  Future<bool> hasPost(String boardID, String postID) async {
     try {
       // get document from database
       final doc = await _firestore.getBoardDoc(boardID);
       if (doc.exists) {
         // return board
         final boardData = Board.fromJson(doc.data()!);
-        return boardData.hasItem(itemID: itemID);
+        return boardData.hasPost(postID: postID);
       }
       return false;
     } on FirebaseException {
@@ -48,7 +47,7 @@ class BoardsRepository {
   }
 }
 
-extension Create on BoardsRepository {
+extension Create on BoardRepository {
   // create a board
   Future<String> createBoard(Board board, String userID) async {
     try {
@@ -84,7 +83,7 @@ extension Create on BoardsRepository {
   }
 }
 
-extension Read on BoardsRepository {
+extension Read on BoardRepository {
   // get board document
   Future<Board> readBoard(String boardID) async {
     try {
@@ -118,15 +117,15 @@ extension Read on BoardsRepository {
     }
   }
 
-  // get board items
-  Future<List<String>> readItems(String boardID) async {
+  // get board posts
+  Future<List<String>> readPosts(String boardID) async {
     try {
       // get document from database
       final doc = await _firestore.getBoardDoc(boardID);
       if (doc.exists) {
         // return board
         final data = Board.fromJson(doc.data()!);
-        return data.items;
+        return data.posts;
       } else {
         // return empty board if document DNE
         return [];
@@ -137,13 +136,13 @@ extension Read on BoardsRepository {
     }
   }
 
-  // stream board items
-  Stream<List<String>> readItemsStream(String boardID) {
+  // stream board posts
+  Stream<List<String>> readPostsStream(String boardID) {
     try {
       return _firestore.boardDoc(boardID).snapshots().map((snapshot) {
         if (snapshot.exists) {
           final data = Board.fromJson(snapshot.data()!);
-          return data.items;
+          return data.posts;
         } else {
           throw Exception('board not found');
         }
@@ -153,15 +152,15 @@ extension Read on BoardsRepository {
     }
   }
 
-  // // check included items
-  // Future<bool> boardIncludesItem(String boardID, String itemID) async {
+  // // check included posts
+  // Future<bool> boardIncludesPost(String boardID, String postID) async {
   //   try {
   //     // get board data
   //     final doc = await _firestore.getBoardDoc(boardID);
   //     if (!doc.exists) return false;
   //     final data = Board.fromJson(doc.data()!);
-  //     // check if the board contains item
-  //     return data.items.contains(itemID);
+  //     // check if the board contains post
+  //     return data.posts.contains(postID);
   //   } on FirebaseException {
   //     // return failure
   //     throw BoardFailure.fromGetBoard();
@@ -169,7 +168,7 @@ extension Read on BoardsRepository {
   // }
 }
 
-extension Update on BoardsRepository {
+extension Update on BoardRepository {
   // update specific user field
   Future<void> updateField(String boardID, String field, String data) async {
     try {
@@ -179,18 +178,18 @@ extension Update on BoardsRepository {
     }
   }
 
-  // update board items
-  Future<void> updateBoardItems({
+  // update board posts
+  Future<void> updateBoardPosts({
     required String boardID,
-    required String itemID,
+    required String postID,
     required bool isSelected,
   }) async {
     try {
       // update based on if the board is selected
       await _firestore.updateBoardDoc(boardID, {
-        'items': !isSelected
-            ? FieldValue.arrayUnion([itemID])
-            : FieldValue.arrayRemove([itemID]),
+        'posts': !isSelected
+            ? FieldValue.arrayUnion([postID])
+            : FieldValue.arrayRemove([postID]),
       });
     } on FirebaseException {
       // return failure
@@ -198,8 +197,8 @@ extension Update on BoardsRepository {
     }
   }
 
-  // update liked items
-  // using batch to handle updating user, item, and board docs at the same time
+  // update liked posts
+  // using batch to handle updating user, post, and board docs at the same time
   Future<void> updateBoardLikes({
     required String userID,
     required String boardID,
@@ -225,26 +224,26 @@ extension Update on BoardsRepository {
       // get user
       final user = await UserRepository().getUserById(userID);
 
-      // update item documents based on isLiked value
+      // update post documents based on isLiked value
       if (isLiked) {
-        // update item doc
+        // update post doc
         batch.update(boardRef, {
-          'likedBy': FieldValue.arrayUnion([userID]),
-          'likes': FieldValue.increment(1),
+          'savedBy': FieldValue.arrayUnion([userID]),
+          'saves': FieldValue.increment(1),
         });
         // update user doc
         if (!user.boards.contains(boardID)) user.boards.add(boardID);
       } else {
-        // update item doc
+        // update post doc
         batch.update(boardRef, {
-          'likedBy': FieldValue.arrayRemove([userID]),
-          'likes': FieldValue.increment(-1),
+          'savedBy': FieldValue.arrayRemove([userID]),
+          'saves': FieldValue.increment(-1),
         });
         // update user doc
         user.boards.remove(boardID);
       }
       // batch update
-      batch.update(userRef, {'likedItems': user.boards});
+      batch.update(userRef, {'likedPosts': user.boards});
 
       // commit changes
       await batch.commit();
@@ -254,9 +253,9 @@ extension Update on BoardsRepository {
   }
 }
 
-extension Delete on BoardsRepository {
-  // delete item:
-  // we need to delete the item at all reference points
+extension Delete on BoardRepository {
+  // delete post:
+  // we need to delete the post at all reference points
   Future<void> deleteBoard(
     String userID,
     String boardID,
@@ -284,7 +283,7 @@ extension Delete on BoardsRepository {
         await _storage.deleteFile('boards/$boardID/cover_image.jpeg');
       }
 
-      // delete item ref
+      // delete post ref
       batch.delete(boardRef);
 
       // find all users that contain the board
@@ -293,22 +292,22 @@ extension Delete on BoardsRepository {
           .where('boards', arrayContains: boardID)
           .get();
 
-      // remove item reference from each board
+      // remove post reference from each board
       for (final userDoc in boardsSnapshot.docs) {
-        // get liked board's items or init if does not exist
-        final userBoards = await BoardsRepository().readItems(userDoc.id);
+        // get liked board's posts or init if does not exist
+        final userBoards = await BoardRepository().readPosts(userDoc.id);
         userBoards.remove(boardID);
         batch.update(userDoc.reference, {'boards': userBoards});
       }
 
       final user = await UserRepository().getUserById(userID);
 
-      user.likedBoards.remove(boardID);
+      user.savedBoards.remove(boardID);
       user.boards.remove(boardID);
 
       batch.update(userRef, {
         'boards': user.boards,
-        'likedBoards': user.likedBoards,
+        'likedBoards': user.savedBoards,
       });
 
       // commit changes

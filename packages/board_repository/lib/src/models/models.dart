@@ -11,9 +11,9 @@ class Board extends Equatable {
     this.id = '',
     this.photoURL,
     this.description = '',
-    this.likes = 0,
-    this.likedBy = const [],
-    this.items = const [],
+    this.saves = 0,
+    this.savedBy = const [],
+    this.posts = const [],
     this.createdAt,
   });
 
@@ -27,9 +27,9 @@ class Board extends Equatable {
   final String? photoURL;
   final String title;
   final String description;
-  final int likes;
-  final List<String> likedBy;
-  final List<String> items;
+  final int saves;
+  final List<String> savedBy;
+  final List<String> posts;
   @timestamp
   final DateTime? createdAt;
 
@@ -45,9 +45,9 @@ class Board extends Equatable {
         photoURL,
         uid,
         description,
-        likes,
-        likedBy,
-        items,
+        saves,
+        savedBy,
+        posts,
         createdAt,
       ];
 
@@ -57,6 +57,6 @@ class Board extends Equatable {
 
 extension BoardExtensions on Board {
   bool get isEmpty => this == Board.empty;
-  int totalLikes() => likes;
-  bool hasItem({required String itemID}) => items.contains(itemID);
+  int totalSaves() => saves;
+  bool hasPost({required String postID}) => posts.contains(postID);
 }

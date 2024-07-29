@@ -3,14 +3,13 @@ import 'package:app_core/app_core.dart';
 part 'models.g.dart';
 
 @JsonSerializable()
-class Item extends Equatable {
+class Post extends Equatable {
   // constructor
-  const Item({
+  const Post({
     required this.uid,
     required this.title,
     this.id = '',
     this.likes = 0,
-    this.likedBy = const [],
     this.tags = const [],
     this.photoURL = '',
     this.description = '',
@@ -18,7 +17,7 @@ class Item extends Equatable {
   });
 
   // factory constructor for creating an instance from JSON
-  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 
   // data fields
   final String id;
@@ -27,12 +26,11 @@ class Item extends Equatable {
   final String title;
   final String description;
   final int likes;
-  final List<String> likedBy;
   final List<String> tags;
   @timestamp
   final DateTime? createdAt;
 
-  static const empty = Item(
+  static const empty = Post(
     uid: '',
     title: '',
   );
@@ -45,16 +43,15 @@ class Item extends Equatable {
         uid,
         description,
         likes,
-        likedBy,
         tags,
         createdAt,
       ];
 
   // method for converting an instance to JSON
-  Map<String, dynamic> toJson() => _$ItemToJson(this);
+  Map<String, dynamic> toJson() => _$PostToJson(this);
 }
 
-extension ItemExtensions on Item {
-  bool get isEmpty => this == Item.empty;
+extension PostExtensions on Post {
+  bool get isEmpty => this == Post.empty;
   int totalLikes() => likes;
 }

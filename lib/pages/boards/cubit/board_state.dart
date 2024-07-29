@@ -66,6 +66,7 @@ extension BoardStateExtensions on BoardState {
   bool get isFailure => status == BoardStatus.failure;
   bool get isCreated => status == BoardStatus.created;
   bool get isCreating => status == BoardStatus.creating;
+  bool get isDeleted => status == BoardStatus.deleted;
   bool get canIncrement => index < posts.length - 1;
   bool get canDecrement => index > 0;
 }

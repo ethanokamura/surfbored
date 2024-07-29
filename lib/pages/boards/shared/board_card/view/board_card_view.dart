@@ -26,6 +26,8 @@ class BoardCard extends StatelessWidget {
             return BoardCardView(board: board);
           } else if (state.isEmpty) {
             return const Center(child: Text('This board is empty.'));
+          } else if (state.isDeleted) {
+            return const Center(child: Text('Board was deleted.'));
           } else {
             return const Center(child: Text('Something went wrong'));
           }

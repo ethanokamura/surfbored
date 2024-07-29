@@ -15,9 +15,11 @@ class BoardRepository {
 extension Create on BoardRepository {
   // create a board
   Future<String> createBoard(Board board, String userID) async {
+    final batch = _firestore.batch();
+    final boardRef = _firestore.boardsCollection().doc();
+    final savesRef = _firestore.savesDoc(boardRef.id);
+    final userRef = _firestore.userDoc(userID);
     try {
-      final boardRef = _firestore.boardsCollection().doc();
-
       // set data
       final newBoard = board.toJson();
       newBoard['id'] = boardRef.id;
@@ -25,11 +27,15 @@ extension Create on BoardRepository {
       newBoard['createdAt'] = Timestamp.now();
 
       // post data
-      await boardRef.set(newBoard);
-      await _firestore.setSavesDoc(boardRef.id, {'users': <String>[]});
-      await _firestore.updateUserDoc(userID, {
-        'boards': FieldValue.arrayUnion([boardRef.id]),
-      });
+      batch
+        ..set(boardRef, newBoard)
+        ..set(savesRef, {'users': <String>[]})
+        ..update(userRef, {
+          'boards': FieldValue.arrayUnion([boardRef.id]),
+        });
+
+      // commit
+      await batch.commit();
 
       // return doc ID
       return boardRef.id;

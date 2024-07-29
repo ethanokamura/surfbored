@@ -103,7 +103,7 @@ class _RegisterUserState extends State<RegisterUser> {
                     bio: bio,
                   );
                   await UserRepository().createUser(uid, user);
-                  await BoardRepository().createBoard(
+                  final likedBoardID = await BoardRepository().createBoard(
                     Board(
                       uid: uid,
                       title: 'Liked Activities:',
@@ -111,6 +111,8 @@ class _RegisterUserState extends State<RegisterUser> {
                     ),
                     uid,
                   );
+                  await UserRepository()
+                      .updateField(uid, 'likedPostsBoardID', likedBoardID);
                 },
                 text: 'Confirm',
               ),

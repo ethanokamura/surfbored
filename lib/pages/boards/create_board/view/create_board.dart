@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
@@ -23,7 +23,7 @@ class CreateBoardPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) => BoardCubit(
           userRepository: context.read<UserRepository>(),
-          boardsRepository: context.read<BoardsRepository>(),
+          boardRepository: context.read<BoardRepository>(),
         ),
         child: const CreateBoard(),
       ),
@@ -59,7 +59,7 @@ class _CreateBoardState extends State<CreateBoard> {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state.isCreated) {
-          return const Center(child: Text('Item created successfully!'));
+          return const Center(child: Text('Board created successfully!'));
         } else if (state.isEmpty) {
           return const Center(child: Text('This board is empty.'));
         } else if (state.isFailure) {
@@ -102,7 +102,7 @@ class _CreateBoardState extends State<CreateBoard> {
                 onTap: () {
                   context.read<BoardCubit>().createBoard(
                         userID:
-                            context.read<UserRepository>().getCurrentUserID(),
+                            context.read<UserRepository>().fetchCurrentUserID(),
                         title: titleText,
                         description: descriptionText,
                         imageFile: imageFile,

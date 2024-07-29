@@ -1,8 +1,8 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/activities/create_activity/create_activity.dart';
 import 'package:rando/pages/boards/create_board/create_board.dart';
+import 'package:rando/pages/posts/create_post/create_post.dart';
 
 enum NavBarItem { home, search, create, inbox, profile }
 
@@ -133,7 +133,7 @@ class BottomNavBar extends StatelessWidget {
             ? await Navigator.push(
                 currentContext,
                 MaterialPageRoute<Page<dynamic>>(
-                  builder: (context) => const CreateActivityPage(),
+                  builder: (context) => const CreatePostPage(),
                 ),
               )
             : await Navigator.push(

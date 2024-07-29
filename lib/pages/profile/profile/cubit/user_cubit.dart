@@ -10,10 +10,10 @@ class UserCubit extends Cubit<UserState> {
 
   final UserRepository _userRepository;
 
-  void streamItems(String userID) {
+  void streamPosts(String userID) {
     emit(state.fromUserLoading());
     try {
-      _userRepository.streamItems(userID).listen(
+      _userRepository.streamPosts(userID).listen(
         (snapshot) {
           emit(state.fromListLoaded(snapshot));
         },
@@ -48,9 +48,9 @@ extension _UserStateExtensions on UserState {
 
   UserState fromUserEmpty() => copyWith(status: UserStatus.empty);
 
-  UserState fromListLoaded(List<String> items) => copyWith(
+  UserState fromListLoaded(List<String> posts) => copyWith(
         status: UserStatus.loaded,
-        items: items,
+        posts: posts,
       );
   UserState fromUserFailure(UserFailure failure) => copyWith(
         status: UserStatus.failure,

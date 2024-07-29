@@ -19,7 +19,7 @@ class BoardsList extends StatelessWidget {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
-            final boards = state.items;
+            final boards = state.posts;
             return BoardListView(boards: boards);
           } else if (state.isEmpty) {
             return const Center(child: Text('This board is empty.'));

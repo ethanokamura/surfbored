@@ -15,8 +15,8 @@ dependencies:
   app_ui:
     path: packages/app_ui
   bloc: ^8.1.4
-  boards_repository:
-    path: packages/boards_repository
+  board_repository:
+    path: packages/board_repository
   dotenv: ^4.2.0
   equatable: ^2.0.5
   flow_builder: ^0.0.10
@@ -25,8 +25,8 @@ dependencies:
   flutter_bloc: ^8.1.6
   flutter_dotenv: ^5.0.2
   intl: ^0.18.1
-  items_repository:
-    path: packages/items_repository
+  post_repository:
+    path: packages/post_repository
   shared_preferences: ^2.0.6
   sqflite: ^2.0.0+3
   user_repository:

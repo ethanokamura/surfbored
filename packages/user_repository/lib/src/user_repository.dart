@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:api_client/api_client.dart' as firebase show User;
 import 'package:api_client/api_client.dart' hide User;
 import 'package:app_core/app_core.dart';
@@ -9,14 +8,11 @@ class UserRepository {
   UserRepository({
     FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firestore,
-    FirebaseStorage? storage,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _storage = storage ?? FirebaseStorage.instance,
         _firestore = firestore ?? FirebaseFirestore.instance {
     _user = _firebaseAuth.authUserChanges(_firestore);
   }
 
-  final FirebaseStorage _storage;
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
 
@@ -36,32 +32,18 @@ class UserRepository {
   }
 
   // get the current user
-  model.User getCurrentUser() {
+  model.User fetchCurrentUser() {
     return user;
   }
 
   // get current user's ID
-  String getCurrentUserID() {
-    return _firebaseAuth.currentUser!.uid;
+  String fetchCurrentUserID() {
+    return user.uid;
   }
 
-  // get user document by ID
-  Future<model.User> getUserById(String userID) async {
-    try {
-      final docSnapshot = await _firestore.getUserDoc(userID);
-      return docSnapshot.exists
-          ? model.User.fromJson(docSnapshot.data()!)
-          : model.User.empty;
-    } on FirebaseException {
-      UserFailure.fromGetUser();
-      return model.User.empty;
-    }
-  }
-
-  // get user data
-  Future<model.User> getUserData(firebase.User? firebaseUser) async {
-    if (firebaseUser == null) return model.User.empty;
-    return model.User.fromFirebaseUser(firebaseUser);
+  // check if the current user is the provided user
+  bool isCurrentUser(String userID) {
+    return user.uid == userID;
   }
 
   // figure out if user exists
@@ -80,7 +62,32 @@ class UserRepository {
       },
     );
   }
+}
 
+extension _FirebaseAuthExtensions on FirebaseAuth {
+  ValueStream<model.User> authUserChanges(FirebaseFirestore firestore) =>
+      authStateChanges()
+          .onErrorResumeWith((_, __) => null)
+          .switchMap<model.User>(
+            (firebaseUser) async* {
+              if (firebaseUser == null) {
+                yield model.User.empty;
+                return;
+              }
+
+              yield* firestore.userDoc(firebaseUser.uid).snapshots().map(
+                    (snapshot) => snapshot.exists
+                        ? model.User.fromJson(snapshot.data()!)
+                        : model.User.empty,
+                  );
+            },
+          )
+          .handleError((Object _) => throw UserFailure.fromAuthUserChanges())
+          .logOnEach('USER')
+          .shareValue();
+}
+
+extension Auth on UserRepository {
   /// Signs the [model.User] in anonymously.
   Future<void> signInAnonymously() async {
     try {
@@ -138,61 +145,6 @@ class UserRepository {
       throw UserFailure.fromSignOut();
     }
   }
-
-  // upload image
-  Future<String?> uploadImage(
-    File file,
-    String doc,
-  ) async {
-    try {
-      // upload to firebase
-      final url =
-          await _storage.uploadFile('users/$doc/cover_image.jpeg', file);
-      // save photoURL to document
-      await _firestore.updateUserDoc(doc, {'photoURL': url});
-      return url;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // check if the current user is the provided user
-  bool isCurrentUser(String userID) {
-    return user.uid == userID;
-  }
-
-  // check if user has liked an post
-  Future<bool> hasLikedPost(String userID, String postID) async {
-    try {
-      final userData = await getUserById(userID);
-      return userData.hasLikedPost(postID: postID);
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-}
-
-extension _FirebaseAuthExtensions on FirebaseAuth {
-  ValueStream<model.User> authUserChanges(FirebaseFirestore firestore) =>
-      authStateChanges()
-          .onErrorResumeWith((_, __) => null)
-          .switchMap<model.User>(
-            (firebaseUser) async* {
-              if (firebaseUser == null) {
-                yield model.User.empty;
-                return;
-              }
-
-              yield* firestore.userDoc(firebaseUser.uid).snapshots().map(
-                    (snapshot) => snapshot.exists
-                        ? model.User.fromJson(snapshot.data()!)
-                        : model.User.empty,
-                  );
-            },
-          )
-          .handleError((Object _) => throw UserFailure.fromAuthUserChanges())
-          .logOnEach('USER')
-          .shareValue();
 }
 
 extension Username on UserRepository {
@@ -267,9 +219,28 @@ extension Create on UserRepository {
   }
 }
 
-extension GetData on UserRepository {
+extension Fetch on UserRepository {
+  // get user document by ID
+  Future<model.User> fetchUserByID(String userID) async {
+    try {
+      final docSnapshot = await _firestore.getUserDoc(userID);
+      return docSnapshot.exists
+          ? model.User.fromJson(docSnapshot.data()!)
+          : model.User.empty;
+    } on FirebaseException {
+      UserFailure.fromGetUser();
+      return model.User.empty;
+    }
+  }
+
+  // get user data
+  Future<model.User> fetchUserData(firebase.User? firebaseUser) async {
+    if (firebaseUser == null) return model.User.empty;
+    return model.User.fromFirebaseUser(firebaseUser);
+  }
+
   // get boards list
-  Future<List<String>> getBoards(String userID) async {
+  Future<List<String>> fetchBoards(String userID) async {
     try {
       // get user doc
       final doc = await _firestore.getUserDoc(userID);
@@ -285,7 +256,7 @@ extension GetData on UserRepository {
   }
 
   // get post list
-  Future<List<String>> getPosts(String userID) async {
+  Future<List<String>> fetchPosts(String userID) async {
     try {
       // get user doc
       final doc = await _firestore.getUserDoc(userID);
@@ -300,40 +271,8 @@ extension GetData on UserRepository {
     }
   }
 
-  // stream board  list
-  Stream<List<String>> streamBoards(String userID) {
-    try {
-      return _firestore.userDoc(userID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          final data = model.User.fromJson(snapshot.data()!);
-          return data.boards;
-        } else {
-          throw Exception('Post not found');
-        }
-      });
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // stream posts list
-  Stream<List<String>> streamPosts(String userID) {
-    try {
-      return _firestore.userDoc(userID).snapshots().map((doc) {
-        if (doc.exists) {
-          final data = model.User.fromJson(doc.data()!);
-          return data.posts;
-        } else {
-          throw Exception('posts not found');
-        }
-      });
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
   // get user's liked posts
-  Future<List<String>> getLikedPosts(String userID) async {
+  Future<List<String>> fetchLikedPosts(String userID) async {
     try {
       // get user doc
       final doc = await _firestore.getUserDoc(userID);
@@ -349,7 +288,7 @@ extension GetData on UserRepository {
   }
 
   // get user's boards
-  Future<List<String>> getLikedBoards(String userID) async {
+  Future<List<String>> fetchSavedBoards(String userID) async {
     try {
       // get user doc
       final doc = await _firestore.getUserDoc(userID);
@@ -359,6 +298,40 @@ extension GetData on UserRepository {
       final userData = model.User.fromJson(doc.data()!);
       // return the user's liked boards
       return userData.savedBoards;
+    } on FirebaseException {
+      throw UserFailure.fromGetUser();
+    }
+  }
+}
+
+extension StreamData on UserRepository {
+  // stream board  list
+  Stream<List<String>> streamBoards(String userID) {
+    try {
+      return _firestore.userDoc(userID).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          final data = model.User.fromJson(snapshot.data()!);
+          return data.boards;
+        } else {
+          throw UserFailure.fromGetUser();
+        }
+      });
+    } on FirebaseException {
+      throw UserFailure.fromGetUser();
+    }
+  }
+
+  // stream posts list
+  Stream<List<String>> streamPosts(String userID) {
+    try {
+      return _firestore.userDoc(userID).snapshots().map((doc) {
+        if (doc.exists) {
+          final data = model.User.fromJson(doc.data()!);
+          return data.posts;
+        } else {
+          throw UserFailure.fromGetUser();
+        }
+      });
     } on FirebaseException {
       throw UserFailure.fromGetUser();
     }

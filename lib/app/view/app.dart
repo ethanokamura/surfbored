@@ -1,9 +1,9 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:items_repository/items_repository.dart';
+import 'package:post_repository/post_repository.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:rando/app/generate_pages.dart';
 import 'package:rando/theme/theme_cubit.dart';
@@ -11,14 +11,14 @@ import 'package:user_repository/user_repository.dart';
 
 class App extends StatelessWidget {
   const App({
-    required this.boardsRepository,
-    required this.itemsRepository,
+    required this.postRepository,
+    required this.boardRepository,
     required this.userRepository,
     super.key,
   });
 
-  final BoardsRepository boardsRepository;
-  final ItemsRepository itemsRepository;
+  final BoardRepository boardRepository;
+  final PostRepository postRepository;
   final UserRepository userRepository;
 
   @override
@@ -28,11 +28,11 @@ class App extends StatelessWidget {
         RepositoryProvider<UserRepository>.value(
           value: userRepository,
         ),
-        RepositoryProvider<ItemsRepository>.value(
-          value: itemsRepository,
+        RepositoryProvider<PostRepository>.value(
+          value: postRepository,
         ),
-        RepositoryProvider<BoardsRepository>.value(
-          value: boardsRepository,
+        RepositoryProvider<BoardRepository>.value(
+          value: boardRepository,
         ),
       ],
       child: MultiBlocProvider(

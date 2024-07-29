@@ -1,11 +1,11 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
 import 'package:rando/pages/boards/edit_board/edit_board.dart';
-import 'package:rando/pages/boards/shared/board_activities/board_activities.dart';
-import 'package:rando/pages/boards/shuffle/shuffle_items.dart';
+import 'package:rando/pages/boards/shared/board_posts/board_posts.dart';
+import 'package:rando/pages/boards/shuffle/shuffle_posts.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {
@@ -21,7 +21,7 @@ class BoardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BoardCubit(
-        boardsRepository: context.read<BoardsRepository>(),
+        boardRepository: context.read<BoardRepository>(),
         userRepository: context.read<UserRepository>(),
       )..streamBoard(boardID),
       child: CustomPageView(
@@ -32,7 +32,7 @@ class BoardPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             } else if (state.isLoaded) {
               final board = state.board;
-              final user = context.read<BoardCubit>().getUser();
+              final user = context.read<UserRepository>().fetchCurrentUser();
               return BoardPageView(board: board, user: user);
             } else if (state.isEmpty) {
               return const Center(child: Text('This board is empty.'));
@@ -63,8 +63,8 @@ class BoardPageView extends StatelessWidget {
     return BlocProvider(
       create: (context) => BoardCubit(
         userRepository: context.read<UserRepository>(),
-        boardsRepository: context.read<BoardsRepository>(),
-      )..fetchBoardItems(board.id),
+        boardRepository: context.read<BoardRepository>(),
+      )..fetchBoardPosts(board.id),
       child: NestedScrollView(
         headerSliverBuilder: (context, _) {
           return [
@@ -241,7 +241,7 @@ class BoardButtons extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => ShuffleItemScreen(boardID: board.id),
+                builder: (context) => ShufflePostsPage(boardID: board.id),
               ),
             ),
             text: 'Shuffle',

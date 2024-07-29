@@ -1,7 +1,49 @@
+import 'dart:io';
+
+import 'package:api_client/api_client.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 extension FirebaseFirestoreExtensions on FirebaseFirestore {
   String createId() => collection('_').doc().id;
+
+  // upload image
+  Future<String?> uploadImage(
+    String collection,
+    String doc,
+    File file,
+  ) async {
+    try {
+      // upload to firebase
+      final url = await FirebaseStorage.instance
+          .uploadFile('$collection/$doc/cover_image.jpeg', file);
+      // save photoURL to document
+      await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(doc)
+          .update({'photoURL': url});
+      return url;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> _processQueryInBatches(
+    Query query,
+    WriteBatch batch,
+    void Function(DocumentSnapshot) processDoc,
+  ) async {
+    final snapshot = await query.get();
+    for (final doc in snapshot.docs) {
+      processDoc(doc);
+    }
+    if (snapshot.docs.length == 500) {
+      await _processQueryInBatches(
+        query.startAfterDocument(snapshot.docs.last),
+        batch,
+        processDoc,
+      );
+    }
+  }
 
   // users
   CollectionReference<Map<String, dynamic>> usersCollection() =>
@@ -52,4 +94,28 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
       boardDoc(boardID).update(data);
   Future<void> setBoardDoc(String boardID, Map<String, dynamic> data) =>
       boardDoc(boardID).set(data);
+
+  // likes
+  CollectionReference<Map<String, dynamic>> likesCollection() =>
+      collection('likes');
+  DocumentReference<Map<String, dynamic>> likeDoc(String postID) =>
+      likesCollection().doc(postID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getLikeDoc(String postID) =>
+      likeDoc(postID).get();
+  Future<void> updateLikeDoc(String postID, Map<String, dynamic> data) =>
+      likeDoc(postID).update(data);
+  Future<void> setLikeDoc(String postID, Map<String, dynamic> data) =>
+      likeDoc(postID).set(data);
+
+  // saves
+  CollectionReference<Map<String, dynamic>> savesCollection() =>
+      collection('saves');
+  DocumentReference<Map<String, dynamic>> savesDoc(String boardID) =>
+      savesCollection().doc(boardID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getSavesDoc(String boardID) =>
+      savesDoc(boardID).get();
+  Future<void> updateSavesDoc(String boardID, Map<String, dynamic> data) =>
+      savesDoc(boardID).update(data);
+  Future<void> setSavesDoc(String boardID, Map<String, dynamic> data) =>
+      savesDoc(boardID).set(data);
 }

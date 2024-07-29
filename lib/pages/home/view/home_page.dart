@@ -27,7 +27,7 @@ class HomeBody extends StatelessWidget {
   const HomeBody({super.key});
   @override
   Widget build(BuildContext context) {
-    final userID = UserRepository().getCurrentUserID();
+    final userID = UserRepository().fetchCurrentUserID();
     final pageController = context.watch<NavBarController>();
     return PageView(
       controller: pageController,

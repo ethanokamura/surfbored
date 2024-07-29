@@ -1,5 +1,5 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/board/view/board_page.dart';
@@ -14,7 +14,7 @@ class BoardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BoardCubit(
-        boardsRepository: context.read<BoardsRepository>(),
+        boardRepository: context.read<BoardRepository>(),
         userRepository: context.read<UserRepository>(),
       )..getBoard(boardID),
       child: BlocBuilder<BoardCubit, BoardState>(

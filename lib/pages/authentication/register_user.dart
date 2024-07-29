@@ -1,6 +1,6 @@
 // dart packages
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -36,7 +36,7 @@ class RegisterUser extends StatelessWidget {
                     await UserRepository().isUsernameUnique(newValue);
                 if (isUnique) {
                   final userID = await UserRepository().createUser(newValue);
-                  await BoardsRepository().createBoard(
+                  await BoardRepository().createBoard(
                     Board(
                       uid: userID,
                       title: 'Liked Activities:',

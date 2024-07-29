@@ -95,7 +95,7 @@ Widget _buildProfileHeader(BuildContext context, User user, bool isCurrent) {
         const VerticalSpacer(),
         const Interests(),
         const VerticalSpacer(),
-        Friends(friends: user.followers),
+        Friends(friends: user.friends),
         const VerticalSpacer(),
         if (isCurrent)
           MyProfileButtons(userID: user.uid)

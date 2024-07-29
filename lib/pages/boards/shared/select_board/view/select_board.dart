@@ -1,5 +1,5 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
@@ -7,17 +7,17 @@ import 'package:user_repository/user_repository.dart';
 
 class SelectBoardCard extends StatelessWidget {
   const SelectBoardCard({
-    required this.itemID,
+    required this.postID,
     required this.boardID,
     super.key,
   });
-  final String itemID;
+  final String postID;
   final String boardID;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BoardCubit(
-        boardsRepository: context.read<BoardsRepository>(),
+        boardRepository: context.read<BoardRepository>(),
         userRepository: context.read<UserRepository>(),
       )..getBoard(boardID),
       child: BlocBuilder<BoardCubit, BoardState>(
@@ -26,7 +26,7 @@ class SelectBoardCard extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final board = state.board;
-            return SelectBoardCardView(board: board, itemID: itemID);
+            return SelectBoardCardView(board: board, postID: postID);
           } else if (state.isEmpty) {
             return const Center(child: Text('This board is empty.'));
           } else {
@@ -41,21 +41,21 @@ class SelectBoardCard extends StatelessWidget {
 class SelectBoardCardView extends StatelessWidget {
   const SelectBoardCardView({
     required this.board,
-    required this.itemID,
+    required this.postID,
     super.key,
   });
   final Board board;
-  final String itemID;
+  final String postID;
 
   @override
   Widget build(BuildContext context) {
-    final selected = board.hasItem(itemID: itemID);
+    final selected = board.hasPost(postID: postID);
 
     return GestureDetector(
       onTap: () {
         context
             .read<BoardCubit>()
-            .toggleSelection(board.id, itemID, isSelected: selected);
+            .toggleSelection(board.id, postID, isSelected: selected);
       },
       child: CustomContainer(
         inverted: false,

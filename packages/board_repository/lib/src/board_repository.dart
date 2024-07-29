@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:api_client/api_client.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:user_repository/user_repository.dart';
 
 class BoardRepository {
   BoardRepository({
@@ -12,80 +10,38 @@ class BoardRepository {
 
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
-
-  // upload image
-  Future<String?> uploadImage(
-    File file,
-    String doc,
-  ) async {
-    try {
-      // upload to firebase
-      final url =
-          await _storage.uploadFile('boards/$doc/cover_image.jpeg', file);
-      // save photoURL to document
-      await _firestore.updateBoardDoc(doc, {'photoURL': url});
-      return url;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // check if user has liked an post
-  Future<bool> hasPost(String boardID, String postID) async {
-    try {
-      // get document from database
-      final doc = await _firestore.getBoardDoc(boardID);
-      if (doc.exists) {
-        // return board
-        final boardData = Board.fromJson(doc.data()!);
-        return boardData.hasPost(postID: postID);
-      }
-      return false;
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
 }
 
 extension Create on BoardRepository {
   // create a board
   Future<String> createBoard(Board board, String userID) async {
     try {
-      return await _firestore.runTransaction((transaction) async {
-        // get references
-        final userRef = _firestore.userDoc(userID);
-        final boardRef = _firestore.collection('boards').doc();
+      final boardRef = _firestore.boardsCollection().doc();
 
-        // get user doc
-        final userSnapshot = await transaction.get(userRef);
-        if (!userSnapshot.exists) throw Exception('User does not exist');
+      // set data
+      final newBoard = board.toJson();
+      newBoard['id'] = boardRef.id;
+      newBoard['uid'] = userID;
+      newBoard['createdAt'] = Timestamp.now();
 
-        // update user doc
-        transaction.update(userRef, {
-          'boards': FieldValue.arrayUnion([boardRef.id]),
-        });
-
-        // prepare data for the new board
-        final newBoard = board.toJson();
-        newBoard['id'] = boardRef.id;
-        newBoard['uid'] = userID;
-        newBoard['createdAt'] = Timestamp.now();
-
-        // preform writes
-        transaction.set(boardRef, newBoard);
-
-        // return id
-        return boardRef.id;
+      // post data
+      await boardRef.set(newBoard);
+      await _firestore.setSavesDoc(boardRef.id, {'users': <String>[]});
+      await _firestore.updateUserDoc(userID, {
+        'boards': FieldValue.arrayUnion([boardRef.id]),
       });
+
+      // return doc ID
+      return boardRef.id;
     } on FirebaseException {
       throw BoardFailure.fromCreateBoard();
     }
   }
 }
 
-extension Read on BoardRepository {
+extension Fetch on BoardRepository {
   // get board document
-  Future<Board> readBoard(String boardID) async {
+  Future<Board> fetchBoard(String boardID) async {
     try {
       // get document from database
       final doc = await _firestore.getBoardDoc(boardID);
@@ -102,23 +58,8 @@ extension Read on BoardRepository {
     }
   }
 
-  // stream board data
-  Stream<Board> readBoardStream(String boardID) {
-    try {
-      return _firestore.boardDoc(boardID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          return Board.fromJson(snapshot.data()!);
-        } else {
-          throw Exception('Board not found');
-        }
-      });
-    } on FirebaseException {
-      throw BoardFailure.fromGetBoard();
-    }
-  }
-
   // get board posts
-  Future<List<String>> readPosts(String boardID) async {
+  Future<List<String>> fetchPosts(String boardID) async {
     try {
       // get document from database
       final doc = await _firestore.getBoardDoc(boardID);
@@ -135,16 +76,17 @@ extension Read on BoardRepository {
       throw BoardFailure.fromGetBoard();
     }
   }
+}
 
-  // stream board posts
-  Stream<List<String>> readPostsStream(String boardID) {
+extension StreamData on BoardRepository {
+  // stream board data
+  Stream<Board> streamBoard(String boardID) {
     try {
       return _firestore.boardDoc(boardID).snapshots().map((snapshot) {
         if (snapshot.exists) {
-          final data = Board.fromJson(snapshot.data()!);
-          return data.posts;
+          return Board.fromJson(snapshot.data()!);
         } else {
-          throw Exception('board not found');
+          throw BoardFailure.fromGetBoard();
         }
       });
     } on FirebaseException {
@@ -152,20 +94,21 @@ extension Read on BoardRepository {
     }
   }
 
-  // // check included posts
-  // Future<bool> boardIncludesPost(String boardID, String postID) async {
-  //   try {
-  //     // get board data
-  //     final doc = await _firestore.getBoardDoc(boardID);
-  //     if (!doc.exists) return false;
-  //     final data = Board.fromJson(doc.data()!);
-  //     // check if the board contains post
-  //     return data.posts.contains(postID);
-  //   } on FirebaseException {
-  //     // return failure
-  //     throw BoardFailure.fromGetBoard();
-  //   }
-  // }
+  // stream board posts
+  Stream<List<String>> streamPosts(String boardID) {
+    try {
+      return _firestore.boardDoc(boardID).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          final data = Board.fromJson(snapshot.data()!);
+          return data.posts;
+        } else {
+          throw BoardFailure.fromGetBoard();
+        }
+      });
+    } on FirebaseException {
+      throw BoardFailure.fromGetBoard();
+    }
+  }
 }
 
 extension Update on BoardRepository {
@@ -197,9 +140,8 @@ extension Update on BoardRepository {
     }
   }
 
-  // update liked posts
-  // using batch to handle updating user, post, and board docs at the same time
-  Future<void> updateBoardLikes({
+  // update board saves
+  Future<void> updateBoardSaves({
     required String userID,
     required String boardID,
     required bool isLiked,
@@ -207,44 +149,47 @@ extension Update on BoardRepository {
     try {
       // get document references
       final userRef = _firestore.userDoc(userID);
-      final boardRef = _firestore.boardDoc(boardID);
+      final postRef = _firestore.postDoc(boardID);
+      final savesRef = _firestore.likeDoc(boardID);
 
       // user batch to perform atomic operation
       final batch = _firestore.batch();
 
       // get document data
       final userSnapshot = await userRef.get();
-      final boardSnapshot = await boardRef.get();
+      final postSnapshot = await postRef.get();
+      final saveSnapshot = await savesRef.get();
 
       // make sure user exists
-      if (!userSnapshot.exists || !boardSnapshot.exists) {
-        throw Exception('Data does not exist!');
+      if (!userSnapshot.exists ||
+          !postSnapshot.exists ||
+          !saveSnapshot.exists) {
+        throw BoardFailure.fromUpdateBoard();
       }
 
-      // get user
-      final user = await UserRepository().getUserById(userID);
-
-      // update post documents based on isLiked value
-      if (isLiked) {
-        // update post doc
-        batch.update(boardRef, {
-          'savedBy': FieldValue.arrayUnion([userID]),
-          'saves': FieldValue.increment(1),
-        });
-        // update user doc
-        if (!user.boards.contains(boardID)) user.boards.add(boardID);
+      if (!isLiked) {
+        batch
+          ..update(userRef, {
+            'savedBoards': FieldValue.arrayUnion([boardID]),
+          })
+          ..update(savesRef, {
+            'users': FieldValue.arrayUnion([userID]),
+          })
+          ..update(postRef, {
+            'saves': FieldValue.increment(1),
+          });
       } else {
-        // update post doc
-        batch.update(boardRef, {
-          'savedBy': FieldValue.arrayRemove([userID]),
-          'saves': FieldValue.increment(-1),
-        });
-        // update user doc
-        user.boards.remove(boardID);
+        batch
+          ..update(userRef, {
+            'savedBoards': FieldValue.arrayRemove([boardID]),
+          })
+          ..update(savesRef, {
+            'users': FieldValue.arrayRemove([userID]),
+          })
+          ..update(postRef, {
+            'saves': FieldValue.increment(-1),
+          });
       }
-      // batch update
-      batch.update(userRef, {'likedPosts': user.boards});
-
       // commit changes
       await batch.commit();
     } on FirebaseException {
@@ -261,55 +206,64 @@ extension Delete on BoardRepository {
     String boardID,
     String photoURL,
   ) async {
+    // start batch
+    final batch = _firestore.batch();
+
+    // get references
+    final boardRef = _firestore.boardDoc(boardID);
+    final saveRef = _firestore.savesDoc(boardID);
+    const batchSize = 500; // Firestore batch limit
+
     try {
-      // start batch
-      final batch = _firestore.batch();
-
-      // get references
-      final userRef = _firestore.userDoc(userID);
-      final boardRef = _firestore.boardDoc(boardID);
-
-      // ensure existing docs
-      final userSnapshot = await userRef.get();
-      final boardSnapshot = await boardRef.get();
-
-      // throw errors
-      if (!userSnapshot.exists || !boardSnapshot.exists) {
-        throw Exception('Data does not exists!');
+      final boardDoc = await boardRef.get();
+      if (!boardDoc.exists) {
+        throw BoardFailure.fromGetBoard();
       }
 
-      // delete image
-      if (photoURL.isNotEmpty) {
-        await _storage.deleteFile('boards/$boardID/cover_image.jpeg');
-      }
+      batch
+        ..delete(boardRef)
+        ..delete(saveRef);
 
-      // delete post ref
-      batch.delete(boardRef);
-
-      // find all users that contain the board
-      final boardsSnapshot = await _firestore
-          .usersCollection()
+      // find all boards containing this post
+      final boardsQuery = _firestore
+          .boardsCollection()
           .where('boards', arrayContains: boardID)
-          .get();
+          .limit(batchSize);
 
-      // remove post reference from each board
-      for (final userDoc in boardsSnapshot.docs) {
-        // get liked board's posts or init if does not exist
-        final userBoards = await BoardRepository().readPosts(userDoc.id);
-        userBoards.remove(boardID);
-        batch.update(userDoc.reference, {'boards': userBoards});
-      }
-
-      final user = await UserRepository().getUserById(userID);
-
-      user.savedBoards.remove(boardID);
-      user.boards.remove(boardID);
-
-      batch.update(userRef, {
-        'boards': user.boards,
-        'likedBoards': user.savedBoards,
+      await _firestore._processQueryInBatches(boardsQuery, batch, (boardDoc) {
+        batch.update(boardDoc.reference, {
+          'boards': FieldValue.arrayRemove([boardID]),
+        });
       });
 
+      // find all users who liked this post
+      var usersQuery = _firestore
+          .collection('users')
+          .where('savedBoards', arrayContains: boardID)
+          .limit(batchSize);
+
+      await _firestore._processQueryInBatches(usersQuery, batch, (userDoc) {
+        batch.update(userDoc.reference, {
+          'savedBoards': FieldValue.arrayRemove([boardID]),
+        });
+      });
+
+      // find all users who liked this post
+      usersQuery = _firestore
+          .collection('users')
+          .where('boards', arrayContains: boardID)
+          .limit(batchSize);
+
+      await _firestore._processQueryInBatches(usersQuery, batch, (userDoc) {
+        batch.update(userDoc.reference, {
+          'boards': FieldValue.arrayRemove([boardID]),
+        });
+      });
+
+      // Optionally delete the associated image file
+      if (photoURL.isNotEmpty) {
+        await _storage.refFromURL(photoURL).delete();
+      }
       // commit changes
       await batch.commit();
     } on FirebaseException {

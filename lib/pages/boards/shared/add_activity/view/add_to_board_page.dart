@@ -1,5 +1,5 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
@@ -9,17 +9,17 @@ import 'package:user_repository/user_repository.dart';
 class AddToBoardPage extends StatelessWidget {
   const AddToBoardPage({
     required this.userID,
-    required this.itemID,
+    required this.postID,
     super.key,
   });
   final String userID;
-  final String itemID;
+  final String postID;
   static MaterialPage<void> page({
-    required String itemID,
+    required String postID,
     required String userID,
   }) {
     return MaterialPage<void>(
-      child: AddToBoardPage(itemID: itemID, userID: userID),
+      child: AddToBoardPage(postID: postID, userID: userID),
     );
   }
 
@@ -39,7 +39,7 @@ class AddToBoardPage extends StatelessWidget {
           padding: const EdgeInsets.all(defaultPadding),
           child: BlocProvider(
             create: (context) => BoardCubit(
-              boardsRepository: context.read<BoardsRepository>(),
+              boardRepository: context.read<BoardRepository>(),
               userRepository: context.read<UserRepository>(),
             )..streamUserBoards(userID),
             child: BlocBuilder<BoardCubit, BoardState>(
@@ -47,7 +47,7 @@ class AddToBoardPage extends StatelessWidget {
                 if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state.isLoaded) {
-                  final boards = state.items;
+                  final boards = state.posts;
                   return ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 10),
@@ -55,7 +55,7 @@ class AddToBoardPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final boardID = boards[index];
                       return SelectBoardCard(
-                        itemID: itemID,
+                        postID: postID,
                         boardID: boardID,
                       );
                     },

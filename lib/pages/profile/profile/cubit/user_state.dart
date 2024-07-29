@@ -5,31 +5,31 @@ enum UserStatus { initial, loading, empty, loaded, failure }
 final class UserState extends Equatable {
   const UserState._({
     this.status = UserStatus.initial,
-    this.items = const [],
+    this.posts = const [],
     this.failure = UserFailure.empty,
   });
 
   const UserState.initial() : this._();
 
   final UserStatus status;
-  final List<String> items;
+  final List<String> posts;
   final UserFailure failure;
 
   @override
   List<Object?> get props => [
         status,
-        items,
+        posts,
         failure,
       ];
 
   UserState copyWith({
     UserStatus? status,
-    List<String>? items,
+    List<String>? posts,
     UserFailure? failure,
   }) {
     return UserState._(
       status: status ?? this.status,
-      items: items ?? this.items,
+      posts: posts ?? this.posts,
       failure: failure ?? this.failure,
     );
   }

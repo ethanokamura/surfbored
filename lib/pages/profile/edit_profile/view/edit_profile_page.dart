@@ -92,24 +92,6 @@ class EditProfile extends StatelessWidget {
           ),
           const VerticalSpacer(),
           CustomTextBox(
-            text: user.website,
-            label: 'website',
-            onPressed: () async {
-              final newValue = await editTextField(
-                context,
-                'website',
-                30,
-                TextEditingController(),
-              );
-              if (newValue != null && context.mounted) {
-                await context
-                    .read<ProfileCubit>()
-                    .editField('website', newValue);
-              }
-            },
-          ),
-          const VerticalSpacer(),
-          CustomTextBox(
             text: user.bio,
             label: 'bio',
             onPressed: () async {

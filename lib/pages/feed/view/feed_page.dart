@@ -1,6 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/activities/activity_feed/activity_feed.dart';
+import 'package:rando/pages/posts/post_feed/post_feed.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({super.key});
@@ -20,7 +20,7 @@ class FeedPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const ActivityFeed(),
+      body: const PostFeed(),
     );
   }
 }

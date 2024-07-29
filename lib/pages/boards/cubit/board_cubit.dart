@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:api_client/api_client.dart';
 import 'package:bloc/bloc.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -10,13 +11,13 @@ part 'board_state.dart';
 
 class BoardCubit extends Cubit<BoardState> {
   BoardCubit({
-    required BoardsRepository boardsRepository,
+    required BoardRepository boardRepository,
     required UserRepository userRepository,
-  })  : _boardsRepository = boardsRepository,
+  })  : _boardRepository = boardRepository,
         _userRepository = userRepository,
         super(const BoardState.initial());
 
-  final BoardsRepository _boardsRepository;
+  final BoardRepository _boardRepository;
   final UserRepository _userRepository;
 
   int index = 0;
@@ -25,14 +26,10 @@ class BoardCubit extends Cubit<BoardState> {
     return boardUserID == currentUserID;
   }
 
-  User getUser() {
-    return _userRepository.getCurrentUser();
-  }
-
   Future<void> getBoard(String boardID) async {
     emit(state.fromBoardLoading());
     try {
-      final board = await _boardsRepository.readBoard(boardID);
+      final board = await _boardRepository.fetchBoard(boardID);
       if (board.isEmpty) {
         emit(state.fromBoardEmpty());
         return;
@@ -43,24 +40,24 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  Future<void> fetchBoardItems(String boardID) async {
+  Future<void> fetchBoardPosts(String boardID) async {
     emit(state.fromBoardLoading());
     try {
-      final items = await _boardsRepository.readItems(boardID);
-      if (items.isEmpty) {
+      final posts = await _boardRepository.fetchPosts(boardID);
+      if (posts.isEmpty) {
         emit(state.fromBoardEmpty());
         return;
       }
-      emit(state.fromListLoaded(items));
+      emit(state.fromListLoaded(posts));
     } on BoardFailure catch (failure) {
       emit(state.fromBoardFailure(failure));
     }
   }
 
-  void streamItems(String boardID) {
+  void streamPosts(String boardID) {
     emit(state.fromBoardLoading());
     try {
-      _boardsRepository.readItemsStream(boardID).listen(
+      _boardRepository.streamPosts(boardID).listen(
         (snapshot) {
           emit(state.fromListLoaded(snapshot));
         },
@@ -76,7 +73,7 @@ class BoardCubit extends Cubit<BoardState> {
   void streamBoard(String boardID) {
     emit(state.fromBoardLoading());
     try {
-      _boardsRepository.readBoardStream(boardID).listen(
+      _boardRepository.streamBoard(boardID).listen(
         (snapshot) {
           emit(state.fromBoardLoaded(snapshot));
         },
@@ -105,23 +102,23 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  Future<void> shuffleItemList(String boardID) async {
+  Future<void> shufflePostList(String boardID) async {
     emit(state.fromBoardLoading());
     try {
-      final items = await _boardsRepository.readItems(boardID);
-      if (items.isEmpty) {
+      final posts = await _boardRepository.fetchPosts(boardID);
+      if (posts.isEmpty) {
         emit(state.fromBoardEmpty());
         return;
       }
-      items.shuffle();
-      emit(state.fromListLoaded(items));
+      posts.shuffle();
+      emit(state.fromListLoaded(posts));
     } on BoardFailure catch (failure) {
       emit(state.fromBoardFailure(failure));
     }
   }
 
   Future<void> editField(String boardID, String field, String data) async {
-    await _boardsRepository.updateField(boardID, field, data);
+    await _boardRepository.updateField(boardID, field, data);
   }
 
   Future<void> toggleLike(
@@ -131,7 +128,7 @@ class BoardCubit extends Cubit<BoardState> {
   }) async {
     emit(state.fromBoardLoading());
     try {
-      await _boardsRepository.updateBoardLikes(
+      await _boardRepository.updateBoardSaves(
         userID: userID,
         boardID: boardID,
         isLiked: isSelected,
@@ -145,14 +142,14 @@ class BoardCubit extends Cubit<BoardState> {
 
   Future<void> toggleSelection(
     String boardID,
-    String itemID, {
+    String postID, {
     required bool isSelected,
   }) async {
     emit(state.fromBoardLoading());
     try {
-      await _boardsRepository.updateBoardItems(
+      await _boardRepository.updateBoardPosts(
         boardID: boardID,
-        itemID: itemID,
+        postID: postID,
         isSelected: isSelected,
       );
       await getBoard(boardID);
@@ -161,12 +158,12 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  void skipItem() {
+  void skipPost() {
     if (state.isLoaded) {
-      final items = state.items;
-      if (index + 1 < items.length) {
+      final posts = state.posts;
+      if (index + 1 < posts.length) {
         index++;
-        emit(state.fromListLoaded(items));
+        emit(state.fromListLoaded(posts));
       }
     }
   }
@@ -189,7 +186,7 @@ class BoardCubit extends Cubit<BoardState> {
   }) async {
     emit(state.fromBoardCreating());
     try {
-      final docID = await _boardsRepository.createBoard(
+      final docID = await _boardRepository.createBoard(
         Board(
           title: title,
           description: description,
@@ -198,7 +195,8 @@ class BoardCubit extends Cubit<BoardState> {
         userID,
       );
       if (imageFile != null) {
-        await _boardsRepository.uploadImage(imageFile, docID);
+        await FirebaseFirestore.instance
+            .uploadImage('boards', docID, imageFile);
       }
       emit(state.fromBoardCreated());
       await getBoard(docID);
@@ -213,7 +211,7 @@ class BoardCubit extends Cubit<BoardState> {
     String photoURL,
   ) async {
     try {
-      await _boardsRepository.deleteBoard(userID, boardID, photoURL);
+      await _boardRepository.deleteBoard(userID, boardID, photoURL);
       emit(state.fromBoardDeleted());
     } on BoardFailure catch (failure) {
       emit(state.fromBoardFailure(failure));
@@ -237,9 +235,9 @@ extension _BoardStateExtensions on BoardState {
         board: board,
       );
 
-  BoardState fromListLoaded(List<String> items) => copyWith(
+  BoardState fromListLoaded(List<String> posts) => copyWith(
         status: BoardStatus.loaded,
-        items: items,
+        posts: posts,
         index: 0,
       );
 

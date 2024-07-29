@@ -1,6 +1,6 @@
 // dart packages
 import 'package:app_ui/app_ui.dart';
-import 'package:boards_repository/boards_repository.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
@@ -25,7 +25,7 @@ class EditBoardPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (_) => BoardCubit(
-          boardsRepository: context.read<BoardsRepository>(),
+          boardRepository: context.read<BoardRepository>(),
           userRepository: context.read<UserRepository>(),
         )..streamBoard(boardID),
         child: BlocBuilder<BoardCubit, BoardState>(

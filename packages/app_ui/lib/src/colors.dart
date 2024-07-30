@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 abstract class CustomColors {
   // dark mode
   static const Color darkAccent = Color(0xff61afef);
-  static const Color darkBackground = Color(0xff1d2025);
-  static const Color darkSurface = Color(0xff282c34);
-  static const Color darkPrimary = Color(0xff3b414d);
+  static const Color darkBackground = Color(0xff10141a);
+  static const Color darkSurface = Color(0xff1d2025);
+  static const Color darkPrimary = Color(0xff282c34);
   static const Color darkTextColor = Color(0xffffffff);
   static const Color darkSubtextColor = Color(0xffabb2bf);
   static const Color darkHintTextColor = Color(0xff8e95a3);
   static const Color inverseDarkTextColor = Color(0xff1d2025);
-  static const Color darkGradientStart = Color(0xff10141a);
-  static const Color darkGradientEnd = Colors.transparent;
+  static const Color darkGradientStart = Colors.black;
+  static const Color darkGradientEnd = Color(0xff1d2025);
 
   // light mode
   static const Color lightAccent = Color(0xff8875e0);

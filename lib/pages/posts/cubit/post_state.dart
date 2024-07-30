@@ -18,7 +18,6 @@ final class PostState extends Equatable {
     this.post = Post.empty,
     this.posts = const [],
     this.failure = PostFailure.empty,
-    this.liked = false,
   });
 
   // initial state
@@ -28,7 +27,6 @@ final class PostState extends Equatable {
   final Post post;
   final List<Post> posts;
   final PostFailure failure;
-  final bool liked;
 
   // rebuilds the app when the props change
   @override
@@ -37,7 +35,6 @@ final class PostState extends Equatable {
         post,
         posts,
         failure,
-        liked,
       ];
 
   PostState copyWith({
@@ -45,14 +42,12 @@ final class PostState extends Equatable {
     Post? post,
     List<Post>? posts,
     PostFailure? failure,
-    bool? liked,
   }) {
     return PostState._(
       status: status ?? this.status,
       post: post ?? this.post,
       posts: posts ?? this.posts,
       failure: failure ?? this.failure,
-      liked: liked ?? this.liked,
     );
   }
 }

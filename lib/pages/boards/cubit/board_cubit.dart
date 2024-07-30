@@ -21,147 +21,57 @@ class BoardCubit extends Cubit<BoardState> {
     return boardUserID == currentUserID;
   }
 
-  Future<void> getBoard(String boardID) async {
-    emit(state.fromBoardLoading());
-    try {
-      final board = await _boardRepository.fetchBoard(boardID);
-      if (board.isEmpty) {
-        emit(state.fromBoardEmpty());
-        return;
-      }
-      emit(state.fromBoardLoaded(board));
-    } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
-    }
-  }
-
+  // change to stream?
   Future<void> fetchBoardPosts(String boardID) async {
-    emit(state.fromBoardLoading());
+    emit(state.fromLoading());
     try {
       final posts = await _boardRepository.fetchPosts(boardID);
       if (posts.isEmpty) {
-        emit(state.fromBoardEmpty());
+        emit(state.fromEmpty());
         return;
       }
-      emit(state.fromListLoaded(posts));
+      emit(state.fromPostsLoaded(posts));
     } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
-    }
-  }
-
-  void streamPosts(String boardID) {
-    emit(state.fromBoardLoading());
-    try {
-      _boardRepository.streamPosts(boardID).listen(
-        (snapshot) {
-          emit(state.fromListLoaded(snapshot));
-        },
-        onError: (dynamic error) {
-          emit(state.fromBoardFailure(BoardFailure.fromGetBoard()));
-        },
-      );
-    } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   void streamBoard(String boardID) {
-    emit(state.fromBoardLoading());
+    emit(state.fromLoading());
     try {
       _boardRepository.streamBoard(boardID).listen(
         (snapshot) {
           emit(state.fromBoardLoaded(snapshot));
         },
         onError: (dynamic error) {
-          emit(state.fromBoardFailure(BoardFailure.fromGetBoard()));
+          emit(state.fromFailure(BoardFailure.fromGetBoard()));
         },
       );
     } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   void streamUserBoards(String userID) {
-    emit(state.fromBoardLoading());
+    emit(state.fromLoading());
     try {
       _boardRepository.streamUserBoards(userID).listen(
         (snapshot) {
           emit(state.fromBoardsLoaded(snapshot));
         },
         onError: (dynamic error) {
-          emit(state.fromBoardEmpty());
+          emit(state.fromEmpty());
         },
       );
     } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
-    }
-  }
-
-  Future<void> shufflePostList(String boardID) async {
-    emit(state.fromBoardLoading());
-    try {
-      final posts = await _boardRepository.fetchPosts(boardID);
-      if (posts.isEmpty) {
-        emit(state.fromBoardEmpty());
-        return;
-      }
-      posts.shuffle();
-      emit(state.fromListLoaded(posts));
-    } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   Future<void> editField(String boardID, String field, dynamic data) async {
-    emit(state.fromBoardLoading());
+    emit(state.fromLoading());
     await _boardRepository.updateField(boardID, {field: data});
-    emit(state.fromBoardUpdated());
-  }
-
-  Future<void> toggleLike(
-    String userID,
-    String boardID, {
-    required bool isSelected,
-  }) async {
-    emit(state.fromBoardLoading());
-    try {
-      await _boardRepository.updateBoardSaves(
-        userID: userID,
-        boardID: boardID,
-        isLiked: isSelected,
-      );
-      emit(state.fromBoardToggle(selected: isSelected));
-    } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
-    }
-  }
-
-  Future<void> toggleSelection(
-    String boardID,
-    String postID, {
-    required bool isSelected,
-  }) async {
-    emit(state.fromBoardLoading());
-    try {
-      await _boardRepository.updateBoardPosts(
-        boardID: boardID,
-        postID: postID,
-        isSelected: isSelected,
-      );
-      await getBoard(boardID);
-    } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
-    }
-  }
-
-  void incrementIndex() {
-    final newIndex = state.index + 1;
-    emit(state.copyWith(index: newIndex));
-  }
-
-  void decrementIndex() {
-    final newIndex = state.index - 1;
-    emit(state.copyWith(index: newIndex));
+    emit(state.fromUpdated());
   }
 
   Future<void> createBoard({
@@ -170,7 +80,7 @@ class BoardCubit extends Cubit<BoardState> {
     required String description,
     required File? imageFile,
   }) async {
-    emit(state.fromBoardLoading());
+    emit(state.fromLoading());
     try {
       final docID = await _boardRepository.createBoard(
         Board(
@@ -184,10 +94,9 @@ class BoardCubit extends Cubit<BoardState> {
         await FirebaseFirestore.instance
             .uploadImage('boards', docID, imageFile);
       }
-      emit(state.fromBoardCreated());
-      await getBoard(docID);
+      emit(state.fromCreated());
     } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
@@ -196,33 +105,33 @@ class BoardCubit extends Cubit<BoardState> {
     String boardID,
     String photoURL,
   ) async {
-    emit(state.fromBoardLoading());
+    emit(state.fromLoading());
     try {
       await _boardRepository.deleteBoard(userID, boardID, photoURL);
-      emit(state.fromBoardDeleted());
+      emit(state.fromDeleted());
     } on BoardFailure catch (failure) {
-      emit(state.fromBoardFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 }
 
 extension _BoardStateExtensions on BoardState {
-  BoardState fromBoardLoading() => copyWith(status: BoardStatus.loading);
+  BoardState fromLoading() => copyWith(status: BoardStatus.loading);
 
-  BoardState fromBoardEmpty() => copyWith(status: BoardStatus.empty);
+  BoardState fromEmpty() => copyWith(status: BoardStatus.empty);
 
-  BoardState fromBoardDeleted() => copyWith(status: BoardStatus.deleted);
+  BoardState fromDeleted() => copyWith(status: BoardStatus.deleted);
 
-  BoardState fromBoardCreated() => copyWith(status: BoardStatus.created);
+  BoardState fromCreated() => copyWith(status: BoardStatus.created);
 
-  BoardState fromBoardUpdated() => copyWith(status: BoardStatus.updated);
+  BoardState fromUpdated() => copyWith(status: BoardStatus.updated);
 
   BoardState fromBoardLoaded(Board board) => copyWith(
         status: BoardStatus.loaded,
         board: board,
       );
 
-  BoardState fromListLoaded(List<String> posts) => copyWith(
+  BoardState fromPostsLoaded(List<String> posts) => copyWith(
         status: BoardStatus.loaded,
         posts: posts,
         index: 0,
@@ -233,12 +142,7 @@ extension _BoardStateExtensions on BoardState {
         boards: boards,
       );
 
-  BoardState fromBoardToggle({required bool selected}) => copyWith(
-        status: BoardStatus.loaded,
-        selected: selected,
-      );
-
-  BoardState fromBoardFailure(BoardFailure failure) => copyWith(
+  BoardState fromFailure(BoardFailure failure) => copyWith(
         status: BoardStatus.failure,
         failure: failure,
       );

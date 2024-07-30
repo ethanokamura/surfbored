@@ -20,20 +20,6 @@ class PostCubit extends Cubit<PostState> {
     return postUserID == currentUserID;
   }
 
-  Future<void> getPost(String postID) async {
-    emit(state.fromLoading());
-    try {
-      final post = await _postRepository.fetchPost(postID);
-      if (post.isEmpty) {
-        emit(state.fromEmpty());
-        return;
-      }
-      emit(state.fromPostLoaded(post));
-    } on PostFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
   void streamPost(String postID) {
     emit(state.fromLoading());
     try {
@@ -104,24 +90,6 @@ class PostCubit extends Cubit<PostState> {
     emit(state.fromUpdate());
   }
 
-  Future<void> toggleLike(
-    String userID,
-    String postID, {
-    required bool liked,
-  }) async {
-    emit(state.fromLoading());
-    try {
-      await _postRepository.updateLikes(
-        userID: userID,
-        postID: postID,
-        isLiked: liked,
-      );
-      emit(state.fromPostToggle(liked: liked));
-    } on PostFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
   Future<void> createPost({
     required String userID,
     required String title,
@@ -183,11 +151,6 @@ extension _PostStateExtensions on PostState {
   PostState fromPostsLoaded(List<Post> posts) => copyWith(
         status: PostStatus.loaded,
         posts: posts,
-      );
-
-  PostState fromPostToggle({required bool liked}) => copyWith(
-        status: PostStatus.loaded,
-        liked: liked,
       );
 
   PostState fromFailure(PostFailure failure) => copyWith(

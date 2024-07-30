@@ -46,12 +46,6 @@ class UserRepository {
     return _firebaseAuth.currentUser!.uid == userID;
   }
 
-  // figure out if user exists
-  Future<bool> doesUserExist(String userID) async {
-    final docSnapshot = await _firestore.getUserDoc(userID);
-    return docSnapshot.exists;
-  }
-
   /// gets generic [watchUser] emmision
   Stream<model.User> watchUserByID(String userID) {
     return _firestore.userDoc(userID).snapshots().map(
@@ -165,16 +159,6 @@ extension Username on UserRepository {
     return userDoc.exists && userDoc.data()!.containsKey('username');
   }
 
-  // find the user's username and return it!
-  Future<String> getUsername(String userID) async {
-    try {
-      final snapshot = await _firestore.usernameDoc(userID).get();
-      return snapshot.exists ? snapshot.get('username') as String : userID;
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
   /// save username to user doc
   Future<void> saveUsername(String userID, String username) async {
     try {
@@ -226,166 +210,6 @@ extension Fetch on UserRepository {
   Future<model.User> fetchUserData(firebase.User? firebaseUser) async {
     if (firebaseUser == null) return model.User.empty;
     return model.User.fromFirebaseUser(firebaseUser);
-  }
-
-  // get boards list
-  Future<List<String>> fetchBoards(String userID) async {
-    try {
-      // get user doc
-      final doc = await _firestore.getUserDoc(userID);
-      // return empty if the doc does not exist
-      if (!doc.exists) return [];
-      // get user data
-      final userData = model.User.fromJson(doc.data()!);
-      // return the user's boards
-      return userData.boards;
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // get post list
-  Future<List<String>> fetchPosts(String userID) async {
-    try {
-      // get user doc
-      final doc = await _firestore.getUserDoc(userID);
-      // return empty if the doc does not exist
-      if (!doc.exists) return [];
-      // get user data
-      final userData = model.User.fromJson(doc.data()!);
-      // return the user's posts
-      return userData.posts;
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // get user's liked posts
-  Future<List<String>> fetchLikedPosts(String userID) async {
-    try {
-      // get user doc
-      final doc = await _firestore.getUserDoc(userID);
-      // return empty if the doc does not exist
-      if (!doc.exists) return [];
-      // get user data
-      final userData = model.User.fromJson(doc.data()!);
-      // return the user's liked posts
-      return userData.posts;
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // get user's boards
-  Future<List<String>> fetchSavedBoards(String userID) async {
-    try {
-      // get user doc
-      final doc = await _firestore.getUserDoc(userID);
-      // return empty if the doc does not exist
-      if (!doc.exists) return [];
-      // get user data
-      final userData = model.User.fromJson(doc.data()!);
-      // return the user's liked boards
-      return userData.savedBoards;
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-}
-
-extension StreamData on UserRepository {
-  // stream board  list
-  Stream<List<String>> streamBoards(String userID) {
-    try {
-      return _firestore.userDoc(userID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          final data = model.User.fromJson(snapshot.data()!);
-          return data.boards;
-        } else {
-          throw UserFailure.fromGetUser();
-        }
-      });
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // stream board list
-  Stream<List<String>> streamBoardIdsWithPagination(String userID,
-      {int pageSize = 10}) async* {
-    final userDoc = await _firestore.userDoc(userID).get();
-    if (!userDoc.exists) {
-      yield [];
-      return;
-    }
-
-    final user = model.User.fromJson(userDoc.data()!);
-    final boardIds = user.boards;
-
-    final buffer = <String>[];
-    var currentIndex = 0;
-
-    while (currentIndex < boardIds.length) {
-      // Fetch the next page of board IDs
-      final boardIdsPage = boardIds.skip(currentIndex).take(pageSize).toList();
-
-      // Update the current index for the next batch
-      currentIndex += pageSize;
-
-      // Add the fetched board IDs to the buffer
-      buffer.addAll(boardIdsPage);
-
-      // Emit the current buffer as a stream event
-      yield buffer;
-    }
-  }
-
-  // stream posts list
-  Stream<List<String>> streamPosts(String userID) {
-    try {
-      return _firestore.userDoc(userID).snapshots().map((doc) {
-        if (doc.exists) {
-          final data = model.User.fromJson(doc.data()!);
-          return data.posts;
-        } else {
-          throw UserFailure.fromGetUser();
-        }
-      });
-    } on FirebaseException {
-      throw UserFailure.fromGetUser();
-    }
-  }
-
-  // stream board list
-  Stream<List<String>> streamPostsWithPagination(
-    String userID, {
-    int pageSize = 10,
-  }) async* {
-    final userDoc = await _firestore.getUserDoc(userID);
-    if (!userDoc.exists) {
-      yield [];
-      return;
-    }
-
-    final user = model.User.fromJson(userDoc.data()!);
-    final postIDs = user.posts;
-
-    final buffer = <String>[];
-    var currentIndex = 0;
-
-    while (currentIndex < postIDs.length) {
-      // Fetch the next page of board IDs
-      final postIDspage = postIDs.skip(currentIndex).take(pageSize).toList();
-
-      // Update the current index for the next batch
-      currentIndex += pageSize;
-
-      // Add the fetched board IDs to the buffer
-      buffer.addAll(postIDspage);
-
-      // Emit the current buffer as a stream event
-      yield buffer;
-    }
   }
 }
 

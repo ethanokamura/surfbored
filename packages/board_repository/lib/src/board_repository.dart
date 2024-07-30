@@ -46,24 +46,6 @@ extension Create on BoardRepository {
 }
 
 extension Fetch on BoardRepository {
-  // get board document
-  Future<Board> fetchBoard(String boardID) async {
-    try {
-      // get document from database
-      final doc = await _firestore.getBoardDoc(boardID);
-      if (doc.exists) {
-        // return board
-        return Board.fromJson(doc.data()!);
-      } else {
-        // return empty board if document DNE
-        return Board.empty;
-      }
-    } on FirebaseException {
-      // return failure
-      throw BoardFailure.fromGetBoard();
-    }
-  }
-
   // get board posts
   Future<List<String>> fetchPosts(String boardID) async {
     try {

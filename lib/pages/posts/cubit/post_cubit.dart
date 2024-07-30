@@ -16,10 +16,6 @@ class PostCubit extends Cubit<PostState> {
 
   final PostRepository _postRepository;
 
-  bool isOwner(String postUserID, String currentUserID) {
-    return postUserID == currentUserID;
-  }
-
   void streamPost(String postID) {
     emit(state.fromLoading());
     try {

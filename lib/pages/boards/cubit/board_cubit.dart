@@ -17,10 +17,6 @@ class BoardCubit extends Cubit<BoardState> {
 
   int index = 0;
 
-  bool isOwner(String boardUserID, String currentUserID) {
-    return boardUserID == currentUserID;
-  }
-
   // change to stream?
   Future<void> fetchBoardPosts(String boardID) async {
     emit(state.fromLoading());

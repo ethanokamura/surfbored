@@ -60,28 +60,6 @@ extension Fetch on PostRepository {
     }
   }
 
-  // get post document
-  Future<List<Post>> fetchPosts(List<String> postIDs) async {
-    if (postIDs.isEmpty) return [];
-    try {
-      final posts = <Post>[];
-      for (final postID in postIDs) {
-        final doc = await _firestore.getPostDoc(postID);
-        Post postData;
-        if (doc.exists) {
-          final data = doc.data();
-          postData = Post.fromJson(data!);
-          posts.add(postData);
-        }
-      }
-      return posts;
-      // get document from database
-    } on FirebaseException {
-      // return failure
-      throw PostFailure.fromGetPost();
-    }
-  }
-
   // get post likes
   Future<int> fetchLikes(String postID) async {
     try {

@@ -1,42 +1,10 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/pages/posts/bottom_sheet.dart';
-import 'package:rando/pages/posts/cubit/activity_cubit.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({required this.postID, super.key});
-  final String postID;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PostCubit(
-        postRepository: context.read<PostRepository>(),
-      )..getPost(postID),
-      child: BlocBuilder<PostCubit, PostState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.isLoaded) {
-            final post = state.post;
-            return PostCardView(post: post);
-          } else if (state.isEmpty) {
-            return const Center(child: Text('This post is empty.'));
-          } else if (state.isDeleted) {
-            return const Center(child: Text('Post was deleted.'));
-          } else {
-            return const Center(child: Text('Something went wrong'));
-          }
-        },
-      ),
-    );
-  }
-}
-
-class PostCardView extends StatelessWidget {
-  const PostCardView({required this.post, super.key});
+  const PostCard({required this.post, super.key});
   final Post post;
 
   @override
@@ -45,7 +13,6 @@ class PostCardView extends StatelessWidget {
       onTap: () => showPostModal(
         context,
         post,
-        context.read<PostCubit>(),
       ),
       child: CustomContainer(
         inverted: false,

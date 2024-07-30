@@ -1,10 +1,15 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:post_repository/post_repository.dart';
 import 'package:rando/pages/posts/shared/post_card/view/post_card.dart';
 
 class PostsGrid extends StatelessWidget {
-  const PostsGrid({required this.onRefresh, required this.posts, super.key});
-  final List<String> posts;
+  const PostsGrid({
+    required this.onRefresh,
+    required this.posts,
+    super.key,
+  });
+  final List<Post> posts;
   final Future<void> Function() onRefresh;
 
   @override
@@ -21,9 +26,9 @@ class PostsGrid extends StatelessWidget {
         ),
         itemCount: posts.length,
         itemBuilder: (context, index) {
-          final postID = posts[index];
+          final post = posts[index];
           return PostCard(
-            postID: postID,
+            post: post,
           );
         },
       ),

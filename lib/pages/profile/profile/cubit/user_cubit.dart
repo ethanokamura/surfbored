@@ -4,8 +4,9 @@ import 'package:user_repository/user_repository.dart';
 part 'user_state.dart';
 
 class UserCubit extends Cubit<UserState> {
-  UserCubit({required UserRepository userRepository})
-      : _userRepository = userRepository,
+  UserCubit({
+    required UserRepository userRepository,
+  })  : _userRepository = userRepository,
         super(const UserState.initial());
 
   final UserRepository _userRepository;
@@ -52,6 +53,7 @@ extension _UserStateExtensions on UserState {
         status: UserStatus.loaded,
         posts: posts,
       );
+
   UserState fromUserFailure(UserFailure failure) => copyWith(
         status: UserStatus.failure,
         failure: failure,

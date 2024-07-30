@@ -19,6 +19,22 @@ class Post extends Equatable {
   // factory constructor for creating an instance from JSON
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 
+  // allows for an easy way to stream data
+  factory Post.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Post(
+      id: doc.id,
+      uid: data['uid'] as String? ?? '',
+      title: data['title'] as String? ?? '',
+      description: data['description'] as String? ?? '',
+      photoURL: data['photoURL'] as String? ?? '',
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      likes: data['likes'] as int? ?? 0,
+      tags:
+          (data['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
+    );
+  }
+
   // data fields
   final String id;
   final String? photoURL;

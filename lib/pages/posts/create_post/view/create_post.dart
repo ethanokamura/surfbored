@@ -4,7 +4,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/pages/posts/cubit/activity_cubit.dart';
+import 'package:rando/pages/posts/cubit/post_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CreatePostPage extends StatelessWidget {

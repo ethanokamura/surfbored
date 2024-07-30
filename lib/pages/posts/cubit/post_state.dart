@@ -1,4 +1,4 @@
-part of 'activity_cubit.dart';
+part of 'post_cubit.dart';
 
 enum PostStatus {
   initial,
@@ -8,6 +8,7 @@ enum PostStatus {
   created,
   creating,
   deleted,
+  edited,
   failure,
 }
 
@@ -20,6 +21,7 @@ final class PostState extends Equatable {
     this.liked = false,
   });
 
+  // initial state
   const PostState.initial() : this._();
 
   final PostStatus status;
@@ -28,6 +30,7 @@ final class PostState extends Equatable {
   final PostFailure failure;
   final bool liked;
 
+  // rebuilds the app when the props change
   @override
   List<Object?> get props => [
         status,
@@ -62,4 +65,5 @@ extension BoardStateExtensions on PostState {
   bool get isCreated => status == PostStatus.created;
   bool get isCreating => status == PostStatus.creating;
   bool get isDeleted => status == PostStatus.deleted;
+  bool get isEdited => status == PostStatus.edited;
 }

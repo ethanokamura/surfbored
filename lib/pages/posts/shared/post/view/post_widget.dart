@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/pages/posts/cubit/activity_cubit.dart';
+import 'package:rando/pages/posts/cubit/post_cubit.dart';
 import 'package:rando/pages/posts/edit_post/edit_post.dart';
 import 'package:rando/pages/posts/shared/post/cubit/like_cubit.dart';
 import 'package:rando/pages/posts/shared/post/view/more_options.dart';
@@ -10,16 +10,16 @@ import 'package:rando/pages/profile/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class PostView extends StatelessWidget {
-  const PostView({required this.post, super.key});
+  const PostView({required this.postCubit, required this.post, super.key});
   final Post post;
-
+  final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
     final user = context.read<UserRepository>().fetchCurrentUser();
-    final isOwner = context.read<PostCubit>().isOwner(
-          post.uid,
-          user.uid,
-        );
+    final isOwner = postCubit.isOwner(
+      post.uid,
+      user.uid,
+    );
 
     return Flexible(
       child: CustomContainer(
@@ -52,17 +52,19 @@ class PostView extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<dynamic>(
-                              builder: (context) =>
-                                  EditPostPage(postID: post.id),
+                              builder: (context) => EditPostPage(
+                                postID: post.id,
+                                // postCubit: postCubit,
+                              ),
                             ),
                           );
                         },
                         onDelete: () async {
-                          await context.read<PostCubit>().deletePost(
-                                post.uid,
-                                post.id,
-                                post.photoURL.toString(),
-                              );
+                          await postCubit.deletePost(
+                            post.uid,
+                            post.id,
+                            post.photoURL.toString(),
+                          );
                         },
                       ),
                     ],

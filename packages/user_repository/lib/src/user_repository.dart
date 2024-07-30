@@ -310,6 +310,36 @@ extension StreamData on UserRepository {
     }
   }
 
+  // stream board list
+  Stream<List<String>> streamBoardIdsWithPagination(String userID,
+      {int pageSize = 10}) async* {
+    final userDoc = await _firestore.userDoc(userID).get();
+    if (!userDoc.exists) {
+      yield [];
+      return;
+    }
+
+    final user = model.User.fromJson(userDoc.data()!);
+    final boardIds = user.boards;
+
+    final buffer = <String>[];
+    var currentIndex = 0;
+
+    while (currentIndex < boardIds.length) {
+      // Fetch the next page of board IDs
+      final boardIdsPage = boardIds.skip(currentIndex).take(pageSize).toList();
+
+      // Update the current index for the next batch
+      currentIndex += pageSize;
+
+      // Add the fetched board IDs to the buffer
+      buffer.addAll(boardIdsPage);
+
+      // Emit the current buffer as a stream event
+      yield buffer;
+    }
+  }
+
   // stream posts list
   Stream<List<String>> streamPosts(String userID) {
     try {
@@ -323,6 +353,38 @@ extension StreamData on UserRepository {
       });
     } on FirebaseException {
       throw UserFailure.fromGetUser();
+    }
+  }
+
+  // stream board list
+  Stream<List<String>> streamPostsWithPagination(
+    String userID, {
+    int pageSize = 10,
+  }) async* {
+    final userDoc = await _firestore.getUserDoc(userID);
+    if (!userDoc.exists) {
+      yield [];
+      return;
+    }
+
+    final user = model.User.fromJson(userDoc.data()!);
+    final postIDs = user.posts;
+
+    final buffer = <String>[];
+    var currentIndex = 0;
+
+    while (currentIndex < postIDs.length) {
+      // Fetch the next page of board IDs
+      final postIDspage = postIDs.skip(currentIndex).take(pageSize).toList();
+
+      // Update the current index for the next batch
+      currentIndex += pageSize;
+
+      // Add the fetched board IDs to the buffer
+      buffer.addAll(postIDspage);
+
+      // Emit the current buffer as a stream event
+      yield buffer;
     }
   }
 }

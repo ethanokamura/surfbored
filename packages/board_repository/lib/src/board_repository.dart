@@ -119,9 +119,9 @@ extension StreamData on BoardRepository {
 
 extension Update on BoardRepository {
   // update specific user field
-  Future<void> updateField(String boardID, String field, String data) async {
+  Future<void> updateField(String boardID, Map<String, dynamic> data) async {
     try {
-      await _firestore.updateBoardDoc(boardID, {field: data});
+      await _firestore.updateBoardDoc(boardID, data);
     } on FirebaseException {
       throw BoardFailure.fromUpdateBoard();
     }

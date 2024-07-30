@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/pages/posts/cubit/activity_cubit.dart';
+import 'package:rando/pages/posts/cubit/post_cubit.dart';
 import 'package:rando/pages/posts/edit_post/edit_post.dart';
 import 'package:rando/pages/posts/shared/post/cubit/like_cubit.dart';
 import 'package:rando/pages/posts/shared/post/view/more_options.dart';
@@ -12,8 +12,8 @@ import 'package:user_repository/user_repository.dart';
 Future<dynamic> showPostModal(
   BuildContext context,
   Post post,
-  PostCubit postCubit,
 ) async {
+  final postCubit = context.read<PostCubit>();
   final user = context.read<UserRepository>().fetchCurrentUser();
   final isOwner = postCubit.isOwner(
     post.uid,
@@ -50,14 +50,21 @@ Future<dynamic> showPostModal(
                     isOwner: isOwner,
                     imgURL: post.photoURL.toString(),
                     onEdit: () {
+                      Navigator.pop(context);
                       Navigator.push(
                         context,
                         MaterialPageRoute<dynamic>(
-                          builder: (context) => EditPostPage(postID: post.id),
+                          builder: (context) {
+                            return BlocProvider.value(
+                              value: postCubit,
+                              child: EditPostPage(postID: post.id),
+                            );
+                          },
                         ),
                       );
                     },
                     onDelete: () async {
+                      Navigator.pop(context);
                       await postCubit.deletePost(
                         post.uid,
                         post.id,

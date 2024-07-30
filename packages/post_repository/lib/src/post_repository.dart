@@ -60,6 +60,28 @@ extension Fetch on PostRepository {
     }
   }
 
+  // get post document
+  Future<List<Post>> fetchPosts(List<String> postIDs) async {
+    if (postIDs.isEmpty) return [];
+    try {
+      final posts = <Post>[];
+      for (final postID in postIDs) {
+        final doc = await _firestore.getPostDoc(postID);
+        Post postData;
+        if (doc.exists) {
+          final data = doc.data();
+          postData = Post.fromJson(data!);
+          posts.add(postData);
+        }
+      }
+      return posts;
+      // get document from database
+    } on FirebaseException {
+      // return failure
+      throw PostFailure.fromGetPost();
+    }
+  }
+
   // get post likes
   Future<int> fetchLikes(String postID) async {
     try {
@@ -118,13 +140,62 @@ extension StreamData on PostRepository {
       throw PostFailure.fromGetPost();
     }
   }
+
+  Stream<List<Post>> streamUserPosts(
+    String userID, {
+    int pageSize = 10,
+  }) async* {
+    final userDoc = await _firestore.getUserDoc(userID);
+
+    if (!userDoc.exists) {
+      yield [];
+      return;
+    }
+
+    final userData = userDoc.data()!;
+
+    final postIDs = List<String>.from(
+      (userData['posts'] as List).map((post) => post as String),
+    );
+
+    final buffer = <Post>[];
+    var currentIndex = 0;
+
+    while (currentIndex < postIDs.length) {
+      // Fetch the next page of post IDs
+      final postIDsPage = postIDs.skip(currentIndex).take(pageSize).toList();
+
+      // Update the current index for the next batch
+      currentIndex += pageSize;
+
+      final postDocs = await Future.wait(
+        postIDsPage.map(_firestore.getPostDoc),
+      );
+
+      // Add the fetched board IDs to the buffer
+      final posts = postDocs
+          .map((doc) {
+            if (doc.exists) {
+              return Post.fromFirestore(doc);
+            } else {
+              return null;
+            }
+          })
+          .whereType<Post>()
+          .toList();
+      buffer.addAll(posts);
+
+      // Emit the current buffer as a stream event
+      yield buffer;
+    }
+  }
 }
 
 extension Update on PostRepository {
   // update specific user field
-  Future<void> updateField(String postID, String field, String data) async {
+  Future<void> updateField(String postID, Map<String, dynamic> data) async {
     try {
-      await _firestore.updatePostDoc(postID, {field: data});
+      await _firestore.updatePostDoc(postID, data);
     } on FirebaseException {
       throw PostFailure.fromUpdatePost();
     }

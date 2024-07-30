@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:rando/app/generate_pages.dart';
+import 'package:rando/pages/posts/cubit/post_cubit.dart';
 import 'package:rando/theme/theme_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -43,6 +44,9 @@ class App extends StatelessWidget {
           BlocProvider<AppCubit>(
             create: (_) => AppCubit(userRepository: userRepository),
           ),
+          // BlocProvider<PostCubit>(
+          //   create: (context) => PostCubit(postRepository: postRepository),
+          // ),
         ],
         child: const AppView(),
       ),

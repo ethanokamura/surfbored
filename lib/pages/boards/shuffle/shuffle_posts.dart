@@ -2,9 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/boards/cubit/board_cubit.dart';
-import 'package:rando/pages/posts/posts.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:rando/pages/boards/shuffle/cubit/shuffle_posts_cubit.dart';
+import 'package:rando/pages/posts/shared/post_wrapper/post_wrapper.dart';
 
 class ShufflePostsPage extends StatelessWidget {
   const ShufflePostsPage({required this.boardID, super.key});
@@ -18,9 +17,8 @@ class ShufflePostsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BoardCubit(
+      create: (context) => ShufflePostsCubit(
         boardRepository: context.read<BoardRepository>(),
-        userRepository: context.read<UserRepository>(),
       )..shufflePostList(boardID),
       child: CustomPageView(
         top: false,
@@ -28,7 +26,7 @@ class ShufflePostsPage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           title: const Text('Shuffle Posts'),
         ),
-        body: BlocBuilder<BoardCubit, BoardState>(
+        body: BlocBuilder<ShufflePostsCubit, ShufflePostsState>(
           builder: (context, state) {
             if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -50,7 +48,7 @@ class ShufflePostsPage extends StatelessWidget {
 
 class ShowPosts extends StatelessWidget {
   const ShowPosts({required this.state, super.key});
-  final BoardState state;
+  final ShufflePostsState state;
   @override
   Widget build(BuildContext context) {
     final posts = state.posts;
@@ -58,10 +56,8 @@ class ShowPosts extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // PostWrapper(
-          //   postID: posts[state.index],
-          //   onRefresh: () => Navigator.pop(context),
-          // ),
+          // show activity
+          PostWrapper(postID: posts[state.index]),
           const VerticalSpacer(),
           Row(
             children: [
@@ -71,7 +67,7 @@ class ShowPosts extends StatelessWidget {
                   text: 'Last',
                   onTap: () {
                     if (state.canDecrement) {
-                      context.read<BoardCubit>().decrementIndex();
+                      context.read<ShufflePostsCubit>().decrementIndex();
                     }
                   },
                 ),
@@ -83,7 +79,7 @@ class ShowPosts extends StatelessWidget {
                   text: 'Next',
                   onTap: () {
                     if (state.canIncrement) {
-                      context.read<BoardCubit>().incrementIndex();
+                      context.read<ShufflePostsCubit>().incrementIndex();
                     }
                   },
                 ),

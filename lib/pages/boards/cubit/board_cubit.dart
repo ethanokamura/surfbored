@@ -117,8 +117,8 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  Future<void> editField(String boardID, String field, String data) async {
-    await _boardRepository.updateField(boardID, field, data);
+  Future<void> editField(String boardID, String field, dynamic data) async {
+    await _boardRepository.updateField(boardID, {field: data});
   }
 
   Future<void> toggleLike(

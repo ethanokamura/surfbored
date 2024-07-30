@@ -21,14 +21,15 @@ class BoardActivities extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final posts = state.posts;
-            return PostsGrid(
-              posts: posts,
-              onRefresh: () async {
-                context
-                    .read<BoardCubit>()
-                    .streamPosts(boardID); // Refresh the posts
-              },
-            );
+            return Text('testing ');
+            // return PostsGrid(
+            //   posts: posts,
+            //   onRefresh: () async {
+            //     context
+            //         .read<BoardCubit>()
+            //         .streamPosts(boardID); // Refresh the posts
+            //   },
+            // );
           } else if (state.isEmpty) {
             return const Center(child: Text('Board is empty.'));
           } else {

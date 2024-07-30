@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:post_repository/post_repository.dart';
 
 // State definitions
-part 'activity_state.dart';
+part 'post_state.dart';
 
 class PostCubit extends Cubit<PostState> {
   PostCubit({
@@ -50,6 +50,23 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  void streamUserPosts(String userID) {
+    emit(state.fromPostsLoading());
+    print('attempting to stream posts');
+    try {
+      _postRepository.streamUserPosts(userID).listen(
+        (posts) {
+          emit(state.fromPostsLoaded(posts));
+        },
+        onError: (dynamic error) {
+          emit(state.fromPostEmpty());
+        },
+      );
+    } on PostFailure catch (failure) {
+      emit(state.fromPostFailure(failure));
+    }
+  }
+
   void streamAllPosts() {
     emit(state.fromPostsLoading());
     try {
@@ -66,8 +83,10 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> editField(String postID, String field, String data) async {
-    await _postRepository.updateField(postID, field, data);
+  Future<void> editField(String postID, String field, dynamic data) async {
+    emit(state.fromPostLoading());
+    await _postRepository.updateField(postID, {field: data});
+    emit(state.fromPostEdited());
   }
 
   Future<void> toggleLike(
@@ -146,6 +165,8 @@ extension _PostStateExtensions on PostState {
   PostState fromPostCreated() => copyWith(status: PostStatus.created);
 
   PostState fromPostDeleted() => copyWith(status: PostStatus.deleted);
+
+  PostState fromPostEdited() => copyWith(status: PostStatus.edited);
 
   PostState fromPostLoaded(Post post) => copyWith(
         status: PostStatus.loaded,

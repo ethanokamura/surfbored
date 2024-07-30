@@ -41,7 +41,7 @@ class _EditPostPageState extends State<EditPostPage> {
           // load
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state.isLoaded || state.isEdited) {
+          } else if (state.isLoaded || state.isUpdated) {
             return EditView(
               post: state.post,
               postCubit: postCubit,
@@ -63,7 +63,7 @@ class EditView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<PostCubit, PostState>(
       listener: (context, state) {
-        if (state.isEdited) {
+        if (state.isUpdated) {
           // Show a success message or navigate back
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Post updated successfully')),

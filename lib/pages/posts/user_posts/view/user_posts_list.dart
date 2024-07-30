@@ -27,7 +27,7 @@ class PostList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return const Center(child: Text('Item list is empty.'));
-          } else if (state.isDeleted || state.isEdited || state.isCreated) {
+          } else if (state.isDeleted || state.isUpdated || state.isCreated) {
             context.read<PostCubit>().streamUserPosts(userID);
             return const Center(child: Text('Posts were changed. Reloading.'));
           } else if (state.isFailure) {

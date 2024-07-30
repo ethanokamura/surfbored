@@ -21,87 +21,87 @@ class PostCubit extends Cubit<PostState> {
   }
 
   Future<void> getPost(String postID) async {
-    emit(state.fromPostLoading());
+    emit(state.fromLoading());
     try {
       final post = await _postRepository.fetchPost(postID);
       if (post.isEmpty) {
-        emit(state.fromPostEmpty());
+        emit(state.fromEmpty());
         return;
       }
       emit(state.fromPostLoaded(post));
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   void streamPost(String postID) {
-    emit(state.fromPostLoading());
+    emit(state.fromLoading());
     try {
       _postRepository.streamPost(postID).listen(
         (snapshot) {
           emit(state.fromPostLoaded(snapshot));
         },
         onError: (dynamic error) {
-          emit(state.fromPostFailure(PostFailure.fromGetPost()));
+          emit(state.fromFailure(PostFailure.fromGetPost()));
         },
       );
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   void streamUserPosts(String userID) {
-    emit(state.fromPostsLoading());
+    emit(state.fromLoading());
     try {
       _postRepository.streamUserPosts(userID).listen(
         (posts) {
           emit(state.fromPostsLoaded(posts));
         },
         onError: (dynamic error) {
-          emit(state.fromPostEmpty());
+          emit(state.fromEmpty());
         },
       );
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   void streamBoardPosts(String boardID) {
-    emit(state.fromPostsLoading());
+    emit(state.fromLoading());
     try {
       _postRepository.streamBoardPosts(boardID).listen(
         (posts) {
           emit(state.fromPostsLoaded(posts));
         },
         onError: (dynamic error) {
-          emit(state.fromPostEmpty());
+          emit(state.fromEmpty());
         },
       );
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   void streamAllPosts() {
-    emit(state.fromPostsLoading());
+    emit(state.fromLoading());
     try {
       _postRepository.streamPosts().listen(
         (posts) {
           emit(state.fromPostsLoaded(posts));
         },
         onError: (dynamic error) {
-          emit(state.fromPostEmpty());
+          emit(state.fromEmpty());
         },
       );
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
   Future<void> editField(String postID, String field, dynamic data) async {
-    emit(state.fromPostLoading());
+    emit(state.fromLoading());
     await _postRepository.updateField(postID, {field: data});
-    emit(state.fromPostEdited());
+    emit(state.fromUpdate());
   }
 
   Future<void> toggleLike(
@@ -109,7 +109,7 @@ class PostCubit extends Cubit<PostState> {
     String postID, {
     required bool liked,
   }) async {
-    emit(state.fromPostLoading());
+    emit(state.fromLoading());
     try {
       await _postRepository.updateLikes(
         userID: userID,
@@ -118,7 +118,7 @@ class PostCubit extends Cubit<PostState> {
       );
       emit(state.fromPostToggle(liked: liked));
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
@@ -129,7 +129,7 @@ class PostCubit extends Cubit<PostState> {
     required List<String> tags,
     required File? imageFile,
   }) async {
-    emit(state.fromPostCreating());
+    emit(state.fromLoading());
     try {
       final docID = await _postRepository.createPost(
         Post(
@@ -143,9 +143,9 @@ class PostCubit extends Cubit<PostState> {
       if (imageFile != null) {
         await FirebaseFirestore.instance.uploadImage('posts', docID, imageFile);
       }
-      emit(state.fromPostCreated());
+      emit(state.fromCreated());
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 
@@ -154,34 +154,26 @@ class PostCubit extends Cubit<PostState> {
     String postID,
     String photoURL,
   ) async {
-    emit(state.fromPostLoading());
+    emit(state.fromLoading());
     try {
       await _postRepository.deletePost(userID, postID, photoURL);
-
-      emit(state.fromPostInitial());
-      emit(state.fromPostDeleted());
+      emit(state.fromDeleted());
     } on PostFailure catch (failure) {
-      emit(state.fromPostFailure(failure));
+      emit(state.fromFailure(failure));
     }
   }
 }
 
 extension _PostStateExtensions on PostState {
-  PostState fromPostInitial() => copyWith(status: PostStatus.initial);
+  PostState fromLoading() => copyWith(status: PostStatus.loading);
 
-  PostState fromPostLoading() => copyWith(status: PostStatus.loading);
+  PostState fromEmpty() => copyWith(status: PostStatus.empty);
 
-  PostState fromPostsLoading() => copyWith(status: PostStatus.loading);
+  PostState fromCreated() => copyWith(status: PostStatus.created);
 
-  PostState fromPostEmpty() => copyWith(status: PostStatus.empty);
+  PostState fromDeleted() => copyWith(status: PostStatus.deleted);
 
-  PostState fromPostCreating() => copyWith(status: PostStatus.creating);
-
-  PostState fromPostCreated() => copyWith(status: PostStatus.created);
-
-  PostState fromPostDeleted() => copyWith(status: PostStatus.deleted);
-
-  PostState fromPostEdited() => copyWith(status: PostStatus.edited);
+  PostState fromUpdate() => copyWith(status: PostStatus.updated);
 
   PostState fromPostLoaded(Post post) => copyWith(
         status: PostStatus.loaded,
@@ -198,7 +190,7 @@ extension _PostStateExtensions on PostState {
         liked: liked,
       );
 
-  PostState fromPostFailure(PostFailure failure) => copyWith(
+  PostState fromFailure(PostFailure failure) => copyWith(
         status: PostStatus.failure,
         failure: failure,
       );

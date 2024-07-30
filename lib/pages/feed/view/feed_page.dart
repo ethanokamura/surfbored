@@ -1,6 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/posts/post_feed/post_feed.dart';
+import 'package:rando/pages/posts/posts.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({super.key});

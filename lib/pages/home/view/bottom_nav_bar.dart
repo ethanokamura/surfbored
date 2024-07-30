@@ -1,8 +1,8 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/pages/boards/create_board/create_board.dart';
-import 'package:rando/pages/posts/create_post/create_post.dart';
+import 'package:rando/pages/boards/boards.dart';
+import 'package:rando/pages/posts/posts.dart';
 
 enum NavBarItem { home, search, create, inbox, profile }
 

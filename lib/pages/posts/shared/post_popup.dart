@@ -9,7 +9,7 @@ import 'package:rando/pages/posts/shared/post/view/more_options.dart';
 import 'package:rando/pages/profile/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
-Future<dynamic> showPostModal(
+Future<dynamic> postPopUp(
   BuildContext context,
   Post post,
 ) async {

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:rando/pages/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 
-class TopBar extends StatelessWidget {
-  const TopBar({required this.user, super.key});
+class ProfileTopBar extends StatelessWidget {
+  const ProfileTopBar({required this.user, super.key});
   final User user;
   @override
   Widget build(BuildContext context) {

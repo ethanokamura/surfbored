@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/pages/posts/posts.dart';
 
-class BoardActivities extends StatelessWidget {
-  const BoardActivities({required this.boardID, super.key});
+class BoardPosts extends StatelessWidget {
+  const BoardPosts({required this.boardID, super.key});
   final String boardID;
   @override
   Widget build(BuildContext context) {

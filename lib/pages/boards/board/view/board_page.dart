@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
 import 'package:rando/pages/boards/edit_board/edit_board.dart';
-import 'package:rando/pages/boards/shared/board_posts/board_posts.dart';
+import 'package:rando/pages/boards/shared/shared.dart';
 import 'package:rando/pages/boards/shuffle/shuffle_posts.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -82,7 +82,7 @@ class BoardPageView extends StatelessWidget {
           ),
           const VerticalSpacer(),
           Flexible(
-            child: BoardActivities(boardID: board.id),
+            child: BoardPosts(boardID: board.id),
           ),
         ],
       ),

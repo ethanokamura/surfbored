@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/pages/posts/bottom_sheet.dart';
+import 'package:rando/pages/posts/shared/post_popup.dart';
 
 class PostCard extends StatelessWidget {
   const PostCard({required this.post, super.key});
@@ -10,7 +10,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => showPostModal(
+      onTap: () => postPopUp(
         context,
         post,
       ),

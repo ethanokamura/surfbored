@@ -1,8 +1,8 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/boards/shared/user_boards/view/boards_list.dart';
-import 'package:rando/pages/posts/user_posts/view/user_posts_list.dart';
+import 'package:rando/pages/boards/boards.dart';
+import 'package:rando/pages/posts/posts.dart';
 import 'package:rando/pages/profile/cubit/profile_cubit.dart';
 import 'package:rando/pages/profile/profile/view/helpers.dart';
 import 'package:user_repository/user_repository.dart';
@@ -73,7 +73,7 @@ class ProfileBuilder extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          TopBar(user: user),
+                          ProfileTopBar(user: user),
                           const VerticalSpacer(),
                           ProfileHeader(user: user, isCurrent: isCurrent),
                           const VerticalSpacer(),

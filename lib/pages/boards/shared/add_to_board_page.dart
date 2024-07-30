@@ -3,7 +3,7 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
-import 'package:rando/pages/boards/shared/select_board/select_board.dart';
+import 'package:rando/pages/boards/shared/shared.dart';
 
 class AddToBoardPage extends StatelessWidget {
   const AddToBoardPage({

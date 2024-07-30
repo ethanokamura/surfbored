@@ -12,14 +12,33 @@ class Board extends Equatable {
     this.photoURL,
     this.description = '',
     this.saves = 0,
-    this.savedBy = const [],
     this.posts = const [],
+    this.tags = const [],
     this.createdAt,
   });
 
   // factory constructor
   // this tells the json serializable what to do
   factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);
+
+  // allows for an easy way to stream data
+  factory Board.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Board(
+      id: doc.id,
+      uid: data['uid'] as String? ?? '',
+      title: data['title'] as String? ?? '',
+      description: data['description'] as String? ?? '',
+      photoURL: data['photoURL'] as String? ?? '',
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      saves: data['saves'] as int? ?? 0,
+      posts: (data['posts'] as List<dynamic>)
+          .map((post) => post as String)
+          .toList(),
+      tags:
+          (data['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
+    );
+  }
 
   // data fields
   final String id;
@@ -28,8 +47,8 @@ class Board extends Equatable {
   final String title;
   final String description;
   final int saves;
-  final List<String> savedBy;
   final List<String> posts;
+  final List<String> tags;
   @timestamp
   final DateTime? createdAt;
 
@@ -46,8 +65,8 @@ class Board extends Equatable {
         uid,
         description,
         saves,
-        savedBy,
         posts,
+        tags,
         createdAt,
       ];
 

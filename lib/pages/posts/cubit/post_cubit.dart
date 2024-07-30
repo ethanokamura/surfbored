@@ -52,9 +52,24 @@ class PostCubit extends Cubit<PostState> {
 
   void streamUserPosts(String userID) {
     emit(state.fromPostsLoading());
-    print('attempting to stream posts');
     try {
       _postRepository.streamUserPosts(userID).listen(
+        (posts) {
+          emit(state.fromPostsLoaded(posts));
+        },
+        onError: (dynamic error) {
+          emit(state.fromPostEmpty());
+        },
+      );
+    } on PostFailure catch (failure) {
+      emit(state.fromPostFailure(failure));
+    }
+  }
+
+  void streamBoardPosts(String boardID) {
+    emit(state.fromPostsLoading());
+    try {
+      _postRepository.streamBoardPosts(boardID).listen(
         (posts) {
           emit(state.fromPostsLoaded(posts));
         },

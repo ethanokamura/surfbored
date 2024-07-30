@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/cubit/board_cubit.dart';
 import 'package:rando/pages/boards/shared/select_board/select_board.dart';
-import 'package:user_repository/user_repository.dart';
 
 class AddToBoardPage extends StatelessWidget {
   const AddToBoardPage({
@@ -40,23 +39,22 @@ class AddToBoardPage extends StatelessWidget {
           child: BlocProvider(
             create: (context) => BoardCubit(
               boardRepository: context.read<BoardRepository>(),
-              userRepository: context.read<UserRepository>(),
             )..streamUserBoards(userID),
             child: BlocBuilder<BoardCubit, BoardState>(
               builder: (context, state) {
                 if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state.isLoaded) {
-                  final boards = state.posts;
+                  final boards = state.boards;
                   return ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 10),
                     itemCount: boards.length,
                     itemBuilder: (context, index) {
-                      final boardID = boards[index];
+                      final board = boards[index];
                       return SelectBoardCard(
                         postID: postID,
-                        boardID: boardID,
+                        board: board,
                       );
                     },
                   );

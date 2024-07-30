@@ -13,12 +13,11 @@ Board _$BoardFromJson(Map<String, dynamic> json) => Board(
       photoURL: json['photoURL'] as String?,
       description: json['description'] as String? ?? '',
       saves: (json['saves'] as num?)?.toInt() ?? 0,
-      savedBy: (json['savedBy'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
       posts:
           (json['posts'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
       createdAt: timestamp.fromJson(json['createdAt']),
     );
@@ -39,8 +38,8 @@ Map<String, dynamic> _$BoardToJson(Board instance) {
   val['title'] = instance.title;
   val['description'] = instance.description;
   val['saves'] = instance.saves;
-  val['savedBy'] = instance.savedBy;
   val['posts'] = instance.posts;
+  val['tags'] = instance.tags;
   writeNotNull('createdAt', timestamp.toJson(instance.createdAt));
   return val;
 }

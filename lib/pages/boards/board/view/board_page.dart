@@ -9,39 +9,19 @@ import 'package:rando/pages/boards/shuffle/shuffle_posts.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {
-  const BoardPage({required this.boardID, super.key});
-  final String boardID;
-  static MaterialPage<void> page({required String boardID}) {
+  const BoardPage({required this.board, super.key});
+  final Board board;
+  static MaterialPage<void> page({required Board board}) {
     return MaterialPage<void>(
-      child: BoardPage(boardID: boardID),
+      child: BoardPageView(board: board),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BoardCubit(
-        boardRepository: context.read<BoardRepository>(),
-        userRepository: context.read<UserRepository>(),
-      )..streamBoard(boardID),
-      child: CustomPageView(
-        top: false,
-        body: BlocBuilder<BoardCubit, BoardState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.isLoaded) {
-              final board = state.board;
-              final user = context.read<UserRepository>().fetchCurrentUser();
-              return BoardPageView(board: board, user: user);
-            } else if (state.isEmpty) {
-              return const Center(child: Text('This board is empty.'));
-            } else {
-              return const Center(child: Text('Something went wrong'));
-            }
-          },
-        ),
-      ),
+    return CustomPageView(
+      top: false,
+      body: BoardPageView(board: board),
     );
   }
 }
@@ -49,68 +29,62 @@ class BoardPage extends StatelessWidget {
 class BoardPageView extends StatelessWidget {
   const BoardPageView({
     required this.board,
-    required this.user,
     super.key,
   });
   final Board board;
-  final User user;
   @override
   Widget build(BuildContext context) {
+    context.read<BoardCubit>().fetchBoardPosts(board.id);
+    final user = context.read<UserRepository>().fetchCurrentUser();
     final isOwner = context.read<BoardCubit>().isOwner(
           board.uid,
           user.uid,
         );
-    return BlocProvider(
-      create: (context) => BoardCubit(
-        userRepository: context.read<UserRepository>(),
-        boardRepository: context.read<BoardRepository>(),
-      )..fetchBoardPosts(board.id),
-      child: NestedScrollView(
-        headerSliverBuilder: (context, _) {
-          return [
-            SliverList(
-              delegate: SliverChildListDelegate(
-                <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TopBar(title: board.title),
-                      const VerticalSpacer(),
-                      ImageWidget(
-                        borderRadius: defaultBorderRadius,
-                        photoURL: board.photoURL,
-                        height: 256,
-                        width: double.infinity,
-                      ),
-                      const VerticalSpacer(),
-                      BoardDetails(
-                        title: board.title,
-                        description: board.description,
-                        username: user.username,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return NestedScrollView(
+      headerSliverBuilder: (context, _) {
+        return [
+          SliverList(
+            delegate: SliverChildListDelegate(
+              <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TopBar(title: board.title),
+                    const VerticalSpacer(),
+                    ImageWidget(
+                      borderRadius: defaultBorderRadius,
+                      photoURL: board.photoURL,
+                      height: 256,
+                      width: double.infinity,
+                    ),
+                    const VerticalSpacer(),
+                    BoardDetails(
+                      title: board.title,
+                      description: board.description,
+                      username: user.username,
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ];
-        },
-        body: Column(
-          children: [
-            const VerticalSpacer(),
-            BoardButtons(
-              isOwner: isOwner,
-              user: user,
-              board: board,
-            ),
-            const VerticalSpacer(),
-            Flexible(
-              child: BoardActivities(boardID: board.id),
-            ),
-          ],
-        ),
+          ),
+        ];
+      },
+      body: Column(
+        children: [
+          const VerticalSpacer(),
+          BoardButtons(
+            isOwner: isOwner,
+            user: user,
+            board: board,
+          ),
+          const VerticalSpacer(),
+          Flexible(
+            child: BoardActivities(boardID: board.id),
+          ),
+        ],
       ),
     );
   }
@@ -211,6 +185,7 @@ class BoardButtons extends StatelessWidget {
   final User user;
   @override
   Widget build(BuildContext context) {
+    final boardCubit = context.read<BoardCubit>();
     return Row(
       children: [
         if (isOwner)
@@ -220,7 +195,12 @@ class BoardButtons extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute<dynamic>(
-                  builder: (context) => EditBoardPage(boardID: board.id),
+                  builder: (context) {
+                    return BlocProvider.value(
+                      value: boardCubit,
+                      child: EditBoardPage(boardID: board.id),
+                    );
+                  },
                 ),
               ),
               text: 'Edit Board',

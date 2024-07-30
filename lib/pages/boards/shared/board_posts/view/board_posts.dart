@@ -1,9 +1,7 @@
-import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/pages/boards/cubit/board_cubit.dart';
+import 'package:post_repository/post_repository.dart';
 import 'package:rando/pages/posts/posts.dart';
-import 'package:user_repository/user_repository.dart';
 
 class BoardActivities extends StatelessWidget {
   const BoardActivities({required this.boardID, super.key});
@@ -11,25 +9,23 @@ class BoardActivities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BoardCubit(
-        boardRepository: context.read<BoardRepository>(),
-        userRepository: context.read<UserRepository>(),
-      )..streamPosts(boardID),
-      child: BlocBuilder<BoardCubit, BoardState>(
+      create: (context) => PostCubit(
+        postRepository: context.read<PostRepository>(),
+      )..streamBoardPosts(boardID),
+      child: BlocBuilder<PostCubit, PostState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
             final posts = state.posts;
-            return Text('testing ');
-            // return PostsGrid(
-            //   posts: posts,
-            //   onRefresh: () async {
-            //     context
-            //         .read<BoardCubit>()
-            //         .streamPosts(boardID); // Refresh the posts
-            //   },
-            // );
+            return PostsGrid(
+              posts: posts,
+              onRefresh: () async {
+                context
+                    .read<PostCubit>()
+                    .streamBoardPosts(boardID); // Refresh the posts
+              },
+            );
           } else if (state.isEmpty) {
             return const Center(child: Text('Board is empty.'));
           } else {

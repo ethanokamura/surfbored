@@ -115,6 +115,55 @@ extension StreamData on BoardRepository {
       throw BoardFailure.fromGetBoard();
     }
   }
+
+  Stream<List<Board>> streamUserBoards(
+    String userID, {
+    int pageSize = 10,
+  }) async* {
+    final userDoc = await _firestore.getUserDoc(userID);
+
+    if (!userDoc.exists) {
+      yield [];
+      return;
+    }
+
+    final userData = userDoc.data()!;
+
+    final boardIDs = List<String>.from(
+      (userData['boards'] as List).map((post) => post as String),
+    );
+
+    final buffer = <Board>[];
+    var currentIndex = 0;
+
+    while (currentIndex < boardIDs.length) {
+      // Fetch the next page of post IDs
+      final boardIDsPage = boardIDs.skip(currentIndex).take(pageSize).toList();
+
+      // Update the current index for the next batch
+      currentIndex += pageSize;
+
+      final boardDocs = await Future.wait(
+        boardIDsPage.map(_firestore.getBoardDoc),
+      );
+
+      // Add the fetched board IDs to the buffer
+      final boards = boardDocs
+          .map((doc) {
+            if (doc.exists) {
+              return Board.fromFirestore(doc);
+            } else {
+              return null;
+            }
+          })
+          .whereType<Board>()
+          .toList();
+      buffer.addAll(boards);
+
+      // Emit the current buffer as a stream event
+      yield buffer;
+    }
+  }
 }
 
 extension Update on BoardRepository {

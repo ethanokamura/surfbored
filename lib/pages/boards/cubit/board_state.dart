@@ -8,6 +8,7 @@ enum BoardStatus {
   deleted,
   created,
   creating,
+  updated,
   failure,
 }
 
@@ -15,6 +16,7 @@ final class BoardState extends Equatable {
   const BoardState._({
     this.status = BoardStatus.initial,
     this.board = Board.empty,
+    this.boards = const [],
     this.posts = const [],
     this.failure = BoardFailure.empty,
     this.selected = false,
@@ -25,6 +27,7 @@ final class BoardState extends Equatable {
 
   final BoardStatus status;
   final Board board;
+  final List<Board> boards;
   final List<String> posts;
   final BoardFailure failure;
   final bool selected;
@@ -34,6 +37,7 @@ final class BoardState extends Equatable {
   List<Object?> get props => [
         status,
         board,
+        boards,
         posts,
         failure,
         selected,
@@ -43,6 +47,7 @@ final class BoardState extends Equatable {
   BoardState copyWith({
     BoardStatus? status,
     Board? board,
+    List<Board>? boards,
     List<String>? posts,
     BoardFailure? failure,
     bool? selected,
@@ -51,6 +56,7 @@ final class BoardState extends Equatable {
     return BoardState._(
       status: status ?? this.status,
       board: board ?? this.board,
+      boards: boards ?? this.boards,
       posts: posts ?? this.posts,
       failure: failure ?? this.failure,
       selected: selected ?? this.selected,
@@ -67,6 +73,7 @@ extension BoardStateExtensions on BoardState {
   bool get isCreated => status == BoardStatus.created;
   bool get isCreating => status == BoardStatus.creating;
   bool get isDeleted => status == BoardStatus.deleted;
+  bool get isUpdated => status == BoardStatus.updated;
   bool get canIncrement => index < posts.length - 1;
   bool get canDecrement => index > 0;
 }

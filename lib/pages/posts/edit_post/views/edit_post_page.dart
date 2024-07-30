@@ -10,6 +10,11 @@ class EditPostPage extends StatefulWidget {
     super.key,
   });
   final String postID;
+  static MaterialPage<void> page({required String postID}) {
+    return MaterialPage<void>(
+      child: EditPostPage(postID: postID),
+    );
+  }
 
   @override
   State<EditPostPage> createState() => _EditPostPageState();
@@ -19,15 +24,11 @@ class _EditPostPageState extends State<EditPostPage> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<PostCubit>()
-        .streamPost(widget.postID); // Call to load the post
+    context.read<PostCubit>().streamPost(widget.postID);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.postID);
-
     final postCubit = context.read<PostCubit>();
     return CustomPageView(
       top: true,

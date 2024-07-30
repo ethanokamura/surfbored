@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:api_client/api_client.dart';
 import 'package:bloc/bloc.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:user_repository/user_repository.dart';
 
 // State definitions
 part 'board_state.dart';
@@ -12,13 +10,10 @@ part 'board_state.dart';
 class BoardCubit extends Cubit<BoardState> {
   BoardCubit({
     required BoardRepository boardRepository,
-    required UserRepository userRepository,
   })  : _boardRepository = boardRepository,
-        _userRepository = userRepository,
         super(const BoardState.initial());
 
   final BoardRepository _boardRepository;
-  final UserRepository _userRepository;
 
   int index = 0;
 
@@ -89,9 +84,9 @@ class BoardCubit extends Cubit<BoardState> {
   void streamUserBoards(String userID) {
     emit(state.fromBoardLoading());
     try {
-      _userRepository.streamBoards(userID).listen(
+      _boardRepository.streamUserBoards(userID).listen(
         (snapshot) {
-          emit(state.fromListLoaded(snapshot));
+          emit(state.fromBoardsLoaded(snapshot));
         },
         onError: (dynamic error) {
           emit(state.fromBoardEmpty());
@@ -118,7 +113,9 @@ class BoardCubit extends Cubit<BoardState> {
   }
 
   Future<void> editField(String boardID, String field, dynamic data) async {
+    emit(state.fromBoardLoading());
     await _boardRepository.updateField(boardID, {field: data});
+    emit(state.fromBoardUpdated());
   }
 
   Future<void> toggleLike(
@@ -133,7 +130,6 @@ class BoardCubit extends Cubit<BoardState> {
         boardID: boardID,
         isLiked: isSelected,
       );
-      // await getBoard(boardID);
       emit(state.fromBoardToggle(selected: isSelected));
     } on BoardFailure catch (failure) {
       emit(state.fromBoardFailure(failure));
@@ -158,16 +154,6 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  void skipPost() {
-    if (state.isLoaded) {
-      final posts = state.posts;
-      if (index + 1 < posts.length) {
-        index++;
-        emit(state.fromListLoaded(posts));
-      }
-    }
-  }
-
   void incrementIndex() {
     final newIndex = state.index + 1;
     emit(state.copyWith(index: newIndex));
@@ -184,7 +170,7 @@ class BoardCubit extends Cubit<BoardState> {
     required String description,
     required File? imageFile,
   }) async {
-    emit(state.fromBoardCreating());
+    emit(state.fromBoardLoading());
     try {
       final docID = await _boardRepository.createBoard(
         Board(
@@ -210,6 +196,7 @@ class BoardCubit extends Cubit<BoardState> {
     String boardID,
     String photoURL,
   ) async {
+    emit(state.fromBoardLoading());
     try {
       await _boardRepository.deleteBoard(userID, boardID, photoURL);
       emit(state.fromBoardDeleted());
@@ -226,9 +213,9 @@ extension _BoardStateExtensions on BoardState {
 
   BoardState fromBoardDeleted() => copyWith(status: BoardStatus.deleted);
 
-  BoardState fromBoardCreating() => copyWith(status: BoardStatus.creating);
-
   BoardState fromBoardCreated() => copyWith(status: BoardStatus.created);
+
+  BoardState fromBoardUpdated() => copyWith(status: BoardStatus.updated);
 
   BoardState fromBoardLoaded(Board board) => copyWith(
         status: BoardStatus.loaded,
@@ -239,6 +226,11 @@ extension _BoardStateExtensions on BoardState {
         status: BoardStatus.loaded,
         posts: posts,
         index: 0,
+      );
+
+  BoardState fromBoardsLoaded(List<Board> boards) => copyWith(
+        status: BoardStatus.loaded,
+        boards: boards,
       );
 
   BoardState fromBoardToggle({required bool selected}) => copyWith(

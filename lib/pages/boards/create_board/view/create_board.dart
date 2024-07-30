@@ -22,7 +22,6 @@ class CreateBoardPage extends StatelessWidget {
       top: true,
       body: BlocProvider(
         create: (context) => BoardCubit(
-          userRepository: context.read<UserRepository>(),
           boardRepository: context.read<BoardRepository>(),
         ),
         child: const CreateBoard(),

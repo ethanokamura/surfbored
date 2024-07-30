@@ -100,7 +100,6 @@ class MoreOptions extends StatelessWidget {
         switch (value) {
           // add to or remove from board
           case Options.manage:
-            Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute<dynamic>(

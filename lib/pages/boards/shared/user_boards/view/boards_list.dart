@@ -1,9 +1,8 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/pages/boards/boards.dart';
-import 'package:rando/pages/profile/profile/cubit/user_cubit.dart';
-import 'package:user_repository/user_repository.dart';
 
 class BoardsList extends StatelessWidget {
   const BoardsList({required this.userID, super.key});
@@ -11,25 +10,29 @@ class BoardsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UserCubit(
-        userRepository: context.read<UserRepository>(),
-      )..streamBoards(userID),
-      child: BlocBuilder<UserCubit, UserState>(
+      create: (context) => BoardCubit(
+        boardRepository: context.read<BoardRepository>(),
+      )..streamUserBoards(userID),
+      child: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
-            final boards = state.posts;
+            final boards = state.boards;
             return BoardListView(
               boards: boards,
               onRefresh: () async =>
-                  context.read<UserCubit>().streamBoards(userID),
+                  context.read<BoardCubit>().streamUserBoards(userID),
             );
           } else if (state.isEmpty) {
-            return const Center(child: Text('This board is empty.'));
-          } else {
+            return const Center(child: Text('No boards.'));
+          } else if (state.isDeleted || state.isUpdated || state.isCreated) {
+            context.read<BoardCubit>().streamUserBoards(userID);
+            return const Center(child: Text('Posts were changed. Reloading.'));
+          } else if (state.isFailure) {
             return const Center(child: Text('Something went wrong'));
           }
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -42,7 +45,7 @@ class BoardListView extends StatelessWidget {
     required this.boards,
     super.key,
   });
-  final List<String> boards;
+  final List<Board> boards;
   final Future<void> Function() onRefresh;
   @override
   Widget build(BuildContext context) {
@@ -54,8 +57,8 @@ class BoardListView extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: boards.length,
         itemBuilder: (context, index) {
-          final boardID = boards[index];
-          return BoardCard(boardID: boardID);
+          final board = boards[index];
+          return BoardCard(board: board);
         },
       ),
     );

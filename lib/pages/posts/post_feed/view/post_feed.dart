@@ -16,13 +16,9 @@ class PostFeed extends StatelessWidget {
       )..streamAllPosts(),
       child: BlocBuilder<PostCubit, PostState>(
         builder: (context, state) {
-          if (state.status == PostStatus.loading) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state.status == PostStatus.empty) {
-            return const Center(child: Text('No posts found.'));
-          } else if (state.status == PostStatus.failure) {
-            return const Center(child: Text('Something went wrong.'));
-          } else if (state.status == PostStatus.loaded) {
+          } else if (state.isLoaded) {
             final posts = state.posts;
             return RefreshIndicator(
               onRefresh: () async => context.read<PostCubit>().streamAllPosts(),
@@ -40,9 +36,15 @@ class PostFeed extends StatelessWidget {
                 },
               ),
             );
-          } else {
+          } else if (state.isEmpty) {
+            return const Center(child: Text('Item list is empty.'));
+          } else if (state.isDeleted || state.isEdited || state.isCreated) {
+            context.read<PostCubit>().streamAllPosts();
+            return const Center(child: Text('Posts were changed. Reloading.'));
+          } else if (state.isFailure) {
             return const Center(child: Text('Something went wrong'));
           }
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

@@ -20,7 +20,10 @@ class BoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: false,
+      top: true,
+      appBar: AppBar(
+        title: Text(board.title),
+      ),
       body: BoardPageView(board: board),
     );
   }
@@ -48,16 +51,14 @@ class BoardPageView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TopBar(title: board.title),
-                    const VerticalSpacer(),
                     ImageWidget(
                       borderRadius: defaultBorderRadius,
                       photoURL: board.photoURL,
-                      // height: 256,
                       width: double.infinity,
                     ),
                     const VerticalSpacer(),
                     BoardDetails(
+                      boardID: board.id,
                       title: board.title,
                       description: board.description,
                       username: user.username,
@@ -93,36 +94,22 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ActionButton(
-          horizontal: 0,
-          vertical: 0,
+        ActionIconButton(
           inverted: false,
           onTap: () => Navigator.pop(context),
           icon: Icons.arrow_back_ios_new_rounded,
         ),
-        const SizedBox(width: 5),
-        Expanded(
-          child: AutoSizeText(
-            '$title:',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textDirection: TextDirection.ltr,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-            ),
+        AutoSizeText(
+          '$title:',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textDirection: TextDirection.ltr,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
           ),
-        ),
-        const SizedBox(width: 5),
-        ActionButton(
-          horizontal: 0,
-          vertical: 0,
-          inverted: false,
-          onTap: () {}, // settings
-          icon: Icons.more_horiz,
         ),
       ],
     );
@@ -134,24 +121,49 @@ class BoardDetails extends StatelessWidget {
     required this.title,
     required this.description,
     required this.username,
+    required this.boardID,
     super.key,
   });
+  final String boardID;
   final String title;
   final String description;
   final String username;
 
   @override
   Widget build(BuildContext context) {
+    final boardCubit = context.read<BoardCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Theme.of(context).textColor,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: Theme.of(context).textColor,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ActionIconButton(
+              // horizontal: 0,
+              // vertical: 0,
+              inverted: false,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (context) {
+                    return BlocProvider.value(
+                      value: boardCubit,
+                      child: EditBoardPage(boardID: boardID),
+                    );
+                  },
+                ),
+              ),
+              icon: Icons.more_horiz,
+            ),
+          ],
         ),
         Text(
           description,
@@ -182,35 +194,15 @@ class BoardButtons extends StatelessWidget {
   final User user;
   @override
   Widget build(BuildContext context) {
-    final boardCubit = context.read<BoardCubit>();
     return Row(
       children: [
-        if (isOwner)
-          Expanded(
-            child: ActionButton(
-              inverted: false,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: boardCubit,
-                      child: EditBoardPage(boardID: board.id),
-                    );
-                  },
-                ),
-              ),
-              text: 'Edit Board',
-            ),
-          )
-        else
-          Expanded(
-            child: ActionButton(
-              inverted: false,
-              onTap: () {},
-              text: 'Save Board',
-            ),
+        Expanded(
+          child: ActionButton(
+            inverted: false,
+            onTap: () {},
+            text: 'Save',
           ),
+        ),
         const HorizontalSpacer(),
         Expanded(
           child: ActionButton(

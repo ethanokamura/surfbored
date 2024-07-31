@@ -118,8 +118,8 @@ This app uses cubits to handle state along side the work done in the backend.
 
 `UI <--> Cubit <--> Repository`
 
-UI - the end point for the user
+UI -> the end point for the user
 
-Cubit - emits and handles state changes
+Cubit -> emits and handles state changes
 
-Repositories - handle requests and responses to the API's
+Repositories -> handle requests and responses to the API's

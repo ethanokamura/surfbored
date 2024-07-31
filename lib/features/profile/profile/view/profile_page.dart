@@ -93,7 +93,7 @@ class ProfileBuilder extends StatelessWidget {
                   children: [
                     const ProfileTabBar(),
                     const VerticalSpacer(),
-                    Expanded(
+                    Flexible(
                       child: TabBarView(
                         children: [
                           UserPostsList(userID: user.uid),

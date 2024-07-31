@@ -1,14 +1,14 @@
-# 🌊 SurfBoard 🌊
+# SurfBoard 🌊
 
 Surfing the web is for boomers. Surf some boards and find cool shit to do.
 
-## 🤔 Why? 🤔
+## Why? 🤔
 
 Need something to do today? Create boards with your favorite activities! Or better yet, find someone else's board to find something new.
 Have trouble choosing? SurfBoard will pick activities at random so you dont have to!
 Connect with friends and make collaborative boards!
 
-## 🔎 How it works 🔍
+## How it works: 🔍
 
 Create and share activities by creating a post!
 Create and share collections of your favorite activites via boards.
@@ -16,7 +16,7 @@ Find an activity you like? Add it to the board of your choosing.
 Find a board you like? Like it and add it to you library of boards.
 
 
-# 📲 Running the Project: 💻
+# Running the Project: 📲
 
 clone the repo and run the following scripts
 
@@ -42,7 +42,7 @@ find . -name "models.dart" | while read -r file; do
 done
 ```
 
-# 📁 Project Structure: 📁
+# Project Structure: 📁
 
 lib/app/ for the main app logic
 lib/features/ for the implemented features of the app
@@ -112,7 +112,7 @@ packages/
       |-- packages/board_repositroy/ to handle board data and its interaction with firestore funcitons
 ```
 
-# 💾 Handling Data and State: 💾
+# Handling Data and State: 💾
 
 This app uses cubits to handle state along side the work done in the backend.
 

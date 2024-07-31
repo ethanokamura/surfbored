@@ -16,6 +16,10 @@ class PostCubit extends Cubit<PostState> {
 
   final PostRepository _postRepository;
 
+  int _currentPage = 0;
+  final int _pageSize = 10;
+  bool _hasMore = true;
+
   void streamPost(String postID) {
     emit(state.fromLoading());
     try {
@@ -32,14 +36,40 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  bool hasMore() {
+    return _hasMore;
+  }
+
   void streamUserPosts(String userID) {
-    emit(state.fromLoading());
+    _currentPage = 0;
+    _hasMore = true;
+    _loadMoreUserPosts(userID, reset: true);
+  }
+
+  void loadMoreUserPosts(String userID) {
+    if (_hasMore) {
+      _currentPage++;
+      _loadMoreUserPosts(userID);
+    }
+  }
+
+  void _loadMoreUserPosts(String userID, {bool reset = false}) {
     try {
-      _postRepository.streamUserPosts(userID).listen(
+      emit(state.fromLoading());
+      _postRepository
+          .streamUserPosts(userID, pageSize: _pageSize, page: _currentPage)
+          .listen(
         (posts) {
-          emit(state.fromPostsLoaded(posts));
+          if (posts.length < _pageSize) {
+            _hasMore = false;
+          }
+          if (reset) {
+            emit(state.fromPostsLoaded(posts));
+          } else {
+            emit(state.fromPostsLoaded(List.of(state.posts)..addAll(posts)));
+          }
         },
-        onError: (dynamic error) {
+        onError: (error) {
           emit(state.fromEmpty());
         },
       );
@@ -49,13 +79,35 @@ class PostCubit extends Cubit<PostState> {
   }
 
   void streamBoardPosts(String boardID) {
-    emit(state.fromLoading());
+    _currentPage = 0;
+    _hasMore = true;
+    _loadMoreBoardPosts(boardID, reset: true);
+  }
+
+  void loadMoreBoardPosts(String boardID) {
+    if (_hasMore) {
+      _currentPage++;
+      _loadMoreBoardPosts(boardID);
+    }
+  }
+
+  void _loadMoreBoardPosts(String boardID, {bool reset = false}) {
     try {
-      _postRepository.streamBoardPosts(boardID).listen(
+      emit(state.fromLoading());
+      _postRepository
+          .streamBoardPosts(boardID, pageSize: _pageSize, page: _currentPage)
+          .listen(
         (posts) {
-          emit(state.fromPostsLoaded(posts));
+          if (posts.length < _pageSize) {
+            _hasMore = false;
+          }
+          if (reset) {
+            emit(state.fromPostsLoaded(posts));
+          } else {
+            emit(state.fromPostsLoaded(List.of(state.posts)..addAll(posts)));
+          }
         },
-        onError: (dynamic error) {
+        onError: (error) {
           emit(state.fromEmpty());
         },
       );

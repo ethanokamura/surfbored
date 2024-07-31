@@ -1,6 +1,5 @@
 part of 'selection_cubit.dart';
 
-@immutable
 abstract class SelectionState extends Equatable {
   const SelectionState();
 

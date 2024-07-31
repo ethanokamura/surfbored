@@ -113,7 +113,10 @@ class EditView extends StatelessWidget {
                     );
                     if (newValue != null && context.mounted) {
                       await postCubit.editField(
-                          post.id, 'description', newValue);
+                        post.id,
+                        'description',
+                        newValue,
+                      );
                     }
                   },
                 ),

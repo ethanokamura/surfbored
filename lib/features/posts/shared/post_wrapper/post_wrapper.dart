@@ -17,7 +17,6 @@ class PostWrapper extends StatelessWidget {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.isLoaded) {
-            print(postID);
             return PostView(
               post: state.post,
               postCubit: context.read<PostCubit>(),

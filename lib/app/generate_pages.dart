@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
-import 'package:rando/pages/authentication/register_user.dart';
-import 'package:rando/pages/home/home.dart';
-import 'package:rando/pages/inbox/inbox.dart';
-import 'package:rando/pages/login/login.dart';
-import 'package:rando/pages/profile/profile/profile.dart';
-import 'package:rando/pages/search/search.dart';
+import 'package:rando/features/authentication/register_user.dart';
+import 'package:rando/features/home/home.dart';
+import 'package:rando/features/inbox/inbox.dart';
+import 'package:rando/features/login/login.dart';
+import 'package:rando/features/profile/profile/profile.dart';
+import 'package:rando/features/search/search.dart';
 
 List<Page<dynamic>> generateAppPages(
   AppState state,

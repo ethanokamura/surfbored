@@ -1,16 +1,29 @@
-# rando
+# SurfBoard
 
-A new Flutter project.
+Surfing the web is for boomers. Surf some boards and find cool shit to do.
 
-## Getting Started
+# Running the Project
 
-This project is a starting point for a Flutter application.
+clone the repo and run the following scripts
 
-A few resources to get you started if this is your first Flutter project:
+To download the dependencies:
+```bash
+# Find all pubspec.yaml files in the project
+find . -name "pubspec.yaml" | while read -r file; do
+  # Navigate to the directory containing the pubspec.yaml
+  dir=$(dirname "$file")
+  echo "Running 'dart pub get' in $dir"
+  (cd "$dir" && dart pub get)
+done
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To generate the data models:
+```bash
+# Find all pubspec.yaml files in the project
+find . -name "models.dart" | while read -r file; do
+  # Navigate to the directory containing the pubspec.yaml
+  dir=$(dirname "$file")
+  echo "Running 'dart pub get' in $dir"
+  (cd "$dir" && flutter pub run build_runner build)
+done
+```

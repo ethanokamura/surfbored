@@ -89,7 +89,7 @@ class MoreOptions extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(CupertinoIcons.delete),
+                Icon(Icons.delete_outline_outlined),
                 SizedBox(width: 10),
                 Text('Delete'),
               ],

@@ -38,7 +38,7 @@ class SelectBoardCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ImageWidget(
+                  SquareImage(
                     borderRadius: defaultBorderRadius,
                     photoURL: board.photoURL,
                     height: 64,

@@ -71,7 +71,7 @@ class EditView extends StatelessWidget {
               children: [
                 EditImage(
                   width: 200,
-                  height: 200,
+                  // height: 200,
                   photoURL: board.photoURL,
                   collection: 'users',
                   docID: board.uid,

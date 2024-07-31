@@ -33,7 +33,7 @@ Future<dynamic> postPopUp(
                 topRight: Radius.circular(defaultRadius),
               ),
               photoURL: post.photoURL,
-              height: 256,
+              // height: 256,
               width: double.infinity,
             ),
             Padding(

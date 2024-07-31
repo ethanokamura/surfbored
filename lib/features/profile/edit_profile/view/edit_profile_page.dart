@@ -23,16 +23,10 @@ class EditProfilePage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const Text('Edit Profile'),
       ),
-      body: BlocProvider(
-        create: (_) => ProfileCubit(
-          userRepository: context.read<UserRepository>(),
-          userID: userID,
-        ),
-        child: BlocBuilder<ProfileCubit, User>(
-          builder: (context, user) {
-            return EditProfile(user: user);
-          },
-        ),
+      body: BlocBuilder<ProfileCubit, User>(
+        builder: (context, user) {
+          return EditProfile(user: user);
+        },
       ),
     );
   }
@@ -46,7 +40,7 @@ class EditProfile extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          EditImage(
+          EditSquareImage(
             width: 200,
             height: 200,
             photoURL: user.photoURL,

@@ -32,7 +32,7 @@ class PostView extends StatelessWidget {
                 ImageWidget(
                   borderRadius: defaultBorderRadius,
                   photoURL: post.photoURL,
-                  height: 256,
+                  // height: 256,
                   width: double.infinity,
                 ),
                 Padding(
@@ -49,10 +49,12 @@ class PostView extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<dynamic>(
-                              builder: (context) => EditPostPage(
-                                postID: post.id,
-                                // postCubit: postCubit,
-                              ),
+                              builder: (context) {
+                                return BlocProvider.value(
+                                  value: postCubit,
+                                  child: EditPostPage(postID: post.id),
+                                );
+                              },
                             ),
                           );
                         },

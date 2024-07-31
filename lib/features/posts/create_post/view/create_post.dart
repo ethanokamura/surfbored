@@ -72,7 +72,6 @@ class _CreateActivityState extends State<CreateActivity> {
               // upload image
               UploadImageWidget(
                 width: 200,
-                height: 200,
                 photoURL: photoURL,
                 onFileChanged: (file) {
                   setState(() {

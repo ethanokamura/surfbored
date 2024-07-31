@@ -53,7 +53,7 @@ class BoardPageView extends StatelessWidget {
                     ImageWidget(
                       borderRadius: defaultBorderRadius,
                       photoURL: board.photoURL,
-                      height: 256,
+                      // height: 256,
                       width: double.infinity,
                     ),
                     const VerticalSpacer(),

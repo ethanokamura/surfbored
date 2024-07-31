@@ -69,7 +69,7 @@ class _CreateBoardState extends State<CreateBoard> {
               // upload image
               UploadImageWidget(
                 width: 200,
-                height: 200,
+                // height: 200,
                 photoURL: photoURL,
                 onFileChanged: (file) {
                   setState(() {

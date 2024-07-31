@@ -1,11 +1,18 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rando/features/profile/cubit/profile_cubit.dart';
 import 'package:rando/features/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfileTopBar extends StatelessWidget {
-  const ProfileTopBar({required this.user, super.key});
+  const ProfileTopBar({
+    required this.user,
+    required this.profileCubit,
+    super.key,
+  });
   final User user;
+  final ProfileCubit profileCubit;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -33,7 +40,15 @@ class ProfileTopBar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<dynamic>(
-                    builder: (context) => ProfileSettingsPage(userID: user.uid),
+                    builder: (context) {
+                      return BlocProvider.value(
+                        value: profileCubit,
+                        child: ProfileSettingsPage(
+                          userID: user.uid,
+                          profileCubit: profileCubit,
+                        ),
+                      );
+                    },
                   ),
                 );
               },
@@ -61,7 +76,7 @@ class ProfileHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ImageWidget(
+        SquareImage(
           photoURL: user.photoURL,
           width: 96,
           height: 96,
@@ -221,65 +236,65 @@ class Friends extends StatelessWidget {
   }
 }
 
-class MyProfileButtons extends StatelessWidget {
-  const MyProfileButtons({required this.userID, super.key});
-  final String userID;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ActionButton(
-            inverted: false,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (context) => ProfileSettingsPage(userID: userID),
-              ),
-            ),
-            text: 'Edit',
-          ),
-        ),
-        const HorizontalSpacer(),
-        Expanded(
-          child: ActionButton(
-            inverted: false,
-            onTap: () {},
-            text: 'Share',
-          ),
-        ),
-      ],
-    );
-  }
-}
+// class MyProfileButtons extends StatelessWidget {
+//   const MyProfileButtons({required this.userID, super.key});
+//   final String userID;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         Expanded(
+//           child: ActionButton(
+//             inverted: false,
+//             onTap: () => Navigator.push(
+//               context,
+//               MaterialPageRoute<dynamic>(
+//                 builder: (context) => ProfileSettingsPage(userID: userID),
+//               ),
+//             ),
+//             text: 'Edit',
+//           ),
+//         ),
+//         const HorizontalSpacer(),
+//         Expanded(
+//           child: ActionButton(
+//             inverted: false,
+//             onTap: () {},
+//             text: 'Share',
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
-class DefaultProfileButtons extends StatelessWidget {
-  const DefaultProfileButtons({super.key});
+// class DefaultProfileButtons extends StatelessWidget {
+//   const DefaultProfileButtons({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          // add follow button
-          child: ActionButton(
-            inverted: false,
-            onTap: () {},
-            text: 'Add',
-          ),
-        ),
-        const HorizontalSpacer(),
-        Expanded(
-          child: ActionButton(
-            inverted: false,
-            onTap: () {},
-            text: 'Message',
-          ),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         Expanded(
+//           // add follow button
+//           child: ActionButton(
+//             inverted: false,
+//             onTap: () {},
+//             text: 'Add',
+//           ),
+//         ),
+//         const HorizontalSpacer(),
+//         Expanded(
+//           child: ActionButton(
+//             inverted: false,
+//             onTap: () {},
+//             text: 'Message',
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class ProfileTabBar extends StatelessWidget {
   const ProfileTabBar({super.key});

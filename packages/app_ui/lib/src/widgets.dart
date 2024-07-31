@@ -245,6 +245,7 @@ class CustomPageView extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: appBar,
       body: Container(
+        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [

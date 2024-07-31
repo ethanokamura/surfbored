@@ -73,7 +73,10 @@ class ProfileBuilder extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ProfileTopBar(user: user),
+                          ProfileTopBar(
+                            user: user,
+                            profileCubit: context.read<ProfileCubit>(),
+                          ),
                           const VerticalSpacer(),
                           ProfileHeader(user: user, isCurrent: isCurrent),
                           const VerticalSpacer(),

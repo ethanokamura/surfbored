@@ -31,7 +31,7 @@ class BoardCard extends StatelessWidget {
         vertical: null,
         child: Row(
           children: [
-            ImageWidget(
+            SquareImage(
               borderRadius: defaultBorderRadius,
               photoURL: board.photoURL,
               height: 64,

@@ -16,7 +16,7 @@ Find an activity you like? Add it to the board of your choosing.
 Find a board you like? Like it and add it to you library of boards.
 
 
-# Running the Project: 📲
+## Running the Project: 📲
 
 clone the repo and run the following scripts
 
@@ -42,13 +42,13 @@ find . -name "models.dart" | while read -r file; do
 done
 ```
 
-# Project Structure: 📁
+## Project Structure: 📁
 
 lib/app/ for the main app logic
 lib/features/ for the implemented features of the app
 packages/ handling the apps structure (data, api calls, UI data, strings, etc.)
 
-## App:
+### App:
 
 The main app file which includes initializing and debugging the app as well as the main app state handler.
 
@@ -70,7 +70,7 @@ lib/app/
             |-- app_state.dart - main app state
 ```
 
-## Features:
+### Features:
 
 Implementations of the packages directory (The UI).
 Uses cubits to interact with the data.
@@ -93,7 +93,7 @@ lib/features/
 ```
 
 
-## Packages:
+### Packages:
 
 The backend/backbone of the project.
 
@@ -112,7 +112,7 @@ packages/
       |-- packages/board_repositroy/ to handle board data and its interaction with firestore funcitons
 ```
 
-# Handling Data and State: 💾
+## Handling Data and State: 💾
 
 This app uses cubits to handle state along side the work done in the backend.
 

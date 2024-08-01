@@ -6,6 +6,7 @@ import 'package:rando/features/boards/cubit/board_cubit.dart';
 import 'package:rando/features/boards/edit_board/edit_board.dart';
 import 'package:rando/features/boards/shared/shared.dart';
 import 'package:rando/features/boards/shuffle/shuffle_posts.dart';
+import 'package:rando/features/shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {
@@ -61,7 +62,7 @@ class BoardPageView extends StatelessWidget {
                       boardID: board.id,
                       title: board.title,
                       description: board.description,
-                      username: user.username,
+                      userID: board.uid,
                     ),
                   ],
                 ),
@@ -120,14 +121,14 @@ class BoardDetails extends StatelessWidget {
   const BoardDetails({
     required this.title,
     required this.description,
-    required this.username,
+    required this.userID,
     required this.boardID,
     super.key,
   });
   final String boardID;
   final String title;
   final String description;
-  final String username;
+  final String userID;
 
   @override
   Widget build(BuildContext context) {
@@ -171,12 +172,7 @@ class BoardDetails extends StatelessWidget {
             color: Theme.of(context).subtextColor,
           ),
         ),
-        Text(
-          '@$username',
-          style: TextStyle(
-            color: Theme.of(context).accentColor,
-          ),
-        ),
+        LinkButton(uid: userID),
       ],
     );
   }

@@ -242,27 +242,3 @@ class CheckBox extends StatelessWidget {
     );
   }
 }
-
-class LinkWidget extends StatelessWidget {
-  const LinkWidget({
-    required this.text,
-    required this.onTap,
-    super.key,
-  });
-
-  final String text;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Theme.of(context).accentColor,
-        ),
-      ),
-    );
-  }
-}

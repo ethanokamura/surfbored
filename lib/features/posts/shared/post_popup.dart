@@ -6,7 +6,7 @@ import 'package:rando/features/posts/cubit/post_cubit.dart';
 import 'package:rando/features/posts/edit_post/edit_post.dart';
 import 'package:rando/features/posts/shared/post/cubit/like_cubit.dart';
 import 'package:rando/features/posts/shared/post/view/more_options.dart';
-import 'package:rando/features/profile/profile/profile.dart';
+import 'package:rando/features/shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<dynamic> postPopUp(
@@ -112,15 +112,7 @@ Future<dynamic> postPopUp(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  LinkWidget(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (context) => ProfilePage(userID: post.uid),
-                      ),
-                    ),
-                    text: '@${user.username}',
-                  ),
+                  LinkButton(uid: post.uid),
                   BlocProvider(
                     create: (context) =>
                         LikeCubit(context.read<PostRepository>()),

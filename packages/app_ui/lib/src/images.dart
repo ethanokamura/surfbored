@@ -471,7 +471,8 @@ class _ImageWidgetState extends State<ImageWidget> {
         ),
         child: Center(
           child: Container(
-            width: widget.width / 4,
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
               borderRadius: widget.borderRadius,
               image: DecorationImage(

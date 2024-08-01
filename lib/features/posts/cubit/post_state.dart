@@ -53,7 +53,7 @@ final class PostState extends Equatable {
   }
 }
 
-extension BoardStateExtensions on PostState {
+extension PostStateExtensions on PostState {
   bool get isEmpty => status == PostStatus.empty;
   bool get isLoaded => status == PostStatus.loaded;
   bool get isLoading => status == PostStatus.loading;
@@ -63,4 +63,31 @@ extension BoardStateExtensions on PostState {
   bool get isCreating => status == PostStatus.creating;
   bool get isDeleted => status == PostStatus.deleted;
   bool get isUpdated => status == PostStatus.updated;
+}
+
+extension _PostStateExtensions on PostState {
+  PostState fromLoading() => copyWith(status: PostStatus.loading);
+
+  PostState fromEmpty() => copyWith(status: PostStatus.empty);
+
+  PostState fromCreated() => copyWith(status: PostStatus.created);
+
+  PostState fromDeleted() => copyWith(status: PostStatus.deleted);
+
+  PostState fromUpdate() => copyWith(status: PostStatus.updated);
+
+  PostState fromPostLoaded(Post post) => copyWith(
+        status: PostStatus.loaded,
+        post: post,
+      );
+
+  PostState fromPostsLoaded(List<Post> posts) => copyWith(
+        status: PostStatus.loaded,
+        posts: posts,
+      );
+
+  PostState fromFailure(PostFailure failure) => copyWith(
+        status: PostStatus.failure,
+        failure: failure,
+      );
 }

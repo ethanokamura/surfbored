@@ -15,6 +15,7 @@ class UserRepository {
 
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
+  final Map<String, String> _usernameCache = {};
 
   late final ValueStream<model.User> _user;
 
@@ -157,6 +158,35 @@ extension Username on UserRepository {
   Future<bool> userHasUsername() async {
     final userDoc = await _firestore.getUserDoc(user.uid);
     return userDoc.exists && userDoc.data()!.containsKey('username');
+  }
+
+  Future<String> fetchUsername(String userID) async {
+    try {
+      final userDoc =
+          await _firestore.collection('usernames').doc(userID).get();
+      if (userDoc.exists) {
+        final data = userDoc.data();
+        return data?['username'] as String;
+      }
+      return userID;
+    } catch (e) {
+      // Handle errors as needed
+      return userID;
+    }
+  }
+
+  Future<String> fetchCacheUsername(String userID) async {
+    if (_usernameCache.containsKey(userID)) {
+      return _usernameCache[userID]!;
+    }
+
+    final username = await fetchUsername(userID);
+    _usernameCache[userID] = username;
+    return username;
+  }
+
+  String? getCachedUsername(String userID) {
+    return _usernameCache[userID];
   }
 
   /// save username to user doc

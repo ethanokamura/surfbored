@@ -311,27 +311,32 @@ extension Update on PostRepository {
           ..update(userRef, {
             'likedPosts': FieldValue.arrayUnion([postID]),
           })
-          ..update(likesRef, {
-            'users': FieldValue.arrayUnion([userID]),
-          })
           ..update(postRef, {
             'likes': FieldValue.increment(1),
+          })
+          ..update(likesRef, {
+            'users': FieldValue.arrayUnion([userID]),
           });
       } else {
         batch
           ..update(userRef, {
             'likedPosts': FieldValue.arrayRemove([postID]),
           })
-          ..update(likesRef, {
-            'users': FieldValue.arrayRemove([userID]),
-          })
           ..update(postRef, {
             'likes': FieldValue.increment(-1),
+          })
+          ..update(likesRef, {
+            'users': FieldValue.arrayRemove([userID]),
           });
       }
       // commit changes
-      await batch.commit();
-
+      try {
+        await batch.commit();
+      } catch (e) {
+        // something failed with batch.commit().
+        // the batch was rolled back.
+        print('could not commit changes $e');
+      }
       return fetchLikes(postID);
     } on FirebaseException {
       throw PostFailure.fromUpdatePost();

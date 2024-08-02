@@ -14,13 +14,16 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      top: false,
-      body: BlocProvider(
-        create: (_) => LoginCubit(
-          userRepository: context.read<UserRepository>(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: CustomPageView(
+        top: false,
+        body: BlocProvider(
+          create: (_) => LoginCubit(
+            userRepository: context.read<UserRepository>(),
+          ),
+          child: const LoginContent(),
         ),
-        child: const LoginContent(),
       ),
     );
   }
@@ -99,6 +102,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
               if (!_codeSent)
                 TextField(
                   controller: _phoneController,
+                  cursorColor: Theme.of(context).subtextColor,
                   keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
                     labelText: 'Phone Number',
@@ -107,6 +111,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
               else
                 TextField(
                   controller: _codeController,
+                  cursorColor: Theme.of(context).subtextColor,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Verification Code',
@@ -128,8 +133,6 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                           },
                           verificationFailed: (exception) {
                             // Error handling is managed by BlocListener
-                            print(
-                                'Verification failed with exception: $exception');
                             context.showSnackBar('Error Verifying. Try Again.');
                           },
                           codeSent: (

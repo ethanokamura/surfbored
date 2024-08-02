@@ -22,7 +22,6 @@ class CreatePostPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) => PostCubit(
-          // userRepository: context.read<UserRepository>(),
           postRepository: context.read<PostRepository>(),
         ),
         child: const CreateActivity(),

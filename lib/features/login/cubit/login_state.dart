@@ -6,10 +6,9 @@ extension LoginStatusExtensions on LoginStatus {
   bool get isSigningIn => this == LoginStatus.signingIn;
 }
 
-enum SignInMethod { none, anonymous, phone }
+enum SignInMethod { none, phone }
 
 extension SignInMethodExtensions on SignInMethod {
-  bool get isAnonymous => this == SignInMethod.anonymous;
   bool get isPhone => this == SignInMethod.phone;
 }
 
@@ -34,12 +33,6 @@ final class LoginState extends Equatable {
           signInMethod: SignInMethod.phone,
         );
 
-  const LoginState.signingInAnonymously()
-      : this._(
-          status: LoginStatus.signingIn,
-          signInMethod: SignInMethod.anonymous,
-        );
-
   const LoginState.failure(UserFailure failure)
       : this._(
           status: LoginStatus.failure,
@@ -57,8 +50,6 @@ final class LoginState extends Equatable {
 extension LoginStateExtensions on LoginState {
   bool get isFailure => status == LoginStatus.failure;
 
-  bool get isSigningInAnonymously =>
-      status.isSigningIn && signInMethod.isAnonymous;
   bool get isSigningInWithPhone => status.isSigningIn && signInMethod.isPhone;
   bool get isVerifyingWithPhone => status.isSigningIn && signInMethod.isPhone;
 }

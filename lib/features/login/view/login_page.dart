@@ -36,7 +36,6 @@ class LoginContent extends StatelessWidget {
       listener: (context, state) {
         if (state.isFailure) {
           final message = switch (state.failure) {
-            AnonymousSignInFailure() => AppStrings.anonSignInFailureMessage,
             PhoneNumberSignInFailure() => AppStrings.phoneSignInFailureMessage,
             _ => AppStrings.unknownFailure,
           };
@@ -70,7 +69,6 @@ class LoginContent extends StatelessWidget {
           ),
           const VerticalSpacer(),
           const PhoneSignIn(),
-          const AnonymousSignInButton(),
         ],
       ),
     );
@@ -130,13 +128,14 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                           },
                           verificationFailed: (exception) {
                             // Error handling is managed by BlocListener
-                            // print('verification failed');
+                            print(
+                                'Verification failed with exception: $exception');
                             context.showSnackBar('Error Verifying. Try Again.');
                           },
                           codeSent: (
-                            String verificationId, [
-                            forceResendingToken,
-                          ]) {
+                            String verificationId,
+                            int? forceResendingToken,
+                          ) {
                             setState(() {
                               _verificationId = verificationId;
                               _codeSent = true;
@@ -166,25 +165,6 @@ class _PhoneSignInState extends State<PhoneSignIn> {
               ),
             ],
           );
-  }
-}
-
-class AnonymousSignInButton extends StatelessWidget {
-  const AnonymousSignInButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final isSigningInAnonymously = context.select<LoginCubit, bool>(
-      (cubit) => cubit.state.isSigningInAnonymously,
-    );
-    return SignInButton(
-      inverted: false,
-      text: AppStrings.guestText,
-      processing: isSigningInAnonymously,
-      onTap: isSigningInAnonymously
-          ? null
-          : () => context.read<LoginCubit>().signInAnonymously(),
-    );
   }
 }
 

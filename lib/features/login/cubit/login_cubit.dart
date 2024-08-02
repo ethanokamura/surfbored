@@ -11,15 +11,6 @@ class LoginCubit extends Cubit<LoginState> {
 
   final UserRepository _userRepository;
 
-  Future<void> signInAnonymously() async {
-    try {
-      emit(const LoginState.signingInAnonymously());
-      await _userRepository.signInAnonymously();
-    } on UserFailure catch (failure) {
-      _onLoginFailed(failure);
-    }
-  }
-
   // retrieve code
   Future<void> signInWithPhone({
     required String phoneNumber,
@@ -34,7 +25,10 @@ class LoginCubit extends Cubit<LoginState> {
         phoneNumber: phoneNumber,
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
-        codeSent: codeSent,
+        codeSent: (String verificationId, int? forceResendingToken) {
+          print('Code sent with verification ID: $verificationId');
+          codeSent(verificationId, forceResendingToken);
+        },
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
       );
     } on PhoneNumberSignInFailure {

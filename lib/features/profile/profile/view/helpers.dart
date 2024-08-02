@@ -305,14 +305,20 @@ class ProfileTabBar extends StatelessWidget {
       tabs: [
         CustomTabWidget(
           child: Icon(
-            Icons.photo_library_outlined,
-            size: 20,
+            FontAwesomeIcons.images,
+            size: 15,
           ),
         ),
         CustomTabWidget(
           child: Icon(
-            Icons.list,
-            size: 20,
+            FontAwesomeIcons.list,
+            size: 15,
+          ),
+        ),
+        CustomTabWidget(
+          child: Icon(
+            FontAwesomeIcons.heart,
+            size: 15,
           ),
         ),
       ],

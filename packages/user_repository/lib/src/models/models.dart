@@ -17,7 +17,6 @@ class User extends Equatable {
     this.boards = const [],
     this.likedPosts = const [],
     this.savedBoards = const [],
-    this.likedPostsBoardID = '',
     this.lastSignInAt,
     this.memberSince,
   });
@@ -43,7 +42,6 @@ class User extends Equatable {
   final List<String> boards;
   final List<String> likedPosts;
   final List<String> savedBoards;
-  final String likedPostsBoardID;
   @timestamp
   final DateTime? memberSince;
   @timestamp
@@ -63,7 +61,6 @@ class User extends Equatable {
         boards,
         likedPosts,
         savedBoards,
-        likedPostsBoardID,
         lastSignInAt,
         memberSince,
       ];

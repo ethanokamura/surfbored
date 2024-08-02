@@ -56,7 +56,7 @@ class ProfileBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final isCurrent = context.read<UserRepository>().isCurrentUser(user.uid);
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: CustomPageView(
         top: false,
         body: NestedScrollView(
@@ -101,6 +101,7 @@ class ProfileBuilder extends StatelessWidget {
                         children: [
                           UserPostsList(userID: user.uid),
                           BoardsList(userID: user.uid),
+                          UserLikedPostsList(userID: user.uid),
                         ],
                       ),
                     ),

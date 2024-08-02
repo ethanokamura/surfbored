@@ -172,6 +172,52 @@ extension StreamData on PostRepository {
     yield buffer;
   }
 
+  Stream<List<Post>> streamUserLikedPosts(
+    String userID, {
+    int pageSize = 10,
+    int page = 0,
+  }) async* {
+    final userDoc = await _firestore.getUserDoc(userID);
+
+    if (!userDoc.exists) {
+      yield [];
+      return;
+    }
+
+    final userData = userDoc.data()!;
+    final postIDs = List<String>.from(
+      (userData['likedPosts'] as List).map((post) => post as String),
+    );
+
+    final reversedPostIDs = postIDs.reversed.toList();
+
+    final buffer = <Post>[];
+    final startIndex = page * pageSize;
+
+    if (startIndex >= reversedPostIDs.length) {
+      yield buffer;
+      return;
+    }
+
+    final postIDsPage =
+        reversedPostIDs.skip(startIndex).take(pageSize).toList();
+    final postDocs = await Future.wait(postIDsPage.map(_firestore.getPostDoc));
+    final posts = postDocs
+        .map((doc) {
+          if (doc.exists) {
+            return Post.fromFirestore(doc);
+          } else {
+            return null;
+          }
+        })
+        .whereType<Post>()
+        .toList();
+
+    buffer.addAll(posts);
+
+    yield buffer;
+  }
+
   Stream<List<Post>> streamBoardPosts(
     String boardID, {
     int pageSize = 10,

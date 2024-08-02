@@ -1,6 +1,5 @@
 // dart packages
 import 'package:app_ui/app_ui.dart';
-import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -103,16 +102,6 @@ class _RegisterUserState extends State<RegisterUser> {
                     bio: bio,
                   );
                   await UserRepository().createUser(uid, user);
-                  final likedBoardID = await BoardRepository().createBoard(
-                    Board(
-                      uid: uid,
-                      title: 'Liked Activities',
-                      description: 'A collection of activities you have liked!',
-                    ),
-                    uid,
-                  );
-                  await UserRepository()
-                      .updateField(uid, 'likedPostsBoardID', likedBoardID);
                 },
                 text: 'Confirm',
               ),

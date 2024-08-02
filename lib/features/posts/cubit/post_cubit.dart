@@ -78,6 +78,44 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  void streamUserLikedPosts(String userID) {
+    emit(state.fromLoading());
+    _currentPage = 0;
+    _hasMore = true;
+    _loadMoreUserLikedPosts(userID, reset: true);
+  }
+
+  void loadMoreUserLikedPosts(String userID) {
+    if (_hasMore) {
+      _currentPage++;
+      _loadMoreUserLikedPosts(userID);
+    }
+  }
+
+  void _loadMoreUserLikedPosts(String userID, {bool reset = false}) {
+    try {
+      _postRepository
+          .streamUserLikedPosts(userID, pageSize: _pageSize, page: _currentPage)
+          .listen(
+        (posts) {
+          if (posts.length < _pageSize) {
+            _hasMore = false;
+          }
+          if (reset) {
+            emit(state.fromPostsLoaded(posts));
+          } else {
+            emit(state.fromPostsLoaded(List.of(state.posts)..addAll(posts)));
+          }
+        },
+        onError: (error) {
+          emit(state.fromEmpty());
+        },
+      );
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
+
   void streamBoardPosts(String boardID) {
     emit(state.fromLoading());
     _currentPage = 0;

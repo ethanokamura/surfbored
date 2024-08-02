@@ -66,11 +66,10 @@ extension Fetch on PostRepository {
       // get document from database
       final doc = await _firestore.getPostDoc(postID);
       if (doc.exists) {
-        // return board
+        // return likes
         final data = Post.fromJson(doc.data()!);
         return data.likes;
       } else {
-        // return empty board if document DNE
         return 0;
       }
     } on FirebaseException {

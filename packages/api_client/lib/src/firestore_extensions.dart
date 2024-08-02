@@ -117,4 +117,16 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
       savesDoc(boardID).update(data);
   Future<void> setSavesDoc(String boardID, Map<String, dynamic> data) =>
       savesDoc(boardID).set(data);
+
+  // tags
+  CollectionReference<Map<String, dynamic>> tagsCollection() =>
+      collection('tags');
+  DocumentReference<Map<String, dynamic>> tagDoc(String tagID) =>
+      usersCollection().doc(tagID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getTagDoc(String tagID) =>
+      tagDoc(tagID).get();
+  Future<void> updateTagDoc(String tagID, Map<String, dynamic> data) =>
+      tagDoc(tagID).update(data);
+  Future<void> setTagDoc(String tagID, Map<String, dynamic> data) =>
+      tagDoc(tagID).set(data, SetOptions(merge: true));
 }

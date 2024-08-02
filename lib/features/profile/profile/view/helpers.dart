@@ -236,66 +236,6 @@ class Friends extends StatelessWidget {
   }
 }
 
-// class MyProfileButtons extends StatelessWidget {
-//   const MyProfileButtons({required this.userID, super.key});
-//   final String userID;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: [
-//         Expanded(
-//           child: ActionButton(
-//             inverted: false,
-//             onTap: () => Navigator.push(
-//               context,
-//               MaterialPageRoute<dynamic>(
-//                 builder: (context) => ProfileSettingsPage(userID: userID),
-//               ),
-//             ),
-//             text: 'Edit',
-//           ),
-//         ),
-//         const HorizontalSpacer(),
-//         Expanded(
-//           child: ActionButton(
-//             inverted: false,
-//             onTap: () {},
-//             text: 'Share',
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class DefaultProfileButtons extends StatelessWidget {
-//   const DefaultProfileButtons({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: [
-//         Expanded(
-//           // add follow button
-//           child: ActionButton(
-//             inverted: false,
-//             onTap: () {},
-//             text: 'Add',
-//           ),
-//         ),
-//         const HorizontalSpacer(),
-//         Expanded(
-//           child: ActionButton(
-//             inverted: false,
-//             onTap: () {},
-//             text: 'Message',
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
 class ProfileTabBar extends StatelessWidget {
   const ProfileTabBar({super.key});
 

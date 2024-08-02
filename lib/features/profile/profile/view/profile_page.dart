@@ -100,7 +100,7 @@ class ProfileBuilder extends StatelessWidget {
                       child: TabBarView(
                         children: [
                           UserPostsList(userID: user.uid),
-                          BoardsList(userID: user.uid),
+                          UserBoardsList(userID: user.uid),
                           UserLikedPostsList(userID: user.uid),
                         ],
                       ),

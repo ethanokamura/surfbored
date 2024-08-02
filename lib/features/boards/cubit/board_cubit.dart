@@ -17,6 +17,10 @@ class BoardCubit extends Cubit<BoardState> {
 
   int index = 0;
 
+  int _currentPage = 0;
+  final int _pageSize = 10;
+  bool _hasMore = true;
+
   // change to stream?
   Future<void> fetchBoardPosts(String boardID) async {
     emit(state.fromLoading());
@@ -48,14 +52,40 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
+  bool hasMore() {
+    return _hasMore;
+  }
+
   void streamUserBoards(String userID) {
     emit(state.fromLoading());
+    _currentPage = 0;
+    _hasMore = true;
+    _loadMoreUserBoards(userID, reset: true);
+  }
+
+  void loadMoreUserBoards(String userID) {
+    if (_hasMore) {
+      _currentPage++;
+      _loadMoreUserBoards(userID);
+    }
+  }
+
+  void _loadMoreUserBoards(String userID, {bool reset = false}) {
     try {
-      _boardRepository.streamUserBoards(userID).listen(
-        (snapshot) {
-          emit(state.fromBoardsLoaded(snapshot));
+      _boardRepository
+          .streamUserBoards(userID, pageSize: _pageSize, page: _currentPage)
+          .listen(
+        (boards) {
+          if (boards.length < _pageSize) {
+            _hasMore = false;
+          }
+          if (reset) {
+            emit(state.fromBoardsLoaded(boards));
+          } else {
+            emit(state.fromBoardsLoaded(List.of(state.boards)..addAll(boards)));
+          }
         },
-        onError: (dynamic error) {
+        onError: (error) {
           emit(state.fromEmpty());
         },
       );

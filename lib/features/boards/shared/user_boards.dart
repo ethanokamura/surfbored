@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/boards/boards.dart';
 
-class BoardsList extends StatelessWidget {
-  const BoardsList({required this.userID, super.key});
+class UserBoardsList extends StatelessWidget {
+  const UserBoardsList({required this.userID, super.key});
   final String userID;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,10 @@ class BoardsList extends StatelessWidget {
           } else if (state.isLoaded) {
             final boards = state.boards;
             return BoardListView(
+              hasMore: context.read<BoardCubit>().hasMore(),
               boards: boards,
+              onLoadMore: () async =>
+                  context.read<BoardCubit>().loadMoreUserBoards(userID),
               onRefresh: () async =>
                   context.read<BoardCubit>().streamUserBoards(userID),
             );
@@ -43,23 +46,36 @@ class BoardListView extends StatelessWidget {
   const BoardListView({
     required this.onRefresh,
     required this.boards,
+    required this.onLoadMore,
+    required this.hasMore,
     super.key,
   });
   final List<Board> boards;
+  final bool hasMore;
   final Future<void> Function() onRefresh;
+  final Future<void> Function() onLoadMore;
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: ListView.separated(
-        padding: const EdgeInsets.only(bottom: defaultPadding),
-        separatorBuilder: (context, index) => const VerticalSpacer(),
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: boards.length,
-        itemBuilder: (context, index) {
-          final board = boards[index];
-          return BoardCard(board: board);
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification.metrics.pixels - 25 >=
+              scrollNotification.metrics.maxScrollExtent) {
+            if (hasMore) onLoadMore();
+          }
+          return false;
         },
+        child: ListView.separated(
+          padding: const EdgeInsets.only(bottom: defaultPadding),
+          separatorBuilder: (context, index) => const VerticalSpacer(),
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: boards.length,
+          itemBuilder: (context, index) {
+            final board = boards[index];
+            return BoardCard(board: board);
+          },
+        ),
       ),
     );
   }

@@ -101,6 +101,7 @@ extension StreamData on BoardRepository {
   Stream<List<Board>> streamUserBoards(
     String userID, {
     int pageSize = 10,
+    int page = 0,
   }) async* {
     final userDoc = await _firestore.getUserDoc(userID);
 
@@ -115,36 +116,34 @@ extension StreamData on BoardRepository {
       (userData['boards'] as List).map((post) => post as String),
     );
 
+    final reversedBoardIDs = boardIDs.reversed.toList();
+
     final buffer = <Board>[];
-    var currentIndex = 0;
+    final startIndex = page * pageSize;
 
-    while (currentIndex < boardIDs.length) {
-      // Fetch the next page of post IDs
-      final boardIDsPage = boardIDs.skip(currentIndex).take(pageSize).toList();
-
-      // Update the current index for the next batch
-      currentIndex += pageSize;
-
-      final boardDocs = await Future.wait(
-        boardIDsPage.map(_firestore.getBoardDoc),
-      );
-
-      // Add the fetched board IDs to the buffer
-      final boards = boardDocs
-          .map((doc) {
-            if (doc.exists) {
-              return Board.fromFirestore(doc);
-            } else {
-              return null;
-            }
-          })
-          .whereType<Board>()
-          .toList();
-      buffer.addAll(boards);
-
-      // Emit the current buffer as a stream event
+    if (startIndex >= reversedBoardIDs.length) {
       yield buffer;
+      return;
     }
+
+    final boardIDsPage =
+        reversedBoardIDs.skip(startIndex).take(pageSize).toList();
+    final boardDocs =
+        await Future.wait(boardIDsPage.map(_firestore.getBoardDoc));
+    final boards = boardDocs
+        .map((doc) {
+          if (doc.exists) {
+            return Board.fromFirestore(doc);
+          } else {
+            return null;
+          }
+        })
+        .whereType<Board>()
+        .toList();
+
+    buffer.addAll(boards);
+
+    yield buffer;
   }
 }
 

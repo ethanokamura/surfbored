@@ -33,6 +33,7 @@ Future<String?> editTextField(
         child: Column(
           children: [
             TextFormField(
+              cursorColor: Theme.of(context).subtextColor,
               controller: textController,
               autofocus: true,
               maxLength: maxLength,

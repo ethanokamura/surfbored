@@ -18,6 +18,7 @@ class _RegisterUserState extends State<RegisterUser> {
   String username = '';
   String name = '';
   String bio = '';
+  String photoURL = '';
   @override
   Widget build(BuildContext context) {
     final uid = UserRepository().fetchCurrentUserID();
@@ -31,7 +32,18 @@ class _RegisterUserState extends State<RegisterUser> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('* required fields'),
+            EditSquareImage(
+              width: 200,
+              height: 200,
+              photoURL: photoURL,
+              collection: 'users',
+              docID: uid,
+              onFileChanged: (url) {
+                photoURL = url;
+              },
+            ),
+            const VerticalSpacer(),
+            const Text('Upload a profile picture.'),
             const VerticalSpacer(),
             CustomInputField(
               label: 'Username*',
@@ -91,6 +103,8 @@ class _RegisterUserState extends State<RegisterUser> {
               },
             ),
             const VerticalSpacer(),
+            const Text('* required fields'),
+            const VerticalSpacer(),
             if (username != '')
               ActionButton(
                 inverted: true,
@@ -100,6 +114,7 @@ class _RegisterUserState extends State<RegisterUser> {
                     username: username,
                     name: name,
                     bio: bio,
+                    photoURL: photoURL,
                   );
                   await UserRepository().createUser(uid, user);
                 },

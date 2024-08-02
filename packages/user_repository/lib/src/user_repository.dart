@@ -83,17 +83,6 @@ extension _FirebaseAuthExtensions on FirebaseAuth {
 }
 
 extension Auth on UserRepository {
-  /// Signs the [model.User] in anonymously.
-  Future<void> signInAnonymously() async {
-    try {
-      final userCredential = await _firebaseAuth.signInAnonymously();
-      final firebaseUser = userCredential.user;
-      unawaited(_updateUserData(firebaseUser));
-    } on FirebaseAuthException {
-      throw UserFailure.fromAnonymousSignIn();
-    }
-  }
-
   // verify phone number
   Future<void> verifyPhone({
     required String phoneNumber,

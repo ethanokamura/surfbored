@@ -139,6 +139,21 @@ class BoardCubit extends Cubit<BoardState> {
       emit(state.fromFailure(failure));
     }
   }
+
+  Future<void> shufflePostList(String boardID) async {
+    emit(state.fromLoading());
+    try {
+      final posts = await _boardRepository.fetchPosts(boardID);
+      if (posts.isEmpty) {
+        emit(state.fromEmpty());
+        return;
+      }
+      posts.shuffle();
+      emit(state.fromPostsLoaded(posts));
+    } on BoardFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
 }
 
 extension _BoardStateExtensions on BoardState {

@@ -20,6 +20,32 @@ class PostCubit extends Cubit<PostState> {
   final int _pageSize = 10;
   bool _hasMore = true;
 
+  Future<void> fetchPost(String postID) async {
+    emit(state.fromLoading());
+    try {
+      final post = await _postRepository.fetchPost(postID);
+      print(post.title);
+      emit(state.fromPostLoaded(post));
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
+
+  Future<void> shufflePostList(String boardID) async {
+    emit(state.fromLoading());
+    try {
+      final posts = await _postRepository.fetchBoardPosts(boardID);
+      if (posts.isEmpty) {
+        emit(state.fromEmpty());
+        return;
+      }
+      posts.shuffle();
+      emit(state.fromPostsLoaded(posts));
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
+
   void streamPost(String postID) {
     emit(state.fromLoading());
     try {

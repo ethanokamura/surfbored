@@ -11,7 +11,7 @@ class PostWrapper extends StatelessWidget {
     return BlocProvider(
       create: (_) => PostCubit(
         postRepository: context.read<PostRepository>(),
-      )..streamPost(postID),
+      )..fetchPost(postID),
       child: BlocBuilder<PostCubit, PostState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -22,7 +22,7 @@ class PostWrapper extends StatelessWidget {
               postCubit: context.read<PostCubit>(),
             );
           } else if (state.isEmpty) {
-            return const Center(child: Text('This board is empty.'));
+            return const Center(child: Text('This post is empty.'));
           } else {
             return const Center(child: Text('Something went wrong'));
           }

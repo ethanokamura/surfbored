@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/boards/cubit/board_cubit.dart';
 import 'package:rando/features/boards/edit_board/edit_board.dart';
-import 'package:rando/features/boards/shared/shared.dart';
-import 'package:rando/features/boards/shuffle/shuffle_posts.dart';
+import 'package:rando/features/posts/posts.dart';
 import 'package:rando/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -206,7 +205,7 @@ class BoardButtons extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => ShufflePostsPage(boardID: board.id),
+                builder: (context) => ShuffledPostsPage(boardID: board.id),
               ),
             ),
             text: 'Shuffle',

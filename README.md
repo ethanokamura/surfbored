@@ -27,7 +27,7 @@ To download the dependencies:
 find . -name "pubspec.yaml" | while read -r file; do
   # Navigate to the directory containing the pubspec.yaml
   dir=$(dirname "$file")
-  echo "Running 'dart pub get' in $dir"
+  echo "Installing packages in $dir"
   (cd "$dir" && dart pub get)
 done
 ```
@@ -39,7 +39,7 @@ To generate the data models:
 find . -name "models.dart" | while read -r file; do
   # Navigate to the directory containing the data models
   dir=$(dirname "$file")
-  echo "Running 'run build_runner build' in $dir"
+  echo "Building data model files in $dir"
   (cd "$dir" && flutter pub run build_runner build)
 done
 ```

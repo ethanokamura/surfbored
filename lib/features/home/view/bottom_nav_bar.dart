@@ -75,7 +75,7 @@ class BottomNavBar extends StatelessWidget {
           label: 'Inbox',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.user, size: 20),
+          icon: Icon(FontAwesomeIcons.solidUser, size: 20),
           label: 'Profile',
         ),
       ],

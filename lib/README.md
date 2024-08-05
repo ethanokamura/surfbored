@@ -2,17 +2,19 @@
 
 The main repository for the application’s code.
 
+The main app file which includes initializing and debugging the app as well as the main app state handler.
+
+Implementations of the packages directory (The UI).
+
+Uses cubits to interact with the data.
+
 ```
 lib/
-  |-- app/ for the main app logic
-  |
-  |-- pages/ for the implemented features of the app
-  |
-  |-- theme/ for the theme cubit
-  |
-  |-- firebase_options.dart - firebase app keys
-  |
-  |-- main.dart - entry point for the app
+  ├── app/                       # Main app logic
+  ├── features/                  # Implemented features of the app
+  ├── theme/                     # Theme cubit
+  ├── firebase_options.dart      # Firebase app keys
+  └── main.dart                  # Entry point for the app
 ```
 
 ## Handling Data and State: 💾
@@ -35,20 +37,15 @@ The main app file which includes initializing and debugging the app as well as t
 
 ```
 lib/app/
-      |-- app_bloc_observer.dart - observes app changes and errors
-      |
-      |-- app_bootstrap.dart - wrapper for the app to handle debugging
-      |
-      |-- app.dart - exports view/app.dart and bootstrap
-      |
-      |-- generate_pages.dart - defines features to generate
-      |
-      |-- view/app.dart - main app file
-      |
-      |-- cubit/
-            |-- app_cubit.dart - main app cubit
-            |
-            |-- app_state.dart - main app state
+    ├── app_bloc_observer.dart    # Observes app changes and errors
+    ├── app_bootstrap.dart        # Wrapper for the app to handle debugging
+    ├── app.dart                  # Exports view/app.dart and bootstrap
+    ├── generate_pages.dart       # Defines features to generate
+    ├── view/
+    │   └── app.dart              # Main app file
+    └── cubit/
+        ├── app_cubit.dart        # Main app cubit
+        └── app_state.dart        # Main app state
 ```
 
 ### Features:
@@ -58,17 +55,11 @@ Uses cubits to interact with the data.
 
 ```
 lib/features/
-      |-- login/ to handle user login page
-      |
-      |-- registration/ to handle user registration
-      |
-      |-- home/ to handle the main navigation logic this contains the bottom nav bar
-      |
-      |-- posts/ to handle the posts features such as viewing or editing a post
-      |
-      |-- boards/ to handle the boards features such as viewing or editing a board
-      |
-      |-- profile/ to handle the user features such as viewing or editing your profile
-      |
-      |-- create/ to handle the creating an activity or board
+    ├── login/                    # Handles user login page
+    ├── registration/             # Handles user registration
+    ├── home/                     # Handles the main navigation logic, including the bottom nav bar
+    ├── posts/                    # Handles the posts features such as viewing or editing a post
+    ├── boards/                   # Handles the boards features such as viewing or editing a board
+    ├── profile/                  # Handles user features such as viewing or editing your profile
+    └── create/                   # Handles creating an activity or board
 ```

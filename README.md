@@ -47,43 +47,22 @@ done
 lib/ for the implemented features of the app
 packages/ handling the apps structure (data, api calls, UI data, strings, etc.)
 
-### Lib:
-The main app file which includes initializing and debugging the app as well as the main app state handler.
-
-Implementations of the packages directory (The UI).
-
-Uses cubits to interact with the data.
-
 ```
 lib/
-  |-- app/ for the main app logic
-  |
-  |-- pages/ for the implemented features of the app
-  |
-  |-- theme/ for the theme cubit
-  |
-  |-- firebase_options.dart - firebase app keys
-  |
-  |-- main.dart - entry point for the app
-```
+  ├── app/                       # Main app logic
+  ├── features/                  # Implemented features of the app
+  ├── theme/                     # Theme cubit
+  ├── firebase_options.dart      # Firebase app keys
+  └── main.dart                  # Entry point for the app
 
-### Packages:
-
-The backend/backbone of the project.
-
-```
 packages/
-      |-- app_core/ for the core functions of the project. the main backbone for the backend
-      |
-      |-- api_client/ for all references to the apis such as firebase storage and firestore
-      |
-      |-- app_ui/ for all ui elements including theme, commonlly used widgets, and constants
-      |
-      |-- user_repository/ to handle user data and its interaction with firestore functions
-      |
-      |-- post_repository/ to handle post data and its interaction with firestore functions
-      |
-      |-- board_repositroy/ to handle board data and its interaction with firestore funcitons
+  ├── app_core/                  # Core functions of the project; main backbone for the backend
+  ├── api_client/                # References to APIs such as Firebase Storage and Firestore
+  ├── app_ui/                    # UI elements including theme, commonly used widgets, and constants
+  ├── user_repository/           # Handles user data and its interaction with Firestore functions
+  ├── post_repository/           # Handles post data and its interaction with Firestore functions
+  └── board_repository/          # Handles board data and its interaction with Firestore functions
+
 ```
 
 ## Handling Data and State: 💾
@@ -97,87 +76,3 @@ UI -> the end point for the user
 Cubit -> emits and handles state changes
 
 Repositories -> handle requests and responses to the API's
-
-## Data Structure:
-
-Scalability: Sharded subcollections help manage large lists and ensure that you stay within Firestore’s document size limits.
-
-Efficiency: Using composite keys and arrays allows for efficient querying and data retrieval.
-
-Simplified Data Management: Keeping separate collections for likes and saves ensures that data is not duplicated and is easy to manage.
-
-Composite Indexes: Implemented composite indexes in place for efficient querying.
-
-Pagination: Implemented pagination to handle data efficiently on the client side.
-
-```
-users/
-  {userId}/
-    posts/
-      {shardId1}/
-        posts: [postId1, postId2, ...]
-      {shardId2}/
-        posts: [postId1, postId2, ...]
-    boards/
-      {shardId1}/
-        posts: [boardId1, boardId2, ...]
-      {shardId2}/
-        posts: [boardId1, boardId2, ...]
-    tags: [tagId1, tagId2, ...]
-    friends: number
-
-friends/
-  {userId1}_{userId2}/
-    userId1: userId1
-    userId2: userId2
-    timestamp: timestamp
-
-usernames/
-  {userId}/
-    userId: userId
-    username: username
-
-posts/
-  {postId}/
-    authorId: userId
-    likes: number
-    tags: [tagId1, tagId2, ...]
-
-likes/
-  {postId}_{userId}/
-    postId: postId
-    userId: userId
-    timestamp: timestamp
-
-boards/
-  {boardId}/
-    authorId: userId
-    saves: number
-    posts/
-      {shardId1}/
-        posts: [postId1, postId2, ...]
-      {shardId2}/
-        posts: [postId1, postId2, ...]
-    tags: [tagId1, tagId2, ...]
-
-saves/
-  {boardId}_{userId}/
-    boardID: postId
-    userId: userId
-    timestamp: timestamp
-
-tags/
-  {tagId}/
-    usageCount: number
-    users: [userId1, userId2, ...]
-    posts/
-      {shardId1}/
-        posts: [postId1, postId2, ...]
-      {shardId2}/
-        posts: [postId1, postId2, ...]
-    boards/
-      {shardId1}/
-        posts: [boardId1, boardId2, ...]
-      {shardId2}/
-        posts: [boardId1, boardId2, ...]
-```

@@ -1,20 +1,16 @@
 # Packages Directory:
 
 The backend/backbone of the project.
+  - handles the apps structure (data, api calls, UI data, strings, etc.)
 
 ```
 packages/
-      |-- app_core/ for the core functions of the project. the main backbone for the backend
-      |
-      |-- api_client/ for all references to the apis such as firebase storage and firestore
-      |
-      |-- app_ui/ for all ui elements including theme, commonlly used widgets, and constants
-      |
-      |-- user_repository/ to handle user data and its interaction with firestore functions
-      |
-      |-- post_repository/ to handle post data and its interaction with firestore functions
-      |
-      |-- board_repositroy/ to handle board data and its interaction with firestore funcitons
+├── app_core/                 # Core functions of the project; main backbone for the backend
+├── api_client/               # References to APIs such as Firebase Storage and Firestore
+├── app_ui/                   # UI elements including theme, commonly used widgets, and constants
+├── user_repository/          # Handles user data and its interaction with Firestore functions
+├── post_repository/          # Handles post data and its interaction with Firestore functions
+└── board_repository/         # Handles board data and its interaction with Firestore functions
 ```
 
 ## Data Structure

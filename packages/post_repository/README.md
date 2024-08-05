@@ -1,5 +1,8 @@
-Post Repository
+# Post Repository
 
-- handles requests and responses to the database
-- handles custom data types for the posts
-- handles failures when performing operations
+```
+post_repository/lib/src/
+  ├── post_repository.dart        # Handles requests and responses to the database
+  ├── failures.dart               # Handles failures when performing operations
+  └── models/models.dart          # Handles custom data types for the posts
+```

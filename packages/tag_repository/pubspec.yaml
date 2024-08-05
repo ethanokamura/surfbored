@@ -1,5 +1,5 @@
-name: board_repository
-description: Board repository.
+name: tag_repository
+description: Tag repository.
 version: 1.0.0+1
 publish_to: none
 

@@ -27,7 +27,6 @@ extension Create on PostRepository {
 
       // post data
       await postRef.set(newPost);
-      await _firestore.setLikeDoc(postRef.id, {'users': <String>[]});
       await _firestore.updateUserDoc(userID, {
         'posts': FieldValue.arrayUnion([postRef.id]),
       });
@@ -76,6 +75,11 @@ extension Fetch on PostRepository {
       // return failure
       throw PostFailure.fromGetPost();
     }
+  }
+
+  Future<bool> hasUserLikedPost(String postID, String userID) async {
+    final likeDoc = await _firestore.getLikeDoc('${postID}_$userID');
+    return likeDoc.exists;
   }
 }
 
@@ -281,53 +285,40 @@ extension Update on PostRepository {
 
   // update liked posts
   Future<int> updateLikes({
-    required String userID,
     required String postID,
+    required String userID,
     required bool isLiked,
   }) async {
+    // get document reference
+    final postRef = _firestore.postDoc(postID);
+    final likeRef = _firestore.likeDoc('${postID}_$userID');
+
+    // user batch to perform atomic operation
+    final batch = _firestore.batch();
+
     try {
-      // get document references
-      final userRef = _firestore.userDoc(userID);
-      final postRef = _firestore.postDoc(postID);
-      final likesRef = _firestore.likeDoc(postID);
-
-      // user batch to perform atomic operation
-      final batch = _firestore.batch();
-
       // get document data
-      final userSnapshot = await userRef.get();
       final postSnapshot = await postRef.get();
-      final likeSnapshot = await likesRef.get();
 
-      // make sure user exists
-      if (!userSnapshot.exists ||
-          !postSnapshot.exists ||
-          !likeSnapshot.exists) {
-        throw PostFailure.fromUpdatePost();
-      }
+      // make sure post exists
+      if (!postSnapshot.exists) throw PostFailure.fromUpdatePost();
 
       if (!isLiked) {
         batch
-          ..update(userRef, {
-            'likedPosts': FieldValue.arrayUnion([postID]),
-          })
           ..update(postRef, {
             'likes': FieldValue.increment(1),
           })
-          ..update(likesRef, {
-            'users': FieldValue.arrayUnion([userID]),
+          ..set(likeRef, {
+            'postID': postID,
+            'userID': userID,
+            'timestamp': FieldValue.serverTimestamp(),
           });
       } else {
         batch
-          ..update(userRef, {
-            'likedPosts': FieldValue.arrayRemove([postID]),
-          })
           ..update(postRef, {
             'likes': FieldValue.increment(-1),
           })
-          ..update(likesRef, {
-            'users': FieldValue.arrayRemove([userID]),
-          });
+          ..delete(likeRef);
       }
       // commit changes
       try {

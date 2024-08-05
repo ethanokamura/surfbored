@@ -12,11 +12,10 @@ class User extends Equatable {
     this.username = '',
     this.name = '',
     this.bio = '',
-    this.friends = const [],
+    this.friends = 0,
     this.posts = const [],
     this.boards = const [],
-    this.likedPosts = const [],
-    this.savedBoards = const [],
+    this.tags = const [],
     this.lastSignInAt,
     this.memberSince,
   });
@@ -37,11 +36,10 @@ class User extends Equatable {
   final String name;
   final String? photoURL;
   final String bio;
-  final List<String> friends;
+  final int friends;
   final List<String> posts;
   final List<String> boards;
-  final List<String> likedPosts;
-  final List<String> savedBoards;
+  final List<String> tags;
   @timestamp
   final DateTime? memberSince;
   @timestamp
@@ -59,8 +57,7 @@ class User extends Equatable {
         friends,
         posts,
         boards,
-        likedPosts,
-        savedBoards,
+        tags,
         lastSignInAt,
         memberSince,
       ];
@@ -71,11 +68,6 @@ class User extends Equatable {
 
 extension UserExtensions on User {
   bool get isEmpty => this == User.empty;
-  int totalFriends() => friends.length;
+  int totalFriends() => friends;
   bool get hasUsername => username != '';
-
-  bool hasLikedPost({required String postID}) => likedPosts.contains(postID);
-  bool hasSavedBoard({required String boardID}) =>
-      savedBoards.contains(boardID);
-  bool hasFriend({required String userID}) => friends.contains(userID);
 }

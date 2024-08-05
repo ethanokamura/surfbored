@@ -4,9 +4,16 @@ import 'package:post_repository/post_repository.dart';
 part 'like_state.dart';
 
 class LikeCubit extends Cubit<LikeState> {
-  LikeCubit(this._postRepository) : super(LikeInitial());
+  LikeCubit(this._postRepository) : super(const LikeState.initial());
 
   final PostRepository _postRepository;
+
+  Future<void> fetchData(String postID, String userID) async {
+    final userLikesPost =
+        await _postRepository.hasUserLikedPost(postID, userID);
+    final likes = await _postRepository.fetchLikes(postID);
+    emit(state.fromLikeSuccess(isLiked: userLikesPost, likes: likes));
+  }
 
   Future<void> toggleLike(
     String userID,
@@ -14,15 +21,15 @@ class LikeCubit extends Cubit<LikeState> {
     required bool liked,
   }) async {
     try {
-      emit(LikeLoading());
+      emit(state.fromLoading());
       final updatedLikes = await _postRepository.updateLikes(
         userID: userID,
         postID: postID,
         isLiked: liked,
       );
-      emit(LikeSuccess(isLiked: !liked, likes: updatedLikes));
+      emit(state.fromLikeSuccess(isLiked: !liked, likes: updatedLikes));
     } catch (e) {
-      emit(LikeFailure(message: e.toString()));
+      throw Exception(e);
     }
   }
 }

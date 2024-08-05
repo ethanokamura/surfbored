@@ -118,22 +118,22 @@ Future<dynamic> postPopUp(
                         LikeCubit(context.read<PostRepository>()),
                     child: BlocBuilder<LikeCubit, LikeState>(
                       builder: (context, state) {
-                        var isCurrentlyLiked =
-                            user.hasLikedPost(postID: post.id);
+                        context.read<LikeCubit>().fetchData(post.id, user.uid);
                         var likes = post.likes;
-                        if (state is LikeLoading) {
+                        var isLiked = false;
+                        if (state.isLoading) {
                           // Show a loading indicator in the button if needed
-                        } else if (state is LikeSuccess) {
-                          isCurrentlyLiked = state.isLiked;
+                        } else if (state.isSuccess) {
                           likes = state.likes;
+                          isLiked = state.liked;
                         }
                         return LikeButton(
                           onTap: () => context.read<LikeCubit>().toggleLike(
                                 user.uid,
                                 post.id,
-                                liked: isCurrentlyLiked,
+                                liked: isLiked,
                               ),
-                          isLiked: isCurrentlyLiked,
+                          isLiked: isLiked,
                           likes: likes,
                         );
                       },

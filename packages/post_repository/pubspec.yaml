@@ -11,13 +11,9 @@ dependencies:
     path: ../api_client
   app_core:
     path: ../app_core
-  board_repository:
-    path: ../board_repository
   flutter:
     sdk: flutter
   json_annotation: ^4.9.0
-  user_repository:
-    path: ../user_repository
 
 dev_dependencies:
   build_runner: ^2.4.11

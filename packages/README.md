@@ -10,6 +10,7 @@ packages/
   ├── app_ui/                    # UI elements including theme, commonly used widgets, and constants
   ├── board_repository/          # Handles board data and its interaction with API's
   ├── post_repository/           # Handles post data and its interaction with API's
+  ├── tag_repository/            # Handles the interaction between tags and the API's
   └── user_repository/           # Handles user data and its interaction with API's
 ```
 
@@ -39,11 +40,6 @@ users/
     tags: [tagId1, tagId2, ...]
     memberSince: timestamp
 
-usernames/
-  {userId}/
-    uid: string
-    username: string
-
 posts/
   {postId}/
     uid: string
@@ -53,6 +49,22 @@ posts/
     likes: number
     tags: [tagId1, tagId2, ...]
     createdAt: timestamp
+
+boards/
+  {boardId}/
+    uid: string
+    id: string
+    title: string
+    description: string
+    likes: number
+    posts: [postId1, postId2, ...]
+    tags: [tagId1, tagId2, ...]
+    createdAt: timestamp
+
+usernames/
+  {userId}/
+    uid: string
+    username: string
 
 tags/
   {tagId}/
@@ -70,17 +82,6 @@ postTags/
 boardTags/
   {tagId}/
     boards: [boardId1, boardId2, ...]
-
-boards/
-  {boardId}/
-    uid: string
-    id: string
-    title: string
-    description: string
-    likes: number
-    posts: [postId1, postId2, ...]
-    tags: [tagId1, tagId2, ...]
-    createdAt: timestamp
 
 friends/
   {userId1}_{userId2}/

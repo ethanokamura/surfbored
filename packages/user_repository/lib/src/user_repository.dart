@@ -151,13 +151,9 @@ extension Username on UserRepository {
 
   Future<String> fetchUsername(String userID) async {
     try {
-      final userDoc =
-          await _firestore.collection('usernames').doc(userID).get();
-      if (userDoc.exists) {
-        final data = userDoc.data();
-        return data?['username'] as String;
-      }
-      return userID;
+      final userDoc = await _firestore.getUsernameDoc(userID);
+      if (!userDoc.exists) return userID;
+      return userDoc.data()?['username'] as String;
     } catch (e) {
       // Handle errors as needed
       return userID;
@@ -189,6 +185,48 @@ extension Username on UserRepository {
     } on FirebaseException {
       throw UserFailure.fromUpdateUser();
     }
+  }
+}
+
+extension Friends on UserRepository {
+  Future<void> sendFriendRequest(String senderID, String recieverID) async {
+    await _firestore
+        .collection('friendRequests')
+        .doc('${senderID}_$recieverID')
+        .set({
+      'senderID': senderID,
+      'recieverID': recieverID,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<void> removeFriendRequest(String senderID, String recieverID) async {
+    await _firestore
+        .collection('friendRequests')
+        .doc('${senderID}_$recieverID')
+        .delete();
+  }
+
+  Future<void> acceptFriendRequest(
+    String requestID,
+    String senderID,
+    String recieverID,
+  ) async {
+    await _firestore.collection('friendRequests').doc(requestID).delete();
+
+    await _firestore.updateUserDoc(
+      senderID,
+      {'friends': FieldValue.increment(1)},
+    );
+    await _firestore.updateUserDoc(
+      recieverID,
+      {'friends': FieldValue.increment(1)},
+    );
+    await _firestore.collection('friends').doc('${senderID}_$recieverID').set({
+      'senderID': senderID,
+      'recieverID': recieverID,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
   }
 }
 

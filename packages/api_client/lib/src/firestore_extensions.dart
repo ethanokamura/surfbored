@@ -97,36 +97,37 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
   // likes
   CollectionReference<Map<String, dynamic>> likesCollection() =>
       collection('likes');
-  DocumentReference<Map<String, dynamic>> likeDoc(String postID) =>
-      likesCollection().doc(postID);
-  Future<DocumentSnapshot<Map<String, dynamic>>> getLikeDoc(String postID) =>
-      likeDoc(postID).get();
-  Future<void> updateLikeDoc(String postID, Map<String, dynamic> data) =>
-      likeDoc(postID).update(data);
-  Future<void> setLikeDoc(String postID, Map<String, dynamic> data) =>
-      likeDoc(postID).set(data);
+  DocumentReference<Map<String, dynamic>> likeDoc(String likeDocID) =>
+      likesCollection().doc(likeDocID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getLikeDoc(String likeDocID) =>
+      likeDoc(likeDocID).get();
+  Future<void> updateLikeDoc(String likeDocID, Map<String, dynamic> data) =>
+      likeDoc(likeDocID).update(data);
+  Future<void> setLikeDoc(String likeDocID, Map<String, dynamic> data) =>
+      likeDoc(likeDocID).set(data);
 
   // saves
   CollectionReference<Map<String, dynamic>> savesCollection() =>
       collection('saves');
-  DocumentReference<Map<String, dynamic>> savesDoc(String boardID) =>
-      savesCollection().doc(boardID);
-  Future<DocumentSnapshot<Map<String, dynamic>>> getSavesDoc(String boardID) =>
-      savesDoc(boardID).get();
-  Future<void> updateSavesDoc(String boardID, Map<String, dynamic> data) =>
-      savesDoc(boardID).update(data);
-  Future<void> setSavesDoc(String boardID, Map<String, dynamic> data) =>
-      savesDoc(boardID).set(data);
+  DocumentReference<Map<String, dynamic>> savesDoc(String saveDocID) =>
+      savesCollection().doc(saveDocID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getSavesDoc(
+          String saveDocID) =>
+      savesDoc(saveDocID).get();
+  Future<void> updateSavesDoc(String saveDocID, Map<String, dynamic> data) =>
+      savesDoc(saveDocID).update(data);
+  Future<void> setSavesDoc(String saveDocID, Map<String, dynamic> data) =>
+      savesDoc(saveDocID).set(data);
 
   // tags
   CollectionReference<Map<String, dynamic>> tagsCollection() =>
       collection('tags');
   DocumentReference<Map<String, dynamic>> tagDoc(String tagID) =>
-      usersCollection().doc(tagID);
+      tagsCollection().doc(tagID);
   Future<DocumentSnapshot<Map<String, dynamic>>> getTagDoc(String tagID) =>
       tagDoc(tagID).get();
   Future<void> updateTagDoc(String tagID, Map<String, dynamic> data) =>
       tagDoc(tagID).update(data);
   Future<void> setTagDoc(String tagID, Map<String, dynamic> data) =>
-      tagDoc(tagID).set(data, SetOptions(merge: true));
+      tagDoc(tagID).set(data);
 }

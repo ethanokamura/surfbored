@@ -97,7 +97,7 @@ class ProfileHeader extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${user.friends.length}',
+                  '${user.friends}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),

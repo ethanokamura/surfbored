@@ -17,7 +17,6 @@ extension Create on BoardRepository {
   Future<String> createBoard(Board board, String userID) async {
     final batch = _firestore.batch();
     final boardRef = _firestore.boardsCollection().doc();
-    final savesRef = _firestore.savesDoc(boardRef.id);
     final userRef = _firestore.userDoc(userID);
     try {
       // set data
@@ -29,7 +28,6 @@ extension Create on BoardRepository {
       // post data
       batch
         ..set(boardRef, newBoard)
-        ..set(savesRef, {'users': <String>[]})
         ..update(userRef, {
           'boards': FieldValue.arrayUnion([boardRef.id]),
         });
@@ -63,6 +61,29 @@ extension Fetch on BoardRepository {
       // return failure
       throw BoardFailure.fromGetBoard();
     }
+  }
+
+  // get board saves
+  Future<int> fetchSaves(String boardID) async {
+    try {
+      // get document from database
+      final doc = await _firestore.getBoardDoc(boardID);
+      if (doc.exists) {
+        // return likes
+        final data = Board.fromJson(doc.data()!);
+        return data.saves;
+      } else {
+        return 0;
+      }
+    } on FirebaseException {
+      // return failure
+      throw BoardFailure.fromGetBoard();
+    }
+  }
+
+  Future<bool> hasUserSavedPost(String boardID, String userID) async {
+    final savesDoc = await _firestore.getSavesDoc('${boardID}_$userID');
+    return savesDoc.exists;
   }
 }
 
@@ -176,58 +197,50 @@ extension Update on BoardRepository {
     }
   }
 
-  // update board saves
-  Future<void> updateBoardSaves({
+  // update liked posts
+  Future<int> updateSaves({
     required String userID,
     required String boardID,
     required bool isLiked,
   }) async {
+    // get document reference
+    final boardRef = _firestore.postDoc(boardID);
+
+    // user batch to perform atomic operation
+    final batch = _firestore.batch();
+
     try {
-      // get document references
-      final userRef = _firestore.userDoc(userID);
-      final postRef = _firestore.postDoc(boardID);
-      final savesRef = _firestore.likeDoc(boardID);
-
-      // user batch to perform atomic operation
-      final batch = _firestore.batch();
-
       // get document data
-      final userSnapshot = await userRef.get();
-      final postSnapshot = await postRef.get();
-      final saveSnapshot = await savesRef.get();
+      final boardSnapshot = await boardRef.get();
 
-      // make sure user exists
-      if (!userSnapshot.exists ||
-          !postSnapshot.exists ||
-          !saveSnapshot.exists) {
-        throw BoardFailure.fromUpdateBoard();
-      }
+      // make sure board exists
+      if (!boardSnapshot.exists) throw BoardFailure.fromUpdateBoard();
 
       if (!isLiked) {
-        batch
-          ..update(userRef, {
-            'savedBoards': FieldValue.arrayUnion([boardID]),
-          })
-          ..update(savesRef, {
-            'users': FieldValue.arrayUnion([userID]),
-          })
-          ..update(postRef, {
-            'saves': FieldValue.increment(1),
-          });
+        batch.update(boardRef, {
+          'saves': FieldValue.increment(1),
+        });
+        // Add the new entry to the saves collection
+        await _firestore.setSavesDoc('${boardID}_$userID', {
+          'boardID': boardID,
+          'userID': userID,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
       } else {
-        batch
-          ..update(userRef, {
-            'savedBoards': FieldValue.arrayRemove([boardID]),
-          })
-          ..update(savesRef, {
-            'users': FieldValue.arrayRemove([userID]),
-          })
-          ..update(postRef, {
-            'saves': FieldValue.increment(-1),
-          });
+        batch.update(boardRef, {
+          'saves': FieldValue.increment(-1),
+        });
+        await _firestore.savesDoc('${boardID}_$userID').delete();
       }
       // commit changes
-      await batch.commit();
+      try {
+        await batch.commit();
+      } catch (e) {
+        // something failed with batch.commit().
+        // the batch was rolled back.
+        print('could not commit changes $e');
+      }
+      return fetchSaves(boardID);
     } on FirebaseException {
       throw BoardFailure.fromUpdateBoard();
     }

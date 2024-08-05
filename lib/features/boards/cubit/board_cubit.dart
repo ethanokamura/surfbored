@@ -21,21 +21,6 @@ class BoardCubit extends Cubit<BoardState> {
   final int _pageSize = 10;
   bool _hasMore = true;
 
-  // change to stream?
-  Future<void> fetchBoardPosts(String boardID) async {
-    emit(state.fromLoading());
-    try {
-      final posts = await _boardRepository.fetchPosts(boardID);
-      if (posts.isEmpty) {
-        emit(state.fromEmpty());
-        return;
-      }
-      emit(state.fromPostsLoaded(posts));
-    } on BoardFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
   void streamBoard(String boardID) {
     emit(state.fromLoading());
     try {
@@ -135,21 +120,6 @@ class BoardCubit extends Cubit<BoardState> {
     try {
       await _boardRepository.deleteBoard(userID, boardID, photoURL);
       emit(state.fromDeleted());
-    } on BoardFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
-  Future<void> shufflePostList(String boardID) async {
-    emit(state.fromLoading());
-    try {
-      final posts = await _boardRepository.fetchPosts(boardID);
-      if (posts.isEmpty) {
-        emit(state.fromEmpty());
-        return;
-      }
-      posts.shuffle();
-      emit(state.fromPostsLoaded(posts));
     } on BoardFailure catch (failure) {
       emit(state.fromFailure(failure));
     }

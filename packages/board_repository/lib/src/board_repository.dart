@@ -44,25 +44,6 @@ extension Create on BoardRepository {
 }
 
 extension Fetch on BoardRepository {
-  // get board posts
-  Future<List<String>> fetchPosts(String boardID) async {
-    try {
-      // get document from database
-      final doc = await _firestore.getBoardDoc(boardID);
-      if (doc.exists) {
-        // return board
-        final data = Board.fromJson(doc.data()!);
-        return data.posts;
-      } else {
-        // return empty board if document DNE
-        return [];
-      }
-    } on FirebaseException {
-      // return failure
-      throw BoardFailure.fromGetBoard();
-    }
-  }
-
   // get board saves
   Future<int> fetchSaves(String boardID) async {
     try {
@@ -103,22 +84,7 @@ extension StreamData on BoardRepository {
     }
   }
 
-  // stream board posts
-  Stream<List<String>> streamPosts(String boardID) {
-    try {
-      return _firestore.boardDoc(boardID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          final data = Board.fromJson(snapshot.data()!);
-          return data.posts;
-        } else {
-          throw BoardFailure.fromGetBoard();
-        }
-      });
-    } on FirebaseException {
-      throw BoardFailure.fromGetBoard();
-    }
-  }
-
+  // stream user boards
   Stream<List<Board>> streamUserBoards(
     String userID, {
     int pageSize = 10,

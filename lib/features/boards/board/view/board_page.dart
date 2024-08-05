@@ -36,7 +36,6 @@ class BoardPageView extends StatelessWidget {
   final Board board;
   @override
   Widget build(BuildContext context) {
-    context.read<BoardCubit>().fetchBoardPosts(board.id);
     final user = context.read<UserRepository>().fetchCurrentUser();
     final isOwner = context.read<UserRepository>().isCurrentUser(board.uid);
     return NestedScrollView(

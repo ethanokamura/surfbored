@@ -10,7 +10,6 @@ packages/
   ├── app_ui/                    # UI elements including theme, commonly used widgets, and constants
   ├── board_repository/          # Handles board data and its interaction with API's
   ├── post_repository/           # Handles post data and its interaction with API's
-  ├── tag_repository/            # Handles tag data and its interaction with API's
   └── user_repository/           # Handles user data and its interaction with API's
 ```
 
@@ -29,71 +28,81 @@ Pagination: Implemented pagination to handle data efficiently on the client side
 ```
 users/
   {userId}/
-    posts/
-      {shardId1}/
-        posts: [postId1, postId2, ...]
-      {shardId2}/
-        posts: [postId1, postId2, ...]
-    boards/
-      {shardId1}/
-        posts: [boardId1, boardId2, ...]
-      {shardId2}/
-        posts: [boardId1, boardId2, ...]
-    tags: [tagId1, tagId2, ...]
+    uid: string
+    photoURL: string
+    username: string
+    name: string
+    bio: string
     friends: number
-
-friends/
-  {userId1}_{userId2}/
-    userId1: userId1
-    userId2: userId2
-    timestamp: timestamp
+    posts: [postId1, postId2, ...]
+    boards: [boardId1, boardId2, ...]
+    tags: [tagId1, tagId2, ...]
+    memberSince: timestamp
 
 usernames/
   {userId}/
-    userId: userId
-    username: username
+    uid: string
+    username: string
 
 posts/
   {postId}/
-    authorId: userId
+    uid: string
+    id: string
+    title: string
+    description: string
     likes: number
     tags: [tagId1, tagId2, ...]
-
-likes/
-  {postId}_{userId}/
-    postId: postId
-    userId: userId
-    timestamp: timestamp
-
-boards/
-  {boardId}/
-    authorId: userId
-    saves: number
-    posts/
-      {shardId1}/
-        posts: [postId1, postId2, ...]
-      {shardId2}/
-        posts: [postId1, postId2, ...]
-    tags: [tagId1, tagId2, ...]
-
-saves/
-  {boardId}_{userId}/
-    boardID: postId
-    userId: userId
-    timestamp: timestamp
+    createdAt: timestamp
 
 tags/
   {tagId}/
+    name: string
     usageCount: number
+
+userTags/
+  {tagId}/
     users: [userId1, userId2, ...]
-    posts/
-      {shardId1}/
-        posts: [postId1, postId2, ...]
-      {shardId2}/
-        posts: [postId1, postId2, ...]
-    boards/
-      {shardId1}/
-        posts: [boardId1, boardId2, ...]
-      {shardId2}/
-        posts: [boardId1, boardId2, ...]
+
+postTags/
+  {tagId}/
+    posts: [postId1, postId2, ...]
+
+boardTags/
+  {tagId}/
+    boards: [boardId1, boardId2, ...]
+
+boards/
+  {boardId}/
+    uid: string
+    id: string
+    title: string
+    description: string
+    likes: number
+    posts: [postId1, postId2, ...]
+    tags: [tagId1, tagId2, ...]
+    createdAt: timestamp
+
+friends/
+  {userId1}_{userId2}/
+    userId1: string
+    userId2: string
+    timestamp: timestamp
+
+friend_requests/
+  {userId1}_{userId2}/
+    sender: string
+    reciever: string
+    timestamp: timestamp
+
+likes/
+  {postId}_{userId}/
+    postId: string
+    userId: string
+    timestamp: timestamp
+
+saves/
+  {boardId}_{userId}/
+    boardID: string
+    userId: string
+    timestamp: timestamp
 ```

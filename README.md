@@ -22,6 +22,7 @@ clone the repo and run the following scripts
 
 To download the dependencies:
 ```bash
+# run_pub_get.sh
 # Find all pubspec.yaml files in the project
 find . -name "pubspec.yaml" | while read -r file; do
   # Navigate to the directory containing the pubspec.yaml
@@ -33,6 +34,7 @@ done
 
 To generate the data models:
 ```bash
+# create_models.sh
 # Find all pubspec.yaml files in the project
 find . -name "models.dart" | while read -r file; do
   # Navigate to the directory containing the pubspec.yaml

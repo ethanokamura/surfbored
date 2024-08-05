@@ -169,7 +169,7 @@ class BoardDetails extends StatelessWidget {
             color: Theme.of(context).subtextColor,
           ),
         ),
-        LinkButton(uid: userID),
+        ProfileLink(uid: userID),
       ],
     );
   }

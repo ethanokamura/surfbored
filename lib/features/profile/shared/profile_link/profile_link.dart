@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
-class LinkButton extends StatelessWidget {
-  const LinkButton({required this.uid, super.key});
+class ProfileLink extends StatelessWidget {
+  const ProfileLink({required this.uid, super.key});
   final String uid;
 
   Future<String?> _fetchUsername(BuildContext context) async {

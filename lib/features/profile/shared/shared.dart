@@ -1,1 +1,1 @@
-export 'link/link.dart';
+export 'profile_link/profile_link.dart';

@@ -112,7 +112,7 @@ Future<dynamic> postPopUp(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  LinkButton(uid: post.uid),
+                  ProfileLink(uid: post.uid),
                   BlocProvider(
                     create: (context) =>
                         LikeCubit(context.read<PostRepository>()),

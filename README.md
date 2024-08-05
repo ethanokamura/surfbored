@@ -107,9 +107,9 @@ packages/
       |
       |-- user_repository/ to handle user data and its interaction with firestore functions
       |
-      |-- packages/post_repository/ to handle post data and its interaction with firestore functions
+      |-- post_repository/ to handle post data and its interaction with firestore functions
       |
-      |-- packages/board_repositroy/ to handle board data and its interaction with firestore funcitons
+      |-- board_repositroy/ to handle board data and its interaction with firestore funcitons
 ```
 
 ## Handling Data and State: 💾

@@ -10,10 +10,9 @@ lib/features/
     ├── explore/                  # Handles the user's explore page / search
     ├── home/                     # Handles the main navigation logic
     ├── inbox/                    # Handles user inbox page
-    ├── login/                    # Handles user login page
+    ├── login/                    # Handles user login page and user registration
     ├── posts/                    # Handles the posts features such as viewing or editing a post
     ├── profile/                  # Handles user features such as viewing or editing your profile
-    ├── registration/             # Handles user registration
     ├── search/                   # Handles search
     └── shared/                   # Handles shared widgets
 ```

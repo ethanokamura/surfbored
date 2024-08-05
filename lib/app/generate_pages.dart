@@ -3,8 +3,7 @@ import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:rando/features/home/home.dart';
 import 'package:rando/features/inbox/inbox.dart';
 import 'package:rando/features/login/login.dart';
-import 'package:rando/features/profile/profile/profile.dart';
-import 'package:rando/features/registration/register_user.dart';
+import 'package:rando/features/profile/profile.dart';
 import 'package:rando/features/search/search.dart';
 
 List<Page<dynamic>> generateAppPages(

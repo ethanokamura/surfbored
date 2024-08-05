@@ -6,7 +6,7 @@ import 'package:rando/features/posts/cubit/post_cubit.dart';
 import 'package:rando/features/posts/edit_post/edit_post.dart';
 import 'package:rando/features/posts/shared/post/cubit/like_cubit.dart';
 import 'package:rando/features/posts/shared/post/view/more_options.dart';
-import 'package:rando/features/shared/shared.dart';
+import 'package:rando/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class PostView extends StatelessWidget {

@@ -6,7 +6,7 @@ import 'package:rando/features/boards/cubit/board_cubit.dart';
 import 'package:rando/features/boards/edit_board/edit_board.dart';
 import 'package:rando/features/boards/shared/shared.dart';
 import 'package:rando/features/boards/shuffle/shuffle_posts.dart';
-import 'package:rando/features/shared/shared.dart';
+import 'package:rando/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {

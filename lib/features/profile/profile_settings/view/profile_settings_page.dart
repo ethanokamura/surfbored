@@ -2,8 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
-import 'package:rando/features/profile/cubit/profile_cubit.dart';
-import 'package:rando/features/profile/edit_profile/edit_profile.dart';
+import 'package:rando/features/profile/profile.dart';
 import 'package:rando/theme/theme_cubit.dart';
 
 class ProfileSettingsPage extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rando/features/explore/feed.dart';
 import 'package:rando/features/home/view/bottom_nav_bar.dart';
 import 'package:rando/features/inbox/inbox.dart';
-import 'package:rando/features/profile/profile/profile.dart';
+import 'package:rando/features/profile/profile.dart';
 import 'package:rando/features/search/search.dart';
 import 'package:user_repository/user_repository.dart';
 

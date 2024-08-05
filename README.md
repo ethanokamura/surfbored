@@ -35,11 +35,11 @@ done
 To generate the data models:
 ```bash
 # create_models.sh
-# Find all pubspec.yaml files in the project
+# Find all the data models files in the project
 find . -name "models.dart" | while read -r file; do
-  # Navigate to the directory containing the pubspec.yaml
+  # Navigate to the directory containing the data models
   dir=$(dirname "$file")
-  echo "Running 'dart pub get' in $dir"
+  echo "Running 'run build_runner build' in $dir"
   (cd "$dir" && flutter pub run build_runner build)
 done
 ```

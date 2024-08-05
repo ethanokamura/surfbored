@@ -4,7 +4,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/boards/cubit/board_cubit.dart';
+import 'package:rando/features/boards/boards.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CreateBoardPage extends StatelessWidget {

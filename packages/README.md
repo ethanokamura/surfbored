@@ -5,12 +5,13 @@ The backend/backbone of the project.
 
 ```
 packages/
-├── app_core/                 # Core functions of the project; main backbone for the backend
-├── api_client/               # References to APIs such as Firebase Storage and Firestore
-├── app_ui/                   # UI elements including theme, commonly used widgets, and constants
-├── user_repository/          # Handles user data and its interaction with Firestore functions
-├── post_repository/          # Handles post data and its interaction with Firestore functions
-└── board_repository/         # Handles board data and its interaction with Firestore functions
+  ├── api_client/                # References to API's such as Firebase Storage and Firestore
+  ├── app_core/                  # Core functions of the project; main backbone for the backend
+  ├── app_ui/                    # UI elements including theme, commonly used widgets, and constants
+  ├── board_repository/          # Handles board data and its interaction with API's
+  ├── post_repository/           # Handles post data and its interaction with API's
+  ├── tag_repository/            # Handles tag data and its interaction with API's
+  └── user_repository/           # Handles user data and its interaction with API's
 ```
 
 ## Data Structure

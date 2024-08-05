@@ -1,6 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/features/feed/feed.dart';
+import 'package:rando/features/explore/feed.dart';
 import 'package:rando/features/home/view/bottom_nav_bar.dart';
 import 'package:rando/features/inbox/inbox.dart';
 import 'package:rando/features/profile/profile/profile.dart';

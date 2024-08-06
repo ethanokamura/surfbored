@@ -1,4 +1,6 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:app_ui/src/constants.dart';
+import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -34,15 +36,7 @@ class Tag extends StatelessWidget {
           horizontal: 10,
           vertical: 5,
         ),
-        child: Text(
-          tag,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Theme.of(context).textColor,
-            fontSize: 14,
-          ),
-        ),
+        child: PrimaryText(text: tag, fontSize: 14),
       ),
     );
   }
@@ -100,14 +94,7 @@ class CustomInputField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       // mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(
-          '$label:',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.normal,
-            color: Theme.of(context).subtextColor,
-          ),
-        ),
+        SecondaryText(text: '$label:', fontSize: 20),
         const HorizontalSpacer(),
         CustomContainer(
           inverted: false,
@@ -118,10 +105,7 @@ class CustomInputField extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    text,
-                    overflow: TextOverflow.clip,
-                  ),
+                  child: PrimaryText(text: text),
                 ),
               ),
               IconButton(
@@ -172,19 +156,16 @@ class CustomTextBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // section name
-              Text(
-                label,
-                style: TextStyle(color: Theme.of(context).accentColor),
-              ),
-              IconButton(
-                onPressed: onPressed,
-                icon: const Icon(Icons.settings),
-                color: Theme.of(context).accentColor,
+              SecondaryText(text: label),
+              ActionIconButton(
+                onTap: onPressed,
+                icon: Icons.settings,
+                inverted: true,
               ),
             ],
           ),
           // text
-          Text(text),
+          PrimaryText(text: text),
         ],
       ),
     );

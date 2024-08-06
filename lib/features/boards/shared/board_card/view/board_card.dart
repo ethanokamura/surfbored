@@ -44,24 +44,8 @@ class BoardCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    board.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Theme.of(context).textColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    board.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Theme.of(context).subtextColor,
-                      fontSize: 14,
-                    ),
-                  ),
+                  TitleText(text: board.title),
+                  SecondaryText(text: board.description, maxLines: 2),
                 ],
               ),
             ),

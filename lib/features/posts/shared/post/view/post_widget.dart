@@ -75,22 +75,8 @@ class PostView extends StatelessWidget {
               ],
             ),
             const VerticalSpacer(),
-            Text(
-              post.title,
-              style: TextStyle(
-                color: Theme.of(context).textColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
-            ),
-            Text(
-              post.description,
-              style: TextStyle(
-                color: Theme.of(context).subtextColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
+            TitleText(text: post.title),
+            DescriptionText(text: post.description),
             const VerticalSpacer(),
             TagList(tags: post.tags),
             const VerticalSpacer(),

@@ -28,20 +28,13 @@ class ProfileSettingsPage extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('User Settings'),
+        title: const AppBarText(text: 'User Settings'),
       ),
       top: false,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // SwitchListTile(
-            //   title: Text(isDarkMode ? 'Dark Mode' : 'Light Mode'),
-            //   value: isDarkMode,
-            //   onChanged: (value) {
-            //     context.read<ThemeCubit>().toggleTheme();
-            //   },
-            // ),
             ActionButton(
               text: 'Theme: ${isDarkMode ? 'Dark Mode' : 'Light Mode'}',
               inverted: false,

@@ -12,7 +12,7 @@ class FeedPage extends StatelessWidget {
       top: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Activity Feed'),
+        title: const AppBarText(text: 'Activity Feed'),
         actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.solidPaperPlane),

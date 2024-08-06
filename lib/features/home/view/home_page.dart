@@ -1,4 +1,5 @@
 import 'package:app_core/app_core.dart';
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:rando/features/explore/feed.dart';
 import 'package:rando/features/home/view/bottom_nav_bar.dart';
@@ -35,7 +36,7 @@ class HomeBody extends StatelessWidget {
       children: [
         const FeedPage(),
         const SearchPage(),
-        const Center(child: Text('Create')),
+        const Center(child: TitleText(text: 'Create')),
         const InboxPage(),
         ProfilePage(userID: userID),
       ],

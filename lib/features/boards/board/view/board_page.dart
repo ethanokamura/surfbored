@@ -19,10 +19,11 @@ class BoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: true,
-      appBar: AppBar(
-        title: Text(board.title),
-      ),
+      top: false,
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   title: AppBarText(text: board.title),
+      // ),
       body: BoardPageView(board: board),
     );
   }
@@ -44,24 +45,29 @@ class BoardPageView extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate(
               <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ImageWidget(
-                      borderRadius: defaultBorderRadius,
-                      photoURL: board.photoURL,
-                      width: double.infinity,
-                    ),
-                    const VerticalSpacer(),
-                    BoardDetails(
-                      boardID: board.id,
-                      title: board.title,
-                      description: board.description,
-                      userID: board.uid,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: defaultPadding),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TopBar(title: board.title),
+                      const VerticalSpacer(),
+                      ImageWidget(
+                        borderRadius: defaultBorderRadius,
+                        photoURL: board.photoURL,
+                        width: double.infinity,
+                      ),
+                      const VerticalSpacer(),
+                      BoardDetails(
+                        boardID: board.id,
+                        title: board.title,
+                        description: board.description,
+                        userID: board.uid,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -70,7 +76,6 @@ class BoardPageView extends StatelessWidget {
       },
       body: Column(
         children: [
-          const VerticalSpacer(),
           BoardButtons(
             isOwner: isOwner,
             user: user,
@@ -92,22 +97,13 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        AppBarText(text: title, fontSize: 30),
         ActionIconButton(
           inverted: false,
           onTap: () => Navigator.pop(context),
-          icon: Icons.arrow_back_ios_new_rounded,
-        ),
-        AutoSizeText(
-          '$title:',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textDirection: TextDirection.ltr,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
+          icon: FontAwesomeIcons.xmark,
         ),
       ],
     );
@@ -135,18 +131,16 @@ class BoardDetails extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: Theme.of(context).textColor,
+            Flexible(
+              child: TitleText(
+                text: title,
                 fontSize: 24,
-                fontWeight: FontWeight.bold,
+                maxLines: 2,
               ),
             ),
             ActionIconButton(
-              // horizontal: 0,
-              // vertical: 0,
               inverted: false,
               onTap: () => Navigator.push(
                 context,
@@ -163,12 +157,8 @@ class BoardDetails extends StatelessWidget {
             ),
           ],
         ),
-        Text(
-          description,
-          style: TextStyle(
-            color: Theme.of(context).subtextColor,
-          ),
-        ),
+        DescriptionText(text: description),
+        const VerticalSpacer(),
         ProfileLink(uid: userID),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:app_ui/src/constants.dart';
+import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -49,18 +50,7 @@ class ActionButton extends StatelessWidget {
               size: 18,
             ),
           if (text != null && icon != null) const SizedBox(width: 10),
-          if (text != null)
-            Text(
-              text!,
-              style: TextStyle(
-                color: inverted
-                    ? Theme.of(context).inverseTextColor
-                    : Theme.of(context).textColor,
-                letterSpacing: 1.5,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
+          if (text != null) ButtonText(text: text!, inverted: inverted),
         ],
       ),
     );
@@ -114,18 +104,7 @@ class SecondaryButton extends StatelessWidget {
               size: 18,
             ),
           if (text != null && icon != null) const SizedBox(width: 10),
-          if (text != null)
-            Text(
-              text!,
-              style: TextStyle(
-                color: inverted
-                    ? Theme.of(context).inverseTextColor
-                    : Theme.of(context).textColor,
-                letterSpacing: 1.5,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
+          if (text != null) ButtonText(text: text!, inverted: inverted),
         ],
       ),
     );
@@ -134,6 +113,39 @@ class SecondaryButton extends StatelessWidget {
 
 class ActionIconButton extends StatelessWidget {
   const ActionIconButton({
+    required this.icon,
+    required this.inverted,
+    required this.onTap,
+    super.key,
+    this.size,
+    this.padding,
+  });
+  final IconData icon;
+  final bool inverted;
+  final double? size;
+  final double? padding;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.all(padding ?? 5),
+        child: Icon(
+          icon,
+          color: inverted
+              ? Theme.of(context).accentColor
+              : Theme.of(context).textColor,
+          size: size ?? 20,
+        ),
+      ),
+    );
+  }
+}
+
+class LabeledIconButton extends StatelessWidget {
+  const LabeledIconButton({
     required this.icon,
     required this.inverted,
     required this.onTap,
@@ -175,14 +187,7 @@ class ActionIconButton extends StatelessWidget {
           ),
         ),
         if (label != null) const SizedBox(height: 5),
-        if (label != null)
-          Text(
-            label!,
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).textColor,
-            ),
-          ),
+        if (label != null) PrimaryText(text: label!),
       ],
     );
   }

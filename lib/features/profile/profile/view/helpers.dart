@@ -23,11 +23,13 @@ class ProfileTopBar extends StatelessWidget {
           children: [
             ActionIconButton(
               inverted: false,
+              padding: 10,
               onTap: () {},
               icon: FontAwesomeIcons.share,
             ),
             ActionIconButton(
               inverted: false,
+              padding: 10,
               onTap: () {
                 Navigator.push(
                   context,
@@ -49,6 +51,7 @@ class ProfileTopBar extends StatelessWidget {
             if (Navigator.of(context).canPop())
               ActionIconButton(
                 inverted: false,
+                padding: 10,
                 onTap: () => Navigator.pop(context),
                 icon: FontAwesomeIcons.xmark,
               ),
@@ -77,28 +80,11 @@ class ProfileHeader extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '@${user.username}',
-              style: TextStyle(
-                color: Theme.of(context).accentColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              user.name,
-              style: TextStyle(
-                color: Theme.of(context).textColor,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
-              style: TextStyle(
-                color: Theme.of(context).subtextColor,
-                fontSize: 14,
-              ),
+            UserText(text: '@${user.username}', bold: true, fontSize: 24),
+            TitleText(text: user.name),
+            SecondaryText(
+              text:
+                  'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
             ),
           ],
         ),
@@ -119,20 +105,8 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'about me',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Theme.of(context).subtextColor,
-            ),
-          ),
-          Text(
-            user.bio,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Theme.of(context).textColor,
-            ),
-          ),
+          const SecondaryText(text: 'about me'),
+          PrimaryText(text: user.bio),
         ],
       ),
     );
@@ -159,13 +133,7 @@ class Interests extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'interests',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Theme.of(context).subtextColor,
-            ),
-          ),
+          const SecondaryText(text: 'interests'),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: TagList(tags: interests),

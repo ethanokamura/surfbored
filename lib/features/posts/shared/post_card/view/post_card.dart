@@ -38,27 +38,11 @@ class PostCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      post.title,
+                    TitleText(text: post.title, fontSize: 14),
+                    DescriptionText(
+                      text: post.description,
+                      fontSize: 14,
                       maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).textColor,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      post.description,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).subtextColor,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 12,
-                      ),
                     ),
                   ],
                 ),

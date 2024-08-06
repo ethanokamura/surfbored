@@ -37,12 +37,17 @@ class PostFeed extends StatelessWidget {
               ),
             );
           } else if (state.isEmpty) {
-            return const Center(child: Text('Item list is empty.'));
+            return const Center(
+                child: PrimaryText(text: 'Item list is empty.'));
           } else if (state.isDeleted || state.isUpdated || state.isCreated) {
             context.read<PostCubit>().streamAllPosts();
-            return const Center(child: Text('Posts were changed. Reloading.'));
+            return const Center(
+              child: PrimaryText(text: 'Posts were changed. Reloading.'),
+            );
           } else if (state.isFailure) {
-            return const Center(child: Text('Something went wrong'));
+            return const Center(
+              child: PrimaryText(text: 'Something went wrong'),
+            );
           }
           return const Center(child: CircularProgressIndicator());
         },

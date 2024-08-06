@@ -32,7 +32,7 @@ class _EditBoardPageState extends State<EditBoardPage> {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Edit Board'),
+        title: const AppBarText(text: 'Edit Board'),
       ),
       body: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
@@ -41,7 +41,9 @@ class _EditBoardPageState extends State<EditBoardPage> {
           } else if (state.isLoaded || state.isUpdated) {
             return EditView(board: state.board, boardCubit: boardCubit);
           } else {
-            return const Center(child: Text('Something went wrong'));
+            return const Center(
+              child: PrimaryText(text: 'Something went wrong'),
+            );
           }
         },
       ),
@@ -60,7 +62,9 @@ class EditView extends StatelessWidget {
         if (state.isUpdated) {
           // Show a success message or navigate back
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Post updated successfully')),
+            const SnackBar(
+              content: PrimaryText(text: 'Post updated successfully'),
+            ),
           );
         }
       },

@@ -25,7 +25,7 @@ class _RegisterUserState extends State<RegisterUser> {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Create Username'),
+        title: const AppBarText(text: 'Create Username'),
       ),
       top: true,
       body: Center(
@@ -43,7 +43,7 @@ class _RegisterUserState extends State<RegisterUser> {
               },
             ),
             const VerticalSpacer(),
-            const Text('Upload a profile picture.'),
+            const PrimaryText(text: 'Upload a profile picture.'),
             const VerticalSpacer(),
             CustomInputField(
               label: 'Username*',
@@ -103,7 +103,7 @@ class _RegisterUserState extends State<RegisterUser> {
               },
             ),
             const VerticalSpacer(),
-            const Text('* required fields'),
+            const SecondaryText(text: '* required fields'),
             const VerticalSpacer(),
             if (username != '')
               ActionButton(

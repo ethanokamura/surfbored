@@ -34,7 +34,7 @@ class _EditPostPageState extends State<EditPostPage> {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Edit Post'),
+        title: const AppBarText(text: 'Edit Post'),
       ),
       body: BlocBuilder<PostCubit, PostState>(
         builder: (context, state) {
@@ -47,7 +47,8 @@ class _EditPostPageState extends State<EditPostPage> {
               postCubit: postCubit,
             );
           } else {
-            return const Center(child: Text('Something went wrong'));
+            return const Center(
+                child: PrimaryText(text: 'Something went wrong'));
           }
         },
       ),
@@ -66,7 +67,9 @@ class EditView extends StatelessWidget {
         if (state.isUpdated) {
           // Show a success message or navigate back
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Post updated successfully')),
+            const SnackBar(
+              content: PrimaryText(text: 'Post updated successfully'),
+            ),
           );
         }
       },

@@ -87,20 +87,16 @@ class BottomNavBar extends StatelessWidget {
     await showBottomModal(
       currentContext,
       <Widget>[
-        Text(
-          'Create Something:',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: currentContext.theme.textColor,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+        const TitleText(
+          text: 'Create Something:',
+          fontSize: 24,
+          // textAlign: TextAlign.center,
         ),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
+            LabeledIconButton(
               icon: FontAwesomeIcons.mountain,
               label: 'Activity',
               inverted: true,
@@ -111,7 +107,7 @@ class BottomNavBar extends StatelessWidget {
               },
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
+            LabeledIconButton(
               icon: FontAwesomeIcons.list,
               label: 'Board',
               inverted: true,

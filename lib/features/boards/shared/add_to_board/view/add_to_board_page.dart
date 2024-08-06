@@ -26,7 +26,7 @@ class AddToBoardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Add Activity To A Board'),
+        title: const AppBarText(text: 'Add Activity To A Board'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pop(context),
@@ -58,9 +58,13 @@ class AddToBoardPage extends StatelessWidget {
                     },
                   );
                 } else if (state.isFailure) {
-                  return const Center(child: Text('Failure Loading Board'));
+                  return const Center(
+                    child: PrimaryText(text: 'Failure Loading Board'),
+                  );
                 } else {
-                  return const Center(child: Text('Unknown state'));
+                  return const Center(
+                    child: PrimaryText(text: 'Unknown state'),
+                  );
                 }
               },
             ),

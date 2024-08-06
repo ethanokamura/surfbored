@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:api_client/api_client.dart';
+import 'package:app_ui/app_ui.dart';
 import 'package:app_ui/src/buttons.dart';
 import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/pop_ups.dart';
@@ -72,20 +73,12 @@ class _EditImageState extends State<EditImage> {
     await showBottomModal(
       context,
       <Widget>[
-        Text(
-          'Select Media:',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Theme.of(context).textColor,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const TitleText(text: 'Select Media:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
+            LabeledIconButton(
               icon: Icons.camera_alt_outlined,
               label: 'Camera',
               inverted: true,
@@ -96,7 +89,7 @@ class _EditImageState extends State<EditImage> {
               },
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
+            LabeledIconButton(
               icon: Icons.photo_library_outlined,
               label: 'Library',
               inverted: true,
@@ -167,7 +160,9 @@ class _EditImageState extends State<EditImage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to pick image. Please try again.'),
+            content: PrimaryText(
+              text: 'Failed to pick image. Please try again.',
+            ),
           ),
         );
       }
@@ -240,20 +235,12 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     await showBottomModal(
       context,
       <Widget>[
-        Text(
-          'Select Media:',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Theme.of(context).textColor,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const TitleText(text: 'Select Media:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
+            LabeledIconButton(
               icon: Icons.camera_alt_outlined,
               label: 'Camera',
               inverted: true,
@@ -264,7 +251,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
               },
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
+            LabeledIconButton(
               icon: Icons.photo_library_outlined,
               label: 'Library',
               inverted: true,
@@ -322,7 +309,9 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to pick image. Please try again.'),
+            content: PrimaryText(
+              text: 'Failed to pick image. Please try again.',
+            ),
           ),
         );
       }
@@ -569,20 +558,12 @@ class _EditSquareImageState extends State<EditSquareImage> {
     await showBottomModal(
       context,
       <Widget>[
-        Text(
-          'Select Media:',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Theme.of(context).textColor,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const TitleText(text: 'Select Media:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
+            LabeledIconButton(
               icon: Icons.camera_alt_outlined,
               label: 'Camera',
               inverted: true,
@@ -593,7 +574,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
               },
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
+            LabeledIconButton(
               icon: Icons.photo_library_outlined,
               label: 'Library',
               inverted: true,
@@ -664,7 +645,9 @@ class _EditSquareImageState extends State<EditSquareImage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to pick image. Please try again.'),
+            content: PrimaryText(
+              text: 'Failed to pick image. Please try again.',
+            ),
           ),
         );
       }

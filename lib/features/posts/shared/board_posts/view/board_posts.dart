@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
@@ -17,7 +18,7 @@ class BoardPosts extends StatelessWidget {
           if (state.isLoading && state.posts.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Loading Posts'),
+                content: PrimaryText(text: 'Loading Posts'),
                 duration: Duration(milliseconds: 500),
               ),
             );
@@ -25,7 +26,7 @@ class BoardPosts extends StatelessWidget {
             context.read<PostCubit>().streamBoardPosts(boardID);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Posts were changed. Reloading.'),
+                content: PrimaryText(text: 'Posts were changed. Reloading.'),
                 duration: Duration(seconds: 1),
               ),
             );
@@ -49,9 +50,11 @@ class BoardPosts extends StatelessWidget {
                 },
               );
             } else if (state.isEmpty) {
-              return const Center(child: Text('Board is empty.'));
+              return const Center(child: PrimaryText(text: 'Board is empty.'));
             } else {
-              return const Center(child: Text('Something went wrong'));
+              return const Center(
+                child: PrimaryText(text: 'Something went wrong'),
+              );
             }
           },
         ),

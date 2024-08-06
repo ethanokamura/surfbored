@@ -49,13 +49,7 @@ class LoginContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const Center(
-            child: Text(
-              'Locals Only',
-              style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: TitleText(text: 'SurfBoard', fontSize: 36),
           ),
           Center(
             child: Container(

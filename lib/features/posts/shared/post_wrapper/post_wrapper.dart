@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
@@ -22,9 +23,13 @@ class PostWrapper extends StatelessWidget {
               postCubit: context.read<PostCubit>(),
             );
           } else if (state.isEmpty) {
-            return const Center(child: Text('This post is empty.'));
+            return const Center(
+              child: PrimaryText(text: 'This post is empty.'),
+            );
           } else {
-            return const Center(child: Text('Something went wrong'));
+            return const Center(
+              child: PrimaryText(text: 'Something went wrong'),
+            );
           }
         },
       ),

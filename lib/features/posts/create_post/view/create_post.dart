@@ -18,7 +18,7 @@ class CreatePostPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Create An Activity!'),
+        title: const AppBarText(text: 'Create An Activity!'),
       ),
       body: BlocProvider(
         create: (context) => PostCubit(
@@ -60,11 +60,17 @@ class _CreateActivityState extends State<CreateActivity> {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state.isCreated) {
-          return const Center(child: Text('Post created successfully!'));
+          return const Center(
+            child: PrimaryText(text: 'Post created successfully!'),
+          );
         } else if (state.isEmpty) {
-          return const Center(child: Text('This board is empty.'));
+          return const Center(
+            child: PrimaryText(text: 'Post is empty'),
+          );
         } else if (state.isFailure) {
-          return const Center(child: Text('Something went wrong'));
+          return const Center(
+            child: PrimaryText(text: 'Something went wrong.'),
+          );
         } else {
           return ListView(
             children: [

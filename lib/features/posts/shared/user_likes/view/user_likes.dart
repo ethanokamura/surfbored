@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
@@ -28,12 +29,17 @@ class UserLikedPostsList extends StatelessWidget {
               },
             );
           } else if (state.isEmpty) {
-            return const Center(child: Text('Item list is empty.'));
+            return const Center(
+                child: PrimaryText(text: 'Item list is empty.'));
           } else if (state.isDeleted || state.isUpdated || state.isCreated) {
             context.read<PostCubit>().streamUserLikedPosts(userID);
-            return const Center(child: Text('Posts were changed. Reloading.'));
+            return const Center(
+              child: PrimaryText(text: 'Posts were changed. Reloading.'),
+            );
           } else if (state.isFailure) {
-            return const Center(child: Text('Something went wrong'));
+            return const Center(
+              child: PrimaryText(text: 'Something went wrong'),
+            );
           }
           return const Center(child: CircularProgressIndicator());
         },

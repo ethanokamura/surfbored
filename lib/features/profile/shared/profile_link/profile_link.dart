@@ -26,12 +26,7 @@ class ProfileLink extends StatelessWidget {
               builder: (context) => ProfilePage(userID: uid),
             ),
           ),
-          child: Text(
-            '@$username',
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-            ),
-          ),
+          child: UserText(text: '@$username', bold: false),
         );
       },
     );

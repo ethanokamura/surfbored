@@ -17,7 +17,7 @@ class CreateBoardPage extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Create A Board!'),
+        title: const AppBarText(text: 'Create A Board!'),
       ),
       top: true,
       body: BlocProvider(
@@ -58,11 +58,15 @@ class _CreateBoardState extends State<CreateBoard> {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state.isCreated) {
-          return const Center(child: Text('Board created successfully!'));
+          return const Center(
+            child: PrimaryText(text: 'Board created successfully!'),
+          );
         } else if (state.isEmpty) {
-          return const Center(child: Text('This board is empty.'));
+          return const Center(child: PrimaryText(text: 'This board is empty.'));
         } else if (state.isFailure) {
-          return const Center(child: Text('Something went wrong'));
+          return const Center(
+            child: PrimaryText(text: 'Something went wrong'),
+          );
         } else {
           return ListView(
             children: [

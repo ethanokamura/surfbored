@@ -1,14 +1,15 @@
 import 'package:app_ui/src/buttons.dart';
+import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:app_ui/src/widgets.dart';
 import 'package:flutter/material.dart';
 
 // dynamic input length maximum
 int maxInputLength(String field) {
-  if (field == 'title') return 30;
+  if (field == 'title') return 40;
   if (field == 'username') return 15;
+  if (field == 'name') return 30;
   if (field == 'bio') return 150;
-  if (field == 'website') return 150;
   if (field == 'description') return 150;
   return 50;
 }
@@ -23,30 +24,19 @@ Future<String?> editTextField(
     context: context,
     builder: (context) => AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      title: Text(
-        'Edit $field:',
-        style: TextStyle(
-          color: Theme.of(context).accentColor,
-        ),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-            TextFormField(
-              cursorColor: Theme.of(context).subtextColor,
-              controller: textController,
-              autofocus: true,
-              maxLength: maxLength,
-              maxLines: null,
-              decoration: InputDecoration(
-                hintText: 'Enter new $field',
-                hintStyle: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).hintTextColor,
-                ),
-              ),
-            ),
-          ],
+      title: TitleText(text: 'Edit $field:'),
+      content: TextFormField(
+        cursorColor: Theme.of(context).subtextColor,
+        controller: textController,
+        autofocus: true,
+        maxLength: maxLength,
+        maxLines: null,
+        decoration: InputDecoration(
+          hintText: 'Enter new $field',
+          hintStyle: TextStyle(
+            fontSize: 18,
+            color: Theme.of(context).hintTextColor,
+          ),
         ),
       ),
       actions: [

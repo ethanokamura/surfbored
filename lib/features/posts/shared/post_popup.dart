@@ -91,21 +91,8 @@ Future<dynamic> postPopUp(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                post.title,
-                style: TextStyle(
-                  color: Theme.of(context).textColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-              Text(
-                post.description,
-                style: TextStyle(
-                  color: Theme.of(context).subtextColor,
-                  fontSize: 18,
-                ),
-              ),
+              TitleText(text: post.title),
+              DescriptionText(text: post.description),
               const VerticalSpacer(),
               TagList(tags: post.tags),
               const VerticalSpacer(),

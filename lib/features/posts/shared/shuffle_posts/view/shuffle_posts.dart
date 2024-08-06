@@ -13,7 +13,8 @@ class ShuffledPostsPage extends StatelessWidget {
     return CustomPageView(
       top: true,
       appBar: AppBar(
-        title: const Text('Shuffled Posts'),
+        backgroundColor: Colors.transparent,
+        title: const AppBarText(text: 'Shuffled Posts'),
       ),
       body: BlocProvider(
         create: (context) => PostCubit(
@@ -27,9 +28,11 @@ class ShuffledPostsPage extends StatelessWidget {
               final posts = state.posts;
               return PostViewController(posts: posts);
             } else if (state.isEmpty) {
-              return const Center(child: Text('Board is empty.'));
+              return const Center(child: PrimaryText(text: 'Board is empty.'));
             } else {
-              return const Center(child: Text('Something went wrong'));
+              return const Center(
+                child: PrimaryText(text: 'Something went wrong'),
+              );
             }
           },
         ),

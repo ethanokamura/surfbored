@@ -49,7 +49,7 @@ class LikeButton extends StatelessWidget {
                       size: 20,
                     ),
                     const SizedBox(width: 10),
-                    Text('$likes likes'),
+                    PrimaryText(text: '$likes likes'),
                   ],
                 ),
               ),

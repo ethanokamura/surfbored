@@ -11,7 +11,7 @@ class InboxPage extends StatelessWidget {
       top: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Inbox'),
+        title: const AppBarText(text: 'Inbox'),
       ),
       body: Column(
         children: [

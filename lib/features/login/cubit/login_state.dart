@@ -1,6 +1,6 @@
 part of 'login_cubit.dart';
 
-enum LoginStatus { initial, verifying, signingIn, failure }
+enum LoginStatus { initial, verifying, signingIn, failure, success }
 
 extension LoginStatusExtensions on LoginStatus {
   bool get isSigningIn => this == LoginStatus.signingIn;
@@ -33,6 +33,11 @@ final class LoginState extends Equatable {
           signInMethod: SignInMethod.phone,
         );
 
+  const LoginState.successfulSignIn()
+      : this._(
+          status: LoginStatus.success,
+        );
+
   const LoginState.failure(UserFailure failure)
       : this._(
           status: LoginStatus.failure,
@@ -49,7 +54,7 @@ final class LoginState extends Equatable {
 
 extension LoginStateExtensions on LoginState {
   bool get isFailure => status == LoginStatus.failure;
-
+  bool get isSuccess => status == LoginStatus.success;
   bool get isSigningInWithPhone => status.isSigningIn && signInMethod.isPhone;
   bool get isVerifyingWithPhone => status.isSigningIn && signInMethod.isPhone;
 }

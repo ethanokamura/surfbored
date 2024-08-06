@@ -144,9 +144,9 @@ extension Username on UserRepository {
   }
 
   // check if the current user has a username
-  Future<bool> userHasUsername() async {
-    final userDoc = await _firestore.getUserDoc(user.uid);
-    return userDoc.exists && userDoc.data()!.containsKey('username');
+  Future<bool> userHasUsername(String userID) async {
+    final usernameDoc = await _firestore.getUsernameDoc(userID);
+    return usernameDoc.exists;
   }
 
   Future<String> fetchUsername(String userID) async {

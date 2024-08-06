@@ -158,13 +158,7 @@ class _EditImageState extends State<EditImage> {
         setState(() {
           isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: PrimaryText(
-              text: 'Failed to pick image. Please try again.',
-            ),
-          ),
-        );
+        context.showSnackBar('Failed to pick image. Please try again.');
       }
     }
   }
@@ -307,13 +301,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
         setState(() {
           isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: PrimaryText(
-              text: 'Failed to pick image. Please try again.',
-            ),
-          ),
-        );
+        context.showSnackBar('Failed to pick image. Please try again.');
       }
     }
   }
@@ -643,13 +631,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
         setState(() {
           isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: PrimaryText(
-              text: 'Failed to pick image. Please try again.',
-            ),
-          ),
-        );
+        context.showSnackBar('Failed to pick image. Please try again.');
       }
     }
   }

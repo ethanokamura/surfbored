@@ -66,11 +66,7 @@ class EditView extends StatelessWidget {
       listener: (context, state) {
         if (state.isUpdated) {
           // Show a success message or navigate back
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: PrimaryText(text: 'Post updated successfully'),
-            ),
-          );
+          context.showSnackBar('Post updated successfully');
         }
       },
       child: BlocBuilder<PostCubit, PostState>(

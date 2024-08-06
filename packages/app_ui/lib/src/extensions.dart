@@ -1,4 +1,3 @@
-import 'package:app_ui/src/text.dart';
 import 'package:flutter/material.dart';
 
 extension BuildContextExtensions on BuildContext {
@@ -13,7 +12,7 @@ extension BuildContextExtensions on BuildContext {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: PrimaryText(text: text),
+          content: Text(text),
           behavior: SnackBarBehavior.floating,
         ),
       );

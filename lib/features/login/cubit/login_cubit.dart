@@ -24,12 +24,16 @@ class LoginCubit extends Cubit<LoginState> {
       await _userRepository.verifyPhone(
         phoneNumber: phoneNumber,
         verificationCompleted: verificationCompleted,
-        verificationFailed: verificationFailed,
+        verificationFailed: (FirebaseAuthException e) {
+          verificationFailed(e);
+          emit(const LoginState.initial());
+        },
         codeSent: (String verificationId, int? forceResendingToken) {
-          print('Code sent with verification ID: $verificationId');
           codeSent(verificationId, forceResendingToken);
         },
-        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+        codeAutoRetrievalTimeout: (String verificationId) {
+          codeAutoRetrievalTimeout(verificationId);
+        },
       );
     } on PhoneNumberSignInFailure {
       emit(const LoginState.initial());
@@ -43,6 +47,7 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(const LoginState.signingInWithPhone());
       await _userRepository.signInWithOTP(otp, verificationId);
+      emit(const LoginState.successfulSignIn());
     } on PhoneNumberSignInFailure {
       emit(const LoginState.initial());
     } on UserFailure catch (failure) {

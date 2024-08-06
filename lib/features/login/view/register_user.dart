@@ -22,6 +22,7 @@ class _RegisterUserState extends State<RegisterUser> {
   @override
   Widget build(BuildContext context) {
     final uid = UserRepository().fetchCurrentUserID();
+    print('user registration page');
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

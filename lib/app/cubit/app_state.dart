@@ -4,7 +4,7 @@ enum AppStatus {
   unauthenticated,
   newlyAuthenticated,
   authenticated,
-  needsRegistration,
+  registration,
   failure,
   // main
   home,
@@ -18,6 +18,7 @@ extension AppStatusExtensions on AppStatus {
   bool get isUnauthenticated => this == AppStatus.unauthenticated;
   bool get isNewlyAuthenticated => this == AppStatus.newlyAuthenticated;
   bool get isAuthenticated => this == AppStatus.authenticated;
+  bool get needsRegistration => this == AppStatus.registration;
   bool get isFailure => this == AppStatus.failure;
 }
 
@@ -45,7 +46,7 @@ final class AppState extends Equatable {
 
   const AppState.needsRegistration(User user)
       : this._(
-          status: AppStatus.needsRegistration,
+          status: AppStatus.registration,
           user: user,
         );
 
@@ -71,6 +72,7 @@ extension AppStateExtensions on AppState {
   bool get isUnauthenticated => status.isUnauthenticated;
   bool get isNewlyAuthenticated => status.isNewlyAuthenticated;
   bool get isAuthenticated => status.isAuthenticated;
+  bool get needsRegistration => status.needsRegistration;
   bool get isFailure => status.isFailure;
 
   AppState copyWith({

@@ -18,18 +18,13 @@ class BoardPosts extends StatelessWidget {
           if (state.isLoading && state.posts.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: PrimaryText(text: 'Loading Posts'),
+                content: Text('Loading Posts'),
                 duration: Duration(milliseconds: 500),
               ),
             );
           } else if (state.isDeleted || state.isUpdated || state.isCreated) {
             context.read<PostCubit>().streamBoardPosts(boardID);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: PrimaryText(text: 'Posts were changed. Reloading.'),
-                duration: Duration(seconds: 1),
-              ),
-            );
+            context.showSnackBar('Posts were changed. Reloading.');
           }
         },
         child: BlocBuilder<PostCubit, PostState>(

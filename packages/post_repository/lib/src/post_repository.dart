@@ -210,21 +210,21 @@ extension StreamData on PostRepository {
     yield buffer;
   }
 
-  Stream<List<Post>> streamUserLikedPosts(
-    String userID, {
+  Stream<List<Post>> streamBoardPosts(
+    String boardID, {
     int pageSize = 10,
     int page = 0,
   }) async* {
-    final userDoc = await _firestore.getUserDoc(userID);
+    final boardDoc = await _firestore.getBoardDoc(boardID);
 
-    if (!userDoc.exists) {
+    if (!boardDoc.exists) {
       yield [];
       return;
     }
 
-    final userData = userDoc.data()!;
+    final boardData = boardDoc.data()!;
     final postIDs = List<String>.from(
-      (userData['likedPosts'] as List).map((post) => post as String),
+      (boardData['posts'] as List).map((post) => post as String),
     );
 
     final reversedPostIDs = postIDs.reversed.toList();
@@ -256,40 +256,34 @@ extension StreamData on PostRepository {
     yield buffer;
   }
 
-  Stream<List<Post>> streamBoardPosts(
-    String boardID, {
+  Stream<List<Post>> streamUserLikedPosts(
+    String userID, {
     int pageSize = 10,
     int page = 0,
   }) async* {
-    final boardDoc = await _firestore.getBoardDoc(boardID);
+    // get post ID
+    final postIDs = await _firestore
+        .collection('likes')
+        .where('userID', isEqualTo: userID)
+        .orderBy('timestamp', descending: true)
+        .get()
+        .then((snapshot) => snapshot.docs)
+        .then(
+          (docs) => docs.map((doc) => doc.data()['postID'] as String).toList(),
+        );
 
-    if (!boardDoc.exists) {
-      yield [];
-      return;
-    }
-
-    final boardData = boardDoc.data()!;
-    final postIDs = List<String>.from(
-      (boardData['posts'] as List).map((post) => post as String),
-    );
-
-    final reversedPostIDs = postIDs.reversed.toList();
-
+    // create buffer
     final buffer = <Post>[];
+
     final startIndex = page * pageSize;
 
-    if (startIndex >= reversedPostIDs.length) {
+    if (startIndex >= postIDs.length) {
       yield buffer;
       return;
     }
 
-    // Fetch the next page of post IDs
-    final postIDsPage =
-        reversedPostIDs.skip(startIndex).take(pageSize).toList();
-    final postDocs = await Future.wait(
-      postIDsPage.map(_firestore.getPostDoc),
-    );
-    // Add the fetched board IDs to the buffer
+    final postIDsPage = postIDs.skip(startIndex).take(pageSize).toList();
+    final postDocs = await Future.wait(postIDsPage.map(_firestore.getPostDoc));
     final posts = postDocs
         .map((doc) {
           if (doc.exists) {
@@ -300,9 +294,9 @@ extension StreamData on PostRepository {
         })
         .whereType<Post>()
         .toList();
+
     buffer.addAll(posts);
 
-    // Emit the current buffer as a stream event
     yield buffer;
   }
 }

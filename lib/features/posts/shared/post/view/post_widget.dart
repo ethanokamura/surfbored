@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/features/posts/cubit/post_cubit.dart';
 import 'package:rando/features/posts/edit_post/edit_post.dart';
-import 'package:rando/features/posts/shared/post/cubit/like_cubit.dart';
+import 'package:rando/features/posts/likes/likes.dart';
 import 'package:rando/features/posts/shared/post/view/more_options.dart';
 import 'package:rando/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
@@ -19,7 +19,7 @@ class PostView extends StatelessWidget {
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserRepository>().fetchCurrentUser();
+    final userID = context.read<UserRepository>().fetchCurrentUserID();
     final isOwner = context.read<UserRepository>().isCurrentUser(post.uid);
     return Flexible(
       child: CustomContainer(
@@ -45,7 +45,7 @@ class PostView extends StatelessWidget {
                     children: [
                       MoreOptions(
                         postID: post.id,
-                        userID: post.uid,
+                        userID: userID,
                         isOwner: isOwner,
                         imgURL: post.photoURL.toString(),
                         onEdit: () {
@@ -98,32 +98,7 @@ class PostView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ProfileLink(uid: post.uid),
-                BlocProvider(
-                  create: (context) =>
-                      LikeCubit(context.read<PostRepository>()),
-                  child: BlocBuilder<LikeCubit, LikeState>(
-                    builder: (context, state) {
-                      context.read<LikeCubit>().fetchData(post.id, user.uid);
-                      var likes = post.likes;
-                      var isLiked = false;
-                      if (state.isLoading) {
-                        // Show a loading indicator in the button if needed
-                      } else if (state.isSuccess) {
-                        likes = state.likes;
-                        isLiked = state.liked;
-                      }
-                      return LikeButton(
-                        onTap: () => context.read<LikeCubit>().toggleLike(
-                              user.uid,
-                              post.id,
-                              liked: isLiked,
-                            ),
-                        isLiked: isLiked,
-                        likes: likes,
-                      );
-                    },
-                  ),
-                ),
+                LikeButton(post: post, userID: userID),
               ],
             ),
           ],

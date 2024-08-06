@@ -55,9 +55,6 @@ extension LikeStateExtensions on LikeState {
 extension _LikeStateExtensions on LikeState {
   LikeState fromLoading() => copyWith(status: LikeStatus.loading);
 
-  LikeState fromSetLiked({required bool isLiked}) =>
-      copyWith(status: LikeStatus.liked, liked: isLiked);
-
   LikeState fromLikeSuccess({required bool isLiked, required int likes}) =>
       copyWith(status: LikeStatus.success, liked: isLiked, likes: likes);
 }

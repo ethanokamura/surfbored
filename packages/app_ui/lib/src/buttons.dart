@@ -188,51 +188,6 @@ class ActionIconButton extends StatelessWidget {
   }
 }
 
-class LikeButton extends StatelessWidget {
-  const LikeButton({
-    required this.onTap,
-    required this.likes,
-    required this.isLiked,
-    super.key,
-  });
-
-  final void Function()? onTap;
-  final int likes;
-  final bool isLiked;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Material(
-        elevation: defaultElevation,
-        color: Theme.of(context).colorScheme.primary,
-        shadowColor: Theme.of(context).shadowColor,
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 5,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border,
-                color: isLiked
-                    ? Theme.of(context).accentColor
-                    : Theme.of(context).textColor,
-                size: 20,
-              ),
-              const SizedBox(width: 10),
-              Text('$likes likes'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class CheckBox extends StatelessWidget {
   const CheckBox({
     required this.isSelected,

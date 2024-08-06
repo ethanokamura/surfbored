@@ -17,24 +17,15 @@ class ProfileTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Expanded(
-          child: AutoSizeText(
-            '@${user.username}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textDirection: TextDirection.ltr,
-            // textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
         Row(
           children: [
+            ActionIconButton(
+              inverted: false,
+              onTap: () {},
+              icon: FontAwesomeIcons.share,
+            ),
             ActionIconButton(
               inverted: false,
               onTap: () {
@@ -75,7 +66,6 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SquareImage(
           photoURL: user.photoURL,
@@ -88,27 +78,20 @@ class ProfileHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              user.name,
+              '@${user.username}',
               style: TextStyle(
-                color: Theme.of(context).textColor,
+                color: Theme.of(context).accentColor,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  '${user.friends}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  'friends',
-                  style: TextStyle(color: Theme.of(context).subtextColor),
-                ),
-              ],
+            Text(
+              user.name,
+              style: TextStyle(
+                color: Theme.of(context).textColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
@@ -220,21 +203,23 @@ class FriendsView extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    // switch to rich text!
-                    Text(
-                      '${state.friends}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                RichText(
+                  text: TextSpan(
+                    text: '${state.friends} ',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'friends',
+                        style: TextStyle(
+                          color: Theme.of(context).subtextColor,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Friends',
-                      style: TextStyle(color: Theme.of(context).subtextColor),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 if (!isCurrent)
                   // show add friend button

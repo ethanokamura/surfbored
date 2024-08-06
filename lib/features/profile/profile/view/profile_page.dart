@@ -83,6 +83,13 @@ class ProfileBuilder extends StatelessWidget {
                           About(user: user),
                           const VerticalSpacer(),
                           const Interests(),
+                          const VerticalSpacer(),
+                          FriendsView(
+                            userID: user.uid,
+                            friends: user.friends,
+                            isCurrent: isCurrent,
+                          ),
+                          const VerticalSpacer(),
                         ],
                       ),
                     ),

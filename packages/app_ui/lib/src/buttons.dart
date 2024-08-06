@@ -70,6 +70,7 @@ class ActionButton extends StatelessWidget {
 class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
     required this.onTap,
+    required this.inverted,
     super.key,
     this.icon,
     this.text,
@@ -77,6 +78,7 @@ class SecondaryButton extends StatelessWidget {
     this.horizontal,
   });
 
+  final bool inverted;
   final IconData? icon;
   final String? text;
   final double? vertical;
@@ -92,7 +94,9 @@ class SecondaryButton extends StatelessWidget {
       ),
       elevation: defaultElevation,
       shadowColor: Colors.black,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: inverted
+          ? Theme.of(context).accentColor
+          : Theme.of(context).colorScheme.primary,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
     return ElevatedButton(
@@ -104,7 +108,9 @@ class SecondaryButton extends StatelessWidget {
           if (icon != null)
             Icon(
               icon,
-              color: Theme.of(context).textColor,
+              color: inverted
+                  ? Theme.of(context).inverseTextColor
+                  : Theme.of(context).textColor,
               size: 18,
             ),
           if (text != null && icon != null) const SizedBox(width: 10),
@@ -112,7 +118,9 @@ class SecondaryButton extends StatelessWidget {
             Text(
               text!,
               style: TextStyle(
-                color: Theme.of(context).textColor,
+                color: inverted
+                    ? Theme.of(context).inverseTextColor
+                    : Theme.of(context).textColor,
                 letterSpacing: 1.5,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,

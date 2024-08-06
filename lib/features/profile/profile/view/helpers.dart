@@ -2,6 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/profile/cubit/profile_cubit.dart';
+import 'package:rando/features/profile/profile/cubit/friends_cubit.dart';
 import 'package:rando/features/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -192,45 +193,86 @@ class Interests extends StatelessWidget {
   }
 }
 
-class Friends extends StatelessWidget {
-  const Friends({required this.friends, super.key});
-  final List<String> friends;
+class FriendsView extends StatelessWidget {
+  const FriendsView({
+    required this.userID,
+    required this.friends,
+    required this.isCurrent,
+    super.key,
+  });
+  final String userID;
+  final bool isCurrent;
+  final int friends;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
       inverted: false,
       horizontal: null,
       vertical: null,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              // switch to rich text!
-              Text(
-                '${friends.length}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+      child: BlocProvider(
+        create: (context) => FriendCubit(context.read<UserRepository>()),
+        child: BlocBuilder<FriendCubit, FriendState>(
+          builder: (context, state) {
+            if (!state.isLoaded && !state.isLoading) {
+              context.read<FriendCubit>().fetchData(userID);
+            }
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    // switch to rich text!
+                    Text(
+                      '${state.friends}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Friends',
+                      style: TextStyle(color: Theme.of(context).subtextColor),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 5),
-              Text(
-                'Friends',
-                style: TextStyle(color: Theme.of(context).subtextColor),
-              ),
-            ],
-          ),
-          // ActionIconButton(
-          //   inverted: true,
-          //   onTap: () {},
-          //   icon: FontAwesomeIcons.plus,
-          // ),
-          ActionIconButton(
-            inverted: true,
-            onTap: () {},
-            icon: FontAwesomeIcons.check,
-          ),
-        ],
+                if (!isCurrent)
+                  // show add friend button
+                  SecondaryButton(
+                    inverted: state.areFriends,
+                    text: state.areFriends
+                        ? 'Remove Friend'
+                        : state.senderID == null
+                            ? 'Send request'
+                            : state.senderID == userID
+                                ? 'Add friend'
+                                : 'Unsend request',
+                    onTap: () {
+                      if (state.areFriends || state.senderID == userID) {
+                        context.read<FriendCubit>().toggleFriend(userID);
+                      } else {
+                        context.read<FriendCubit>().toggleFriendRequest(userID);
+                      }
+                    },
+                    icon: state.areFriends
+                        ? Icons.check
+                        : state.senderID == null
+                            ? Icons.add
+                            : state.senderID == userID
+                                ? Icons.add
+                                : Icons.delete,
+                  )
+                else
+                  // show friends list
+                  SecondaryButton(
+                    onTap: () {},
+                    inverted: false,
+                    text: 'My friends',
+                  ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

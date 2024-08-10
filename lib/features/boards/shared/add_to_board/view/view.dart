@@ -1,1 +1,1 @@
-export 'add_to_board_page.dart';
+export 'add_to_board.dart';

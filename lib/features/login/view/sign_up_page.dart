@@ -3,18 +3,18 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:user_repository/user_repository.dart';
 
-class RegisterUser extends StatefulWidget {
-  const RegisterUser._();
+class SignUpPage extends StatefulWidget {
+  const SignUpPage._();
   static Page<dynamic> page() => const MaterialPage<void>(
         key: ValueKey('register_page'),
-        child: RegisterUser._(),
+        child: SignUpPage._(),
       );
 
   @override
-  State<RegisterUser> createState() => _RegisterUserState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _RegisterUserState extends State<RegisterUser> {
+class _SignUpPageState extends State<SignUpPage> {
   String username = '';
   String name = '';
   String bio = '';
@@ -22,14 +22,14 @@ class _RegisterUserState extends State<RegisterUser> {
   @override
   Widget build(BuildContext context) {
     final uid = UserRepository().fetchCurrentUserID();
-    print('user registration page');
+    print('user registration page $uid');
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: 'Create Username'),
       ),
       top: true,
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -110,6 +110,7 @@ class _RegisterUserState extends State<RegisterUser> {
               ActionButton(
                 inverted: true,
                 onTap: () async {
+                  print('confirming');
                   final user = User(
                     uid: uid,
                     username: username,

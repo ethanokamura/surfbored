@@ -48,7 +48,8 @@ class _EditPostPageState extends State<EditPostPage> {
             );
           } else {
             return const Center(
-                child: PrimaryText(text: 'Something went wrong'));
+              child: PrimaryText(text: 'Something went wrong'),
+            );
           }
         },
       ),

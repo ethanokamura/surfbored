@@ -1,2 +1,2 @@
 export 'login_page.dart';
-export 'register_user.dart';
+export 'sign_up_page.dart';

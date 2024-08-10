@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/login/cubit/login_cubit.dart';
+import 'package:rando/features/login/cubit/authentication_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
 class LoginPage extends StatelessWidget {
@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
       child: CustomPageView(
         top: false,
         body: BlocProvider(
-          create: (_) => LoginCubit(
+          create: (_) => AuthCubit(
             userRepository: context.read<UserRepository>(),
           ),
           child: const LoginContent(),
@@ -34,7 +34,7 @@ class LoginContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
+    return BlocListener<AuthCubit, AuthState>(
       listenWhen: (_, current) => current.isFailure,
       listener: (context, state) {
         if (state.isFailure) {
@@ -74,7 +74,6 @@ class LoginContent extends StatelessWidget {
 
 class PhoneSignIn extends StatefulWidget {
   const PhoneSignIn({super.key});
-
   @override
   State<PhoneSignIn> createState() => _PhoneSignInState();
 }
@@ -114,13 +113,16 @@ class _PhoneSignInState extends State<PhoneSignIn> {
               const SizedBox(height: 16),
               SignInButton(
                 inverted: true,
+                processing:
+                    context.read<AuthCubit>().state.isSigningInWithPhone ||
+                        context.read<AuthCubit>().state.isVerifyingWithOTP,
                 onTap: () async {
                   setState(() => isLoading = true);
                   if (!_codeSent) {
-                    await context.read<LoginCubit>().signInWithPhone(
+                    await context.read<AuthCubit>().signInWithPhone(
                           phoneNumber: _phoneController.text.trim(),
                           verificationCompleted: (credential) async {
-                            await context.read<LoginCubit>().signInWithOTP(
+                            await context.read<AuthCubit>().signInWithOTP(
                                   _codeController.text.trim(),
                                   _verificationId,
                                 );
@@ -142,15 +144,19 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                           codeAutoRetrievalTimeout: (String verificationId) {
                             setState(() {
                               _verificationId = verificationId;
+                              print('verification id: $_verificationId');
                             });
                           },
                         );
                     setState(() => isLoading = false);
                   } else {
-                    await context.read<LoginCubit>().signInWithOTP(
+                    print('signing in');
+                    print('otp: ${_codeController.text.trim()}');
+                    await context.read<AuthCubit>().signInWithOTP(
                           _codeController.text.trim(),
                           _verificationId,
                         );
+                    print('signed in');
                     setState(() => isLoading = false);
                   }
                 },

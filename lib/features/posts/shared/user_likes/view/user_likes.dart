@@ -30,7 +30,8 @@ class UserLikedPostsList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return const Center(
-                child: PrimaryText(text: 'Item list is empty.'));
+              child: PrimaryText(text: 'Item list is empty.'),
+            );
           } else if (state.isDeleted || state.isUpdated || state.isCreated) {
             context.read<PostCubit>().streamUserLikedPosts(userID);
             return const Center(

@@ -2,12 +2,12 @@ import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
 import 'package:user_repository/user_repository.dart';
 
-part 'login_state.dart';
+part 'authentication_state.dart';
 
-class LoginCubit extends Cubit<LoginState> {
-  LoginCubit({required UserRepository userRepository})
+class AuthCubit extends Cubit<AuthState> {
+  AuthCubit({required UserRepository userRepository})
       : _userRepository = userRepository,
-        super(const LoginState.initial());
+        super(const AuthState.initial());
 
   final UserRepository _userRepository;
 
@@ -20,23 +20,29 @@ class LoginCubit extends Cubit<LoginState> {
     required void Function(String) codeAutoRetrievalTimeout,
   }) async {
     try {
-      emit(const LoginState.verifyingPhone());
+      emit(const AuthState.verifyingPhone());
       await _userRepository.verifyPhone(
         phoneNumber: phoneNumber,
         verificationCompleted: verificationCompleted,
         verificationFailed: (FirebaseAuthException e) {
+          print('Verification failed: ${e.message}');
           verificationFailed(e);
-          emit(const LoginState.initial());
+          emit(const AuthState.initial());
         },
         codeSent: (String verificationId, int? forceResendingToken) {
+          print('Code sent with verification ID: $verificationId');
           codeSent(verificationId, forceResendingToken);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
+          print('Auto retrieval timeout: $verificationId');
           codeAutoRetrievalTimeout(verificationId);
         },
       );
-    } on PhoneNumberSignInFailure {
-      emit(const LoginState.initial());
+    } on InvalidPhoneNumberFailure {
+      print('invalid phone number');
+    } on PhoneNumberSignInFailure catch (e) {
+      print('Phone number sign-in failure: $e');
+      emit(const AuthState.initial());
     } on UserFailure catch (failure) {
       _onLoginFailed(failure);
     }
@@ -45,18 +51,36 @@ class LoginCubit extends Cubit<LoginState> {
   // sign the user in
   Future<void> signInWithOTP(String otp, String? verificationId) async {
     try {
-      emit(const LoginState.signingInWithPhone());
+      emit(const AuthState.signingInWithPhone());
+      print('signing in');
       await _userRepository.signInWithOTP(otp, verificationId);
-      emit(const LoginState.successfulSignIn());
-    } on PhoneNumberSignInFailure {
-      emit(const LoginState.initial());
+      print('sign in success');
+      emit(const AuthState.successfulSignIn());
+    } on PhoneNumberSignInFailure catch (e) {
+      print('Phone number sign-in failure: $e');
+      emit(const AuthState.initial());
     } on UserFailure catch (failure) {
+      print('user failure $failure');
       _onLoginFailed(failure);
     }
   }
 
+  // send code
+  Future<void> sendCode(String phoneNumber) async {
+    await _userRepository.sendOTP(phoneNumber: phoneNumber);
+  }
+
+  // verify
+  Future<void> verify(ConfirmationResult confirmationResult, String otp) async {
+    await _userRepository.authenticateNewUser(
+      confirmationResult: confirmationResult,
+      otp: otp,
+    );
+  }
+
   void _onLoginFailed(UserFailure failure) {
-    emit(LoginState.failure(failure));
-    emit(const LoginState.initial());
+    print('Login failed: $failure');
+    emit(AuthState.failure(failure));
+    emit(const AuthState.initial());
   }
 }

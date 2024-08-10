@@ -142,11 +142,11 @@ extension _BoardStateExtensions on BoardState {
         board: board,
       );
 
-  BoardState fromPostsLoaded(List<String> posts) => copyWith(
-        status: BoardStatus.loaded,
-        posts: posts,
-        index: 0,
-      );
+  // BoardState fromPostsLoaded(List<String> posts) => copyWith(
+  //       status: BoardStatus.loaded,
+  //       posts: posts,
+  //       index: 0,
+  //     );
 
   BoardState fromBoardsLoaded(List<Board> boards) => copyWith(
         status: BoardStatus.loaded,

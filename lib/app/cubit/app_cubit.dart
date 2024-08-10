@@ -31,20 +31,13 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
-  Future<void> _onUserChanged(User user) async {
+  void _onUserChanged(User user) {
     if (user.isEmpty) {
       emit(const AppState.unauthenticated());
+    } else if (state.isUnauthenticated) {
+      emit(AppState.newlyAuthenticated(user));
     } else {
-      await checkUserRegistration(user);
-    }
-  }
-
-  Future<void> checkUserRegistration(User user) async {
-    final hasUsername = await _userRepository.userHasUsername(user.uid);
-    if (hasUsername) {
       emit(AppState.authenticated(user));
-    } else {
-      emit(AppState.needsRegistration(user));
     }
   }
 
@@ -56,10 +49,6 @@ class AppCubit extends Cubit<AppState> {
     } else {
       emit(currentState);
     }
-  }
-
-  void updateStatus(AppStatus status, {Map<String, dynamic>? parameters}) {
-    emit(state.copyWith(status: status, parameters: parameters));
   }
 
   late final StreamSubscription<User> _userSubscription;

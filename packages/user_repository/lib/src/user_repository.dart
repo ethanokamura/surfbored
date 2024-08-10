@@ -2,7 +2,7 @@ import 'package:api_client/api_client.dart' as firebase show User;
 import 'package:api_client/api_client.dart' hide User;
 import 'package:app_core/app_core.dart';
 import 'package:user_repository/src/failures.dart';
-import 'package:user_repository/src/models/models.dart' as model;
+import 'package:user_repository/src/models/models.dart';
 
 class UserRepository {
   UserRepository({
@@ -17,23 +17,23 @@ class UserRepository {
   final FirebaseFirestore _firestore;
   final Map<String, String> _usernameCache = {};
 
-  late final ValueStream<model.User> _user;
+  late final ValueStream<User> _user;
 
   // current user as a stream
-  Stream<model.User> get watchUser => _user.asBroadcastStream();
+  Stream<User> get watchUser => _user.asBroadcastStream();
 
   // get the current user's data synchonously
-  model.User get user => _user.valueOrNull ?? model.User.empty;
+  User get user => _user.valueOrNull ?? User.empty;
 
   /// Gets the initial [watchUser] emission.
   ///
-  /// Returns [model.User.empty] when an error occurs.
-  Future<model.User> getOpeningUser() {
-    return watchUser.first.catchError((Object _) => model.User.empty);
+  /// Returns [User.empty] when an error occurs.
+  Future<User> getOpeningUser() {
+    return watchUser.first.catchError((Object _) => User.empty);
   }
 
   // get the current user
-  model.User fetchCurrentUser() {
+  User fetchCurrentUser() {
     return user;
   }
 
@@ -48,33 +48,33 @@ class UserRepository {
   }
 
   /// gets generic [watchUser] emmision
-  Stream<model.User> watchUserByID(String userID) {
+  Stream<User> watchUserByID(String userID) {
     return _firestore.userDoc(userID).snapshots().map(
       (snapshot) {
-        return snapshot.exists
-            ? model.User.fromJson(snapshot.data()!)
-            : model.User.empty;
+        return snapshot.exists ? User.fromJson(snapshot.data()!) : User.empty;
       },
     );
   }
 }
 
 extension _FirebaseAuthExtensions on FirebaseAuth {
-  ValueStream<model.User> authUserChanges(FirebaseFirestore firestore) =>
+  ValueStream<User> authUserChanges(FirebaseFirestore firestore) =>
       authStateChanges()
           .onErrorResumeWith((_, __) => null)
-          .switchMap<model.User>(
+          .switchMap<User>(
             (firebaseUser) async* {
               if (firebaseUser == null) {
-                yield model.User.empty;
+                yield User.empty;
                 return;
               }
 
-              yield* firestore.userDoc(firebaseUser.uid).snapshots().map(
-                    (snapshot) => snapshot.exists
-                        ? model.User.fromJson(snapshot.data()!)
-                        : model.User.empty,
-                  );
+              final snapshot = await firestore.userDoc(firebaseUser.uid).get();
+              if (!snapshot.exists) {
+                yield User.empty; // Only yield empty if document doesn't exist
+                return;
+              }
+
+              yield User.fromJson(snapshot.data()!);
             },
           )
           .handleError((Object _) => throw UserFailure.fromAuthUserChanges())
@@ -83,6 +83,41 @@ extension _FirebaseAuthExtensions on FirebaseAuth {
 }
 
 extension Auth on UserRepository {
+  // send OTP
+  Future<ConfirmationResult?> sendOTP({required String phoneNumber}) async {
+    try {
+      final result = await _firebaseAuth.signInWithPhoneNumber(phoneNumber);
+      return result;
+    } on FirebaseAuthException catch (e) {
+      // Handle specific FirebaseAuth exceptions
+      print('Failed to send OTP: ${e.message}');
+      return null;
+    } catch (e) {
+      // Handle other errors
+      print('Unexpected error: $e');
+      return null;
+    }
+  }
+
+  // authenticate user
+  Future<bool?> authenticateNewUser({
+    required ConfirmationResult confirmationResult,
+    required String otp,
+  }) async {
+    try {
+      final userCredential = await confirmationResult.confirm(otp);
+      return userCredential.additionalUserInfo!.isNewUser;
+    } on FirebaseAuthException catch (e) {
+      // Handle specific FirebaseAuth exceptions
+      print('Failed to confirm OTP: ${e.message}');
+      return null;
+    } catch (e) {
+      // Handle other errors
+      print('Unexpected error: $e');
+      return null;
+    }
+  }
+
   // verify phone number
   Future<void> verifyPhone({
     required String phoneNumber,
@@ -107,16 +142,20 @@ extension Auth on UserRepository {
 
   // Signs the user in
   Future<void> signInWithOTP(String otp, String? verificationId) async {
-    final credential = PhoneAuthProvider.credential(
-      verificationId: verificationId!,
-      smsCode: otp,
-    );
     try {
+      final credential = PhoneAuthProvider.credential(
+        verificationId: verificationId!,
+        smsCode: otp,
+      );
+      print('got credential');
       final userCredential =
           await _firebaseAuth.signInWithCredential(credential);
+      print('signed in with credential');
       final firebaseUser = userCredential.user;
+      print('updated firebase user');
       unawaited(_updateUserData(firebaseUser));
-    } on FirebaseAuthException {
+    } on FirebaseAuthException catch (e) {
+      print('error signing user in $e');
       throw UserFailure.fromPhoneNumberSignIn();
     }
   }
@@ -124,7 +163,7 @@ extension Auth on UserRepository {
   // sign out
   Future<void> signOut() async {
     try {
-      await _firebaseAuth.signOut();
+      await Future.wait([_firebaseAuth.signOut()]);
     } on Exception {
       throw UserFailure.fromSignOut();
     }
@@ -324,7 +363,7 @@ extension Friends on UserRepository {
       final doc = await _firestore.getUserDoc(userID);
       if (doc.exists) {
         // return likes
-        final data = model.User.fromJson(doc.data()!);
+        final data = User.fromJson(doc.data()!);
         return data.friends;
       } else {
         return 0;
@@ -344,7 +383,7 @@ extension Friends on UserRepository {
 
 extension Create on UserRepository {
   // create new firestore document for user
-  Future<void> createUser(String userID, model.User newUser) async {
+  Future<void> createUser(String userID, User newUser) async {
     // authenticate user
     try {
       // set username in usernames collection
@@ -363,22 +402,22 @@ extension Create on UserRepository {
 
 extension Fetch on UserRepository {
   // get user document by ID
-  Future<model.User> fetchUserByID(String userID) async {
+  Future<User> fetchUserByID(String userID) async {
     try {
       final docSnapshot = await _firestore.getUserDoc(userID);
       return docSnapshot.exists
-          ? model.User.fromJson(docSnapshot.data()!)
-          : model.User.empty;
+          ? User.fromJson(docSnapshot.data()!)
+          : User.empty;
     } on FirebaseException {
       UserFailure.fromGetUser();
-      return model.User.empty;
+      return User.empty;
     }
   }
 
   // get user data
-  Future<model.User> fetchUserData(firebase.User? firebaseUser) async {
-    if (firebaseUser == null) return model.User.empty;
-    return model.User.fromFirebaseUser(firebaseUser);
+  Future<User> fetchUserData(firebase.User? firebaseUser) async {
+    if (firebaseUser == null) return User.empty;
+    return User.fromFirebaseUser(firebaseUser);
   }
 }
 
@@ -389,7 +428,7 @@ extension Update on UserRepository {
       return;
     }
     final uid = firebaseUser.uid;
-    final user = model.User.fromFirebaseUser(firebaseUser);
+    final user = User.fromFirebaseUser(firebaseUser);
     return _firestore.userDoc(uid).set(
           user.toJson(),
           SetOptions(

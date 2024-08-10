@@ -2,10 +2,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:api_client/api_client.dart';
-import 'package:app_ui/app_ui.dart';
 import 'package:app_ui/src/buttons.dart';
 import 'package:app_ui/src/constants.dart';
+import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/pop_ups.dart';
+import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:app_ui/src/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';

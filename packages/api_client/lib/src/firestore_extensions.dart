@@ -112,7 +112,8 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
   DocumentReference<Map<String, dynamic>> savesDoc(String saveDocID) =>
       savesCollection().doc(saveDocID);
   Future<DocumentSnapshot<Map<String, dynamic>>> getSavesDoc(
-          String saveDocID) =>
+    String saveDocID,
+  ) =>
       savesDoc(saveDocID).get();
   Future<void> updateSavesDoc(String saveDocID, Map<String, dynamic> data) =>
       savesDoc(saveDocID).update(data);

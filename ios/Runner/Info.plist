@@ -2,36 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
-  <!-- Google Sign-in Section -->
-  <key>GIDClientID</key>
-  <string>940006126022-5u20h1tg0ke2rd1nehceitd0e36uk4pa.apps.googleusercontent.com</string>
-  <key>CFBundleURLTypes</key>
-  <array>
-    <dict>
-      <key>CFBundleTypeRole</key>
-      <string>Editor</string>
-      <key>CFBundleURLSchemes</key>
-      <array>
-        <string>com.googleusercontent.apps.940006126022-5u20h1tg0ke2rd1nehceitd0e36uk4pa</string>
-      </array>
-    </dict>
-  </array>
-  <!-- End of the Google Sign-in Section -->
-
-  <!-- IOS PHOTO ACCESS -->
-  <key>NSMicrophoneUsageDescription</key>
-  <string>Microphone Access Required</string>
-  <key>NSMotionUsageDescription</key>
-  <string>Motion Usage Required</string>
-  <key>NSCameraUsageDescription</key>
-  <string>This app requires access to the camera.</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-  <string>Please allow access to photo library so you can easily upload your photos.</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>Please allow access to photo library so you can easily upload your photos.</string>
-  <!-- End of IOS photo access -->
-
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -50,9 +22,52 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app-1-940006126022-ios-e7b936cb1f5b13ac81c2c7</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.940006126022-5u20h1tg0ke2rd1nehceitd0e36uk4pa</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Bundle ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>perfectline.io.rando</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GIDClientID</key>
+	<string>940006126022-5u20h1tg0ke2rd1nehceitd0e36uk4pa.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone Access Required</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion Usage Required</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Please allow access to photo library so you can easily upload your photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please allow access to photo library so you can easily upload your photos.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -71,9 +86,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

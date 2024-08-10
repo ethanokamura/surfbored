@@ -1,4 +1,4 @@
-import 'package:app_ui/app_ui.dart';
+import 'package:app_ui/src/buttons.dart';
 import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';

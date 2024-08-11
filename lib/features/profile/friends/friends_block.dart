@@ -1,11 +1,11 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/profile/profile/cubit/friends_cubit.dart';
+import 'package:rando/features/profile/friends/cubit/friends_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
-class FriendsView extends StatelessWidget {
-  const FriendsView({
+class FriendsBlock extends StatelessWidget {
+  const FriendsBlock({
     required this.userID,
     required this.friends,
     required this.isCurrent,

@@ -121,8 +121,7 @@ class _CreateActivityState extends State<CreateActivity> {
                 inverted: true,
                 onTap: () {
                   context.read<PostCubit>().createPost(
-                        userID:
-                            context.read<UserRepository>().fetchCurrentUserID(),
+                        userID: context.read<UserRepository>().user.uid,
                         title: titleText,
                         description: descriptionText,
                         tags: tags,

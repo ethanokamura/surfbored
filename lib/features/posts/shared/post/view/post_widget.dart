@@ -19,8 +19,8 @@ class PostView extends StatelessWidget {
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    final userID = context.read<UserRepository>().fetchCurrentUserID();
-    final isOwner = context.read<UserRepository>().isCurrentUser(post.uid);
+    final userID = context.read<UserRepository>().user.uid;
+    final isOwner = userID == post.uid;
     return Flexible(
       child: CustomContainer(
         inverted: false,

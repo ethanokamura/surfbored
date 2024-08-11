@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/boards/boards.dart';
 import 'package:rando/features/posts/posts.dart';
 import 'package:rando/features/profile/cubit/profile_cubit.dart';
-import 'package:rando/features/profile/profile/view/friends.dart';
+import 'package:rando/features/profile/friends/friends.dart';
 import 'package:rando/features/profile/profile/view/interests.dart';
 import 'package:rando/features/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
@@ -56,7 +56,7 @@ class ProfileBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isCurrent = context.read<UserRepository>().isCurrentUser(user.uid);
+    final isCurrent = user.uid == context.read<UserRepository>().user.uid;
     return DefaultTabController(
       length: 3,
       child: CustomPageView(
@@ -85,7 +85,7 @@ class ProfileBuilder extends StatelessWidget {
                           const VerticalSpacer(),
                           About(user: user),
                           const VerticalSpacer(),
-                          FriendsView(
+                          FriendsBlock(
                             userID: user.uid,
                             friends: user.friends,
                             isCurrent: isCurrent,

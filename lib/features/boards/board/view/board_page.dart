@@ -37,8 +37,8 @@ class BoardPageView extends StatelessWidget {
   final Board board;
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserRepository>().fetchCurrentUser();
-    final isOwner = context.read<UserRepository>().isCurrentUser(board.uid);
+    final user = context.read<UserRepository>().user;
+    final isOwner = user.uid == board.uid;
     return NestedScrollView(
       headerSliverBuilder: (context, _) {
         return [

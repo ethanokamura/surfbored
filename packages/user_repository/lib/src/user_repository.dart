@@ -32,21 +32,6 @@ class UserRepository {
     return watchUser.first.catchError((Object _) => User.empty);
   }
 
-  // get the current user
-  User fetchCurrentUser() {
-    return user;
-  }
-
-  // get current user's ID
-  String fetchCurrentUserID() {
-    return _firebaseAuth.currentUser!.uid;
-  }
-
-  // check if the current user is the provided user
-  bool isCurrentUser(String userID) {
-    return _firebaseAuth.currentUser!.uid == userID;
-  }
-
   /// gets generic [watchUser] emmision
   Stream<User> watchUserByID(String userID) {
     return _firestore.userDoc(userID).snapshots().map(
@@ -369,6 +354,25 @@ extension Friends on UserRepository {
       }
     } on FirebaseException {
       throw UserFailure.fromGetUser();
+    }
+  }
+
+  Future<List<String>> fetchFriendRequests(String userID) async {
+    try {
+      final senderIDs = await _firestore
+          .collection('friendRequests')
+          .where('receiverID', isEqualTo: userID)
+          .orderBy('timestamp', descending: true)
+          .get()
+          .then((snapshot) => snapshot.docs)
+          .then(
+            (docs) =>
+                docs.map((doc) => doc.data()['senderID'] as String).toList(),
+          );
+      return senderIDs;
+    } on FirebaseException catch (e) {
+      print('Error fetching friend requests: $e');
+      throw UserFailure.fromGetUser(); // Handle error accordingly
     }
   }
 

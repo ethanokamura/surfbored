@@ -104,8 +104,7 @@ class _CreateBoardState extends State<CreateBoard> {
                 inverted: true,
                 onTap: () {
                   context.read<BoardCubit>().createBoard(
-                        userID:
-                            context.read<UserRepository>().fetchCurrentUserID(),
+                        userID: context.read<UserRepository>().user.uid,
                         title: titleText,
                         description: descriptionText,
                         imageFile: imageFile,

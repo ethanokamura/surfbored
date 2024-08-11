@@ -21,8 +21,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String photoURL = '';
   @override
   Widget build(BuildContext context) {
-    final uid = UserRepository().fetchCurrentUserID();
-    print('user registration page $uid');
+    final uid = UserRepository().user.uid;
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

@@ -129,6 +129,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                           },
                           verificationFailed: (exception) {
                             // Error handling is managed by BlocListener
+                            print(exception);
                             context.showSnackBar('Error Verifying. Try Again.');
                           },
                           codeSent: (
@@ -144,27 +145,18 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                           codeAutoRetrievalTimeout: (String verificationId) {
                             setState(() {
                               _verificationId = verificationId;
-                              print('verification id: $_verificationId');
                             });
                           },
                         );
-                    setState(() => isLoading = false);
                   } else {
-                    print('signing in');
-                    print('otp: ${_codeController.text.trim()}');
                     await context.read<AuthCubit>().signInWithOTP(
                           _codeController.text.trim(),
                           _verificationId,
                         );
-                    print('signed in');
-                    setState(() => isLoading = false);
                   }
+                  setState(() => isLoading = false);
                 },
-                text: isLoading
-                    ? 'Loading'
-                    : !_codeSent
-                        ? 'Send Code'
-                        : 'Sign In',
+                text: _codeSent ? 'Sign In' : 'Send Code',
               ),
             ],
           );

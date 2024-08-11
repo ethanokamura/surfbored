@@ -228,59 +228,93 @@ extension Username on UserRepository {
 }
 
 extension Friends on UserRepository {
-  Future<void> toggleFriendRequest(String otherUserID) async {
+  Future<void> sendFriendRequest(String otherUserID) async {
     try {
       final currentUserID = user.uid;
-      // sort
       final docID = _getSortedDocID(currentUserID, otherUserID);
-      // get doc
-      final friendRequestRef =
-          _firestore.collection('friendRequests').doc(docID);
-
-      final doc = await friendRequestRef.get();
-
-      if (doc.exists) {
-        await friendRequestRef.delete();
-      } else {
-        await friendRequestRef.set({
-          'senderID': currentUserID,
-          'recieverID': otherUserID,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-      }
-    } on FirebaseException {
-      throw UserFailure.fromUpdateUser();
-    }
-  }
-
-  Future<void> removeFriendRequest(String otherUserID) async {
-    try {
-      // get current user's id
-      final currentUserID = user.uid;
-      // sort
-      final docID = _getSortedDocID(currentUserID, otherUserID);
-      // set doc
-      await _firestore.collection('friendRequests').doc(docID).delete();
-    } on FirebaseException {
+      await _firestore.collection('friendRequests').doc(docID).set({
+        'senderID': currentUserID,
+        'receiverID': otherUserID,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException catch (e) {
       // return failure
+      print('error $e');
       throw UserFailure.fromUpdateUser();
     }
   }
 
-  Future<bool> toggleFriend(
+  Future<void> cancelFriendRequest(String otherUserID) async {
+    try {
+      final currentUserID = user.uid;
+      final docID = _getSortedDocID(currentUserID, otherUserID);
+      await _firestore.collection('friendRequests').doc(docID).delete();
+    } on FirebaseException catch (e) {
+      // return failure
+      print('error $e');
+      throw UserFailure.fromUpdateUser();
+    }
+  }
+
+  Future<void> addFriend(
     String otherUserID,
   ) async {
     // get current user
     final currentUserID = user.uid;
     // sort
     final docID = _getSortedDocID(currentUserID, otherUserID);
+
     // batch
     final batch = _firestore.batch();
 
     // docs
     final userRef = _firestore.userDoc(currentUserID);
     final otherUserRef = _firestore.userDoc(otherUserID);
+    final friendsRef = _firestore.collection('friends').doc(docID);
     final friendReqRef = _firestore.collection('friendRequests').doc(docID);
+
+    try {
+      // make sure users exist
+      final userSnapshot = await userRef.get();
+      final otherUserSnapshot = await otherUserRef.get();
+      if (!userSnapshot.exists || !otherUserSnapshot.exists) {
+        throw UserFailure.fromGetUser();
+      }
+
+      // add friend
+      batch
+        ..update(userRef, {'friends': FieldValue.increment(1)})
+        ..update(otherUserRef, {'friends': FieldValue.increment(1)})
+        ..set(friendsRef, {
+          'userID1': currentUserID,
+          'userID2': otherUserID,
+          'timestamp': FieldValue.serverTimestamp(),
+        })
+        ..delete(friendReqRef);
+
+      // commit batch
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      // return failure
+      print('error $e');
+      throw UserFailure.fromUpdateUser();
+    }
+  }
+
+  Future<void> removeFriend(
+    String otherUserID,
+  ) async {
+    // get current user
+    final currentUserID = user.uid;
+    // sort
+    final docID = _getSortedDocID(currentUserID, otherUserID);
+
+    // batch
+    final batch = _firestore.batch();
+
+    // docs
+    final userRef = _firestore.userDoc(currentUserID);
+    final otherUserRef = _firestore.userDoc(otherUserID);
     final friendsRef = _firestore.collection('friends').doc(docID);
 
     try {
@@ -291,38 +325,77 @@ extension Friends on UserRepository {
         throw UserFailure.fromGetUser();
       }
 
-      // get friend doc
-      final friendDoc = await friendsRef.get();
-      final areFriends = friendDoc.exists;
-
-      // check if they are friends
-      if (areFriends) {
-        batch
-          ..update(userRef, {'friends': FieldValue.increment(-1)})
-          ..update(otherUserRef, {'friends': FieldValue.increment(-1)})
-          ..delete(friendsRef);
-      } else {
-        batch
-          ..update(userRef, {'friends': FieldValue.increment(1)})
-          ..update(otherUserRef, {'friends': FieldValue.increment(1)})
-          ..set(friendsRef, {
-            'userID1': currentUserID,
-            'userID2': otherUserID,
-            'timestamp': FieldValue.serverTimestamp(),
-          });
-        await friendReqRef.delete();
-      }
+      // remove friend
+      batch
+        ..update(userRef, {'friends': FieldValue.increment(-1)})
+        ..update(otherUserRef, {'friends': FieldValue.increment(-1)})
+        ..delete(friendsRef);
 
       // commit batch
       await batch.commit();
-
-      // return friends
-      return !areFriends;
-    } on FirebaseException {
+    } on FirebaseException catch (e) {
       // return failure
+      print('error $e');
       throw UserFailure.fromUpdateUser();
     }
   }
+
+  // Future<bool> toggleFriend(
+  //   String otherUserID,
+  // ) async {
+  //   // get current user
+  //   final currentUserID = user.uid;
+  //   // sort
+  //   final docID = _getSortedDocID(currentUserID, otherUserID);
+  //   // batch
+  //   final batch = _firestore.batch();
+
+  //   // docs
+  //   final userRef = _firestore.userDoc(currentUserID);
+  //   final otherUserRef = _firestore.userDoc(otherUserID);
+  //   final friendReqRef = _firestore.collection('friendRequests').doc(docID);
+  //   final friendsRef = _firestore.collection('friends').doc(docID);
+
+  //   try {
+  //     // make sure users exist
+  //     final userSnapshot = await userRef.get();
+  //     final otherUserSnapshot = await otherUserRef.get();
+  //     if (!userSnapshot.exists || !otherUserSnapshot.exists) {
+  //       throw UserFailure.fromGetUser();
+  //     }
+
+  //     // get friend doc
+  //     final friendDoc = await friendsRef.get();
+  //     final areFriends = friendDoc.exists;
+
+  //     // check if they are friends
+  //     if (areFriends) {
+  //       batch
+  //         ..update(userRef, {'friends': FieldValue.increment(-1)})
+  //         ..update(otherUserRef, {'friends': FieldValue.increment(-1)})
+  //         ..delete(friendsRef);
+  //     } else {
+  //       batch
+  //         ..update(userRef, {'friends': FieldValue.increment(1)})
+  //         ..update(otherUserRef, {'friends': FieldValue.increment(1)})
+  //         ..set(friendsRef, {
+  //           'userID1': currentUserID,
+  //           'userID2': otherUserID,
+  //           'timestamp': FieldValue.serverTimestamp(),
+  //         });
+  //       await friendReqRef.delete();
+  //     }
+
+  //     // commit batch
+  //     await batch.commit();
+
+  //     // return friends
+  //     return !areFriends;
+  //   } on FirebaseException {
+  //     // return failure
+  //     throw UserFailure.fromUpdateUser();
+  //   }
+  // }
 
   Future<bool> areUsersFriends(String otherUserID) async {
     try {

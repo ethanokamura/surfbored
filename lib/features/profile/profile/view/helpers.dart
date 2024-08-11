@@ -10,8 +10,10 @@ class ProfileTopBar extends StatelessWidget {
   const ProfileTopBar({
     required this.user,
     required this.profileCubit,
+    required this.isCurrent,
     super.key,
   });
+  final bool isCurrent;
   final User user;
   final ProfileCubit profileCubit;
   @override
@@ -27,27 +29,28 @@ class ProfileTopBar extends StatelessWidget {
               onTap: () {},
               icon: FontAwesomeIcons.share,
             ),
-            ActionIconButton(
-              inverted: false,
-              padding: 10,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) {
-                      return BlocProvider.value(
-                        value: profileCubit,
-                        child: ProfileSettingsPage(
-                          userID: user.uid,
-                          profileCubit: profileCubit,
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-              icon: FontAwesomeIcons.ellipsis,
-            ),
+            if (isCurrent)
+              ActionIconButton(
+                inverted: false,
+                padding: 10,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<dynamic>(
+                      builder: (context) {
+                        return BlocProvider.value(
+                          value: profileCubit,
+                          child: ProfileSettingsPage(
+                            userID: user.uid,
+                            profileCubit: profileCubit,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                icon: FontAwesomeIcons.ellipsis,
+              ),
             if (Navigator.of(context).canPop())
               ActionIconButton(
                 inverted: false,
@@ -156,16 +159,26 @@ class FriendsView extends StatelessWidget {
   final int friends;
   @override
   Widget build(BuildContext context) {
+    var buttonText = '';
     return CustomContainer(
       inverted: false,
       horizontal: null,
       vertical: null,
       child: BlocProvider(
-        create: (context) => FriendCubit(context.read<UserRepository>()),
+        create: (context) =>
+            FriendCubit(context.read<UserRepository>())..fetchData(userID),
         child: BlocBuilder<FriendCubit, FriendState>(
           builder: (context, state) {
-            if (!state.isLoaded && !state.isLoading) {
-              context.read<FriendCubit>().fetchData(userID);
+            if (state.isLoading) {
+              return const Center(child: PrimaryText(text: 'Loading friends'));
+            } else if (state.isRequested) {
+              buttonText = 'Request Sent';
+            } else if (state.isRecieved) {
+              buttonText = 'Accept Request';
+            } else if (state.areFriends) {
+              buttonText = 'Remove Friend';
+            } else {
+              buttonText = 'Add Friend';
             }
 
             return Row(
@@ -190,30 +203,15 @@ class FriendsView extends StatelessWidget {
                   ),
                 ),
                 if (!isCurrent)
-                  // show add friend button
                   SecondaryButton(
-                    inverted: state.areFriends,
-                    text: state.areFriends
-                        ? 'Remove Friend'
-                        : state.senderID == null
-                            ? 'Send request'
-                            : state.senderID == userID
-                                ? 'Add friend'
-                                : 'Unsend request',
-                    onTap: () {
-                      if (state.areFriends || state.senderID == userID) {
-                        context.read<FriendCubit>().toggleFriend(userID);
-                      } else {
-                        context.read<FriendCubit>().toggleFriendRequest(userID);
-                      }
+                    text: buttonText,
+                    onTap: () async {
+                      print('press');
+                      await context
+                          .read<FriendCubit>()
+                          .friendStateSelection(userID);
                     },
-                    icon: state.areFriends
-                        ? Icons.check
-                        : state.senderID == null
-                            ? Icons.add
-                            : state.senderID == userID
-                                ? Icons.add
-                                : Icons.delete,
+                    inverted: !state.isRequested,
                   )
                 else
                   // show friends list

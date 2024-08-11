@@ -13,39 +13,45 @@ class FriendCubit extends Cubit<FriendState> {
     try {
       final friends = await _userRepository.fetchFriendCount(userID);
       final areFriends = await _userRepository.areUsersFriends(userID);
-      final sender = await _userRepository.fetchRequestSender(userID);
 
       if (areFriends) {
-        emit(state.fromFriendSuccess(areFriends: areFriends));
-      } else if (sender != null) {
-        emit(state.fromRequestLoaded(senderID: sender));
+        print('users are friends');
+        emit(state.fromFriendAccepted());
+      } else {
+        final sender = await _userRepository.fetchRequestSender(userID);
+        if (sender == null) {
+          print('no request found');
+          emit(state.fromNoRequest());
+        } else {
+          if (sender == userID) {
+            print('user is reciever');
+            emit(state.fromRequestRecieved());
+          } else {
+            print('user is sender');
+            emit(state.fromRequestSent());
+          }
+        }
       }
-      emit(state.fromFriendsLoaded(friends: friends));
+      emit(state.copyWith(friends: friends));
     } catch (e) {
       emit(state.fromFailure());
     }
   }
 
-  Future<void> toggleFriendRequest(String userID) async {
-    emit(state.fromLoading());
-    try {
-      await _userRepository.toggleFriendRequest(userID);
-      final sender = await _userRepository.fetchRequestSender(userID);
-      emit(state.fromRequestLoaded(senderID: sender));
-    } catch (e) {
-      emit(state.fromFailure());
+  Future<void> friendStateSelection(String userID) async {
+    if (state.isRecieved) {
+      print('adding friend');
+      await _userRepository.addFriend(userID);
+    } else if (state.isRequested) {
+      print('removing request');
+      await _userRepository.cancelFriendRequest(userID);
+    } else if (state.areFriends) {
+      print('removing friend');
+      await _userRepository.removeFriend(userID);
+    } else {
+      print('sending request');
+      await _userRepository.sendFriendRequest(userID);
     }
-  }
-
-  Future<void> toggleFriend(String userID) async {
-    emit(state.fromLoading());
-    try {
-      final areFriends = await _userRepository.toggleFriend(userID);
-      final friends = await _userRepository.fetchFriendCount(userID);
-      emit(state.fromFriendSuccess(areFriends: areFriends));
-      emit(state.fromFriendsLoaded(friends: friends));
-    } catch (e) {
-      emit(state.fromFailure());
-    }
+    await fetchData(userID);
   }
 }

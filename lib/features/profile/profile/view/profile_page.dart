@@ -75,6 +75,7 @@ class ProfileBuilder extends StatelessWidget {
                         children: [
                           ProfileTopBar(
                             user: user,
+                            isCurrent: isCurrent,
                             profileCubit: context.read<ProfileCubit>(),
                           ),
                           const VerticalSpacer(),

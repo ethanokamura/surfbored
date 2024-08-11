@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/boards/boards.dart';
 import 'package:rando/features/posts/posts.dart';
 import 'package:rando/features/profile/cubit/profile_cubit.dart';
-import 'package:rando/features/profile/profile/view/helpers.dart';
+import 'package:rando/features/profile/profile/view/friends.dart';
+import 'package:rando/features/profile/profile/view/interests.dart';
+import 'package:rando/features/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -89,7 +91,7 @@ class ProfileBuilder extends StatelessWidget {
                             isCurrent: isCurrent,
                           ),
                           const VerticalSpacer(),
-                          const Interests(),
+                          const InterestsList(),
                         ],
                       ),
                     ),
@@ -117,6 +119,146 @@ class ProfileBuilder extends StatelessWidget {
               : const Center(child: CircularProgressIndicator()),
         ),
       ),
+    );
+  }
+}
+
+class ProfileTopBar extends StatelessWidget {
+  const ProfileTopBar({
+    required this.user,
+    required this.profileCubit,
+    required this.isCurrent,
+    super.key,
+  });
+  final bool isCurrent;
+  final User user;
+  final ProfileCubit profileCubit;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Row(
+          children: [
+            ActionIconButton(
+              inverted: false,
+              padding: 10,
+              onTap: () {},
+              icon: FontAwesomeIcons.share,
+            ),
+            if (isCurrent)
+              ActionIconButton(
+                inverted: false,
+                padding: 10,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<dynamic>(
+                      builder: (context) {
+                        return BlocProvider.value(
+                          value: profileCubit,
+                          child: ProfileSettingsPage(
+                            userID: user.uid,
+                            profileCubit: profileCubit,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                icon: FontAwesomeIcons.ellipsis,
+              ),
+            if (Navigator.of(context).canPop())
+              ActionIconButton(
+                inverted: false,
+                padding: 10,
+                onTap: () => Navigator.pop(context),
+                icon: FontAwesomeIcons.xmark,
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class ProfileHeader extends StatelessWidget {
+  const ProfileHeader({required this.user, required this.isCurrent, super.key});
+  final User user;
+  final bool isCurrent;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SquareImage(
+          photoURL: user.photoURL,
+          width: 96,
+          height: 96,
+          borderRadius: defaultBorderRadius,
+        ),
+        const HorizontalSpacer(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            UserText(text: '@${user.username}', bold: true, fontSize: 24),
+            TitleText(text: user.name),
+            SecondaryText(
+              text:
+                  'joined: ${DateFormatter.formatTimestamp(user.memberSince!)}',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class About extends StatelessWidget {
+  const About({required this.user, super.key});
+  final User user;
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      inverted: false,
+      horizontal: null,
+      vertical: null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SecondaryText(text: 'about me'),
+          PrimaryText(text: user.bio),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileTabBar extends StatelessWidget {
+  const ProfileTabBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CustomTabBarWidget(
+      tabs: [
+        CustomTabWidget(
+          child: Icon(
+            FontAwesomeIcons.images,
+            size: 15,
+          ),
+        ),
+        CustomTabWidget(
+          child: Icon(
+            FontAwesomeIcons.list,
+            size: 15,
+          ),
+        ),
+        CustomTabWidget(
+          child: Icon(
+            FontAwesomeIcons.heart,
+            size: 15,
+          ),
+        ),
+      ],
     );
   }
 }

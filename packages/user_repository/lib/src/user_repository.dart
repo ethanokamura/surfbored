@@ -340,63 +340,6 @@ extension Friends on UserRepository {
     }
   }
 
-  // Future<bool> toggleFriend(
-  //   String otherUserID,
-  // ) async {
-  //   // get current user
-  //   final currentUserID = user.uid;
-  //   // sort
-  //   final docID = _getSortedDocID(currentUserID, otherUserID);
-  //   // batch
-  //   final batch = _firestore.batch();
-
-  //   // docs
-  //   final userRef = _firestore.userDoc(currentUserID);
-  //   final otherUserRef = _firestore.userDoc(otherUserID);
-  //   final friendReqRef = _firestore.collection('friendRequests').doc(docID);
-  //   final friendsRef = _firestore.collection('friends').doc(docID);
-
-  //   try {
-  //     // make sure users exist
-  //     final userSnapshot = await userRef.get();
-  //     final otherUserSnapshot = await otherUserRef.get();
-  //     if (!userSnapshot.exists || !otherUserSnapshot.exists) {
-  //       throw UserFailure.fromGetUser();
-  //     }
-
-  //     // get friend doc
-  //     final friendDoc = await friendsRef.get();
-  //     final areFriends = friendDoc.exists;
-
-  //     // check if they are friends
-  //     if (areFriends) {
-  //       batch
-  //         ..update(userRef, {'friends': FieldValue.increment(-1)})
-  //         ..update(otherUserRef, {'friends': FieldValue.increment(-1)})
-  //         ..delete(friendsRef);
-  //     } else {
-  //       batch
-  //         ..update(userRef, {'friends': FieldValue.increment(1)})
-  //         ..update(otherUserRef, {'friends': FieldValue.increment(1)})
-  //         ..set(friendsRef, {
-  //           'userID1': currentUserID,
-  //           'userID2': otherUserID,
-  //           'timestamp': FieldValue.serverTimestamp(),
-  //         });
-  //       await friendReqRef.delete();
-  //     }
-
-  //     // commit batch
-  //     await batch.commit();
-
-  //     // return friends
-  //     return !areFriends;
-  //   } on FirebaseException {
-  //     // return failure
-  //     throw UserFailure.fromUpdateUser();
-  //   }
-  // }
-
   Future<bool> areUsersFriends(String otherUserID) async {
     try {
       final currentUserID = user.uid;

@@ -1,4 +1,5 @@
 // dart packages
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:user_repository/user_repository.dart';
@@ -21,7 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String photoURL = '';
   @override
   Widget build(BuildContext context) {
-    final uid = UserRepository().user.uid;
+    final uid = context.read<UserRepository>().user.uid;
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -58,8 +59,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 if (newValue != null &&
                     newValue.trim() != '' &&
                     context.mounted) {
-                  final isUnique =
-                      await UserRepository().isUsernameUnique(newValue);
+                  final isUnique = await context
+                      .read<UserRepository>()
+                      .isUsernameUnique(newValue);
                   if (isUnique) {
                     setState(() => username = newValue);
                   }
@@ -117,7 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     bio: bio,
                     photoURL: photoURL,
                   );
-                  await UserRepository().createUser(uid, user);
+                  await context.read<UserRepository>().createUser(uid, user);
                 },
                 text: 'Confirm',
               ),

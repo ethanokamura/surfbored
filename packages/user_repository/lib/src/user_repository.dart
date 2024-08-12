@@ -67,6 +67,7 @@ extension _FirebaseAuthExtensions on FirebaseAuth {
           .shareValue();
 }
 
+// remove print statements!
 extension Auth on UserRepository {
   // send OTP
   Future<ConfirmationResult?> sendOTP({required String phoneNumber}) async {

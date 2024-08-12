@@ -290,7 +290,6 @@ extension Delete on PostRepository {
   Future<void> deletePost(String userID, String postID, String photoURL) async {
     final batch = _firestore.batch();
     final postRef = _firestore.postDoc(postID);
-    final likeRef = _firestore.likeDoc(postID);
     const batchSize = 500;
     try {
       final postDoc = await postRef.get();

@@ -19,14 +19,13 @@ class UserRepository {
 
   late final ValueStream<User> _user;
 
-  // current user as a stream
+  /// current user as a stream
   Stream<User> get watchUser => _user.asBroadcastStream();
 
-  // get the current user's data synchonously
+  /// get the current user's data synchonously
   User get user => _user.valueOrNull ?? User.empty;
 
   /// Gets the initial [watchUser] emission.
-  ///
   /// Returns [User.empty] when an error occurs.
   Future<User> getOpeningUser() {
     return watchUser.first.catchError((Object _) => User.empty);
@@ -43,6 +42,7 @@ class UserRepository {
 }
 
 extension _FirebaseAuthExtensions on FirebaseAuth {
+  /// watch for changes in auth
   ValueStream<User> authUserChanges(FirebaseFirestore firestore) =>
       authStateChanges()
           .onErrorResumeWith((_, __) => null)
@@ -67,43 +67,7 @@ extension _FirebaseAuthExtensions on FirebaseAuth {
           .shareValue();
 }
 
-// remove print statements!
 extension Auth on UserRepository {
-  // send OTP
-  Future<ConfirmationResult?> sendOTP({required String phoneNumber}) async {
-    try {
-      final result = await _firebaseAuth.signInWithPhoneNumber(phoneNumber);
-      return result;
-    } on FirebaseAuthException catch (e) {
-      // Handle specific FirebaseAuth exceptions
-      print('Failed to send OTP: ${e.message}');
-      return null;
-    } catch (e) {
-      // Handle other errors
-      print('Unexpected error: $e');
-      return null;
-    }
-  }
-
-  // authenticate user
-  Future<bool?> authenticateNewUser({
-    required ConfirmationResult confirmationResult,
-    required String otp,
-  }) async {
-    try {
-      final userCredential = await confirmationResult.confirm(otp);
-      return userCredential.additionalUserInfo!.isNewUser;
-    } on FirebaseAuthException catch (e) {
-      // Handle specific FirebaseAuth exceptions
-      print('Failed to confirm OTP: ${e.message}');
-      return null;
-    } catch (e) {
-      // Handle other errors
-      print('Unexpected error: $e');
-      return null;
-    }
-  }
-
   // verify phone number
   Future<void> verifyPhone({
     required String phoneNumber,
@@ -133,15 +97,11 @@ extension Auth on UserRepository {
         verificationId: verificationId!,
         smsCode: otp,
       );
-      print('got credential');
       final userCredential =
           await _firebaseAuth.signInWithCredential(credential);
-      print('signed in with credential');
       final firebaseUser = userCredential.user;
-      print('updated firebase user');
       unawaited(_updateUserData(firebaseUser));
     } on FirebaseAuthException catch (e) {
-      print('error signing user in $e');
       throw UserFailure.fromPhoneNumberSignIn();
     }
   }
@@ -159,47 +119,40 @@ extension Auth on UserRepository {
 extension Username on UserRepository {
   // check if username is unqiue
   Future<bool> isUsernameUnique(String username) async {
-    // query database to see if the username already exists
-    final querySnapshot = await _firestore
-        .usernameCollection()
-        .where('username', isEqualTo: username)
-        .limit(1)
-        .get();
-    return querySnapshot.docs.isEmpty;
+    try {
+      final querySnapshot = await _firestore
+          .usernameCollection()
+          .where('username', isEqualTo: username)
+          .limit(1)
+          .get();
+      return querySnapshot.docs.isEmpty;
+    } on FirebaseException {
+      throw UserFailure.fromGetUsername();
+    }
   }
 
   // check if the current user has a username
   Future<bool> userHasUsername(String userID) async {
-    final usernameDoc = await _firestore.getUsernameDoc(userID);
-    return usernameDoc.exists;
+    try {
+      final usernameDoc = await _firestore.getUsernameDoc(userID);
+      return usernameDoc.exists;
+    } on FirebaseException {
+      throw UserFailure.fromGetUsername();
+    }
   }
 
+  // get users username
   Future<String> fetchUsername(String userID) async {
     try {
-      final userDoc = await _firestore.getUsernameDoc(userID);
-      if (!userDoc.exists) return userID;
-      return userDoc.data()?['username'] as String;
-    } catch (e) {
-      // Handle errors as needed
-      return userID;
+      final usernameDoc = await _firestore.getUsernameDoc(userID);
+      if (!usernameDoc.exists) return userID;
+      return usernameDoc.data()?['username'] as String;
+    } on FirebaseException {
+      throw UserFailure.fromGetUsername();
     }
   }
 
-  Future<String> fetchCacheUsername(String userID) async {
-    if (_usernameCache.containsKey(userID)) {
-      return _usernameCache[userID]!;
-    }
-
-    final username = await fetchUsername(userID);
-    _usernameCache[userID] = username;
-    return username;
-  }
-
-  String? getCachedUsername(String userID) {
-    return _usernameCache[userID];
-  }
-
-  /// save username to user doc
+  // save username to user doc
   Future<void> saveUsername(String userID, String username) async {
     try {
       // save username in user doc
@@ -208,46 +161,37 @@ extension Username on UserRepository {
       await _firestore
           .setUsernameDoc(userID, {'username': username, 'uid': user.uid});
     } on FirebaseException {
-      throw UserFailure.fromUpdateUser();
+      throw UserFailure.fromUpdateUsername();
     }
   }
 }
 
 extension Friends on UserRepository {
-  Future<void> sendFriendRequest(String otherUserID) async {
+  // modify the friend request to the desired user
+  Future<void> modifyFriendRequest(
+    String otherUserID, {
+    bool removed = false,
+  }) async {
     try {
       final currentUserID = user.uid;
       final docID = _getSortedDocID(currentUserID, otherUserID);
-      await _firestore.collection('friendRequests').doc(docID).set({
-        'senderID': currentUserID,
-        'receiverID': otherUserID,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-    } on FirebaseException catch (e) {
-      // return failure
-      print('error $e');
-      throw UserFailure.fromUpdateUser();
+
+      removed
+          ? await _firestore.deleteFriendRequestDoc(docID)
+          : await _firestore.setFriendDoc(docID, {
+              'senderID': currentUserID,
+              'receiverID': otherUserID,
+              'timestamp': FieldValue.serverTimestamp(),
+            });
+    } on FirebaseException {
+      throw UserFailure.fromUpdateFriend();
     }
   }
 
-  Future<void> cancelFriendRequest(String otherUserID) async {
-    try {
-      final currentUserID = user.uid;
-      final docID = _getSortedDocID(currentUserID, otherUserID);
-      await _firestore.collection('friendRequests').doc(docID).delete();
-    } on FirebaseException catch (e) {
-      // return failure
-      print('error $e');
-      throw UserFailure.fromUpdateUser();
-    }
-  }
-
-  Future<void> addFriend(
-    String otherUserID,
-  ) async {
+  // modify friend status with the desired user
+  Future<void> modifyFriend(String otherUserID, int increment) async {
     // get current user
     final currentUserID = user.uid;
-    // sort
     final docID = _getSortedDocID(currentUserID, otherUserID);
 
     // batch
@@ -256,8 +200,7 @@ extension Friends on UserRepository {
     // docs
     final userRef = _firestore.userDoc(currentUserID);
     final otherUserRef = _firestore.userDoc(otherUserID);
-    final friendsRef = _firestore.collection('friends').doc(docID);
-    final friendReqRef = _firestore.collection('friendRequests').doc(docID);
+    final friendsRef = _firestore.friendDoc(docID);
 
     try {
       // make sure users exist
@@ -267,86 +210,52 @@ extension Friends on UserRepository {
         throw UserFailure.fromGetUser();
       }
 
-      // add friend
       batch
-        ..update(userRef, {'friends': FieldValue.increment(1)})
-        ..update(otherUserRef, {'friends': FieldValue.increment(1)})
-        ..set(friendsRef, {
-          'userID1': currentUserID,
-          'userID2': otherUserID,
-          'timestamp': FieldValue.serverTimestamp(),
-        })
-        ..delete(friendReqRef);
+        ..update(userRef, {'friends': FieldValue.increment(increment)})
+        ..update(otherUserRef, {'friends': FieldValue.increment(increment)});
 
-      // commit batch
-      await batch.commit();
-    } on FirebaseException catch (e) {
-      // return failure
-      print('error $e');
-      throw UserFailure.fromUpdateUser();
-    }
-  }
-
-  Future<void> removeFriend(
-    String otherUserID,
-  ) async {
-    // get current user
-    final currentUserID = user.uid;
-    // sort
-    final docID = _getSortedDocID(currentUserID, otherUserID);
-
-    // batch
-    final batch = _firestore.batch();
-
-    // docs
-    final userRef = _firestore.userDoc(currentUserID);
-    final otherUserRef = _firestore.userDoc(otherUserID);
-    final friendsRef = _firestore.collection('friends').doc(docID);
-
-    try {
-      // make sure users exist
-      final userSnapshot = await userRef.get();
-      final otherUserSnapshot = await otherUserRef.get();
-      if (!userSnapshot.exists || !otherUserSnapshot.exists) {
-        throw UserFailure.fromGetUser();
+      if (increment == 1) {
+        // adding friend
+        final friendReqRef = _firestore.friendRequestDoc(docID);
+        batch
+          ..set(friendsRef, {
+            'userID1': currentUserID,
+            'userID2': otherUserID,
+            'timestamp': FieldValue.serverTimestamp(),
+          })
+          ..delete(friendReqRef);
+      } else {
+        // removing friend
+        batch.delete(friendsRef);
       }
 
-      // remove friend
-      batch
-        ..update(userRef, {'friends': FieldValue.increment(-1)})
-        ..update(otherUserRef, {'friends': FieldValue.increment(-1)})
-        ..delete(friendsRef);
-
       // commit batch
       await batch.commit();
-    } on FirebaseException catch (e) {
-      // return failure
-      print('error $e');
-      throw UserFailure.fromUpdateUser();
+    } on FirebaseException {
+      increment == 0
+          ? throw UserFailure.fromCreateFriend()
+          : throw UserFailure.fromDeleteFriend();
     }
   }
 
+  // check if friend doc exists
   Future<bool> areUsersFriends(String otherUserID) async {
     try {
       final currentUserID = user.uid;
-      // sort
       final docID = _getSortedDocID(currentUserID, otherUserID);
-      // get doc
-      final friendDoc = await _firestore.collection('friends').doc(docID).get();
+      final friendDoc = await _firestore.getFriendDoc(docID);
       return friendDoc.exists;
     } on FirebaseException {
-      throw UserFailure.fromGetUser();
+      throw UserFailure.fromGetFriend();
     }
   }
 
+  // retrieve the requester's ID
   Future<String?> fetchRequestSender(String otherUserID) async {
     try {
       final currentUserID = user.uid;
-      // sort
       final docID = _getSortedDocID(currentUserID, otherUserID);
-      // get request doc
-      final friendRequestDoc =
-          await _firestore.collection('friendRequests').doc(docID).get();
+      final friendRequestDoc = await _firestore.getFriendDoc(docID);
       // return sender ID
       if (friendRequestDoc.exists) {
         return friendRequestDoc.data()?['senderID'] as String?;
@@ -358,6 +267,7 @@ extension Friends on UserRepository {
     }
   }
 
+  // get all the user's friend requests
   Future<List<String>> fetchFriendRequests(String userID) async {
     try {
       final senderIDs = await _firestore
@@ -371,9 +281,8 @@ extension Friends on UserRepository {
                 docs.map((doc) => doc.data()['senderID'] as String).toList(),
           );
       return senderIDs;
-    } on FirebaseException catch (e) {
-      print('Error fetching friend requests: $e');
-      throw UserFailure.fromGetUser(); // Handle error accordingly
+    } on FirebaseException {
+      throw UserFailure.fromGetUser();
     }
   }
 
@@ -395,6 +304,7 @@ extension Friends on UserRepository {
     }
   }
 
+  // sort doc for easy compounded indecies
   String _getSortedDocID(String docID1, String docID2) {
     return docID1.compareTo(docID2) > 0
         ? '${docID1}_$docID2'
@@ -407,14 +317,15 @@ extension Create on UserRepository {
   Future<void> createUser(String userID, User newUser) async {
     // authenticate user
     try {
-      // set username in usernames collection
+      // set username
       await _firestore.setUsernameDoc(userID, {
         'username': newUser.username,
         'uid': userID,
       });
-      // set data
-      await _firestore.setUserDoc(userID, newUser.toJson());
-      await _firestore.setUserDoc(userID, {'memberSince': Timestamp.now()});
+      // set user data
+      final userData = newUser.toJson()
+        ..addAll({'memberSince': Timestamp.now()});
+      await _firestore.setUserDoc(userID, userData);
     } on FirebaseException {
       throw UserFailure.fromCreateUser();
     }

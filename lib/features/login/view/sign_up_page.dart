@@ -111,7 +111,6 @@ class _SignUpPageState extends State<SignUpPage> {
               ActionButton(
                 inverted: true,
                 onTap: () async {
-                  print('confirming');
                   final user = User(
                     uid: uid,
                     username: username,

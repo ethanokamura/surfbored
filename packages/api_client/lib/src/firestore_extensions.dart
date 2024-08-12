@@ -131,4 +131,33 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
       tagDoc(tagID).update(data);
   Future<void> setTagDoc(String tagID, Map<String, dynamic> data) =>
       tagDoc(tagID).set(data);
+
+  // friendRequests
+  CollectionReference<Map<String, dynamic>> friendRequestCollection() =>
+      collection('friendRequests');
+  DocumentReference<Map<String, dynamic>> friendRequestDoc(String docID) =>
+      friendRequestCollection().doc(docID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getFriendRequestDoc(
+          String docID) =>
+      friendRequestDoc(docID).get();
+  Future<void> updateFriendRequestDoc(
+          String docID, Map<String, dynamic> data) =>
+      friendRequestDoc(docID).update(data);
+  Future<void> setFriendRequestDoc(String docID, Map<String, dynamic> data) =>
+      friendRequestDoc(docID).set(data, SetOptions(merge: true));
+  Future<void> deleteFriendRequestDoc(String docID) =>
+      friendRequestDoc(docID).delete();
+
+  // friends
+  CollectionReference<Map<String, dynamic>> friendCollection() =>
+      collection('friends');
+  DocumentReference<Map<String, dynamic>> friendDoc(String docID) =>
+      friendCollection().doc(docID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getFriendDoc(String docID) =>
+      friendDoc(docID).get();
+  Future<void> updateFriendDoc(String docID, Map<String, dynamic> data) =>
+      friendDoc(docID).update(data);
+  Future<void> setFriendDoc(String docID, Map<String, dynamic> data) =>
+      friendDoc(docID).set(data, SetOptions(merge: true));
+  Future<void> deleteFriendDoc(String docID) => friendDoc(docID).delete();
 }

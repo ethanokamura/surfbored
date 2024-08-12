@@ -3,11 +3,23 @@ import 'package:app_core/app_core.dart';
 class UserFailure extends Failure {
   const UserFailure._();
 
-  // data retrieval
+  // user data retrieval
   factory UserFailure.fromGetUser() => const GetUserFailure();
   factory UserFailure.fromCreateUser() => const CreateUserFailure();
   factory UserFailure.fromUpdateUser() => const UpdateUserFailure();
   factory UserFailure.fromDeleteUser() => const DeleteUserFailure();
+
+  // username data retrieval
+  factory UserFailure.fromGetUsername() => const GetUsernameFailure();
+  factory UserFailure.fromCreateUsername() => const CreateUsernameFailure();
+  factory UserFailure.fromUpdateUsername() => const UpdateUsernameFailure();
+  factory UserFailure.fromDeleteUsername() => const DeleteUsernameFailure();
+
+  // friend data retrieval
+  factory UserFailure.fromGetFriend() => const GetFriendFailure();
+  factory UserFailure.fromCreateFriend() => const CreateFriendFailure();
+  factory UserFailure.fromUpdateFriend() => const UpdateFriendFailure();
+  factory UserFailure.fromDeleteFriend() => const DeleteFriendFailure();
 
   // auth
   factory UserFailure.fromAuthUserChanges() => const AuthUserChangesFailure();
@@ -23,22 +35,6 @@ class UserFailure extends Failure {
 
 class EmptyUserFailure extends UserFailure {
   const EmptyUserFailure() : super._();
-}
-
-class GetUserFailure extends UserFailure {
-  const GetUserFailure() : super._();
-}
-
-class CreateUserFailure extends UserFailure {
-  const CreateUserFailure() : super._();
-}
-
-class UpdateUserFailure extends UserFailure {
-  const UpdateUserFailure() : super._();
-}
-
-class DeleteUserFailure extends UserFailure {
-  const DeleteUserFailure() : super._();
 }
 
 class AnonymousSignInFailure extends UserFailure {
@@ -62,4 +58,52 @@ class PhoneNumberSignInFailure extends UserFailure {
 
 class SignOutFailure extends UserFailure {
   const SignOutFailure() : super._();
+}
+
+class GetUserFailure extends UserFailure {
+  const GetUserFailure() : super._();
+}
+
+class CreateUserFailure extends UserFailure {
+  const CreateUserFailure() : super._();
+}
+
+class UpdateUserFailure extends UserFailure {
+  const UpdateUserFailure() : super._();
+}
+
+class DeleteUserFailure extends UserFailure {
+  const DeleteUserFailure() : super._();
+}
+
+class GetUsernameFailure extends UserFailure {
+  const GetUsernameFailure() : super._();
+}
+
+class CreateUsernameFailure extends UserFailure {
+  const CreateUsernameFailure() : super._();
+}
+
+class UpdateUsernameFailure extends UserFailure {
+  const UpdateUsernameFailure() : super._();
+}
+
+class DeleteUsernameFailure extends UserFailure {
+  const DeleteUsernameFailure() : super._();
+}
+
+class GetFriendFailure extends UserFailure {
+  const GetFriendFailure() : super._();
+}
+
+class CreateFriendFailure extends UserFailure {
+  const CreateFriendFailure() : super._();
+}
+
+class UpdateFriendFailure extends UserFailure {
+  const UpdateFriendFailure() : super._();
+}
+
+class DeleteFriendFailure extends UserFailure {
+  const DeleteFriendFailure() : super._();
 }

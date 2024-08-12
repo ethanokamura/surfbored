@@ -40,17 +40,13 @@ class FriendCubit extends Cubit<FriendState> {
 
   Future<void> friendStateSelection(String userID) async {
     if (state.isRecieved) {
-      print('adding friend');
-      await _userRepository.addFriend(userID);
+      await _userRepository.modifyFriend(userID, 1);
     } else if (state.isRequested) {
-      print('removing request');
-      await _userRepository.cancelFriendRequest(userID);
+      await _userRepository.modifyFriendRequest(userID, removed: false);
     } else if (state.areFriends) {
-      print('removing friend');
-      await _userRepository.removeFriend(userID);
+      await _userRepository.modifyFriend(userID, -1);
     } else {
-      print('sending request');
-      await _userRepository.sendFriendRequest(userID);
+      await _userRepository.modifyFriendRequest(userID);
     }
     await fetchData(userID);
   }

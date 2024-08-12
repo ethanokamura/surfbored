@@ -65,19 +65,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  // send code
-  Future<void> sendCode(String phoneNumber) async {
-    await _userRepository.sendOTP(phoneNumber: phoneNumber);
-  }
-
-  // verify
-  Future<void> verify(ConfirmationResult confirmationResult, String otp) async {
-    await _userRepository.authenticateNewUser(
-      confirmationResult: confirmationResult,
-      otp: otp,
-    );
-  }
-
   void _onLoginFailed(UserFailure failure) {
     print('Login failed: $failure');
     emit(AuthState.failure(failure));

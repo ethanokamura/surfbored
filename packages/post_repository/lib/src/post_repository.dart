@@ -20,10 +20,12 @@ extension Create on PostRepository {
       final postRef = _firestore.postsCollection().doc();
 
       // set data
-      final newPost = post.toJson();
-      newPost['id'] = postRef.id;
-      newPost['uid'] = userID;
-      newPost['createdAt'] = Timestamp.now();
+      final newPost = post.toJson()
+        ..addAll({
+          'id': postRef.id,
+          'uid': userID,
+          'createdAt': Timestamp.now(),
+        });
 
       // post data
       await postRef.set(newPost);
@@ -40,40 +42,30 @@ extension Create on PostRepository {
 }
 
 extension Fetch on PostRepository {
-  // get post document
+  // fetch post
   Future<Post> fetchPost(String postID) async {
     try {
-      // get document from database
       final doc = await _firestore.getPostDoc(postID);
-      if (doc.exists) {
-        final data = doc.data();
-        // return board
-        return Post.fromJson(data!);
-      } else {
-        // return empty board if document DNE
-        return Post.empty;
-      }
+      if (!doc.exists) return Post.empty;
+      final data = doc.data();
+      return Post.fromJson(data!);
     } on FirebaseException {
       // return failure
       throw PostFailure.fromGetPost();
     }
   }
 
+  // fetch all the post from a board
   Future<List<Post>> fetchBoardPosts(String boardID) async {
     try {
       final boardDoc = await _firestore.getBoardDoc(boardID);
-
       if (!boardDoc.exists) return [];
-
       final boardData = boardDoc.data()!;
 
       final postIDs = List<String>.from(
         (boardData['posts'] as List).map((post) => post as String),
       );
-
-      final postDocs = await Future.wait(
-        postIDs.map(_firestore.getPostDoc),
-      );
+      final postDocs = await Future.wait(postIDs.map(_firestore.getPostDoc));
 
       final posts = postDocs
           .map((doc) {
@@ -93,27 +85,28 @@ extension Fetch on PostRepository {
     }
   }
 
-  // get post likes
+  // fetch post's likes
   Future<int> fetchLikes(String postID) async {
     try {
-      // get document from database
       final doc = await _firestore.getPostDoc(postID);
       if (doc.exists) {
-        // return likes
         final data = Post.fromJson(doc.data()!);
         return data.likes;
       } else {
         return 0;
       }
     } on FirebaseException {
-      // return failure
       throw PostFailure.fromGetPost();
     }
   }
 
   Future<bool> hasUserLikedPost(String postID, String userID) async {
-    final likeDoc = await _firestore.getLikeDoc('${postID}_$userID');
-    return likeDoc.exists;
+    try {
+      final likeDoc = await _firestore.getLikeDoc('${postID}_$userID');
+      return likeDoc.exists;
+    } on FirebaseException {
+      throw PostFailure.fromGetPost();
+    }
   }
 }
 
@@ -122,11 +115,8 @@ extension StreamData on PostRepository {
   Stream<Post> streamPost(String postID) {
     try {
       return _firestore.postDoc(postID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          return Post.fromJson(snapshot.data()!);
-        } else {
-          throw PostFailure.fromGetPost();
-        }
+        if (snapshot.exists) return Post.fromJson(snapshot.data()!);
+        throw PostFailure.fromGetPost();
       });
     } on FirebaseException {
       throw PostFailure.fromGetPost();
@@ -164,6 +154,7 @@ extension StreamData on PostRepository {
     }
   }
 
+  // stream all the user's posts using pagination
   Stream<List<Post>> streamUserPosts(
     String userID, {
     int pageSize = 10,
@@ -176,40 +167,16 @@ extension StreamData on PostRepository {
       return;
     }
 
-    final userData = userDoc.data()!;
     final postIDs = List<String>.from(
-      (userData['posts'] as List).map((post) => post as String),
+      (userDoc.data()!['posts'] as List).map((post) => post as String),
     );
 
     final reversedPostIDs = postIDs.reversed.toList();
 
-    final buffer = <Post>[];
-    final startIndex = page * pageSize;
-
-    if (startIndex >= reversedPostIDs.length) {
-      yield buffer;
-      return;
-    }
-
-    final postIDsPage =
-        reversedPostIDs.skip(startIndex).take(pageSize).toList();
-    final postDocs = await Future.wait(postIDsPage.map(_firestore.getPostDoc));
-    final posts = postDocs
-        .map((doc) {
-          if (doc.exists) {
-            return Post.fromFirestore(doc);
-          } else {
-            return null;
-          }
-        })
-        .whereType<Post>()
-        .toList();
-
-    buffer.addAll(posts);
-
-    yield buffer;
+    yield* streamPostsByIDs(pageSize, page, reversedPostIDs);
   }
 
+  // stream all the board's posts using pagination
   Stream<List<Post>> streamBoardPosts(
     String boardID, {
     int pageSize = 10,
@@ -222,59 +189,43 @@ extension StreamData on PostRepository {
       return;
     }
 
-    final boardData = boardDoc.data()!;
     final postIDs = List<String>.from(
-      (boardData['posts'] as List).map((post) => post as String),
+      (boardDoc.data()!['posts'] as List).map((post) => post as String),
     );
 
     final reversedPostIDs = postIDs.reversed.toList();
 
-    final buffer = <Post>[];
-    final startIndex = page * pageSize;
-
-    if (startIndex >= reversedPostIDs.length) {
-      yield buffer;
-      return;
-    }
-
-    final postIDsPage =
-        reversedPostIDs.skip(startIndex).take(pageSize).toList();
-    final postDocs = await Future.wait(postIDsPage.map(_firestore.getPostDoc));
-    final posts = postDocs
-        .map((doc) {
-          if (doc.exists) {
-            return Post.fromFirestore(doc);
-          } else {
-            return null;
-          }
-        })
-        .whereType<Post>()
-        .toList();
-
-    buffer.addAll(posts);
-
-    yield buffer;
+    yield* streamPostsByIDs(pageSize, page, reversedPostIDs);
   }
 
+  // stream all the user's liked posts using pagination
   Stream<List<Post>> streamUserLikedPosts(
     String userID, {
     int pageSize = 10,
     int page = 0,
   }) async* {
     // get post ID
-    final postIDs = await _firestore
+    final likedPostsSnapshot = await _firestore
         .collection('likes')
         .where('userID', isEqualTo: userID)
         .orderBy('timestamp', descending: true)
-        .get()
-        .then((snapshot) => snapshot.docs)
-        .then(
-          (docs) => docs.map((doc) => doc.data()['postID'] as String).toList(),
-        );
+        .limit(pageSize * (page + 1)) // Fetch only necessary pages
+        .get();
 
-    // create buffer
+    final postIDs = likedPostsSnapshot.docs
+        .map((doc) => doc.data()['postID'] as String)
+        .toList();
+
+    yield* streamPostsByIDs(pageSize, page, postIDs);
+  }
+
+  // generic post stream
+  Stream<List<Post>> streamPostsByIDs(
+    int pageSize,
+    int page,
+    List<String> postIDs,
+  ) async* {
     final buffer = <Post>[];
-
     final startIndex = page * pageSize;
 
     if (startIndex >= postIDs.length) {
@@ -283,19 +234,15 @@ extension StreamData on PostRepository {
     }
 
     final postIDsPage = postIDs.skip(startIndex).take(pageSize).toList();
-    final postDocs = await Future.wait(postIDsPage.map(_firestore.getPostDoc));
-    final posts = postDocs
-        .map((doc) {
-          if (doc.exists) {
-            return Post.fromFirestore(doc);
-          } else {
-            return null;
-          }
-        })
-        .whereType<Post>()
-        .toList();
+    final postDocs = await _firestore
+        .postsCollection()
+        .where(FieldPath.documentId, whereIn: postIDsPage)
+        .get();
 
-    buffer.addAll(posts);
+    // Process documents and add to buffer
+    for (final doc in postDocs.docs) {
+      buffer.add(Post.fromFirestore(doc));
+    }
 
     yield buffer;
   }
@@ -312,51 +259,31 @@ extension Update on PostRepository {
   }
 
   // update liked posts
-  Future<int> updateLikes({
+  Future<void> updateLikes({
     required String postID,
     required String userID,
     required bool isLiked,
   }) async {
-    // get document reference
     final postRef = _firestore.postDoc(postID);
     final likeRef = _firestore.likeDoc('${postID}_$userID');
-
-    // user batch to perform atomic operation
     final batch = _firestore.batch();
 
     try {
-      // get document data
-      final postSnapshot = await postRef.get();
-
-      // make sure post exists
-      if (!postSnapshot.exists) throw PostFailure.fromUpdatePost();
-
       if (!isLiked) {
         batch
-          ..update(postRef, {
-            'likes': FieldValue.increment(1),
-          })
+          ..update(postRef, {'likes': FieldValue.increment(1)})
           ..set(likeRef, {
             'postID': postID,
             'userID': userID,
-            'timestamp': FieldValue.serverTimestamp(),
+            'timestamp': Timestamp.now(),
           });
       } else {
         batch
-          ..update(postRef, {
-            'likes': FieldValue.increment(-1),
-          })
+          ..update(postRef, {'likes': FieldValue.increment(-1)})
           ..delete(likeRef);
       }
       // commit changes
-      try {
-        await batch.commit();
-      } catch (e) {
-        // something failed with batch.commit().
-        // the batch was rolled back.
-        print('could not commit changes $e');
-      }
-      return fetchLikes(postID);
+      await batch.commit();
     } on FirebaseException {
       throw PostFailure.fromUpdatePost();
     }
@@ -369,8 +296,7 @@ extension Delete on PostRepository {
     final batch = _firestore.batch();
     final postRef = _firestore.postDoc(postID);
     final likeRef = _firestore.likeDoc(postID);
-    const batchSize = 500; // Firestore batch limit
-
+    const batchSize = 500;
     try {
       final postDoc = await postRef.get();
       if (!postDoc.exists) {
@@ -393,19 +319,7 @@ extension Delete on PostRepository {
         });
       });
 
-      // find all users who liked this post
-      final usersQuery = _firestore
-          .collection('users')
-          .where('likedPosts', arrayContains: postID)
-          .limit(batchSize);
-
-      await _firestore.processQueryInBatches(usersQuery, batch, (userDoc) {
-        batch.update(userDoc.reference, {
-          'likedPosts': FieldValue.arrayRemove([postID]),
-        });
-      });
-
-      await _firestore.updateUserDoc(userID, {
+      batch.update(_firestore.userDoc(userID), {
         'posts': FieldValue.arrayRemove([postID]),
       });
 

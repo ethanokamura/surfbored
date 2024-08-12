@@ -22,12 +22,13 @@ class LikeCubit extends Cubit<LikeState> {
   }) async {
     try {
       emit(state.fromLoading());
-      final updatedLikes = await _postRepository.updateLikes(
+      await _postRepository.updateLikes(
         userID: userID,
         postID: postID,
         isLiked: liked,
       );
-      emit(state.fromLikeSuccess(isLiked: !liked, likes: updatedLikes));
+      final likes = await _postRepository.fetchLikes(postID);
+      emit(state.fromLikeSuccess(isLiked: !liked, likes: likes));
     } catch (e) {
       throw Exception(e);
     }

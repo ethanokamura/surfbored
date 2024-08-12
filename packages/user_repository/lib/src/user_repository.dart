@@ -15,7 +15,6 @@ class UserRepository {
 
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
-  final Map<String, String> _usernameCache = {};
 
   late final ValueStream<User> _user;
 
@@ -101,7 +100,7 @@ extension Auth on UserRepository {
           await _firebaseAuth.signInWithCredential(credential);
       final firebaseUser = userCredential.user;
       unawaited(_updateUserData(firebaseUser));
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       throw UserFailure.fromPhoneNumberSignIn();
     }
   }

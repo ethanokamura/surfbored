@@ -19,23 +19,18 @@ extension Create on BoardRepository {
     final boardRef = _firestore.boardsCollection().doc();
     final userRef = _firestore.userDoc(userID);
     try {
-      // set data
-      final newBoard = board.toJson();
-      newBoard['id'] = boardRef.id;
-      newBoard['uid'] = userID;
-      newBoard['createdAt'] = Timestamp.now();
-
-      // post data
+      final newBoard = board.toJson()
+        ..addAll({
+          'id': boardRef.id,
+          'uid': userID,
+          'createdAt': Timestamp.now(),
+        });
       batch
         ..set(boardRef, newBoard)
         ..update(userRef, {
           'boards': FieldValue.arrayUnion([boardRef.id]),
         });
-
-      // commit
       await batch.commit();
-
-      // return doc ID
       return boardRef.id;
     } on FirebaseException {
       throw BoardFailure.fromCreateBoard();
@@ -47,24 +42,22 @@ extension Fetch on BoardRepository {
   // get board saves
   Future<int> fetchSaves(String boardID) async {
     try {
-      // get document from database
       final doc = await _firestore.getBoardDoc(boardID);
-      if (doc.exists) {
-        // return likes
-        final data = Board.fromJson(doc.data()!);
-        return data.saves;
-      } else {
-        return 0;
-      }
+      if (!doc.exists) return 0;
+      final data = Board.fromJson(doc.data()!);
+      return data.saves;
     } on FirebaseException {
-      // return failure
       throw BoardFailure.fromGetBoard();
     }
   }
 
   Future<bool> hasUserSavedPost(String boardID, String userID) async {
-    final savesDoc = await _firestore.getSavesDoc('${boardID}_$userID');
-    return savesDoc.exists;
+    try {
+      final savesDoc = await _firestore.getSavesDoc('${boardID}_$userID');
+      return savesDoc.exists;
+    } on FirebaseException {
+      throw BoardFailure.fromGetBoard();
+    }
   }
 }
 
@@ -73,11 +66,8 @@ extension StreamData on BoardRepository {
   Stream<Board> streamBoard(String boardID) {
     try {
       return _firestore.boardDoc(boardID).snapshots().map((snapshot) {
-        if (snapshot.exists) {
-          return Board.fromJson(snapshot.data()!);
-        } else {
-          throw BoardFailure.fromGetBoard();
-        }
+        if (snapshot.exists) return Board.fromJson(snapshot.data()!);
+        throw BoardFailure.fromGetBoard();
       });
     } on FirebaseException {
       throw BoardFailure.fromGetBoard();
@@ -97,10 +87,8 @@ extension StreamData on BoardRepository {
       return;
     }
 
-    final userData = userDoc.data()!;
-
     final boardIDs = List<String>.from(
-      (userData['boards'] as List).map((post) => post as String),
+      (userDoc.data()!['boards'] as List).map((post) => post as String),
     );
 
     final reversedBoardIDs = boardIDs.reversed.toList();
@@ -113,22 +101,17 @@ extension StreamData on BoardRepository {
       return;
     }
 
-    final boardIDsPage =
+    final postIDsPage =
         reversedBoardIDs.skip(startIndex).take(pageSize).toList();
-    final boardDocs =
-        await Future.wait(boardIDsPage.map(_firestore.getBoardDoc));
-    final boards = boardDocs
-        .map((doc) {
-          if (doc.exists) {
-            return Board.fromFirestore(doc);
-          } else {
-            return null;
-          }
-        })
-        .whereType<Board>()
-        .toList();
+    final postDocs = await _firestore
+        .postsCollection()
+        .where(FieldPath.documentId, whereIn: postIDsPage)
+        .get();
 
-    buffer.addAll(boards);
+    // Process documents and add to buffer
+    for (final doc in postDocs.docs) {
+      buffer.add(Board.fromFirestore(doc));
+    }
 
     yield buffer;
   }
@@ -164,49 +147,33 @@ extension Update on BoardRepository {
   }
 
   // update liked posts
-  Future<int> updateSaves({
+  Future<void> updateSaves({
     required String userID,
     required String boardID,
     required bool isLiked,
   }) async {
-    // get document reference
     final boardRef = _firestore.postDoc(boardID);
-
-    // user batch to perform atomic operation
+    final saveRef = _firestore.savesDoc('${boardID}_$userID');
     final batch = _firestore.batch();
 
     try {
-      // get document data
-      final boardSnapshot = await boardRef.get();
-
-      // make sure board exists
-      if (!boardSnapshot.exists) throw BoardFailure.fromUpdateBoard();
-
       if (!isLiked) {
-        batch.update(boardRef, {
-          'saves': FieldValue.increment(1),
-        });
-        // Add the new entry to the saves collection
-        await _firestore.setSavesDoc('${boardID}_$userID', {
-          'boardID': boardID,
-          'userID': userID,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
+        batch
+          ..update(boardRef, {'saves': FieldValue.increment(1)})
+          ..set(saveRef, {
+            'boardID': boardID,
+            'userID': userID,
+            'timestamp': FieldValue.serverTimestamp(),
+          });
       } else {
-        batch.update(boardRef, {
-          'saves': FieldValue.increment(-1),
-        });
-        await _firestore.savesDoc('${boardID}_$userID').delete();
+        batch
+          ..update(boardRef, {
+            'saves': FieldValue.increment(-1),
+          })
+          ..delete(saveRef);
       }
       // commit changes
-      try {
-        await batch.commit();
-      } catch (e) {
-        // something failed with batch.commit().
-        // the batch was rolled back.
-        print('could not commit changes $e');
-      }
-      return fetchSaves(boardID);
+      await batch.commit();
     } on FirebaseException {
       throw BoardFailure.fromUpdateBoard();
     }
@@ -214,21 +181,13 @@ extension Update on BoardRepository {
 }
 
 extension Delete on BoardRepository {
-  // delete post:
-  // we need to delete the post at all reference points
+  // delete board:
   Future<void> deleteBoard(
-    String userID,
-    String boardID,
-    String photoURL,
-  ) async {
-    // start batch
+      String userID, String boardID, String photoURL) async {
     final batch = _firestore.batch();
-
-    // get references
     final boardRef = _firestore.boardDoc(boardID);
     final saveRef = _firestore.savesDoc(boardID);
-    const batchSize = 500; // Firestore batch limit
-
+    const batchSize = 500;
     try {
       final boardDoc = await boardRef.get();
       if (!boardDoc.exists) {
@@ -237,49 +196,25 @@ extension Delete on BoardRepository {
 
       batch
         ..delete(boardRef)
-        ..delete(saveRef);
+        ..delete(saveRef)
+        ..update(_firestore.userDoc(userID), {
+          'boards': FieldValue.arrayRemove([boardID]),
+        });
 
       // find all boards containing this post
       final boardsQuery = _firestore
-          .boardsCollection()
-          .where('boards', arrayContains: boardID)
+          .savesCollection()
+          .where('boardID', arrayContains: boardID)
           .limit(batchSize);
 
-      await _firestore.processQueryInBatches(boardsQuery, batch, (boardDoc) {
-        batch.update(boardDoc.reference, {
-          'boards': FieldValue.arrayRemove([boardID]),
-        });
-      });
-
-      // find all users who liked this post
-      var usersQuery = _firestore
-          .collection('users')
-          .where('savedBoards', arrayContains: boardID)
-          .limit(batchSize);
-
-      await _firestore.processQueryInBatches(usersQuery, batch, (userDoc) {
-        batch.update(userDoc.reference, {
-          'savedBoards': FieldValue.arrayRemove([boardID]),
-        });
-      });
-
-      // find all users who liked this post
-      usersQuery = _firestore
-          .collection('users')
-          .where('boards', arrayContains: boardID)
-          .limit(batchSize);
-
-      await _firestore.processQueryInBatches(usersQuery, batch, (userDoc) {
-        batch.update(userDoc.reference, {
-          'boards': FieldValue.arrayRemove([boardID]),
-        });
-      });
+      // delete all docs
+      await _firestore.deleteDocumentsByQuery(boardsQuery, batch);
 
       // Optionally delete the associated image file
       if (photoURL.isNotEmpty) {
         await _storage.refFromURL(photoURL).delete();
       }
-      // commit changes
+
       await batch.commit();
     } on FirebaseException {
       throw BoardFailure.fromDeleteBoard();

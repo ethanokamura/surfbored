@@ -44,6 +44,28 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
     }
   }
 
+  Future<void> deleteDocumentsByQuery(Query query, WriteBatch batch) async {
+    const batchSize = 500;
+    try {
+      final querySnapshot = await query.limit(batchSize).get();
+      if (querySnapshot.docs.isEmpty) return;
+      for (final doc in querySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+
+      if (querySnapshot.size == batchSize) {
+        await deleteDocumentsByQuery(query, batch);
+      }
+    } catch (e) {
+      throw FirebaseException(
+        plugin: 'cloud_firestore',
+        message: 'Failed to delete documents $e',
+      );
+    }
+  }
+
   // users
   CollectionReference<Map<String, dynamic>> usersCollection() =>
       collection('users');

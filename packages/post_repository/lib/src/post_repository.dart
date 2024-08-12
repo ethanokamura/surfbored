@@ -16,24 +16,22 @@ class PostRepository {
 extension Create on PostRepository {
   // create an post
   Future<String> createPost(Post post, String userID) async {
+    final batch = _firestore.batch();
+    final postRef = _firestore.postsCollection().doc();
+    final userRef = _firestore.userDoc(userID);
     try {
-      final postRef = _firestore.postsCollection().doc();
-
-      // set data
       final newPost = post.toJson()
         ..addAll({
           'id': postRef.id,
           'uid': userID,
           'createdAt': Timestamp.now(),
         });
-
-      // post data
-      await postRef.set(newPost);
-      await _firestore.updateUserDoc(userID, {
-        'posts': FieldValue.arrayUnion([postRef.id]),
-      });
-
-      // return doc ID
+      batch
+        ..set(postRef, newPost)
+        ..update(userRef, {
+          'posts': FieldValue.arrayUnion([postRef.id]),
+        });
+      await batch.commit();
       return postRef.id;
     } on FirebaseException {
       throw PostFailure.fromCreatePost();
@@ -89,12 +87,9 @@ extension Fetch on PostRepository {
   Future<int> fetchLikes(String postID) async {
     try {
       final doc = await _firestore.getPostDoc(postID);
-      if (doc.exists) {
-        final data = Post.fromJson(doc.data()!);
-        return data.likes;
-      } else {
-        return 0;
-      }
+      if (!doc.exists) return 0;
+      final data = Post.fromJson(doc.data()!);
+      return data.likes;
     } on FirebaseException {
       throw PostFailure.fromGetPost();
     }
@@ -303,9 +298,16 @@ extension Delete on PostRepository {
         throw PostFailure.fromGetPost();
       }
 
-      batch
-        ..delete(postRef)
-        ..delete(likeRef);
+      batch.delete(postRef);
+
+      // find all boards containing this post
+      final likesQuery = _firestore
+          .likesCollection()
+          .where('postID', arrayContains: postID)
+          .limit(batchSize);
+
+      // delete all docs
+      await _firestore.deleteDocumentsByQuery(likesQuery, batch);
 
       // find all boards containing this post
       final boardsQuery = _firestore

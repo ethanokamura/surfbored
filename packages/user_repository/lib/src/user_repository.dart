@@ -269,16 +269,15 @@ extension Friends on UserRepository {
   // get all the user's friend requests
   Future<List<String>> fetchFriendRequests(String userID) async {
     try {
-      final senderIDs = await _firestore
+      final senderSnapshots = await _firestore
           .collection('friendRequests')
           .where('receiverID', isEqualTo: userID)
           .orderBy('timestamp', descending: true)
-          .get()
-          .then((snapshot) => snapshot.docs)
-          .then(
-            (docs) =>
-                docs.map((doc) => doc.data()['senderID'] as String).toList(),
-          );
+          .get();
+      final senderIDs = senderSnapshots.docs
+          .map((doc) => doc.data()['senderID'] as String)
+          .toList();
+
       return senderIDs;
     } on FirebaseException {
       throw UserFailure.fromGetUser();

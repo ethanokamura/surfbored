@@ -70,7 +70,7 @@ Future<dynamic> postPopUp(
                       if (context.mounted) Navigator.pop(context);
                     },
                   ),
-                  ActionIconButton(
+                  LabeledIconButton(
                     icon: FontAwesomeIcons.xmark,
                     size: 20,
                     inverted: false,

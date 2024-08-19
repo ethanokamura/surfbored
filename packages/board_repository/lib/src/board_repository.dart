@@ -88,7 +88,7 @@ extension StreamData on BoardRepository {
     }
 
     final boardIDs = List<String>.from(
-      (userDoc.data()!['boards'] as List).map((post) => post as String),
+      (userDoc.data()!['boards'] as List).map((board) => board as String),
     );
 
     final reversedBoardIDs = boardIDs.reversed.toList();
@@ -101,15 +101,15 @@ extension StreamData on BoardRepository {
       return;
     }
 
-    final postIDsPage =
+    final boardIDsPage =
         reversedBoardIDs.skip(startIndex).take(pageSize).toList();
-    final postDocs = await _firestore
-        .postsCollection()
-        .where(FieldPath.documentId, whereIn: postIDsPage)
+    final boardDocs = await _firestore
+        .boardsCollection()
+        .where(FieldPath.documentId, whereIn: boardIDsPage)
         .get();
 
     // Process documents and add to buffer
-    for (final doc in postDocs.docs) {
+    for (final doc in boardDocs.docs) {
       buffer.add(Board.fromFirestore(doc));
     }
 

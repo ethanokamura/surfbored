@@ -15,7 +15,6 @@ class UserRepository {
 
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
-
   late final ValueStream<User> _user;
 
   /// current user as a stream
@@ -125,16 +124,6 @@ extension Username on UserRepository {
           .limit(1)
           .get();
       return querySnapshot.docs.isEmpty;
-    } on FirebaseException {
-      throw UserFailure.fromGetUsername();
-    }
-  }
-
-  // check if the current user has a username
-  Future<bool> userHasUsername(String userID) async {
-    try {
-      final usernameDoc = await _firestore.getUsernameDoc(userID);
-      return usernameDoc.exists;
     } on FirebaseException {
       throw UserFailure.fromGetUsername();
     }

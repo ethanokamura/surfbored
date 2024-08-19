@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:user_repository/user_repository.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage._();
-  static Page<dynamic> page() => const MaterialPage<void>(
-        key: ValueKey('register_page'),
-        child: SignUpPage._(),
-      );
+  const SignUpPage({super.key});
+
+  static MaterialPage<void> page() {
+    return const MaterialPage<void>(child: SignUpPage());
+  }
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();

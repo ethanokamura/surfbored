@@ -25,7 +25,6 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final uid = context.read<UserRepository>().user.uid;
-    print('sign up page');
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

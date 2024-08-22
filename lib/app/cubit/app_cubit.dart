@@ -36,7 +36,6 @@ class AppCubit extends Cubit<AppState> {
   }
 
   void confirmedUsername(User user) {
-    print('confirming username');
     emit(AppState.newlyAuthenticated(user));
   }
 
@@ -45,10 +44,8 @@ class AppCubit extends Cubit<AppState> {
       emit(const AppState.unauthenticated());
     } else if (state.isUnauthenticated) {
       if (user.hasUsername) {
-        print('user has username. emitting newly auth');
         emit(AppState.newlyAuthenticated(user));
       } else {
-        print('user has no username. emitting without username');
         emit(AppState.newlyAuthenticatedWithoutUsername(user));
       }
     } else {

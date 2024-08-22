@@ -129,8 +129,9 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                           },
                           verificationFailed: (exception) {
                             // Error handling is managed by BlocListener
-                            print(exception);
-                            context.showSnackBar('Error Verifying. Try Again.');
+                            context.showSnackBar(
+                              'Error Verifying. Try Again. $exception',
+                            );
                           },
                           codeSent: (
                             String verificationId,

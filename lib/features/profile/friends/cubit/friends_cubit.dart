@@ -15,19 +15,15 @@ class FriendCubit extends Cubit<FriendState> {
       final areFriends = await _userRepository.areUsersFriends(userID);
 
       if (areFriends) {
-        print('users are friends');
         emit(state.fromFriendAccepted());
       } else {
         final sender = await _userRepository.fetchRequestSender(userID);
         if (sender == null) {
-          print('no request found');
           emit(state.fromNoRequest());
         } else {
           if (sender == userID) {
-            print('user is reciever');
             emit(state.fromRequestRecieved());
           } else {
-            print('user is sender');
             emit(state.fromRequestSent());
           }
         }
@@ -42,7 +38,7 @@ class FriendCubit extends Cubit<FriendState> {
     if (state.isRecieved) {
       await _userRepository.modifyFriend(userID, 1);
     } else if (state.isRequested) {
-      await _userRepository.modifyFriendRequest(userID, removed: false);
+      await _userRepository.modifyFriendRequest(userID);
     } else if (state.areFriends) {
       await _userRepository.modifyFriend(userID, -1);
     } else {

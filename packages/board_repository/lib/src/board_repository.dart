@@ -183,7 +183,7 @@ extension Update on BoardRepository {
 extension Delete on BoardRepository {
   // delete board:
   Future<void> deleteBoard(
-      String userID, String boardID, String photoURL) async {
+      String userID, String boardID, String photoURL,) async {
     final batch = _firestore.batch();
     final boardRef = _firestore.boardDoc(boardID);
     final saveRef = _firestore.savesDoc(boardID);

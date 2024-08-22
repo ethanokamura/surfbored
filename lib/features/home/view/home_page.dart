@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:rando/features/explore/feed.dart';
 import 'package:rando/features/home/view/bottom_nav_bar.dart';
 import 'package:rando/features/inbox/inbox.dart';
-import 'package:rando/features/login/login.dart';
 import 'package:rando/features/profile/profile.dart';
 import 'package:rando/features/search/search.dart';
 import 'package:user_repository/user_repository.dart';
@@ -30,23 +29,18 @@ class HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userID = context.read<UserRepository>().user.uid;
-    final hasUsername = context.read<UserRepository>().user.hasUsername;
     final pageController = context.watch<NavBarController>();
 
     return PageView(
       controller: pageController,
       physics: const NeverScrollableScrollPhysics(),
-      children: hasUsername
-          ? [
-              const FeedPage(),
-              const SearchPage(),
-              const Center(child: TitleText(text: 'Create')),
-              const InboxPage(),
-              ProfilePage(userID: userID),
-            ]
-          : [
-              const SignUpPage(),
-            ],
+      children: [
+        const FeedPage(),
+        const SearchPage(),
+        const Center(child: TitleText(text: 'Create')),
+        const InboxPage(),
+        ProfilePage(userID: userID),
+      ],
     );
   }
 }

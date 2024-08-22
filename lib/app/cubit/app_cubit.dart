@@ -10,7 +10,11 @@ class AppCubit extends Cubit<AppState> {
         super(
           userRepository.user.isEmpty
               ? const AppState.unauthenticated()
-              : AppState.newlyAuthenticated(userRepository.user),
+              : userRepository.user.hasUsername
+                  ? AppState.newlyAuthenticated(userRepository.user)
+                  : AppState.newlyAuthenticatedWithoutUsername(
+                      userRepository.user,
+                    ),
         ) {
     _watchUser();
   }
@@ -31,11 +35,22 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
+  void confirmedUsername(User user) {
+    print('confirming username');
+    emit(AppState.newlyAuthenticated(user));
+  }
+
   void _onUserChanged(User user) {
     if (user.isEmpty) {
       emit(const AppState.unauthenticated());
     } else if (state.isUnauthenticated) {
-      emit(AppState.newlyAuthenticated(user));
+      if (user.hasUsername) {
+        print('user has username. emitting newly auth');
+        emit(AppState.newlyAuthenticated(user));
+      } else {
+        print('user has no username. emitting without username');
+        emit(AppState.newlyAuthenticatedWithoutUsername(user));
+      }
     } else {
       emit(AppState.authenticated(user));
     }

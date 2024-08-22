@@ -20,6 +20,9 @@ List<Page<dynamic>> onGenerateAppPages(
   if (status.isNewlyAuthenticated) {
     return [HomePage.page()];
   }
+  if (status.isNewlyAuthenticatedWithoutUsername) {
+    return [SignUpPage.page()];
+  }
   return pages;
 }
 

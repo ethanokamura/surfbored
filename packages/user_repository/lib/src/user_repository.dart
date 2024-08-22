@@ -301,18 +301,18 @@ extension Friends on UserRepository {
 
 extension Create on UserRepository {
   // create new firestore document for user
-  Future<void> createUser(String userID, User newUser) async {
-    // authenticate user
+  Future<User> createUser(User data) async {
     try {
+      final userID = user.uid;
       // set username
       await _firestore.setUsernameDoc(userID, {
-        'username': newUser.username,
+        'username': data.username,
         'uid': userID,
       });
       // set user data
-      final userData = newUser.toJson()
-        ..addAll({'memberSince': Timestamp.now()});
+      final userData = data.toJson()..addAll({'memberSince': Timestamp.now()});
       await _firestore.setUserDoc(userID, userData);
+      return user;
     } on FirebaseException {
       throw UserFailure.fromCreateUser();
     }

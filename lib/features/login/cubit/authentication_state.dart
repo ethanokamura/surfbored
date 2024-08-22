@@ -2,7 +2,7 @@ part of 'authentication_cubit.dart';
 
 enum AuthStatus { initial, verifying, signingIn, failure, success }
 
-extension LoginStatusExtensions on AuthStatus {
+extension AuthStatusExtensions on AuthStatus {
   bool get isSigningIn => this == AuthStatus.signingIn;
   bool get isVerifying => this == AuthStatus.verifying;
 }
@@ -53,7 +53,7 @@ final class AuthState extends Equatable {
   List<Object> get props => [status, signInMethod, failure];
 }
 
-extension LoginStateExtensions on AuthState {
+extension AuthStateExtensions on AuthState {
   bool get isFailure => status == AuthStatus.failure;
   bool get isSuccess => status == AuthStatus.success;
   bool get isSigningInWithPhone => status.isSigningIn && signInMethod.isPhone;

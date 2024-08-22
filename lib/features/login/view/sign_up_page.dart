@@ -2,14 +2,16 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  const SignUpPage._();
 
-  static MaterialPage<void> page() {
-    return const MaterialPage<void>(child: SignUpPage());
-  }
+  static Page<dynamic> page() => const MaterialPage<void>(
+        key: ValueKey('sign_up_page'),
+        child: SignUpPage._(),
+      );
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -23,6 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final uid = context.read<UserRepository>().user.uid;
+    print('sign up page');
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -118,7 +121,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     bio: bio,
                     photoURL: photoURL,
                   );
-                  await context.read<UserRepository>().createUser(uid, user);
+                  final newUser =
+                      await context.read<UserRepository>().createUser(user);
+                  if (context.mounted) {
+                    context.read<AppCubit>().confirmedUsername(newUser);
+                  }
                 },
                 text: 'Confirm',
               ),

@@ -3,6 +3,7 @@ part of 'app_cubit.dart';
 enum AppStatus {
   unauthenticated,
   newlyAuthenticated,
+  newlyAuthenticatedWithoutUsername,
   authenticated,
   failure,
 }
@@ -10,6 +11,8 @@ enum AppStatus {
 extension AppStatusExtensions on AppStatus {
   bool get isUnauthenticated => this == AppStatus.unauthenticated;
   bool get isNewlyAuthenticated => this == AppStatus.newlyAuthenticated;
+  bool get isNewlyAuthenticatedWithoutUsername =>
+      this == AppStatus.newlyAuthenticatedWithoutUsername;
   bool get isAuthenticated => this == AppStatus.authenticated;
   bool get isFailure => this == AppStatus.failure;
 }
@@ -26,6 +29,12 @@ final class AppState extends Equatable {
   const AppState.newlyAuthenticated(User user)
       : this._(
           status: AppStatus.newlyAuthenticated,
+          user: user,
+        );
+
+  const AppState.newlyAuthenticatedWithoutUsername(User user)
+      : this._(
+          status: AppStatus.newlyAuthenticatedWithoutUsername,
           user: user,
         );
 
@@ -55,6 +64,8 @@ final class AppState extends Equatable {
 extension AppStateExtensions on AppState {
   bool get isUnauthenticated => status.isUnauthenticated;
   bool get isNewlyAuthenticated => status.isNewlyAuthenticated;
+  bool get isNewlyAuthenticatedWithoutUsername =>
+      status.isNewlyAuthenticatedWithoutUsername;
   bool get isAuthenticated => status.isAuthenticated;
   bool get isFailure => status.isFailure;
 

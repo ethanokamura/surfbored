@@ -5,6 +5,7 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/boards/boards.dart';
+import 'package:rando/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CreateBoardPage extends StatelessWidget {
@@ -45,6 +46,7 @@ class _CreateBoardState extends State<CreateBoard> {
 
   String titleText = 'title';
   String descriptionText = 'description';
+  List<String> tags = [];
   String docID = '';
   String? photoURL;
 
@@ -98,7 +100,13 @@ class _CreateBoardState extends State<CreateBoard> {
                 onPressed: () => editField('description'),
               ),
               const VerticalSpacer(),
-
+              EditTagsBox(
+                tags: tags,
+                updateTags: (newTags) => setState(() {
+                  tags = newTags;
+                }),
+              ),
+              const VerticalSpacer(),
               // submit
               ActionButton(
                 inverted: true,
@@ -106,6 +114,7 @@ class _CreateBoardState extends State<CreateBoard> {
                   context.read<BoardCubit>().createBoard(
                         userID: context.read<UserRepository>().user.uid,
                         title: titleText,
+                        tags: tags,
                         description: descriptionText,
                         imageFile: imageFile,
                       );

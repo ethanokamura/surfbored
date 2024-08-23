@@ -89,6 +89,7 @@ class BoardCubit extends Cubit<BoardState> {
     required String userID,
     required String title,
     required String description,
+    required List<String> tags,
     required File? imageFile,
   }) async {
     emit(state.fromLoading());
@@ -97,6 +98,7 @@ class BoardCubit extends Cubit<BoardState> {
         Board(
           title: title,
           description: description,
+          tags: tags,
           uid: 'userId', // Replace with actual user ID
         ),
         userID,

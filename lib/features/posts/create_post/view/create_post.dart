@@ -102,18 +102,11 @@ class _CreateActivityState extends State<CreateActivity> {
                 onPressed: () => editField('description'),
               ),
               const VerticalSpacer(),
-
-              // edit tags
-              Column(
-                children: [
-                  CustomInputField(
-                    label: 'tags',
-                    text: tagsText,
-                    onPressed: () => editField('tags'),
-                  ),
-                  const VerticalSpacer(),
-                  TagList(tags: tags),
-                ],
+              EditTagsBox(
+                tags: tags,
+                updateTags: (newTags) => setState(() {
+                  tags = newTags;
+                }),
               ),
               const VerticalSpacer(),
 
@@ -139,12 +132,6 @@ class _CreateActivityState extends State<CreateActivity> {
     );
   }
 
-  // create list of tags
-  List<String> createTags(String tagList) {
-    final tags = tagList.trim();
-    return tags.split(' ');
-  }
-
   // dynamic input length maximum
   int maxInputLength(String field) {
     switch (field) {
@@ -162,8 +149,6 @@ class _CreateActivityState extends State<CreateActivity> {
       textController.text = titleText;
     } else if (field == 'description' && field != descriptionText) {
       textController.text = descriptionText;
-    } else if (field == 'tags' && field != tagsText) {
-      textController.text = tagsText;
     }
 
     // edit
@@ -176,8 +161,6 @@ class _CreateActivityState extends State<CreateActivity> {
           titleText = textController.text;
         } else if (field == 'description') {
           descriptionText = textController.text;
-        } else {
-          tags = createTags(textController.text);
         }
       });
       textController.clear();

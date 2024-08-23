@@ -61,10 +61,7 @@ class BoardPageView extends StatelessWidget {
                       ),
                       const VerticalSpacer(),
                       BoardDetails(
-                        boardID: board.id,
-                        title: board.title,
-                        description: board.description,
-                        userID: board.uid,
+                        board: board,
                       ),
                     ],
                   ),
@@ -98,8 +95,14 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppBarText(text: title, fontSize: 30),
+        Expanded(
+            child: AppBarText(
+          text: title,
+          fontSize: 30,
+          maxLines: 2,
+        )),
         ActionIconButton(
           inverted: false,
           onTap: () => Navigator.pop(context),
@@ -111,17 +114,8 @@ class TopBar extends StatelessWidget {
 }
 
 class BoardDetails extends StatelessWidget {
-  const BoardDetails({
-    required this.title,
-    required this.description,
-    required this.userID,
-    required this.boardID,
-    super.key,
-  });
-  final String boardID;
-  final String title;
-  final String description;
-  final String userID;
+  const BoardDetails({required this.board, super.key});
+  final Board board;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +129,7 @@ class BoardDetails extends StatelessWidget {
           children: [
             Flexible(
               child: TitleText(
-                text: title,
+                text: board.title,
                 fontSize: 24,
                 maxLines: 2,
               ),
@@ -148,7 +142,7 @@ class BoardDetails extends StatelessWidget {
                   builder: (context) {
                     return BlocProvider.value(
                       value: boardCubit,
-                      child: EditBoardPage(boardID: boardID),
+                      child: EditBoardPage(boardID: board.id),
                     );
                   },
                 ),
@@ -157,9 +151,9 @@ class BoardDetails extends StatelessWidget {
             ),
           ],
         ),
-        DescriptionText(text: description),
+        DescriptionText(text: board.description),
         const VerticalSpacer(),
-        ProfileLink(uid: userID),
+        ProfileLink(uid: board.uid),
       ],
     );
   }

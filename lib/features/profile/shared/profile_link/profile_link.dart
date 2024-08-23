@@ -19,14 +19,16 @@ class ProfileLink extends StatelessWidget {
       future: _fetchUsername(context),
       builder: (context, snapshot) {
         final username = snapshot.data ?? 'Unknown User';
-        return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (context) => ProfilePage(userID: uid),
+        return Flexible(
+          child: GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (context) => ProfilePage(userID: uid),
+              ),
             ),
+            child: UserText(text: '@$username', bold: false),
           ),
-          child: UserText(text: '@$username', bold: false),
         );
       },
     );

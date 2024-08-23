@@ -98,11 +98,12 @@ class TopBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-            child: AppBarText(
-          text: title,
-          fontSize: 30,
-          maxLines: 2,
-        )),
+          child: AppBarText(
+            text: title,
+            fontSize: 30,
+            maxLines: 2,
+          ),
+        ),
         ActionIconButton(
           inverted: false,
           onTap: () => Navigator.pop(context),

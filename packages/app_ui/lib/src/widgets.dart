@@ -4,44 +4,6 @@ import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 
-class TagList extends StatelessWidget {
-  const TagList({required this.tags, super.key});
-  final List<String> tags;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: tags.map((item) {
-        return Tag(tag: item);
-      }).toList(),
-    );
-  }
-}
-
-class Tag extends StatelessWidget {
-  const Tag({required this.tag, super.key});
-  final String tag;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      elevation: defaultElevation,
-      color: Theme.of(context).colorScheme.primary,
-      shadowColor: Theme.of(context).shadowColor,
-      borderRadius: const BorderRadius.all(Radius.circular(5)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 5,
-        ),
-        child: PrimaryText(text: tag, fontSize: 14),
-      ),
-    );
-  }
-}
-
 class CustomContainer extends StatelessWidget {
   const CustomContainer({
     required this.inverted,

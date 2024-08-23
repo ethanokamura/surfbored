@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/features/posts/cubit/post_cubit.dart';
+import 'package:rando/features/tags/tags.dart';
 
 class EditPostPage extends StatefulWidget {
   const EditPostPage({

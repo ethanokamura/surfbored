@@ -71,9 +71,11 @@ class _AddTagsPageState extends State<AddTagsPage> {
                       icon: Icons.add,
                       onTap: () {
                         final tag = _tagController.text.trim();
-                        setState(() {
-                          _tags.add(tag);
-                        });
+                        if (tag != '') {
+                          setState(() {
+                            _tags.add(tag);
+                          });
+                        }
                         _tagController.clear();
                       },
                     ),

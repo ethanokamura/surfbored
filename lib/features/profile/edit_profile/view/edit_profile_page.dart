@@ -101,10 +101,11 @@ class EditProfile extends StatelessWidget {
               }
             },
           ),
+          const VerticalSpacer(),
           EditTagsBox(
             tags: user.tags,
-            updateTags: (tags) =>
-                context.read<ProfileCubit>().editField('tags', tags),
+            updateTags: (newTags) =>
+                context.read<ProfileCubit>().editField('tags', newTags),
           ),
         ],
       ),

@@ -30,6 +30,31 @@ class User extends Equatable {
         lastSignInAt: DateTime.now(),
       );
 
+  // allows for an easy way to stream data
+  factory User.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return User(
+      uid: data['uid'] as String? ?? '',
+      photoURL: data['photoURL'] as String? ?? '',
+      username: data['username'] as String? ?? '',
+      name: data['name'] as String? ?? '',
+      bio: data['bio'] as String? ?? '',
+      friends: data['friends'] as int? ?? 0,
+      posts: (data['posts'] as List<dynamic>)
+          .map((post) => post as String)
+          .toList(),
+      boards: (data['boards'] as List<dynamic>)
+          .map((board) => board as String)
+          .toList(),
+      tags:
+          (data['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
+      lastSignInAt:
+          (data['lastSignInAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      memberSince:
+          (data['memberSince'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+
   // data fields
   final String uid;
   final String username;

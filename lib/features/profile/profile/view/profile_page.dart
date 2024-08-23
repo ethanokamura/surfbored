@@ -83,7 +83,7 @@ class ProfileBuilder extends StatelessWidget {
                           const VerticalSpacer(),
                           ProfileHeader(user: user, isCurrent: isCurrent),
                           const VerticalSpacer(),
-                          About(user: user),
+                          About(bio: user.bio),
                           const VerticalSpacer(),
                           FriendsBlock(
                             userID: user.uid,
@@ -91,7 +91,7 @@ class ProfileBuilder extends StatelessWidget {
                             isCurrent: isCurrent,
                           ),
                           const VerticalSpacer(),
-                          const InterestsList(),
+                          InterestsList(interests: user.tags),
                         ],
                       ),
                     ),
@@ -214,8 +214,8 @@ class ProfileHeader extends StatelessWidget {
 }
 
 class About extends StatelessWidget {
-  const About({required this.user, super.key});
-  final User user;
+  const About({required this.bio, super.key});
+  final String bio;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -226,7 +226,7 @@ class About extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SecondaryText(text: 'about me'),
-          PrimaryText(text: user.bio),
+          PrimaryText(text: bio),
         ],
       ),
     );

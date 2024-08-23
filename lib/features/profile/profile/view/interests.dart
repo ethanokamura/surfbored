@@ -3,18 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:rando/features/tags/tags.dart';
 
 class InterestsList extends StatelessWidget {
-  const InterestsList({super.key});
-
+  const InterestsList({required this.interests, super.key});
+  final List<String> interests;
   @override
   Widget build(BuildContext context) {
-    final interests = <String>[
-      'tattoos',
-      'dates',
-      'outdoors',
-      'food',
-      'cats',
-      'movies',
-    ];
     return CustomContainer(
       inverted: false,
       horizontal: null,

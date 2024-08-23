@@ -360,10 +360,14 @@ extension Update on UserRepository {
   }
 
   // update specific user field
-  Future<void> updateField(String userID, String field, String data) async {
+  Future<void> updateField(
+    String userID,
+    String field,
+    dynamic data,
+  ) async {
     try {
       field == 'username'
-          ? await saveUsername(userID, data)
+          ? await saveUsername(userID, data as String)
           : await _firestore.updateUserDoc(userID, {field: data});
     } on FirebaseException {
       throw UserFailure.fromUpdateUser();

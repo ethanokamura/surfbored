@@ -75,6 +75,7 @@ class EditView extends StatelessWidget {
         builder: (context, state) {
           return SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 EditImage(
                   width: 200,
@@ -122,25 +123,11 @@ class EditView extends StatelessWidget {
                   },
                 ),
                 const VerticalSpacer(),
-                CustomTextBox(
-                  text: 'tags',
-                  label: 'tags',
-                  onPressed: () async {
-                    final newValue = await editTextField(
-                      context,
-                      'tags',
-                      50,
-                      TextEditingController(),
-                    );
-                    if (newValue != null && context.mounted) {
-                      final trimmed = newValue.trim();
-                      final tags = trimmed.split(' ');
-                      await postCubit.editField(post.id, 'tags', tags);
-                    }
-                  },
+                EditTagsBox(
+                  tags: post.tags,
+                  updateTags: (tags) =>
+                      postCubit.editField(post.id, 'tags', tags),
                 ),
-                const VerticalSpacer(),
-                TagList(tags: post.tags),
               ],
             ),
           );

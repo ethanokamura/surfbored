@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rando/features/tags/views/tag.dart';
+import 'package:rando/features/tags/shared/tag.dart';
 
 class TagList extends StatelessWidget {
   const TagList({required this.tags, super.key});

@@ -2,6 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/profile/cubit/profile_cubit.dart';
+import 'package:rando/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
 
 class EditProfilePage extends StatelessWidget {
@@ -99,6 +100,11 @@ class EditProfile extends StatelessWidget {
                 await context.read<ProfileCubit>().editField('bio', newValue);
               }
             },
+          ),
+          EditTagsBox(
+            tags: user.tags,
+            updateTags: (tags) =>
+                context.read<ProfileCubit>().editField('tags', tags),
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/boards/boards.dart';
+import 'package:rando/features/tags/tags.dart';
 
 class EditBoardPage extends StatefulWidget {
   const EditBoardPage({required this.boardID, super.key});
@@ -114,6 +115,12 @@ class EditView extends StatelessWidget {
                       );
                     }
                   },
+                ),
+                const VerticalSpacer(),
+                EditTagsBox(
+                  tags: board.tags,
+                  updateTags: (tags) =>
+                      boardCubit.editField(board.id, 'tags', tags),
                 ),
                 const VerticalSpacer(),
                 ActionButton(

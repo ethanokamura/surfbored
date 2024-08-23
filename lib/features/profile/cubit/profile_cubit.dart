@@ -32,7 +32,7 @@ class ProfileCubit extends Cubit<User> {
     return _userSubscription.cancel();
   }
 
-  Future<void> editField(String field, String data) async {
+  Future<void> editField(String field, dynamic data) async {
     await _userRepository.updateField(_userID, field, data);
   }
 }

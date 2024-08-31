@@ -6,8 +6,6 @@ enum PostStatus {
   loadingMore,
   empty,
   loaded,
-  created,
-  creating,
   deleted,
   updated,
   failure,
@@ -59,8 +57,6 @@ extension PostStateExtensions on PostState {
   bool get isLoading => status == PostStatus.loading;
   bool get isLoadingMore => status == PostStatus.loadingMore;
   bool get isFailure => status == PostStatus.failure;
-  bool get isCreated => status == PostStatus.created;
-  bool get isCreating => status == PostStatus.creating;
   bool get isDeleted => status == PostStatus.deleted;
   bool get isUpdated => status == PostStatus.updated;
 }
@@ -69,8 +65,6 @@ extension _PostStateExtensions on PostState {
   PostState fromLoading() => copyWith(status: PostStatus.loading);
 
   PostState fromEmpty() => copyWith(status: PostStatus.empty);
-
-  PostState fromCreated() => copyWith(status: PostStatus.created);
 
   PostState fromDeleted() => copyWith(status: PostStatus.deleted);
 

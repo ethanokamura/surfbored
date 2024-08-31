@@ -26,6 +26,7 @@ class LikeButton extends StatelessWidget {
           return GestureDetector(
             onTap: () => context.read<LikeCubit>().toggleLike(
                   userID,
+                  post.uid,
                   post.id,
                   liked: isLiked,
                 ),

@@ -8,8 +8,8 @@ import 'package:rando/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {
-  const BoardPage({required this.board, super.key});
-  final Board board;
+  const BoardPage({required this.boardID, super.key});
+  final String boardID;
   static MaterialPage<void> page({required Board board}) {
     return MaterialPage<void>(
       child: BoardPageView(board: board),
@@ -18,13 +18,27 @@ class BoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<BoardCubit>().fetchBoard(boardID);
     return CustomPageView(
       top: false,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   title: AppBarText(text: board.title),
-      // ),
-      body: BoardPageView(board: board),
+      body: BlocBuilder<BoardCubit, BoardState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.isLoaded) {
+            return BoardPageView(
+              board: state.board,
+            );
+          } else if (state.isDeleted) {
+            return const Center(
+              child: PrimaryText(text: 'Deleted board.'),
+            );
+          }
+          return const Center(
+            child: PrimaryText(text: 'Something went wrong'),
+          );
+        },
+      ),
     );
   }
 }
@@ -143,7 +157,18 @@ class BoardDetails extends StatelessWidget {
                   builder: (context) {
                     return BlocProvider.value(
                       value: boardCubit,
-                      child: EditBoardPage(boardID: board.id),
+                      child: EditBoardPage(
+                        boardID: board.id,
+                        onDelete: () async {
+                          Navigator.pop(context);
+                          await boardCubit.deleteBoard(
+                            board.uid,
+                            board.id,
+                            board.photoURL,
+                          );
+                          if (context.mounted) Navigator.pop(context);
+                        },
+                      ),
                     );
                   },
                 ),

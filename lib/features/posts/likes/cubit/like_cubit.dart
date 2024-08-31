@@ -17,6 +17,7 @@ class LikeCubit extends Cubit<LikeState> {
 
   Future<void> toggleLike(
     String userID,
+    String ownerID,
     String postID, {
     required bool liked,
   }) async {
@@ -24,6 +25,7 @@ class LikeCubit extends Cubit<LikeState> {
       emit(state.fromLoading());
       await _postRepository.updateLikes(
         userID: userID,
+        ownerID: ownerID,
         postID: postID,
         isLiked: liked,
       );

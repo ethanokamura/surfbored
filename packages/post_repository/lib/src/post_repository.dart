@@ -257,6 +257,7 @@ extension Update on PostRepository {
   Future<void> updateLikes({
     required String postID,
     required String userID,
+    required String ownerID,
     required bool isLiked,
   }) async {
     final postRef = _firestore.postDoc(postID);
@@ -270,6 +271,7 @@ extension Update on PostRepository {
           ..set(likeRef, {
             'postID': postID,
             'userID': userID,
+            'ownerID': ownerID,
             'timestamp': Timestamp.now(),
           });
       } else {
@@ -297,7 +299,11 @@ extension Delete on PostRepository {
         throw PostFailure.fromGetPost();
       }
 
-      batch.delete(postRef);
+      batch
+        ..delete(postRef)
+        ..update(_firestore.userDoc(userID), {
+          'posts': FieldValue.arrayRemove([postID]),
+        });
 
       // find all boards containing this post
       final likesQuery = _firestore
@@ -318,10 +324,6 @@ extension Delete on PostRepository {
         batch.update(boardDoc.reference, {
           'posts': FieldValue.arrayRemove([postID]),
         });
-      });
-
-      batch.update(_firestore.userDoc(userID), {
-        'posts': FieldValue.arrayRemove([postID]),
       });
 
       // Optionally delete the associated image file

@@ -39,6 +39,17 @@ extension Create on BoardRepository {
 }
 
 extension Fetch on BoardRepository {
+  // get board
+  Future<Board> fetchBoard(String boardID) async {
+    try {
+      final doc = await _firestore.getBoardDoc(boardID);
+      if (!doc.exists) return Board.empty;
+      return Board.fromJson(doc.data()!);
+    } on FirebaseException {
+      throw BoardFailure.fromGetBoard();
+    }
+  }
+
   // get board saves
   Future<int> fetchSaves(String boardID) async {
     try {
@@ -150,6 +161,7 @@ extension Update on BoardRepository {
   Future<void> updateSaves({
     required String userID,
     required String boardID,
+    required String ownerID,
     required bool isLiked,
   }) async {
     final boardRef = _firestore.postDoc(boardID);
@@ -162,6 +174,7 @@ extension Update on BoardRepository {
           ..update(boardRef, {'saves': FieldValue.increment(1)})
           ..set(saveRef, {
             'boardID': boardID,
+            'ownerID': ownerID,
             'userID': userID,
             'timestamp': FieldValue.serverTimestamp(),
           });
@@ -183,20 +196,20 @@ extension Update on BoardRepository {
 extension Delete on BoardRepository {
   // delete board:
   Future<void> deleteBoard(
-      String userID, String boardID, String photoURL,) async {
+    String userID,
+    String boardID,
+    String photoURL,
+  ) async {
     final batch = _firestore.batch();
     final boardRef = _firestore.boardDoc(boardID);
-    final saveRef = _firestore.savesDoc(boardID);
     const batchSize = 500;
     try {
       final boardDoc = await boardRef.get();
-      if (!boardDoc.exists) {
-        throw BoardFailure.fromGetBoard();
-      }
+
+      if (!boardDoc.exists) throw BoardFailure.fromGetBoard();
 
       batch
         ..delete(boardRef)
-        ..delete(saveRef)
         ..update(_firestore.userDoc(userID), {
           'boards': FieldValue.arrayRemove([boardID]),
         });

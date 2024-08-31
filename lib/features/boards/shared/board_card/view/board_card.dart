@@ -19,7 +19,7 @@ class BoardCard extends StatelessWidget {
             builder: (context) {
               return BlocProvider.value(
                 value: boardCubit,
-                child: BoardPage(board: board),
+                child: BoardPage(boardID: board.id),
               );
             },
           ),

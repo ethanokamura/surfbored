@@ -19,6 +19,16 @@ class BoardCubit extends Cubit<BoardState> {
   final int _pageSize = 10;
   bool _hasMore = true;
 
+  Future<void> fetchBoard(String boardID) async {
+    emit(state.fromLoading());
+    try {
+      final board = await _boardRepository.fetchBoard(boardID);
+      emit(state.fromBoardLoaded(board));
+    } on BoardFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
+
   void streamBoard(String boardID) {
     emit(state.fromLoading());
     try {
@@ -81,16 +91,18 @@ class BoardCubit extends Cubit<BoardState> {
     emit(state.fromLoading());
     await _boardRepository.updateField(boardID, {field: data});
     emit(state.fromUpdated());
+    await fetchBoard(boardID);
   }
 
   Future<void> deleteBoard(
     String userID,
     String boardID,
-    String photoURL,
+    String? photoURL,
   ) async {
     emit(state.fromLoading());
     try {
-      await _boardRepository.deleteBoard(userID, boardID, photoURL);
+      final url = photoURL ?? '';
+      await _boardRepository.deleteBoard(userID, boardID, url);
       emit(state.fromDeleted());
     } on BoardFailure catch (failure) {
       emit(state.fromFailure(failure));
@@ -111,12 +123,6 @@ extension _BoardStateExtensions on BoardState {
         status: BoardStatus.loaded,
         board: board,
       );
-
-  // BoardState fromPostsLoaded(List<String> posts) => copyWith(
-  //       status: BoardStatus.loaded,
-  //       posts: posts,
-  //       index: 0,
-  //     );
 
   BoardState fromBoardsLoaded(List<Board> boards) => copyWith(
         status: BoardStatus.loaded,

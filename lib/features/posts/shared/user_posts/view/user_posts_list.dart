@@ -32,7 +32,7 @@ class UserPostsList extends StatelessWidget {
             return const Center(
               child: PrimaryText(text: 'Item list is empty.'),
             );
-          } else if (state.isDeleted || state.isUpdated || state.isCreated) {
+          } else if (state.isDeleted || state.isUpdated) {
             context.read<PostCubit>().streamUserPosts(userID);
             return const Center(
               child: PrimaryText(text: 'Posts were changed. Reloading.'),

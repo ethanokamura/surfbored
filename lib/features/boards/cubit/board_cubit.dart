@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:api_client/api_client.dart';
 import 'package:bloc/bloc.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -85,34 +83,6 @@ class BoardCubit extends Cubit<BoardState> {
     emit(state.fromUpdated());
   }
 
-  Future<void> createBoard({
-    required String userID,
-    required String title,
-    required String description,
-    required List<String> tags,
-    required File? imageFile,
-  }) async {
-    emit(state.fromLoading());
-    try {
-      final docID = await _boardRepository.createBoard(
-        Board(
-          title: title,
-          description: description,
-          tags: tags,
-          uid: 'userId', // Replace with actual user ID
-        ),
-        userID,
-      );
-      if (imageFile != null) {
-        await FirebaseFirestore.instance
-            .uploadImage('boards', docID, imageFile);
-      }
-      emit(state.fromCreated());
-    } on BoardFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
   Future<void> deleteBoard(
     String userID,
     String boardID,
@@ -134,8 +104,6 @@ extension _BoardStateExtensions on BoardState {
   BoardState fromEmpty() => copyWith(status: BoardStatus.empty);
 
   BoardState fromDeleted() => copyWith(status: BoardStatus.deleted);
-
-  BoardState fromCreated() => copyWith(status: BoardStatus.created);
 
   BoardState fromUpdated() => copyWith(status: BoardStatus.updated);
 

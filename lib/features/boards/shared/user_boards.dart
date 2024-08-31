@@ -29,7 +29,7 @@ class UserBoardsList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return const Center(child: PrimaryText(text: 'No boards.'));
-          } else if (state.isDeleted || state.isUpdated || state.isCreated) {
+          } else if (state.isDeleted || state.isUpdated) {
             context.read<BoardCubit>().streamUserBoards(userID);
             return const Center(
               child: PrimaryText(text: 'Posts were changed. Reloading.'),

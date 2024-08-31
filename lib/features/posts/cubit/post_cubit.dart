@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:api_client/api_client.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:post_repository/post_repository.dart';
@@ -199,33 +196,6 @@ class PostCubit extends Cubit<PostState> {
     emit(state.fromLoading());
     await _postRepository.updateField(postID, {field: data});
     emit(state.fromUpdate());
-  }
-
-  Future<void> createPost({
-    required String userID,
-    required String title,
-    required String description,
-    required List<String> tags,
-    required File? imageFile,
-  }) async {
-    emit(state.fromLoading());
-    try {
-      final docID = await _postRepository.createPost(
-        Post(
-          title: title,
-          description: description,
-          uid: 'userId', // Replace with actual user ID
-          tags: tags,
-        ),
-        userID,
-      );
-      if (imageFile != null) {
-        await FirebaseFirestore.instance.uploadImage('posts', docID, imageFile);
-      }
-      emit(state.fromCreated());
-    } on PostFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
   }
 
   Future<void> deletePost(

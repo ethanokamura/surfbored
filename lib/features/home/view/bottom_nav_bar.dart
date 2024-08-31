@@ -1,8 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/features/boards/boards.dart';
-import 'package:rando/features/posts/posts.dart';
+import 'package:rando/features/create/create.dart';
 
 enum NavBarItem { home, search, create, inbox, profile }
 
@@ -102,7 +101,7 @@ class BottomNavBar extends StatelessWidget {
               inverted: true,
               size: 40,
               onTap: () {
-                choice = 'items';
+                choice = 'Post';
                 Navigator.pop(currentContext);
               },
             ),
@@ -113,7 +112,7 @@ class BottomNavBar extends StatelessWidget {
               inverted: true,
               size: 40,
               onTap: () {
-                choice = 'boards';
+                choice = 'Board';
                 Navigator.pop(currentContext);
               },
             ),
@@ -121,24 +120,14 @@ class BottomNavBar extends StatelessWidget {
         ),
       ],
     );
-    if (choice == null) {
-      return;
-    } else {
-      if (currentContext.mounted) {
-        choice! == 'items'
-            ? await Navigator.push(
-                currentContext,
-                MaterialPageRoute<Page<dynamic>>(
-                  builder: (context) => const CreatePostPage(),
-                ),
-              )
-            : await Navigator.push(
-                currentContext,
-                MaterialPageRoute<Page<dynamic>>(
-                  builder: (context) => const CreateBoardPage(),
-                ),
-              );
-      }
+    if (choice == null) return;
+    if (currentContext.mounted) {
+      await Navigator.push(
+        currentContext,
+        MaterialPageRoute<Page<dynamic>>(
+          builder: (context) => CreatePage(type: choice!),
+        ),
+      );
     }
   }
 }

@@ -6,8 +6,6 @@ enum BoardStatus {
   empty,
   loaded,
   deleted,
-  created,
-  creating,
   updated,
   failure,
 }
@@ -70,8 +68,6 @@ extension BoardStateExtensions on BoardState {
   bool get isLoaded => status == BoardStatus.loaded;
   bool get isLoading => status == BoardStatus.loading;
   bool get isFailure => status == BoardStatus.failure;
-  bool get isCreated => status == BoardStatus.created;
-  bool get isCreating => status == BoardStatus.creating;
   bool get isDeleted => status == BoardStatus.deleted;
   bool get isUpdated => status == BoardStatus.updated;
   bool get canIncrement => index < posts.length - 1;

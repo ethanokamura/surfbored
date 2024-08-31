@@ -22,7 +22,7 @@ class BoardPosts extends StatelessWidget {
                 duration: Duration(milliseconds: 500),
               ),
             );
-          } else if (state.isDeleted || state.isUpdated || state.isCreated) {
+          } else if (state.isDeleted || state.isUpdated) {
             context.read<PostCubit>().streamBoardPosts(boardID);
             context.showSnackBar('Posts were changed. Reloading.');
           }

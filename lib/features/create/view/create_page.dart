@@ -1,17 +1,24 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:app_ui/app_ui.dart';
+import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/cubit/post_cubit.dart';
+import 'package:rando/features/create/cubit/create_cubit.dart';
 import 'package:rando/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
 
-class CreatePostPage extends StatelessWidget {
-  const CreatePostPage({super.key});
-  static Page<dynamic> page() =>
-      const MaterialPage<void>(child: CreatePostPage());
+class CreatePage extends StatelessWidget {
+  const CreatePage({required this.type, super.key});
+
+  static MaterialPage<void> page({required String type}) {
+    return MaterialPage<void>(
+      child: CreatePage(type: type),
+    );
+  }
+
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -19,25 +26,27 @@ class CreatePostPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: 'Create An Activity!'),
+        title: AppBarText(text: 'Create A $type!'),
       ),
       body: BlocProvider(
-        create: (context) => PostCubit(
+        create: (context) => CreateCubit(
           postRepository: context.read<PostRepository>(),
+          boardRepository: context.read<BoardRepository>(),
         ),
-        child: const CreateActivity(),
+        child: CreatePost(type: type),
       ),
     );
   }
 }
 
-class CreateActivity extends StatefulWidget {
-  const CreateActivity({super.key});
+class CreatePost extends StatefulWidget {
+  const CreatePost({required this.type, super.key});
+  final String type;
   @override
-  State<CreateActivity> createState() => _CreateActivityState();
+  State<CreatePost> createState() => _CreatePostState();
 }
 
-class _CreateActivityState extends State<CreateActivity> {
+class _CreatePostState extends State<CreatePost> {
   // text controller
   final textController = TextEditingController();
   Uint8List? pickedImage;
@@ -56,7 +65,7 @@ class _CreateActivityState extends State<CreateActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostCubit, PostState>(
+    return BlocBuilder<CreateCubit, CreateState>(
       builder: (context, state) {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
@@ -88,7 +97,7 @@ class _CreateActivityState extends State<CreateActivity> {
               const VerticalSpacer(),
 
               // edit title
-              CustomInputField(
+              CustomTextBox(
                 label: 'title',
                 text: titleText,
                 onPressed: () => editField('title'),
@@ -96,25 +105,29 @@ class _CreateActivityState extends State<CreateActivity> {
               const VerticalSpacer(),
 
               // edit description
-              CustomInputField(
-                label: 'info',
+              CustomTextBox(
+                label: 'description',
                 text: descriptionText,
                 onPressed: () => editField('description'),
               ),
+
               const VerticalSpacer(),
+
               EditTagsBox(
                 tags: tags,
                 updateTags: (newTags) => setState(() {
                   tags = newTags;
                 }),
               ),
+
               const VerticalSpacer(),
 
               // submit
               ActionButton(
                 inverted: true,
                 onTap: () {
-                  context.read<PostCubit>().createPost(
+                  context.read<CreateCubit>().create(
+                        type: widget.type.toLowerCase(),
                         userID: context.read<UserRepository>().user.uid,
                         title: titleText,
                         description: descriptionText,

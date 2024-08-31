@@ -52,41 +52,33 @@ class CustomInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      // mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SecondaryText(text: '$label:', fontSize: 20),
-        const HorizontalSpacer(),
-        CustomContainer(
-          inverted: false,
-          horizontal: null,
-          vertical: 0,
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: PrimaryText(text: text),
-                ),
-              ),
-              IconButton(
-                onPressed: onPressed,
-                icon: Icon(
-                  Icons.edit,
-                  color: Theme.of(context).accentColor,
-                ),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                // splashColor: Colors.transparent,
-                // highlightColor: Colors.transparent,
-                tooltip: 'Edit',
-                iconSize: 20,
-              ),
-            ],
+    return CustomContainer(
+      inverted: false,
+      horizontal: null,
+      vertical: 0,
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: PrimaryText(text: text),
+            ),
           ),
-        ),
-      ],
+          IconButton(
+            onPressed: onPressed,
+            icon: Icon(
+              Icons.edit,
+              color: Theme.of(context).accentColor,
+            ),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            // splashColor: Colors.transparent,
+            // highlightColor: Colors.transparent,
+            tooltip: 'Edit',
+            iconSize: 20,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -187,47 +179,14 @@ class CustomPageView extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: appBar,
-      body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).backgroundGradientStart,
-              Theme.of(context).backgroundGradientEnd,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: defaultPadding,
+            right: defaultPadding,
+            top: (top == true) ? defaultPadding : 0,
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: defaultPadding,
-              right: defaultPadding,
-              top: (top == true) ? defaultPadding : 0,
-            ),
-            child: body,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ScreenGradient extends StatelessWidget {
-  const ScreenGradient({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).backgroundGradientStart,
-            Theme.of(context).backgroundGradientEnd,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+          child: body,
         ),
       ),
     );

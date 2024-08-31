@@ -60,18 +60,6 @@ extension CustomThemeData on ThemeData {
   Color get inverseTextColor => brightness == Brightness.dark
       ? CustomColors.inverseDarkTextColor
       : CustomColors.inverseLightTextColor;
-
-  /// [backgroundGradientStart]
-  /// Used on scaffold gradients
-  Color get backgroundGradientStart => brightness == Brightness.dark
-      ? CustomColors.darkGradientStart
-      : CustomColors.lightGradientStart;
-
-  /// [backgroundGradientEnd]
-  /// Used on scaffold gradients
-  Color get backgroundGradientEnd => brightness == Brightness.dark
-      ? CustomColors.darkGradientEnd
-      : CustomColors.lightGradientEnd;
 }
 
 // Dark Mode

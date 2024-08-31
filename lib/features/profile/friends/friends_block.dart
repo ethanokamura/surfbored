@@ -83,7 +83,8 @@ class FriendsCountText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: '$friends ',
-        style: const TextStyle(
+        style: TextStyle(
+          color: Theme.of(context).textColor,
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),

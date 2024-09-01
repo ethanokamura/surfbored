@@ -78,4 +78,5 @@ extension BoardExtensions on Board {
   bool get isEmpty => this == Board.empty;
   int totalSaves() => saves;
   bool hasPost({required String postID}) => posts.contains(postID);
+  bool userOwnsBoard({required String userID}) => uid == userID;
 }

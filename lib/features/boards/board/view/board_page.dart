@@ -52,7 +52,6 @@ class BoardPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<UserRepository>().user;
-    final isOwner = user.uid == board.uid;
     return NestedScrollView(
       headerSliverBuilder: (context, _) {
         return [
@@ -88,7 +87,7 @@ class BoardPageView extends StatelessWidget {
       body: Column(
         children: [
           BoardButtons(
-            isOwner: isOwner,
+            isOwner: board.userOwnsBoard(userID: user.uid),
             user: user,
             board: board,
           ),
@@ -199,13 +198,22 @@ class BoardButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: ActionButton(
-            inverted: false,
-            onTap: () {},
-            text: 'Save',
+        if (isOwner)
+          Expanded(
+            child: ActionButton(
+              inverted: false,
+              onTap: () {},
+              text: 'Share',
+            ),
           ),
-        ),
+        if (!isOwner)
+          Expanded(
+            child: ActionButton(
+              inverted: false,
+              onTap: () {},
+              text: 'Save',
+            ),
+          ),
         const HorizontalSpacer(),
         Expanded(
           child: ActionButton(

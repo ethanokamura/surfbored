@@ -39,7 +39,7 @@ class EditBoardPage extends StatelessWidget {
         listener: (context, state) {
           if (state.isUpdated) {
             // Show a success message or navigate back
-            context.showSnackBar('Post updated successfully');
+            context.showSnackBar('Board updated successfully!');
           }
         },
         child: BlocBuilder<BoardCubit, BoardState>(
@@ -81,6 +81,7 @@ class EditView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           EditImage(
             width: 200,

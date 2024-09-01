@@ -5,7 +5,7 @@ import 'package:post_repository/post_repository.dart';
 import 'package:rando/features/posts/cubit/post_cubit.dart';
 import 'package:rando/features/tags/tags.dart';
 
-class EditPostPage extends StatefulWidget {
+class EditPostPage extends StatelessWidget {
   const EditPostPage({
     required this.postID,
     super.key,
@@ -18,41 +18,40 @@ class EditPostPage extends StatefulWidget {
   }
 
   @override
-  State<EditPostPage> createState() => _EditPostPageState();
-}
-
-class _EditPostPageState extends State<EditPostPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PostCubit>().streamPost(widget.postID);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final postCubit = context.read<PostCubit>();
+    context.read<PostCubit>().fetchPost(postID);
     return CustomPageView(
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: 'Edit Post'),
       ),
-      body: BlocBuilder<PostCubit, PostState>(
-        builder: (context, state) {
-          // load
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.isLoaded || state.isUpdated) {
-            return EditView(
-              post: state.post,
-              postCubit: postCubit,
-            );
-          } else {
+      body: BlocListener<PostCubit, PostState>(
+        listener: (context, state) {
+          if (state.isUpdated) {
+            // Show a success message or navigate back
+            context.showSnackBar('Post updated successfully!');
+          }
+        },
+        child: BlocBuilder<PostCubit, PostState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state.isLoaded) {
+              return EditView(
+                post: state.post,
+                postCubit: context.read<PostCubit>(),
+              );
+            } else if (state.isDeleted) {
+              return const Center(
+                child: PrimaryText(text: 'Deleted board.'),
+              );
+            }
             return const Center(
               child: PrimaryText(text: 'Something went wrong'),
             );
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -64,75 +63,68 @@ class EditView extends StatelessWidget {
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PostCubit, PostState>(
-      listener: (context, state) {
-        if (state.isUpdated) {
-          // Show a success message or navigate back
-          context.showSnackBar('Post updated successfully');
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          EditImage(
+            width: 200,
+            // height: 200,
+            photoURL: post.photoURL,
+            collection: 'users',
+            docID: post.uid,
+            onFileChanged: (url) =>
+                postCubit.editField(post.id, 'photoURL', url),
+          ),
+          const VerticalSpacer(),
+          EditField(
+            field: 'title',
+            value: post.title,
+            boardID: post.id,
+          ),
+          const VerticalSpacer(),
+          EditField(
+            field: 'description',
+            value: post.description,
+            boardID: post.id,
+          ),
+          const VerticalSpacer(),
+          EditTagsBox(
+            tags: post.tags,
+            updateTags: (tags) => postCubit.editField(post.id, 'tags', tags),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class EditField extends StatelessWidget {
+  const EditField({
+    required this.field,
+    required this.value,
+    required this.boardID,
+    super.key,
+  });
+  final String field;
+  final String value;
+  final String boardID;
+  @override
+  Widget build(BuildContext context) {
+    return CustomTextBox(
+      text: value,
+      label: field,
+      onPressed: () async {
+        final newValue = await editTextField(
+          context,
+          field,
+          30,
+          TextEditingController(),
+        );
+        if (newValue != null && context.mounted) {
+          await context.read<PostCubit>().editField(boardID, field, newValue);
         }
       },
-      child: BlocBuilder<PostCubit, PostState>(
-        builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                EditImage(
-                  width: 200,
-                  // height: 200,
-                  photoURL: post.photoURL,
-                  collection: 'users',
-                  docID: post.uid,
-                  onFileChanged: (url) =>
-                      postCubit.editField(post.id, 'photoURL', url),
-                ),
-                const VerticalSpacer(),
-                CustomTextBox(
-                  text: post.title,
-                  label: 'title',
-                  onPressed: () async {
-                    final newValue = await editTextField(
-                      context,
-                      'title',
-                      30,
-                      TextEditingController(),
-                    );
-                    if (newValue != null && context.mounted) {
-                      await postCubit.editField(post.id, 'title', newValue);
-                    }
-                  },
-                ),
-                const VerticalSpacer(),
-                CustomTextBox(
-                  text: post.description,
-                  label: 'description',
-                  onPressed: () async {
-                    final newValue = await editTextField(
-                      context,
-                      'description',
-                      150,
-                      TextEditingController(),
-                    );
-                    if (newValue != null && context.mounted) {
-                      await postCubit.editField(
-                        post.id,
-                        'description',
-                        newValue,
-                      );
-                    }
-                  },
-                ),
-                const VerticalSpacer(),
-                EditTagsBox(
-                  tags: post.tags,
-                  updateTags: (tags) =>
-                      postCubit.editField(post.id, 'tags', tags),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
     );
   }
 }

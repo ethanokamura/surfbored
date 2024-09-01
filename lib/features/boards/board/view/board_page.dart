@@ -31,7 +31,7 @@ class BoardPage extends StatelessWidget {
             );
           } else if (state.isDeleted) {
             return const Center(
-              child: PrimaryText(text: 'Deleted board.'),
+              child: PrimaryText(text: 'Board was deleted.'),
             );
           }
           return const Center(

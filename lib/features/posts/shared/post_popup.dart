@@ -5,7 +5,7 @@ import 'package:post_repository/post_repository.dart';
 import 'package:rando/features/posts/cubit/post_cubit.dart';
 import 'package:rando/features/posts/edit_post/edit_post.dart';
 import 'package:rando/features/posts/likes/likes.dart';
-import 'package:rando/features/posts/shared/post/view/more_options.dart';
+import 'package:rando/features/posts/shared/more_options.dart';
 import 'package:rando/features/profile/profile.dart';
 import 'package:rando/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';

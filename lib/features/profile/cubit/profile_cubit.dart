@@ -2,8 +2,10 @@ import 'package:app_core/app_core.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfileCubit extends Cubit<User> {
-  ProfileCubit({required UserRepository userRepository, required String userID})
-      : _userRepository = userRepository,
+  ProfileCubit({
+    required UserRepository userRepository,
+    required String userID,
+  })  : _userRepository = userRepository,
         _userID = userID,
         super(User.empty) {
     _watchUser();

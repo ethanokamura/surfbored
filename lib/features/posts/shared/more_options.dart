@@ -102,7 +102,7 @@ class MoreOptions extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => AddToBoardPage(
+                builder: (context) => SelectBoardPage(
                   postID: postID,
                   userID: userID,
                 ),

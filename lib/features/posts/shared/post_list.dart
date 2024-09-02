@@ -25,6 +25,8 @@ class PostsList extends StatelessWidget {
               hasMore: context.read<PostCubit>().hasMore(),
               onLoadMore: () async =>
                   context.read<PostCubit>().loadMorePosts(type, docID),
+              onRefresh: () async =>
+                  context.read<PostCubit>().streamPosts(type, docID),
             );
           } else if (state.isEmpty) {
             return const Center(child: PrimaryText(text: 'No posts here!'));

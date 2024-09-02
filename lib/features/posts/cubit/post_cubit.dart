@@ -58,6 +58,28 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  void streamPosts(String type, String docID) {
+    if (type == 'user') {
+      streamUserPosts(docID);
+    } else if (type == 'likes') {
+      streamUserLikedPosts(docID);
+    } else if (type == 'board') {
+      streamBoardPosts(docID);
+    }
+    // error
+  }
+
+  void loadMorePosts(String type, String docID) {
+    if (type == 'user') {
+      loadMoreUserPosts(docID);
+    } else if (type == 'likes') {
+      loadMoreUserLikedPosts(docID);
+    } else if (type == 'board') {
+      loadMoreBoardPosts(docID);
+    }
+    // error
+  }
+
   bool hasMore() {
     return _hasMore;
   }

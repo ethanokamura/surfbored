@@ -4,15 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/features/posts/posts.dart';
 
-class UserPostsList extends StatelessWidget {
-  const UserPostsList({required this.userID, super.key});
-  final String userID;
+class PostsList extends StatelessWidget {
+  const PostsList({required this.type, required this.docID, super.key});
+  final String docID;
+  final String type;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PostCubit(
         postRepository: context.read<PostRepository>(),
-      )..streamUserPosts(userID),
+      )..streamPosts(type, docID),
       child: BlocBuilder<PostCubit, PostState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -20,29 +21,20 @@ class UserPostsList extends StatelessWidget {
           } else if (state.isLoaded) {
             final posts = state.posts;
             return PostsGrid(
-              hasMore: context.read<PostCubit>().hasMore(),
               posts: posts,
+              hasMore: context.read<PostCubit>().hasMore(),
               onLoadMore: () async =>
-                  context.read<PostCubit>().loadMoreUserPosts(userID),
-              onRefresh: () async {
-                context.read<PostCubit>().streamUserPosts(userID);
-              },
+                  context.read<PostCubit>().loadMorePosts(type, docID),
             );
           } else if (state.isEmpty) {
-            return const Center(
-              child: PrimaryText(text: 'Item list is empty.'),
-            );
+            return const Center(child: PrimaryText(text: 'No posts here!'));
           } else if (state.isDeleted || state.isUpdated) {
-            context.read<PostCubit>().streamUserPosts(userID);
+            context.read<PostCubit>().streamPosts(type, docID);
             return const Center(
               child: PrimaryText(text: 'Posts were changed. Reloading.'),
             );
-          } else if (state.isFailure) {
-            return const Center(
-              child: PrimaryText(text: 'Something went wrong'),
-            );
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: PrimaryText(text: 'Something went wrong'));
         },
       ),
       // ),

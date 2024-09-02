@@ -93,7 +93,7 @@ class BoardPageView extends StatelessWidget {
           ),
           const VerticalSpacer(),
           Flexible(
-            child: BoardPosts(boardID: board.id),
+            child: PostsList(type: 'board', docID: board.id),
           ),
         ],
       ),

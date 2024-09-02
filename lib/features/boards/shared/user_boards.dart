@@ -24,8 +24,6 @@ class UserBoardsList extends StatelessWidget {
               boards: boards,
               onLoadMore: () async =>
                   context.read<BoardCubit>().loadMoreUserBoards(userID),
-              onRefresh: () async =>
-                  context.read<BoardCubit>().streamUserBoards(userID),
             );
           } else if (state.isEmpty) {
             return const Center(child: PrimaryText(text: 'No boards.'));
@@ -48,7 +46,6 @@ class UserBoardsList extends StatelessWidget {
 
 class BoardListView extends StatelessWidget {
   const BoardListView({
-    required this.onRefresh,
     required this.boards,
     required this.onLoadMore,
     required this.hasMore,
@@ -56,30 +53,26 @@ class BoardListView extends StatelessWidget {
   });
   final List<Board> boards;
   final bool hasMore;
-  final Future<void> Function() onRefresh;
   final Future<void> Function() onLoadMore;
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (scrollNotification) {
-          if (scrollNotification.metrics.pixels - 25 >=
-              scrollNotification.metrics.maxScrollExtent) {
-            if (hasMore) onLoadMore();
-          }
-          return false;
+    return NotificationListener<ScrollNotification>(
+      onNotification: (scrollNotification) {
+        if (scrollNotification.metrics.pixels - 25 >=
+            scrollNotification.metrics.maxScrollExtent) {
+          if (hasMore) onLoadMore();
+        }
+        return false;
+      },
+      child: ListView.separated(
+        padding: const EdgeInsets.only(bottom: defaultPadding),
+        separatorBuilder: (context, index) => const VerticalSpacer(),
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: boards.length,
+        itemBuilder: (context, index) {
+          final board = boards[index];
+          return BoardCard(board: board);
         },
-        child: ListView.separated(
-          padding: const EdgeInsets.only(bottom: defaultPadding),
-          separatorBuilder: (context, index) => const VerticalSpacer(),
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: boards.length,
-          itemBuilder: (context, index) {
-            final board = boards[index];
-            return BoardCard(board: board);
-          },
-        ),
       ),
     );
   }

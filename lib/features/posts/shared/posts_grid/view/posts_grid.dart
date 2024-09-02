@@ -5,7 +5,6 @@ import 'package:rando/features/posts/shared/post_card/view/post_card.dart';
 
 class PostsGrid extends StatelessWidget {
   const PostsGrid({
-    required this.onRefresh,
     required this.onLoadMore,
     required this.posts,
     required this.hasMore,
@@ -13,38 +12,38 @@ class PostsGrid extends StatelessWidget {
   });
   final List<Post> posts;
   final bool hasMore;
-  final Future<void> Function() onRefresh;
   final Future<void> Function() onLoadMore;
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (scrollNotification) {
-          if (scrollNotification.metrics.pixels - 25 >=
-              scrollNotification.metrics.maxScrollExtent) {
-            if (hasMore) onLoadMore();
-          }
-          return false;
-        },
-        child: GridView.builder(
-          padding: const EdgeInsets.only(bottom: defaultPadding),
-          physics: const AlwaysScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-            childAspectRatio: 0.9,
-          ),
-          itemCount: posts.length,
-          itemBuilder: (context, index) {
-            final post = posts[index];
-            return PostCard(
-              post: post,
-            );
-          },
+    final count = posts.length;
+    const itemsPerRow = 2;
+    const ratio = 0.9;
+    return NotificationListener<ScrollNotification>(
+      onNotification: (scrollNotification) {
+        if (scrollNotification.metrics.pixels - 25 >=
+            scrollNotification.metrics.maxScrollExtent) {
+          if (hasMore) onLoadMore();
+        }
+        return false;
+      },
+      child: GridView.builder(
+        padding: const EdgeInsets.only(bottom: defaultPadding),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: itemsPerRow,
+          crossAxisSpacing: defaultPadding,
+          mainAxisSpacing: defaultPadding,
+          childAspectRatio: ratio,
         ),
+        itemCount: count,
+        itemBuilder: (context, index) {
+          final post = posts[index];
+          return PostCard(
+            post: post,
+          );
+        },
       ),
     );
   }

@@ -272,7 +272,7 @@ extension Update on PostRepository {
             'postID': postID,
             'userID': userID,
             'ownerID': ownerID,
-            'timestamp': Timestamp.now(),
+            'timestamp': FieldValue.serverTimestamp(),
           });
       } else {
         batch

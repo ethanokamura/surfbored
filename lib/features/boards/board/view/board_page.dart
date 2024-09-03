@@ -3,6 +3,7 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rando/features/boards/boards.dart';
+import 'package:rando/features/boards/saves/saves.dart';
 import 'package:rando/features/posts/posts.dart';
 import 'package:rando/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
@@ -208,10 +209,9 @@ class BoardButtons extends StatelessWidget {
           ),
         if (!isOwner)
           Expanded(
-            child: ActionButton(
-              inverted: false,
-              onTap: () {},
-              text: 'Save',
+            child: SaveButton(
+              board: board,
+              userID: user.uid,
             ),
           ),
         const HorizontalSpacer(),

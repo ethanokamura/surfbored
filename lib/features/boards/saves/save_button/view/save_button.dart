@@ -1,0 +1,47 @@
+import 'package:app_ui/app_ui.dart';
+import 'package:board_repository/board_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rando/features/boards/saves/cubit/save_cubit.dart';
+
+class SaveButton extends StatelessWidget {
+  const SaveButton({required this.board, required this.userID, super.key});
+  final Board board;
+  final String userID;
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SaveCubit(context.read<BoardRepository>()),
+      child: BlocBuilder<SaveCubit, SaveState>(
+        builder: (context, state) {
+          context.read<SaveCubit>().fetchData(board.id, userID);
+          var saves = board.saves;
+          var isSaved = false;
+          if (state.isLoading) {
+            // Show a loading indicator in the button if needed
+          } else if (state.isSuccess) {
+            saves = state.saves;
+            isSaved = state.saved;
+          }
+          return ToggleButton(
+            inverted: false,
+            onTap: () => context.read<SaveCubit>().toggleSave(
+                  userID,
+                  board.uid,
+                  board.id,
+                  saved: isSaved,
+                ),
+            icon: Icon(
+              isSaved ? Icons.bookmark_sharp : Icons.bookmark_outline_sharp,
+              color: isSaved
+                  ? Theme.of(context).accentColor
+                  : Theme.of(context).textColor,
+              size: 20,
+            ),
+            text: '$saves saves',
+          );
+        },
+      ),
+    );
+  }
+}

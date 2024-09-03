@@ -210,3 +210,46 @@ class CheckBox extends StatelessWidget {
     );
   }
 }
+
+class ToggleButton extends StatelessWidget {
+  const ToggleButton({
+    required this.inverted,
+    required this.onTap,
+    super.key,
+    this.icon,
+    this.text,
+  });
+
+  final Icon? icon;
+  final bool inverted;
+  final String? text;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = ElevatedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 10,
+      ),
+      elevation: defaultElevation,
+      shadowColor: Colors.black,
+      backgroundColor: inverted
+          ? Theme.of(context).accentColor
+          : Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+    );
+    return ElevatedButton(
+      onPressed: onTap,
+      style: style,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) icon!,
+          if (text != null && icon != null) const SizedBox(width: 10),
+          if (text != null) ButtonText(text: text!, inverted: inverted),
+        ],
+      ),
+    );
+  }
+}

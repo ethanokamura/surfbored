@@ -62,7 +62,7 @@ extension Fetch on BoardRepository {
     }
   }
 
-  Future<bool> hasUserSavedPost(String boardID, String userID) async {
+  Future<bool> hasUserSavedBoard(String boardID, String userID) async {
     try {
       final savesDoc = await _firestore.getSavesDoc('${boardID}_$userID');
       return savesDoc.exists;
@@ -162,27 +162,25 @@ extension Update on BoardRepository {
     required String userID,
     required String boardID,
     required String ownerID,
-    required bool isLiked,
+    required bool isSaved,
   }) async {
-    final boardRef = _firestore.postDoc(boardID);
+    final boardRef = _firestore.boardDoc(boardID);
     final saveRef = _firestore.savesDoc('${boardID}_$userID');
     final batch = _firestore.batch();
 
     try {
-      if (!isLiked) {
+      if (!isSaved) {
         batch
           ..update(boardRef, {'saves': FieldValue.increment(1)})
           ..set(saveRef, {
             'boardID': boardID,
-            'ownerID': ownerID,
             'userID': userID,
+            'ownerID': ownerID,
             'timestamp': FieldValue.serverTimestamp(),
           });
       } else {
         batch
-          ..update(boardRef, {
-            'saves': FieldValue.increment(-1),
-          })
+          ..update(boardRef, {'saves': FieldValue.increment(-1)})
           ..delete(saveRef);
       }
       // commit changes

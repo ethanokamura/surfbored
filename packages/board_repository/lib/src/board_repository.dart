@@ -104,16 +104,45 @@ extension StreamData on BoardRepository {
 
     final reversedBoardIDs = boardIDs.reversed.toList();
 
+    yield* streamBoardsByIDs(pageSize, page, reversedBoardIDs);
+  }
+
+  // stream all the user's liked posts using pagination
+  Stream<List<Board>> streamUserSavedBoards(
+    String userID, {
+    int pageSize = 10,
+    int page = 0,
+  }) async* {
+    // get post ID
+    final savedBoardsSnapshot = await _firestore
+        .collection('saves')
+        .where('userID', isEqualTo: userID)
+        .orderBy('timestamp', descending: true)
+        .limit(pageSize * (page + 1)) // Fetch only necessary pages
+        .get();
+
+    final boardIDs = savedBoardsSnapshot.docs
+        .map((doc) => doc.data()['boardID'] as String)
+        .toList();
+
+    yield* streamBoardsByIDs(pageSize, page, boardIDs);
+  }
+
+  // generic post stream
+  Stream<List<Board>> streamBoardsByIDs(
+    int pageSize,
+    int page,
+    List<String> boardIDs,
+  ) async* {
     final buffer = <Board>[];
     final startIndex = page * pageSize;
 
-    if (startIndex >= reversedBoardIDs.length) {
+    if (startIndex >= boardIDs.length) {
       yield buffer;
       return;
     }
 
-    final boardIDsPage =
-        reversedBoardIDs.skip(startIndex).take(pageSize).toList();
+    final boardIDsPage = boardIDs.skip(startIndex).take(pageSize).toList();
     final boardDocs = await _firestore
         .boardsCollection()
         .where(FieldPath.documentId, whereIn: boardIDsPage)

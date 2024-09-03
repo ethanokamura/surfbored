@@ -87,6 +87,48 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
+  void streamUserSavedBoards(String userID) {
+    emit(state.fromLoading());
+    _currentPage = 0;
+    _hasMore = true;
+    _loadMoreUserSavedBoards(userID, reset: true);
+  }
+
+  void loadMoreUserSavedBoards(String userID) {
+    if (_hasMore) {
+      _currentPage++;
+      _loadMoreUserSavedBoards(userID);
+    }
+  }
+
+  void _loadMoreUserSavedBoards(String userID, {bool reset = false}) {
+    try {
+      _boardRepository
+          .streamUserSavedBoards(
+        userID,
+        pageSize: _pageSize,
+        page: _currentPage,
+      )
+          .listen(
+        (boards) {
+          if (boards.length < _pageSize) {
+            _hasMore = false;
+          }
+          if (reset) {
+            emit(state.fromBoardsLoaded(boards));
+          } else {
+            emit(state.fromBoardsLoaded(List.of(state.boards)..addAll(boards)));
+          }
+        },
+        onError: (error) {
+          emit(state.fromEmpty());
+        },
+      );
+    } on BoardFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
+
   Future<void> editField(String boardID, String field, dynamic data) async {
     emit(state.fromLoading());
     await _boardRepository.updateField(boardID, {field: data});

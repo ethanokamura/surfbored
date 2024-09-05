@@ -13,6 +13,7 @@ class User extends Equatable {
     this.name = '',
     this.bio = '',
     this.friends = 0,
+    this.blockedUsers = const [],
     this.posts = const [],
     this.boards = const [],
     this.tags = const [],
@@ -40,6 +41,9 @@ class User extends Equatable {
       name: data['name'] as String? ?? '',
       bio: data['bio'] as String? ?? '',
       friends: data['friends'] as int? ?? 0,
+      blockedUsers: (data['blockedUsers'] as List<dynamic>)
+          .map((user) => user as String)
+          .toList(),
       posts: (data['posts'] as List<dynamic>)
           .map((post) => post as String)
           .toList(),
@@ -62,6 +66,7 @@ class User extends Equatable {
   final String? photoURL;
   final String bio;
   final int friends;
+  final List<String> blockedUsers;
   final List<String> posts;
   final List<String> boards;
   final List<String> tags;
@@ -80,6 +85,7 @@ class User extends Equatable {
         photoURL,
         bio,
         friends,
+        blockedUsers,
         posts,
         boards,
         tags,
@@ -95,4 +101,5 @@ extension UserExtensions on User {
   bool get isEmpty => this == User.empty;
   int totalFriends() => friends;
   bool get hasUsername => username != '';
+  bool hasUserBlocked(String userID) => blockedUsers.contains(userID);
 }

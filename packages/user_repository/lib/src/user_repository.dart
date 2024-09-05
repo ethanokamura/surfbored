@@ -297,6 +297,37 @@ extension Friends on UserRepository {
         ? '${docID1}_$docID2'
         : '${docID2}_$docID1';
   }
+
+  Future<void> toggleBlockUser(String userID) async {
+    try {
+      final doc = _firestore.userDoc(user.uid);
+      final snapshot = await doc.get();
+      if (!snapshot.exists) return;
+      final data = User.fromJson(snapshot.data()!);
+      if (data.hasUserBlocked(userID)) {
+        await doc.update({
+          'blockedUsers': FieldValue.arrayRemove([userID]),
+        });
+      } else {
+        await doc.update({
+          'blockedUsers': FieldValue.arrayUnion([userID]),
+        });
+      }
+    } on FirebaseException {
+      throw UserFailure.fromUpdateFriend();
+    }
+  }
+
+  Future<bool> isUserBlocked(String userID) async {
+    try {
+      final snapshot = await _firestore.getUserDoc(userID);
+      if (!snapshot.exists) return false;
+      final otherUser = User.fromJson(snapshot.data()!);
+      return user.hasUserBlocked(userID) || otherUser.hasUserBlocked(user.uid);
+    } on FirebaseException {
+      throw UserFailure.fromGetUser();
+    }
+  }
 }
 
 extension Create on UserRepository {

@@ -101,23 +101,21 @@ class ProfileBuilder extends StatelessWidget {
               ),
             ];
           },
-          body: user.uid.isNotEmpty
-              ? Column(
+          body: Column(
+            children: [
+              const ProfileTabBar(),
+              const VerticalSpacer(),
+              Flexible(
+                child: TabBarView(
                   children: [
-                    const ProfileTabBar(),
-                    const VerticalSpacer(),
-                    Flexible(
-                      child: TabBarView(
-                        children: [
-                          PostsList(type: 'user', docID: user.uid),
-                          UserBoardsList(userID: user.uid),
-                          PostsList(type: 'likes', docID: user.uid),
-                        ],
-                      ),
-                    ),
+                    PostsList(type: 'user', docID: user.uid),
+                    UserBoardsList(userID: user.uid),
+                    PostsList(type: 'likes', docID: user.uid),
                   ],
-                )
-              : const Center(child: CircularProgressIndicator()),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

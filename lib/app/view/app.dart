@@ -7,6 +7,7 @@ import 'package:post_repository/post_repository.dart';
 import 'package:rando/app/cubit/app_cubit.dart';
 import 'package:rando/features/home/home.dart';
 import 'package:rando/features/login/login.dart';
+import 'package:rando/features/reroutes/reroutes.dart';
 import 'package:rando/theme/theme_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -77,6 +78,9 @@ class AppView extends StatelessWidget {
         return MaterialApp(
           onGenerateTitle: (context) => AppStrings.appTitle,
           theme: context.read<ThemeCubit>().themeData,
+          onUnknownRoute: (settings) {
+            return MaterialPageRoute(builder: (_) => const ReroutePage());
+          },
           debugShowCheckedModeBanner: false,
           home: BlocListener<AppCubit, AppState>(
             listenWhen: (_, current) => current.isFailure,

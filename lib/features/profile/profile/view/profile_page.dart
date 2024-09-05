@@ -6,6 +6,7 @@ import 'package:rando/features/posts/posts.dart';
 import 'package:rando/features/profile/cubit/profile_cubit.dart';
 import 'package:rando/features/profile/friends/friends.dart';
 import 'package:rando/features/profile/profile/view/interests.dart';
+import 'package:rando/features/profile/profile/view/more_profile_options.dart';
 import 'package:rando/features/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -140,34 +141,26 @@ class ProfileTopBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            ActionIconButton(
-              inverted: false,
-              padding: 10,
-              onTap: () {},
-              icon: FontAwesomeIcons.share,
-            ),
-            if (isCurrent)
-              ActionIconButton(
-                inverted: false,
-                padding: 10,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: profileCubit,
-                          child: ProfileSettingsPage(
-                            userID: user.uid,
-                            profileCubit: profileCubit,
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-                icon: FontAwesomeIcons.ellipsis,
+            MoreProfileOptions(
+              isCurrent: isCurrent,
+              onEdit: () => Navigator.push(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (context) {
+                    return BlocProvider.value(
+                      value: profileCubit,
+                      child: ProfileSettingsPage(
+                        userID: user.uid,
+                        profileCubit: profileCubit,
+                      ),
+                    );
+                  },
+                ),
               ),
+              onBlock: () =>
+                  context.read<UserRepository>().toggleBlockUser(user.uid),
+              onShare: () {},
+            ),
             if (Navigator.of(context).canPop())
               ActionIconButton(
                 inverted: false,

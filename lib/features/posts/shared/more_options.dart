@@ -13,7 +13,6 @@ class MoreOptions extends StatelessWidget {
   const MoreOptions({
     required this.postID,
     required this.userID,
-    required this.imgURL,
     required this.isOwner,
     required this.onDelete,
     required this.onEdit,
@@ -21,7 +20,6 @@ class MoreOptions extends StatelessWidget {
   });
 
   final String postID;
-  final String imgURL;
   final String userID;
   final bool isOwner;
   final void Function() onDelete;

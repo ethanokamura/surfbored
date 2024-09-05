@@ -74,7 +74,6 @@ class Header extends StatelessWidget {
                 postID: post.id,
                 userID: userID,
                 isOwner: isOwner,
-                imgURL: post.photoURL.toString(),
                 onEdit: () {
                   Navigator.push(
                     context,

@@ -46,7 +46,6 @@ Future<dynamic> postPopUp(
                     postID: post.id,
                     userID: userID,
                     isOwner: isOwner,
-                    imgURL: post.photoURL.toString(),
                     onEdit: () {
                       Navigator.pop(context);
                       Navigator.push(

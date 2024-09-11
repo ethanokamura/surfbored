@@ -160,9 +160,8 @@ class ProfileTopBar extends StatelessWidget {
               onShare: () {},
             ),
             if (Navigator.of(context).canPop())
-              ActionIconButton(
+              LabeledIconButton(
                 inverted: false,
-                padding: 10,
                 onTap: () => Navigator.pop(context),
                 icon: FontAwesomeIcons.xmark,
               ),

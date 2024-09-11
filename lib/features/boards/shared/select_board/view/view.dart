@@ -1,1 +1,1 @@
-export 'select_board.dart';
+export 'select_board_page.dart';

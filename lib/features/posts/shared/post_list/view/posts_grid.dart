@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/shared/post_card/view/post_card.dart';
+import 'package:rando/features/posts/shared/post_list/view/post_card.dart';
 
 class PostsGrid extends StatelessWidget {
   const PostsGrid({

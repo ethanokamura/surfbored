@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/features/posts/posts.dart';
+import 'package:rando/features/posts/shared/post_list/view/posts_grid.dart';
 
 class PostsList extends StatelessWidget {
   const PostsList({required this.type, required this.docID, super.key});
@@ -39,7 +40,6 @@ class PostsList extends StatelessWidget {
           return const Center(child: PrimaryText(text: 'Something went wrong'));
         },
       ),
-      // ),
     );
   }
 }

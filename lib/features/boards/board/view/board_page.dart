@@ -11,9 +11,9 @@ import 'package:user_repository/user_repository.dart';
 class BoardPage extends StatelessWidget {
   const BoardPage({required this.boardID, super.key});
   final String boardID;
-  static MaterialPage<void> page({required Board board}) {
+  static MaterialPage<void> page({required String boardID}) {
     return MaterialPage<void>(
-      child: BoardPageView(board: board),
+      child: BoardPage(boardID: boardID),
     );
   }
 
@@ -93,9 +93,7 @@ class BoardPageView extends StatelessWidget {
             board: board,
           ),
           const VerticalSpacer(),
-          Flexible(
-            child: PostsList(type: 'board', docID: board.id),
-          ),
+          Flexible(child: PostsList(type: 'board', docID: board.id)),
         ],
       ),
     );

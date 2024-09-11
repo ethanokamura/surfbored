@@ -24,7 +24,7 @@ class LikeButton extends StatelessWidget {
             isLiked = state.liked;
           }
           return ToggleButton(
-            inverted: false,
+            onSurface: true,
             onTap: () => context.read<LikeCubit>().toggleLike(
                   userID,
                   post.uid,

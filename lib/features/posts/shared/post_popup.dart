@@ -99,7 +99,7 @@ Future<dynamic> postPopUp(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ProfileLink(uid: post.uid),
+                  UserDetails(uid: post.uid),
                   LikeButton(post: post, userID: userID),
                 ],
               ),

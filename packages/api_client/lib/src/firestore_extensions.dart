@@ -160,10 +160,13 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
   DocumentReference<Map<String, dynamic>> friendRequestDoc(String docID) =>
       friendRequestCollection().doc(docID);
   Future<DocumentSnapshot<Map<String, dynamic>>> getFriendRequestDoc(
-          String docID,) =>
+    String docID,
+  ) =>
       friendRequestDoc(docID).get();
   Future<void> updateFriendRequestDoc(
-          String docID, Map<String, dynamic> data,) =>
+    String docID,
+    Map<String, dynamic> data,
+  ) =>
       friendRequestDoc(docID).update(data);
   Future<void> setFriendRequestDoc(String docID, Map<String, dynamic> data) =>
       friendRequestDoc(docID).set(data, SetOptions(merge: true));

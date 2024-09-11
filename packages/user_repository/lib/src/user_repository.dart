@@ -369,6 +369,28 @@ extension Fetch on UserRepository {
     if (firebaseUser == null) return User.empty;
     return User.fromFirebaseUser(firebaseUser);
   }
+
+  // get users photoURL
+  Future<void> setPhotoURL(String photoURL) async {
+    try {
+      final photoDoc = _firestore.collection('userPhoto').doc(user.uid);
+      await photoDoc.set({'photoURL': photoURL, 'uid': user.uid});
+    } on FirebaseException {
+      throw UserFailure.fromUpdateUser();
+    }
+  }
+
+  // get users photoURL
+  Future<String?> fetchPhotoURL(String userID) async {
+    try {
+      final photoDoc =
+          await _firestore.collection('userPhoto').doc(userID).get();
+      if (!photoDoc.exists) return null;
+      return photoDoc.data()?['photoURL'] as String;
+    } on FirebaseException {
+      throw UserFailure.fromGetUser();
+    }
+  }
 }
 
 extension Update on UserRepository {

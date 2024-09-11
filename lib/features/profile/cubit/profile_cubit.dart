@@ -37,4 +37,8 @@ class ProfileCubit extends Cubit<User> {
   Future<void> editField(String field, dynamic data) async {
     await _userRepository.updateField(_userID, field, data);
   }
+
+  Future<void> setPhotoURL(String url) async {
+    await _userRepository.setPhotoURL(url);
+  }
 }

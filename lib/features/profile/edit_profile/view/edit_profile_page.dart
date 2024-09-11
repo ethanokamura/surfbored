@@ -48,7 +48,9 @@ class EditProfile extends StatelessWidget {
             collection: 'users',
             docID: user.uid,
             onFileChanged: (url) {
-              context.read<ProfileCubit>().editField('photoURL', url);
+              context.read<ProfileCubit>()
+                ..editField('photoURL', url)
+                ..setPhotoURL(url);
             },
           ),
           const VerticalSpacer(),

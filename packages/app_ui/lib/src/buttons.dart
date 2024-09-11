@@ -213,7 +213,7 @@ class CheckBox extends StatelessWidget {
 
 class ToggleButton extends StatelessWidget {
   const ToggleButton({
-    required this.inverted,
+    required this.onSurface,
     required this.onTap,
     super.key,
     this.icon,
@@ -221,7 +221,7 @@ class ToggleButton extends StatelessWidget {
   });
 
   final Icon? icon;
-  final bool inverted;
+  final bool onSurface;
   final String? text;
   final void Function()? onTap;
 
@@ -234,8 +234,8 @@ class ToggleButton extends StatelessWidget {
       ),
       elevation: defaultElevation,
       shadowColor: Colors.black,
-      backgroundColor: inverted
-          ? Theme.of(context).accentColor
+      backgroundColor: onSurface
+          ? Theme.of(context).colorScheme.primary
           : Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
@@ -247,7 +247,7 @@ class ToggleButton extends StatelessWidget {
         children: [
           if (icon != null) icon!,
           if (text != null && icon != null) const SizedBox(width: 10),
-          if (text != null) ButtonText(text: text!, inverted: inverted),
+          if (text != null) ButtonText(text: text!, inverted: false),
         ],
       ),
     );

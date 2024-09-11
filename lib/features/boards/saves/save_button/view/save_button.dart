@@ -24,7 +24,7 @@ class SaveButton extends StatelessWidget {
             isSaved = state.saved;
           }
           return ToggleButton(
-            inverted: false,
+            onSurface: false,
             onTap: () => context.read<SaveCubit>().toggleSave(
                   userID,
                   board.uid,

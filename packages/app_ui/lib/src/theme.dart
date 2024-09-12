@@ -132,7 +132,7 @@ ThemeData lightMode = ThemeData(
 
   // custom color scheme
   colorScheme: const ColorScheme.light(
-    // surface: CustomColors.lightSurface,
+    surface: CustomColors.lightSurface,
     onSurface: CustomColors.lightTextColor,
     primary: CustomColors.lightPrimary,
     onPrimary: CustomColors.lightTextColor,

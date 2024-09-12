@@ -33,7 +33,7 @@ class SearchButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = ElevatedButton.styleFrom(
       padding: const EdgeInsets.all(10),
-      elevation: defaultElevation,
+      elevation: 0,
       shadowColor: Colors.black,
       backgroundColor: Theme.of(context).accentColor,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),

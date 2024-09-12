@@ -8,7 +8,6 @@ class Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: defaultElevation,
       color: Theme.of(context).colorScheme.primary,
       shadowColor: Theme.of(context).shadowColor,
       borderRadius: const BorderRadius.all(Radius.circular(5)),

@@ -28,7 +28,7 @@ class ActionButton extends StatelessWidget {
         horizontal: horizontal == null ? 15 : horizontal!,
         vertical: vertical == null ? 10 : vertical!,
       ),
-      elevation: defaultElevation,
+      elevation: 0,
       shadowColor: Colors.black,
       backgroundColor: inverted
           ? Theme.of(context).accentColor
@@ -82,7 +82,7 @@ class SecondaryButton extends StatelessWidget {
         horizontal: horizontal == null ? 15 : horizontal!,
         vertical: vertical == null ? 10 : vertical!,
       ),
-      elevation: defaultElevation,
+      elevation: 0,
       shadowColor: Colors.black,
       backgroundColor: inverted
           ? Theme.of(context).accentColor
@@ -163,7 +163,7 @@ class LabeledIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = ElevatedButton.styleFrom(
       padding: const EdgeInsets.all(10),
-      elevation: defaultElevation,
+      elevation: 0,
       shadowColor: Colors.black,
       backgroundColor: inverted
           ? Theme.of(context).accentColor
@@ -232,7 +232,7 @@ class ToggleButton extends StatelessWidget {
         horizontal: 15,
         vertical: 10,
       ),
-      elevation: defaultElevation,
+      elevation: 0,
       shadowColor: Colors.black,
       backgroundColor: onSurface
           ? Theme.of(context).colorScheme.primary

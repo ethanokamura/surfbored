@@ -15,11 +15,11 @@ abstract class CustomColors {
 
   // light mode
   static const Color lightAccent = Color(0xff8875e0);
-  static const Color lightBackground = Color(0xfff1f4f8);
-  static const Color lightSurface = Color(0xffffffff);
-  static const Color lightPrimary = Color(0xffe6e9eb);
+  static const Color lightBackground = Color(0xffffffff);
+  static const Color lightSurface = Color(0xfff3f5f6);
+  static const Color lightPrimary = Color(0xffe5e8ea);
   static const Color lightTextColor = Color(0xff1a1a1a);
-  static const Color lightSubtextColor = Color(0xff1d1d1d);
+  static const Color lightSubtextColor = Color(0xff7e8286);
   static const Color lightHintTextColor = Color(0xff8f8f8f);
   static const Color inverseLightTextColor = Color(0xffffffff);
 }

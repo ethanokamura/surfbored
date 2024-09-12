@@ -21,7 +21,6 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: defaultElevation,
       color: inverted == true
           ? Theme.of(context).accentColor
           : Theme.of(context).colorScheme.surface,

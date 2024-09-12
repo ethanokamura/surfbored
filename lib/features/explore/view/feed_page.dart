@@ -13,12 +13,6 @@ class FeedPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: 'Activity Feed'),
-        actions: [
-          IconButton(
-            icon: const Icon(FontAwesomeIcons.solidPaperPlane),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: const PostFeed(),
     );

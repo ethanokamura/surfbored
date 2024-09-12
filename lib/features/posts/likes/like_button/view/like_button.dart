@@ -38,7 +38,7 @@ class LikeButton extends StatelessWidget {
                   : Theme.of(context).textColor,
               size: 20,
             ),
-            text: '$likes likes',
+            text: '$likes',
           );
         },
       ),

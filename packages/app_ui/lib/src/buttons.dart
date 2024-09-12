@@ -246,8 +246,13 @@ class ToggleButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null) icon!,
-          if (text != null && icon != null) const SizedBox(width: 10),
-          if (text != null) ButtonText(text: text!, inverted: false),
+          if (text != null && icon != null) const SizedBox(width: 5),
+          if (text != null)
+            ButtonText(
+              text: text!,
+              inverted: false,
+              fontSize: 14,
+            ),
         ],
       ),
     );

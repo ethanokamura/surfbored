@@ -154,10 +154,12 @@ class ButtonText extends StatelessWidget {
   const ButtonText({
     required this.text,
     required this.inverted,
+    this.fontSize,
     super.key,
   });
   final String text;
   final bool inverted;
+  final double? fontSize;
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -170,7 +172,7 @@ class ButtonText extends StatelessWidget {
             : Theme.of(context).textColor,
         letterSpacing: 1.5,
         fontWeight: FontWeight.bold,
-        fontSize: 16,
+        fontSize: fontSize ?? 16,
       ),
     );
   }

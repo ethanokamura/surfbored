@@ -1,8 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'package:app_core/app_core.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:equatable/equatable.dart';
 
-// State definitions
 part 'board_state.dart';
 
 class BoardCubit extends Cubit<BoardState> {

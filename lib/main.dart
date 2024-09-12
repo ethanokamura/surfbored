@@ -10,7 +10,6 @@ Future<void> main() async {
     await bootstrap(
       init: () async {
         try {
-          // await dotenv.load();
           await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
           );

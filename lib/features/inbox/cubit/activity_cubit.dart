@@ -1,5 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:app_core/app_core.dart';
 import 'package:user_repository/user_repository.dart';
 
 // State definitions

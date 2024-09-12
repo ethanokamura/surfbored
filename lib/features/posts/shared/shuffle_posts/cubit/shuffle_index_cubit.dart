@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:app_core/app_core.dart';
 
 class ShuffleIndexCubit extends Cubit<int> {
   ShuffleIndexCubit() : super(0); // Initial state is 0

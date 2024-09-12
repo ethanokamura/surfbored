@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:api_client/api_client.dart';
-import 'package:bloc/bloc.dart';
+import 'package:app_core/app_core.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:equatable/equatable.dart';
 import 'package:post_repository/post_repository.dart';
 
 // State definitions

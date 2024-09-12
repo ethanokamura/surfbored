@@ -20,26 +20,59 @@ class BoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<BoardCubit>().fetchBoard(boardID);
-    return CustomPageView(
-      top: false,
-      body: BlocBuilder<BoardCubit, BoardState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.isLoaded) {
-            return BoardPageView(
-              board: state.board,
-            );
-          } else if (state.isDeleted) {
-            return const Center(
-              child: PrimaryText(text: 'Board was deleted.'),
-            );
-          }
-          return const Center(
-            child: PrimaryText(text: 'Something went wrong'),
+    return BlocBuilder<BoardCubit, BoardState>(
+      builder: (context, state) {
+        if (state.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state.isLoaded) {
+          final board = state.board;
+          final boardCubit = context.read<BoardCubit>();
+          return CustomPageView(
+            top: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              title: AppBarText(text: board.title),
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute<dynamic>(
+                      builder: (context) {
+                        return BlocProvider.value(
+                          value: boardCubit,
+                          child: EditBoardPage(
+                            boardID: board.id,
+                            onDelete: () async {
+                              Navigator.pop(context);
+                              await boardCubit.deleteBoard(
+                                board.uid,
+                                board.id,
+                                board.photoURL,
+                              );
+                              if (context.mounted) Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  icon: const Icon(Icons.more_horiz),
+                ),
+              ],
+            ),
+            body: BoardPageView(
+              board: board,
+            ),
           );
-        },
-      ),
+        } else if (state.isDeleted) {
+          return const Center(
+            child: PrimaryText(text: 'Board was deleted.'),
+          );
+        }
+        return const Center(
+          child: PrimaryText(text: 'Something went wrong'),
+        );
+      },
     );
   }
 }
@@ -66,8 +99,6 @@ class BoardPageView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TopBar(title: board.title),
-                      const VerticalSpacer(),
                       ImageWidget(
                         borderRadius: defaultBorderRadius,
                         photoURL: board.photoURL,
@@ -100,80 +131,19 @@ class BoardPageView extends StatelessWidget {
   }
 }
 
-class TopBar extends StatelessWidget {
-  const TopBar({required this.title, super.key});
-  final String title;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: AppBarText(
-            text: title,
-            fontSize: 30,
-            maxLines: 2,
-          ),
-        ),
-        ActionIconButton(
-          inverted: false,
-          onTap: () => Navigator.pop(context),
-          icon: FontAwesomeIcons.xmark,
-        ),
-      ],
-    );
-  }
-}
-
 class BoardDetails extends StatelessWidget {
   const BoardDetails({required this.board, super.key});
   final Board board;
 
   @override
   Widget build(BuildContext context) {
-    final boardCubit = context.read<BoardCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              child: TitleText(
-                text: board.title,
-                fontSize: 24,
-                maxLines: 2,
-              ),
-            ),
-            ActionIconButton(
-              inverted: false,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: boardCubit,
-                      child: EditBoardPage(
-                        boardID: board.id,
-                        onDelete: () async {
-                          Navigator.pop(context);
-                          await boardCubit.deleteBoard(
-                            board.uid,
-                            board.id,
-                            board.photoURL,
-                          );
-                          if (context.mounted) Navigator.pop(context);
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-              icon: Icons.more_horiz,
-            ),
-          ],
+        TitleText(
+          text: board.title,
+          fontSize: 24,
+          maxLines: 2,
         ),
         DescriptionText(text: board.description),
         const VerticalSpacer(),

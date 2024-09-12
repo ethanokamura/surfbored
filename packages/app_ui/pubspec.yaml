@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
   api_client:
@@ -17,10 +17,10 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   google_fonts: ^6.2.1
   image: ^4.2.0
-  image_cropper: ^7.1.0
+  image_cropper: ^8.0.2
   image_picker: ^1.1.2
-  intl: ^0.18.1
+  intl: ^0.19.0
   path_provider: ^2.1.3
 
 dev_dependencies:
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^6.0.0

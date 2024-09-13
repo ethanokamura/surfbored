@@ -79,3 +79,19 @@ UI -> the end point for the user
 Cubit -> emits and handles state changes
 
 Repositories -> handle requests and responses to the API's
+
+## Tech Stack:
+
+The current tech stack for this project:
+
+```
+Frontend:
+  └── Flutter App
+
+Backend:
+  ├── Firebase Auth (auth)
+  ├── Firebase Storage (images)
+  ├── Firebase Firestore (documents)
+  ├── Firebase Cloud Functions (cloud functions)
+  └── Algolia (search)
+```

@@ -34,7 +34,7 @@ class PostListView extends StatelessWidget {
           itemCount: posts.length,
           itemBuilder: (context, index) {
             final post = posts[index];
-            return PostSearchCard(post: post);
+            return PostCard(post: post);
           },
         ),
       ),

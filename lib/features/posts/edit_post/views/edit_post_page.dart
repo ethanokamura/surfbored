@@ -38,6 +38,7 @@ class EditPostPage extends StatelessWidget {
             if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state.isLoaded) {
+              context.read<PostCubit>().printTest();
               return EditView(
                 post: state.post,
                 postCubit: context.read<PostCubit>(),
@@ -122,6 +123,7 @@ class EditField extends StatelessWidget {
           TextEditingController(),
         );
         if (newValue != null && context.mounted) {
+          print('new value $newValue');
           await context.read<PostCubit>().editField(boardID, field, newValue);
         }
       },

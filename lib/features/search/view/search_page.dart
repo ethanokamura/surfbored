@@ -127,7 +127,7 @@ class _SearchPageState extends State<SearchPage> {
         pagingController: pagingController,
         separatorBuilder: (context, index) => const VerticalSpacer(),
         builderDelegate: PagedChildBuilderDelegate<Post>(
-          itemBuilder: (_, post, __) => PostCard(post: post),
+          itemBuilder: (_, post, __) => PostSearchCard(post: post),
           firstPageErrorIndicatorBuilder: (context) => _errorIndicator(),
           newPageErrorIndicatorBuilder: (context) => _errorIndicator(),
           firstPageProgressIndicatorBuilder: (context) => _loadIndicator(),

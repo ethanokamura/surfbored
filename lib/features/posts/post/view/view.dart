@@ -1,1 +1,1 @@
-export 'post_widget.dart';
+export 'post_view.dart';

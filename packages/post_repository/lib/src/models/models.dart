@@ -35,6 +35,21 @@ class Post extends Equatable {
     );
   }
 
+  // allows for easy way to access algolia data
+  factory Post.fromAlgolia(Map<String, dynamic> json) {
+    return Post(
+      id: json['objectID'] as String? ?? '',
+      uid: json['uid'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      photoURL: json['photoURL'] as String? ?? '',
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
+      likes: json['likes'] as int? ?? 0,
+      tags:
+          (json['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
+    );
+  }
+
   // data fields
   final String id;
   final String? photoURL;

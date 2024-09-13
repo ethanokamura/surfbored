@@ -215,17 +215,8 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> editField(String postID, String field, dynamic data) async {
     emit(state.fromLoading());
-    try {
-      print(data);
-      await _postRepository.updateField(postID, {field: data});
-    } catch (e) {
-      print(e);
-    }
+    await _postRepository.updateField(postID, {field: data});
     emit(state.fromUpdate());
-  }
-
-  void printTest() {
-    print('success');
   }
 
   Future<void> deletePost(

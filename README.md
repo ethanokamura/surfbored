@@ -15,35 +15,6 @@ Create and share collections of your favorite activites via boards.
 Find an activity you like? Add it to the board of your choosing.
 Find a board you like? Like it and add it to you library of boards.
 
-
-## Running the Project: 📲
-
-clone the repo and run the following scripts
-
-To download the dependencies:
-```bash
-# run_pub_get.sh
-# Find all pubspec.yaml files in the project
-find . -name "pubspec.yaml" | while read -r file; do
-  # Navigate to the directory containing the pubspec.yaml
-  dir=$(dirname "$file")
-  echo "Installing packages in $dir"
-  (cd "$dir" && dart pub get)
-done
-```
-
-To generate the data models:
-```bash
-# create_models.sh
-# Find all the data models files in the project
-find . -name "models.dart" | while read -r file; do
-  # Navigate to the directory containing the data models
-  dir=$(dirname "$file")
-  echo "Building data model files in $dir"
-  (cd "$dir" && flutter pub run build_runner build)
-done
-```
-
 ## Project Structure: 📁
 
 lib/ for the implemented features of the app

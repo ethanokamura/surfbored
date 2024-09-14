@@ -59,6 +59,28 @@ class User extends Equatable {
     );
   }
 
+  // allows for easy way to access algolia data
+  factory User.fromAlgolia(Map<String, dynamic> json) {
+    return User(
+      uid: json['objectID'] as String? ?? '',
+      photoURL: json['photoURL'] as String? ?? '',
+      username: json['username'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      bio: json['bio'] as String? ?? '',
+      friends: json['friends'] as int? ?? 0,
+      lastSignInAt:
+          DateTime.fromMillisecondsSinceEpoch(json['lastSignInAt'] as int),
+      posts: (json['posts'] as List<dynamic>)
+          .map((post) => post as String)
+          .toList(),
+      boards: (json['boards'] as List<dynamic>)
+          .map((post) => post as String)
+          .toList(),
+      tags:
+          (json['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
+    );
+  }
+
   // data fields
   final String uid;
   final String username;

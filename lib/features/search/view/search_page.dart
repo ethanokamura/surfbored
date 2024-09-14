@@ -1,7 +1,7 @@
 import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:rando/features/posts/posts.dart';

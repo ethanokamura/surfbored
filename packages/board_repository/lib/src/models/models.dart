@@ -40,6 +40,24 @@ class Board extends Equatable {
     );
   }
 
+  // allows for easy way to access algolia data
+  factory Board.fromAlgolia(Map<String, dynamic> json) {
+    return Board(
+      id: json['objectID'] as String? ?? '',
+      uid: json['uid'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      photoURL: json['photoURL'] as String? ?? '',
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
+      saves: json['saves'] as int? ?? 0,
+      posts: (json['posts'] as List<dynamic>)
+          .map((post) => post as String)
+          .toList(),
+      tags:
+          (json['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
+    );
+  }
+
   // data fields
   final String id;
   final String uid;

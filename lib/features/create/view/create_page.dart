@@ -5,8 +5,8 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/create/cubit/create_cubit.dart';
-import 'package:rando/features/tags/tags.dart';
+import 'package:surfbored/features/create/cubit/create_cubit.dart';
+import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CreatePage extends StatelessWidget {

@@ -2,8 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/cubit/post_cubit.dart';
-import 'package:rando/features/posts/post/post.dart';
+import 'package:surfbored/features/posts/cubit/post_cubit.dart';
+import 'package:surfbored/features/posts/post/post.dart';
 
 class PostFeed extends StatelessWidget {
   const PostFeed({super.key});

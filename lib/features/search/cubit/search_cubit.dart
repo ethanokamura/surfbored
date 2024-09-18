@@ -1,6 +1,6 @@
 import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:app_core/app_core.dart';
-import 'package:rando/features/search/view/post_results.dart';
+import 'package:surfbored/features/search/view/post_results.dart';
 
 part 'search_state.dart';
 

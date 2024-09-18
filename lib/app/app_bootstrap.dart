@@ -4,7 +4,7 @@ import 'dart:isolate';
 import 'package:app_core/app_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rando/app/app_bloc_observer.dart';
+import 'package:surfbored/app/app_bloc_observer.dart';
 
 Future<void> bootstrap({
   required FutureOr<Widget> Function() builder,

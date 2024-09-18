@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/posts.dart';
+import 'package:surfbored/features/posts/posts.dart';
 
 class PostCard extends StatelessWidget {
   const PostCard({required this.post, super.key});

@@ -1,6 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/features/tags/add_tags/view/edit_tag_list.dart';
+import 'package:surfbored/features/tags/add_tags/view/edit_tag_list.dart';
 
 class AddTagsPage extends StatefulWidget {
   const AddTagsPage({

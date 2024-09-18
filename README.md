@@ -1,11 +1,11 @@
-# SurfBoard 🌊
+# SurfBored 🌊
 
 Surfing the web is for boomers. Surf some boards and find cool shit to do.
 
 ## Why? 🤔
 
 Need something to do today? Create boards with your favorite activities! Or better yet, find someone else's board to find something new.
-Have trouble choosing? SurfBoard will pick activities at random so you dont have to!
+Have trouble choosing? SurfBored will pick activities at random so you dont have to!
 Connect with friends and make collaborative boards!
 
 ## How it works: 🔍

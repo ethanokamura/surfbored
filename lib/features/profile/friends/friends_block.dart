@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/profile/friends/cubit/friends_cubit.dart';
+import 'package:surfbored/features/profile/friends/cubit/friends_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
 class FriendsBlock extends StatelessWidget {

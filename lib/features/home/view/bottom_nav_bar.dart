@@ -1,7 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/features/create/create.dart';
+import 'package:surfbored/features/create/create.dart';
 
 enum NavBarItem { home, search, create, inbox, profile }
 

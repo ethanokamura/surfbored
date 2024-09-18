@@ -1,6 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/features/boards/boards.dart';
+import 'package:surfbored/features/boards/boards.dart';
 
 enum Options {
   manage,

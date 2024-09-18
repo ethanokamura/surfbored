@@ -1,6 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/features/tags/tags.dart';
+import 'package:surfbored/features/tags/tags.dart';
 
 class EditTagsBox extends StatelessWidget {
   const EditTagsBox({required this.tags, required this.updateTags, super.key});

@@ -4,9 +4,9 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/posts.dart';
-import 'package:rando/features/search/view/post_results.dart';
-import 'package:rando/features/search/view/search_metadata.dart';
+import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/search/view/post_results.dart';
+import 'package:surfbored/features/search/view/search_metadata.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});

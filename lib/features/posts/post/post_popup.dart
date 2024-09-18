@@ -2,12 +2,12 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/cubit/post_cubit.dart';
-import 'package:rando/features/posts/edit_post/edit_post.dart';
-import 'package:rando/features/posts/likes/likes.dart';
-import 'package:rando/features/posts/shared/more_options.dart';
-import 'package:rando/features/profile/profile.dart';
-import 'package:rando/features/tags/tags.dart';
+import 'package:surfbored/features/posts/cubit/post_cubit.dart';
+import 'package:surfbored/features/posts/edit_post/edit_post.dart';
+import 'package:surfbored/features/posts/likes/likes.dart';
+import 'package:surfbored/features/posts/shared/more_options.dart';
+import 'package:surfbored/features/profile/profile.dart';
+import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<dynamic> postPopUp(

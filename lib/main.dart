@@ -1,9 +1,9 @@
 import 'package:api_client/api_client.dart';
+import 'package:app_core/app_core.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/app/app.dart';
-import 'package:rando/firebase_options.dart';
+import 'package:surfbored/app/app.dart';
+import 'package:surfbored/firebase_options.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {

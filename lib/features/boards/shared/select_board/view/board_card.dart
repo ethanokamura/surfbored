@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/boards/shared/select_board/cubit/selection_cubit.dart';
+import 'package:surfbored/features/boards/shared/select_board/cubit/selection_cubit.dart';
 
 class SelectBoardCard extends StatelessWidget {
   const SelectBoardCard({

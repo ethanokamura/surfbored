@@ -2,8 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/boards/boards.dart';
-import 'package:rando/features/boards/shared/select_board/view/board_card.dart';
+import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/boards/shared/select_board/view/board_card.dart';
 
 class SelectBoardPage extends StatelessWidget {
   const SelectBoardPage({

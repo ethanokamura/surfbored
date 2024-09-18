@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rando/features/tags/add_tags/view/edit_tag.dart';
+import 'package:surfbored/features/tags/add_tags/view/edit_tag.dart';
 
 class EditTagList extends StatelessWidget {
   const EditTagList({required this.tags, required this.onDelete, super.key});

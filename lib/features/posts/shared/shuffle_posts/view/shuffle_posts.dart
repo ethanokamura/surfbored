@@ -2,8 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/posts.dart';
-import 'package:rando/features/posts/shared/shuffle_posts/cubit/shuffle_index_cubit.dart';
+import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/posts/shared/shuffle_posts/cubit/shuffle_index_cubit.dart';
 
 class ShuffledPostsPage extends StatelessWidget {
   const ShuffledPostsPage({required this.boardID, super.key});

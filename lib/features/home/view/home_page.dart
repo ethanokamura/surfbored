@@ -1,11 +1,11 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:rando/features/explore/explore.dart';
-import 'package:rando/features/home/view/bottom_nav_bar.dart';
-import 'package:rando/features/inbox/inbox.dart';
-import 'package:rando/features/profile/profile.dart';
-import 'package:rando/features/search/search.dart';
+import 'package:surfbored/features/explore/explore.dart';
+import 'package:surfbored/features/home/view/bottom_nav_bar.dart';
+import 'package:surfbored/features/inbox/inbox.dart';
+import 'package:surfbored/features/profile/profile.dart';
+import 'package:surfbored/features/search/search.dart';
 import 'package:user_repository/user_repository.dart';
 
 class HomePage extends StatelessWidget {

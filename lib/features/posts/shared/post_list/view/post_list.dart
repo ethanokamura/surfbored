@@ -2,8 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/posts.dart';
-import 'package:rando/features/posts/shared/post_list/view/post_list_view.dart';
+import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/posts/shared/post_list/view/post_list_view.dart';
 
 class PostsList extends StatelessWidget {
   const PostsList({required this.type, required this.docID, super.key});

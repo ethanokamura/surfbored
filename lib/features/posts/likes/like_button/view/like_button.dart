@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:rando/features/posts/likes/cubit/like_cubit.dart';
+import 'package:surfbored/features/posts/likes/cubit/like_cubit.dart';
 
 class LikeButton extends StatelessWidget {
   const LikeButton({required this.post, required this.userID, super.key});

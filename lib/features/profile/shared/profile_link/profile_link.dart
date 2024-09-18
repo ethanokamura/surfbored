@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/profile/profile.dart';
+import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfileLink extends StatelessWidget {

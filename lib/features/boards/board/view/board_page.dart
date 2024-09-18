@@ -2,10 +2,10 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rando/features/boards/boards.dart';
-import 'package:rando/features/boards/saves/saves.dart';
-import 'package:rando/features/posts/posts.dart';
-import 'package:rando/features/profile/profile.dart';
+import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/boards/saves/saves.dart';
+import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {

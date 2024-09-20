@@ -26,7 +26,10 @@ class CreatePage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: AppBarText(text: 'Create A $type!'),
+        title: AppBarText(
+          text:
+              type == 'post' ? AppStrings.createPost : AppStrings.createdBoard,
+        ),
       ),
       body: BlocProvider(
         create: (context) => CreateCubit(
@@ -71,15 +74,15 @@ class _CreatePostState extends State<CreatePost> {
           return const Center(child: CircularProgressIndicator());
         } else if (state.isCreated) {
           return const Center(
-            child: PrimaryText(text: 'Post created successfully!'),
+            child: PrimaryText(text: AppStrings.createSuccess),
           );
         } else if (state.isEmpty) {
           return const Center(
-            child: PrimaryText(text: 'Post is empty'),
+            child: PrimaryText(text: AppStrings.emptyPost),
           );
         } else if (state.isFailure) {
           return const Center(
-            child: PrimaryText(text: 'Something went wrong.'),
+            child: PrimaryText(text: AppStrings.fetchFailure),
           );
         } else {
           return ListView(
@@ -136,7 +139,7 @@ class _CreatePostState extends State<CreatePost> {
                       );
                   Navigator.pop(context);
                 },
-                text: 'Create',
+                text: AppStrings.create,
               ),
             ],
           );

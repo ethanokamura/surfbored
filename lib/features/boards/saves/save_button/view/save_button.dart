@@ -38,7 +38,7 @@ class SaveButton extends StatelessWidget {
                   : Theme.of(context).textColor,
               size: 20,
             ),
-            text: '$saves saves',
+            text: '$saves ${AppStrings.saves}',
           );
         },
       ),

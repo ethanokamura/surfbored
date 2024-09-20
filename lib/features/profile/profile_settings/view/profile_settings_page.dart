@@ -28,7 +28,7 @@ class ProfileSettingsPage extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: 'User Settings'),
+        title: const AppBarText(text: AppStrings.userSettings),
       ),
       top: false,
       body: Center(
@@ -36,7 +36,8 @@ class ProfileSettingsPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ActionButton(
-              text: 'Theme: ${isDarkMode ? 'Dark Mode' : 'Light Mode'}',
+              text:
+                  '${AppStrings.theme}: ${isDarkMode ? AppStrings.darkMode : AppStrings.lightMode}',
               inverted: false,
               onTap: () => context.read<ThemeCubit>().toggleTheme(),
             ),
@@ -53,12 +54,12 @@ class ProfileSettingsPage extends StatelessWidget {
                   },
                 ),
               ),
-              text: 'Edit Profile',
+              text: AppStrings.editProfile,
             ),
             ActionButton(
               inverted: false,
               onTap: context.read<AppCubit>().logOut,
-              text: 'Logout',
+              text: AppStrings.logOut,
             ),
           ],
         ),

@@ -14,7 +14,7 @@ class ShuffledPostsPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: 'Shuffled Posts'),
+        title: const AppBarText(text: AppStrings.shuffledPosts),
       ),
       body: BlocProvider(
         create: (context) => PostCubit(
@@ -28,10 +28,12 @@ class ShuffledPostsPage extends StatelessWidget {
               final posts = state.posts;
               return PostViewController(posts: posts);
             } else if (state.isEmpty) {
-              return const Center(child: PrimaryText(text: 'Board is empty.'));
+              return const Center(
+                child: PrimaryText(text: AppStrings.emptyBoard),
+              );
             } else {
               return const Center(
-                child: PrimaryText(text: 'Something went wrong'),
+                child: PrimaryText(text: AppStrings.fetchFailure),
               );
             }
           },
@@ -65,7 +67,7 @@ class PostViewController extends StatelessWidget {
                     Expanded(
                       child: ActionButton(
                         inverted: false,
-                        text: 'Last',
+                        text: AppStrings.last,
                         onTap: () {
                           if (state > 0) {
                             context.read<ShuffleIndexCubit>().decrement();
@@ -77,7 +79,7 @@ class PostViewController extends StatelessWidget {
                     Expanded(
                       child: ActionButton(
                         inverted: true,
-                        text: 'Next',
+                        text: AppStrings.next,
                         onTap: () {
                           if (state < posts.length - 1) {
                             context.read<ShuffleIndexCubit>().increment();

@@ -28,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: 'Create Username'),
+        title: const AppBarText(text: AppStrings.createUsername),
       ),
       top: true,
       body: SingleChildScrollView(
@@ -46,15 +46,15 @@ class _SignUpPageState extends State<SignUpPage> {
               },
             ),
             const VerticalSpacer(),
-            const PrimaryText(text: 'Upload a profile picture.'),
+            const PrimaryText(text: AppStrings.uploadProfilePicture),
             const VerticalSpacer(),
             CustomInputField(
-              label: 'Username*',
-              text: username != '' ? username : 'username',
+              label: '${AppStrings.username}*',
+              text: username != '' ? username : AppStrings.username,
               onPressed: () async {
                 final newValue = await editTextField(
                   context,
-                  'Username',
+                  AppStrings.username,
                   TextEditingController(),
                 );
                 if (newValue != null &&
@@ -71,12 +71,12 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             const VerticalSpacer(),
             CustomInputField(
-              label: 'Name',
-              text: name != '' ? name : 'Name',
+              label: AppStrings.name,
+              text: name != '' ? name : AppStrings.name,
               onPressed: () async {
                 final newValue = await editTextField(
                   context,
-                  'Name',
+                  AppStrings.name,
                   TextEditingController(),
                 );
                 if (newValue != null &&
@@ -88,12 +88,12 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             const VerticalSpacer(),
             CustomInputField(
-              label: 'Bio',
-              text: bio != '' ? bio : 'Bio',
+              label: AppStrings.bio,
+              text: bio != '' ? bio : AppStrings.bio,
               onPressed: () async {
                 final newValue = await editTextField(
                   context,
-                  'Bio',
+                  AppStrings.bio,
                   TextEditingController(),
                 );
                 if (newValue != null &&
@@ -104,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
               },
             ),
             const VerticalSpacer(),
-            const SecondaryText(text: '* required fields'),
+            const SecondaryText(text: AppStrings.requiredFields),
             const VerticalSpacer(),
             if (username != '')
               ActionButton(
@@ -123,7 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     context.read<AppCubit>().confirmedUsername(newUser);
                   }
                 },
-                text: 'Confirm',
+                text: AppStrings.confirm,
               ),
           ],
         ),

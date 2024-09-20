@@ -8,7 +8,7 @@ Future<void> unknownPagePopup(
     context: context,
     builder: (context) => AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      title: const TitleText(text: 'Error 404: Page Not Found.'),
+      title: const TitleText(text: AppStrings.pageNotFound),
       actions: [
         // go back
         Expanded(
@@ -18,7 +18,7 @@ Future<void> unknownPagePopup(
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            text: 'Return',
+            text: AppStrings.goBack,
           ),
         ),
       ],

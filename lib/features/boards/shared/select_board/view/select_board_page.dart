@@ -28,7 +28,7 @@ class SelectBoardPage extends StatelessWidget {
       top: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: 'Add Activity To A Board'),
+        title: const AppBarText(text: AppStrings.addActivity),
       ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () => Navigator.pop(context),
@@ -67,15 +67,17 @@ class SelectBoardsList extends StatelessWidget {
                   context.read<BoardCubit>().loadMoreUserBoards(userID),
             );
           } else if (state.isEmpty) {
-            return const Center(child: PrimaryText(text: 'No boards.'));
+            return const Center(
+              child: PrimaryText(text: AppStrings.emptyPosts),
+            );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<BoardCubit>().streamUserBoards(userID);
             return const Center(
-              child: PrimaryText(text: 'Posts were changed. Reloading.'),
+              child: PrimaryText(text: AppStrings.changedPosts),
             );
           } else if (state.isFailure) {
             return const Center(
-              child: PrimaryText(text: 'Something went wrong'),
+              child: PrimaryText(text: AppStrings.fetchFailure),
             );
           }
           return const Center(child: CircularProgressIndicator());

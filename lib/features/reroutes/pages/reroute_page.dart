@@ -13,12 +13,12 @@ class ReroutePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const AppBarText(
-              text: 'Uh oh! Page not found.',
+              text: AppStrings.pageNotFound,
             ),
             const VerticalSpacer(),
             if (Navigator.canPop(context))
               ActionButton(
-                text: 'Return Home',
+                text: AppStrings.returnHome,
                 inverted: false,
                 onTap: () =>
                     Navigator.of(context).popUntil((route) => route.isFirst),

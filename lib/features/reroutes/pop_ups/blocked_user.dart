@@ -8,7 +8,7 @@ Future<void> blockedUserPopup(
     context: context,
     builder: (context) => AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      title: const TitleText(text: 'User Not Avaliable.'),
+      title: const TitleText(text: AppStrings.blockedUser),
       actions: [
         // go back
         Expanded(
@@ -18,7 +18,7 @@ Future<void> blockedUserPopup(
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            text: 'Return',
+            text: AppStrings.goBack,
           ),
         ),
       ],

@@ -33,13 +33,13 @@ class EditBoardPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: 'Edit Board'),
+        title: const AppBarText(text: AppStrings.editBoard),
       ),
       body: BlocListener<BoardCubit, BoardState>(
         listener: (context, state) {
           if (state.isUpdated) {
             // Show a success message or navigate back
-            context.showSnackBar('Board updated successfully!');
+            context.showSnackBar(AppStrings.updatedBoard);
           }
         },
         child: BlocBuilder<BoardCubit, BoardState>(
@@ -54,11 +54,11 @@ class EditBoardPage extends StatelessWidget {
               );
             } else if (state.isDeleted) {
               return const Center(
-                child: PrimaryText(text: 'Deleted board.'),
+                child: PrimaryText(text: AppStrings.deleteBoard),
               );
             }
             return const Center(
-              child: PrimaryText(text: 'Something went wrong'),
+              child: PrimaryText(text: AppStrings.fetchFailure),
             );
           },
         ),
@@ -113,7 +113,7 @@ class EditView extends StatelessWidget {
           const VerticalSpacer(),
           ActionButton(
             inverted: true,
-            text: 'Delete Board',
+            text: AppStrings.deleteBoard,
             onTap: () {
               onDelete();
               Navigator.pop(context);

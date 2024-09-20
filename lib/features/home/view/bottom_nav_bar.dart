@@ -87,7 +87,7 @@ class BottomNavBar extends StatelessWidget {
       currentContext,
       <Widget>[
         const TitleText(
-          text: 'Create Something:',
+          text: AppStrings.createSomething,
           fontSize: 24,
           // textAlign: TextAlign.center,
         ),
@@ -97,7 +97,7 @@ class BottomNavBar extends StatelessWidget {
           children: [
             ActionIconButton(
               icon: FontAwesomeIcons.mountain,
-              label: 'Activity',
+              label: AppStrings.activity,
               inverted: true,
               size: 40,
               onTap: () {
@@ -108,7 +108,7 @@ class BottomNavBar extends StatelessWidget {
             const SizedBox(width: 40),
             ActionIconButton(
               icon: FontAwesomeIcons.list,
-              label: 'Board',
+              label: AppStrings.board,
               inverted: true,
               size: 40,
               onTap: () {

@@ -28,15 +28,17 @@ class UserBoardsList extends StatelessWidget {
                   context.read<BoardCubit>().streamUserBoards(userID),
             );
           } else if (state.isEmpty) {
-            return const Center(child: PrimaryText(text: 'No boards.'));
+            return const Center(
+              child: PrimaryText(text: AppStrings.emptyBoards),
+            );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<BoardCubit>().streamUserBoards(userID);
             return const Center(
-              child: PrimaryText(text: 'Posts were changed. Reloading.'),
+              child: PrimaryText(text: AppStrings.changedBoards),
             );
           } else if (state.isFailure) {
             return const Center(
-              child: PrimaryText(text: 'Something went wrong'),
+              child: PrimaryText(text: AppStrings.fetchFailure),
             );
           }
           return const Center(child: CircularProgressIndicator());

@@ -38,7 +38,7 @@ class MoreSearchOptions extends StatelessWidget {
             children: [
               Icon(Icons.list),
               SizedBox(width: 10),
-              PrimaryText(text: 'Add Or Remove'),
+              PrimaryText(text: AppStrings.addOrRemove),
             ],
           ),
         ),
@@ -52,7 +52,7 @@ class MoreSearchOptions extends StatelessWidget {
             children: [
               Icon(Icons.ios_share),
               SizedBox(width: 10),
-              PrimaryText(text: 'Share'),
+              PrimaryText(text: AppStrings.share),
             ],
           ),
         ),

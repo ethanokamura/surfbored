@@ -30,14 +30,18 @@ class PostsList extends StatelessWidget {
                   context.read<PostCubit>().streamPosts(type, docID),
             );
           } else if (state.isEmpty) {
-            return const Center(child: PrimaryText(text: 'No posts here!'));
+            return const Center(
+              child: PrimaryText(text: AppStrings.emptyPosts),
+            );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<PostCubit>().streamPosts(type, docID);
             return const Center(
-              child: PrimaryText(text: 'Posts were changed. Reloading.'),
+              child: PrimaryText(text: AppStrings.changedPosts),
             );
           }
-          return const Center(child: PrimaryText(text: 'Something went wrong'));
+          return const Center(
+            child: PrimaryText(text: AppStrings.fetchFailure),
+          );
         },
       ),
     );

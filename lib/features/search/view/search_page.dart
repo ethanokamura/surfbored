@@ -136,7 +136,7 @@ class _SearchPageState extends State<SearchPage> {
       );
 
   Widget _errorIndicator() => const Center(
-        child: PrimaryText(text: 'error loading post'),
+        child: PrimaryText(text: AppStrings.postError),
       );
   Widget _loadIndicator() => const Center(
         child: CircularProgressIndicator(),

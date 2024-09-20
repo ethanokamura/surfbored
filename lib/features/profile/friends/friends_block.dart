@@ -26,7 +26,9 @@ class FriendsBlock extends StatelessWidget {
         child: BlocBuilder<FriendCubit, FriendState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: PrimaryText(text: 'Loading friends'));
+              return const Center(
+                child: PrimaryText(text: AppStrings.loadingFriends),
+              );
             }
 
             final buttonText = _getButtonText(state);
@@ -47,7 +49,7 @@ class FriendsBlock extends StatelessWidget {
                     onSurface: true,
                     onTap: () {},
                     inverted: false,
-                    text: 'My friends',
+                    text: AppStrings.myFriends,
                   ),
               ],
             );
@@ -58,10 +60,10 @@ class FriendsBlock extends StatelessWidget {
   }
 
   String _getButtonText(FriendState state) {
-    if (state.isRequested) return 'Request Sent';
-    if (state.isRecieved) return 'Accept Request';
-    if (state.areFriends) return 'Remove Friend';
-    return 'Add Friend';
+    if (state.isRequested) return AppStrings.friendRequestSent;
+    if (state.isRecieved) return AppStrings.acceptFriendRequest;
+    if (state.areFriends) return AppStrings.removeFriend;
+    return AppStrings.addFriend;
   }
 
   Future<void> _handleAction(
@@ -92,7 +94,7 @@ class FriendsCountText extends StatelessWidget {
         ),
         children: <TextSpan>[
           TextSpan(
-            text: 'friends',
+            text: AppStrings.friends,
             style: TextStyle(
               color: Theme.of(context).subtextColor,
               fontWeight: FontWeight.normal,

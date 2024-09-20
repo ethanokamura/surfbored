@@ -46,7 +46,7 @@ class MoreOptions extends StatelessWidget {
             children: [
               Icon(Icons.list),
               SizedBox(width: 10),
-              PrimaryText(text: 'Add Or Remove'),
+              PrimaryText(text: AppStrings.addOrRemove),
             ],
           ),
         ),
@@ -60,7 +60,7 @@ class MoreOptions extends StatelessWidget {
             children: [
               Icon(Icons.ios_share),
               SizedBox(width: 10),
-              PrimaryText(text: 'Share'),
+              PrimaryText(text: AppStrings.share),
             ],
           ),
         ),
@@ -75,7 +75,7 @@ class MoreOptions extends StatelessWidget {
               children: [
                 Icon(Icons.edit),
                 SizedBox(width: 10),
-                PrimaryText(text: 'Edit'),
+                PrimaryText(text: AppStrings.edit),
               ],
             ),
           ),
@@ -88,7 +88,7 @@ class MoreOptions extends StatelessWidget {
               children: [
                 Icon(Icons.delete_outline_outlined),
                 SizedBox(width: 10),
-                PrimaryText(text: 'Delete'),
+                PrimaryText(text: AppStrings.delete),
               ],
             ),
           ),

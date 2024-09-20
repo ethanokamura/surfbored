@@ -49,7 +49,7 @@ class LoginContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const Center(
-            child: TitleText(text: 'SurfBoard', fontSize: 36),
+            child: TitleText(text: AppStrings.appTitle, fontSize: 36),
           ),
           Center(
             child: Container(
@@ -98,7 +98,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                   cursorColor: Theme.of(context).subtextColor,
                   keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
-                    labelText: 'Phone Number',
+                    labelText: AppStrings.phoneNumber,
                   ),
                 )
               else
@@ -107,7 +107,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                   cursorColor: Theme.of(context).subtextColor,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    labelText: 'Verification Code',
+                    labelText: AppStrings.verificationCode,
                   ),
                 ),
               const SizedBox(height: 16),
@@ -130,7 +130,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                           verificationFailed: (exception) {
                             // Error handling is managed by BlocListener
                             context.showSnackBar(
-                              'Error Verifying. Try Again. $exception',
+                              '${AppStrings.verificationError} $exception',
                             );
                           },
                           codeSent: (
@@ -157,7 +157,7 @@ class _PhoneSignInState extends State<PhoneSignIn> {
                   }
                   setState(() => isLoading = false);
                 },
-                text: _codeSent ? 'Sign In' : 'Send Code',
+                text: _codeSent ? AppStrings.signIn : AppStrings.sendCode,
               ),
             ],
           );
@@ -183,7 +183,7 @@ class SignInButton extends StatelessWidget {
     return ActionButton(
       inverted: inverted,
       onTap: onTap,
-      text: processing ? 'Loading' : text,
+      text: processing ? AppStrings.loading : text,
     );
   }
 }

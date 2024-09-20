@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:app_ui/src/buttons.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
@@ -23,7 +24,7 @@ Future<String?> editTextField(
     context: context,
     builder: (context) => AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      title: TitleText(text: 'Edit $field:'),
+      title: TitleText(text: '${AppStrings.edit} $field:'),
       content: TextFormField(
         cursorColor: Theme.of(context).subtextColor,
         controller: textController,
@@ -31,7 +32,7 @@ Future<String?> editTextField(
         maxLength: maxInputLength(field),
         maxLines: null,
         decoration: InputDecoration(
-          hintText: 'Enter new $field',
+          hintText: '${AppStrings.enterField} $field',
           hintStyle: TextStyle(
             fontSize: 18,
             color: Theme.of(context).hintTextColor,
@@ -46,7 +47,7 @@ Future<String?> editTextField(
               child: ActionButton(
                 inverted: true,
                 onTap: () => Navigator.pop(context),
-                text: 'Cancel',
+                text: AppStrings.cancel,
               ),
             ),
             const HorizontalSpacer(),
@@ -56,7 +57,7 @@ Future<String?> editTextField(
               child: ActionButton(
                 inverted: true,
                 onTap: () => Navigator.of(context).pop(textController.text),
-                text: 'Save',
+                text: AppStrings.save,
               ),
             ),
           ],

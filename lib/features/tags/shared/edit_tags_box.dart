@@ -21,7 +21,7 @@ class EditTagsBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // section name
-              const SecondaryText(text: 'Edit tags'),
+              const SecondaryText(text: AppStrings.editTags),
               ActionIconButton(
                 inverted: true,
                 icon: Icons.settings,

@@ -14,7 +14,7 @@ class InboxPage extends StatelessWidget {
       top: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: 'Inbox'),
+        title: const AppBarText(text: AppStrings.inbox),
       ),
       body: const SingleChildScrollView(
         child: Column(
@@ -54,10 +54,12 @@ class FriendRequestList extends StatelessWidget {
               },
             );
           } else if (state.isEmpty) {
-            return const Center(child: PrimaryText(text: 'No friend requests'));
+            return const Center(
+              child: PrimaryText(text: AppStrings.noFriendRequests),
+            );
           } else {
             return const Center(
-              child: PrimaryText(text: 'Something went wrong'),
+              child: PrimaryText(text: AppStrings.fetchFailure),
             );
           }
         },

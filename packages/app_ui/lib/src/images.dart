@@ -74,14 +74,14 @@ class _EditImageState extends State<EditImage> {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: 'Select Media:', fontSize: 24),
+        const TitleText(text: '${AppStrings.selectMedia}:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ActionIconButton(
               icon: Icons.camera_alt_outlined,
-              label: 'Camera',
+              label: AppStrings.camera,
               inverted: true,
               size: 40,
               onTap: () {
@@ -92,7 +92,7 @@ class _EditImageState extends State<EditImage> {
             const SizedBox(width: 40),
             ActionIconButton(
               icon: Icons.photo_library_outlined,
-              label: 'Library',
+              label: AppStrings.photoLibrary,
               inverted: true,
               size: 40,
               onTap: () {
@@ -230,7 +230,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: 'Select Media:', fontSize: 24),
+        const TitleText(text: '${AppStrings.selectMedia}:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -547,7 +547,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: 'Select Media:', fontSize: 24),
+        const TitleText(text: '${AppStrings.selectMedia}:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

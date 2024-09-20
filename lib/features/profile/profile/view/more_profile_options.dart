@@ -45,7 +45,7 @@ class MoreProfileOptions extends StatelessWidget {
             children: [
               Icon(Icons.ios_share),
               SizedBox(width: 10),
-              PrimaryText(text: 'Share'),
+              PrimaryText(text: AppStrings.share),
             ],
           ),
         ),
@@ -58,7 +58,7 @@ class MoreProfileOptions extends StatelessWidget {
               children: [
                 Icon(Icons.settings),
                 SizedBox(width: 10),
-                PrimaryText(text: 'Edit'),
+                PrimaryText(text: AppStrings.edit),
               ],
             ),
           ),
@@ -72,7 +72,7 @@ class MoreProfileOptions extends StatelessWidget {
               children: [
                 Icon(Icons.block_flipped),
                 SizedBox(width: 10),
-                PrimaryText(text: 'Block/Unblock'),
+                PrimaryText(text: AppStrings.toggleBlock),
               ],
             ),
           ),

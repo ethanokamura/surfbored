@@ -79,7 +79,7 @@ class _EditImageState extends State<EditImage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LabeledIconButton(
+            ActionIconButton(
               icon: Icons.camera_alt_outlined,
               label: 'Camera',
               inverted: true,
@@ -90,7 +90,7 @@ class _EditImageState extends State<EditImage> {
               },
             ),
             const SizedBox(width: 40),
-            LabeledIconButton(
+            ActionIconButton(
               icon: Icons.photo_library_outlined,
               label: 'Library',
               inverted: true,
@@ -235,7 +235,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LabeledIconButton(
+            ActionIconButton(
               icon: Icons.camera_alt_outlined,
               label: 'Camera',
               inverted: true,
@@ -246,7 +246,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
               },
             ),
             const SizedBox(width: 40),
-            LabeledIconButton(
+            ActionIconButton(
               icon: Icons.photo_library_outlined,
               label: 'Library',
               inverted: true,
@@ -552,7 +552,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LabeledIconButton(
+            ActionIconButton(
               icon: Icons.camera_alt_outlined,
               label: 'Camera',
               inverted: true,
@@ -563,7 +563,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
               },
             ),
             const SizedBox(width: 40),
-            LabeledIconButton(
+            ActionIconButton(
               icon: Icons.photo_library_outlined,
               label: 'Library',
               inverted: true,

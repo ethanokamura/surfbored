@@ -41,7 +41,7 @@ Future<dynamic> postSearchPopUp(
                       postID: post.id,
                       userID: userID,
                     ),
-                    LabeledIconButton(
+                    ActionIconButton(
                       icon: FontAwesomeIcons.xmark,
                       size: 20,
                       inverted: false,

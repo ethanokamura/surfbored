@@ -111,6 +111,7 @@ class CustomTextBox extends StatelessWidget {
               // section name
               SecondaryText(text: label),
               ActionIconButton(
+                background: false,
                 onTap: onPressed,
                 icon: Icons.settings,
                 inverted: true,

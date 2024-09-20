@@ -36,13 +36,15 @@ class FriendsBlock extends StatelessWidget {
               children: [
                 FriendsCountText(friends: state.friends),
                 if (!isCurrent)
-                  SecondaryButton(
+                  ActionButton(
+                    onSurface: true,
                     text: buttonText,
                     onTap: () => _handleAction(context, state, userID),
                     inverted: !state.isRequested,
                   )
                 else
-                  SecondaryButton(
+                  ActionButton(
+                    onSurface: true,
                     onTap: () {},
                     inverted: false,
                     text: 'My friends',

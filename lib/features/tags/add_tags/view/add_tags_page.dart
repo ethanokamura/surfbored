@@ -66,7 +66,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
                         ),
                       ),
                     ),
-                    LabeledIconButton(
+                    ActionIconButton(
                       inverted: true,
                       icon: Icons.add,
                       onTap: () {

@@ -95,7 +95,7 @@ class BottomNavBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LabeledIconButton(
+            ActionIconButton(
               icon: FontAwesomeIcons.mountain,
               label: 'Activity',
               inverted: true,
@@ -106,7 +106,7 @@ class BottomNavBar extends StatelessWidget {
               },
             ),
             const SizedBox(width: 40),
-            LabeledIconButton(
+            ActionIconButton(
               icon: FontAwesomeIcons.list,
               label: 'Board',
               inverted: true,

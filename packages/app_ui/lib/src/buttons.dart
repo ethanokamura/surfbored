@@ -8,6 +8,7 @@ class ActionButton extends StatelessWidget {
     required this.inverted,
     required this.onTap,
     super.key,
+    this.onSurface,
     this.icon,
     this.text,
     this.vertical,
@@ -15,6 +16,7 @@ class ActionButton extends StatelessWidget {
   });
 
   final IconData? icon;
+  final bool? onSurface;
   final bool inverted;
   final String? text;
   final double? vertical;
@@ -30,9 +32,11 @@ class ActionButton extends StatelessWidget {
       ),
       elevation: 0,
       shadowColor: Colors.black,
-      backgroundColor: inverted
-          ? Theme.of(context).accentColor
-          : Theme.of(context).colorScheme.surface,
+      backgroundColor: onSurface != null && onSurface!
+          ? Theme.of(context).colorScheme.primary
+          : inverted
+              ? Theme.of(context).accentColor
+              : Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
     return ElevatedButton(
@@ -57,59 +61,38 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-class SecondaryButton extends StatelessWidget {
-  const SecondaryButton({
-    required this.onTap,
-    required this.inverted,
-    super.key,
-    this.icon,
-    this.text,
-    this.vertical,
-    this.horizontal,
-  });
+// class ActionIconButton extends StatelessWidget {
+//   const ActionIconButton({
+//     required this.icon,
+//     required this.inverted,
+//     required this.onTap,
+//     super.key,
+//     this.size,
+//     this.padding,
+//   });
+//   final IconData icon;
+//   final bool inverted;
+//   final double? size;
+//   final double? padding;
+//   final void Function()? onTap;
 
-  final bool inverted;
-  final IconData? icon;
-  final String? text;
-  final double? vertical;
-  final double? horizontal;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = ElevatedButton.styleFrom(
-      padding: EdgeInsets.symmetric(
-        horizontal: horizontal == null ? 15 : horizontal!,
-        vertical: vertical == null ? 10 : vertical!,
-      ),
-      elevation: 0,
-      shadowColor: Colors.black,
-      backgroundColor: inverted
-          ? Theme.of(context).accentColor
-          : Theme.of(context).colorScheme.primary,
-      shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
-    );
-    return ElevatedButton(
-      onPressed: onTap,
-      style: style,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (icon != null)
-            Icon(
-              icon,
-              color: inverted
-                  ? Theme.of(context).inverseTextColor
-                  : Theme.of(context).textColor,
-              size: 18,
-            ),
-          if (text != null && icon != null) const SizedBox(width: 10),
-          if (text != null) ButtonText(text: text!, inverted: inverted),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: Padding(
+//         padding: EdgeInsets.all(padding ?? 5),
+//         child: Icon(
+//           icon,
+//           color: inverted
+//               ? Theme.of(context).accentColor
+//               : Theme.of(context).textColor,
+//           size: size ?? 20,
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class ActionIconButton extends StatelessWidget {
   const ActionIconButton({
@@ -117,46 +100,17 @@ class ActionIconButton extends StatelessWidget {
     required this.inverted,
     required this.onTap,
     super.key,
-    this.size,
-    this.padding,
-  });
-  final IconData icon;
-  final bool inverted;
-  final double? size;
-  final double? padding;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.all(padding ?? 5),
-        child: Icon(
-          icon,
-          color: inverted
-              ? Theme.of(context).accentColor
-              : Theme.of(context).textColor,
-          size: size ?? 20,
-        ),
-      ),
-    );
-  }
-}
-
-class LabeledIconButton extends StatelessWidget {
-  const LabeledIconButton({
-    required this.icon,
-    required this.inverted,
-    required this.onTap,
-    super.key,
     this.label,
+    this.padding,
     this.size,
+    this.background,
   });
   final IconData icon;
   final bool inverted;
   final String? label;
+  final bool? background;
   final double? size;
+  final double? padding;
   final void Function()? onTap;
 
   @override
@@ -171,25 +125,39 @@ class LabeledIconButton extends StatelessWidget {
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          onPressed: onTap,
-          style: style,
-          icon: Icon(
-            icon,
-            color: inverted
-                ? Theme.of(context).inverseTextColor
-                : Theme.of(context).textColor,
-            size: size ?? 15,
-          ),
-        ),
-        if (label != null) const SizedBox(height: 5),
-        if (label != null) PrimaryText(text: label!),
-      ],
-    );
+    return background != null && background! == false
+        ? GestureDetector(
+            onTap: onTap,
+            child: Padding(
+              padding: EdgeInsets.all(padding ?? 5),
+              child: Icon(
+                icon,
+                color: inverted
+                    ? Theme.of(context).accentColor
+                    : Theme.of(context).textColor,
+                size: size ?? 20,
+              ),
+            ),
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: onTap,
+                style: style,
+                icon: Icon(
+                  icon,
+                  color: inverted
+                      ? Theme.of(context).inverseTextColor
+                      : Theme.of(context).textColor,
+                  size: size ?? 15,
+                ),
+              ),
+              if (label != null) const SizedBox(height: 5),
+              if (label != null) PrimaryText(text: label!),
+            ],
+          );
   }
 }
 

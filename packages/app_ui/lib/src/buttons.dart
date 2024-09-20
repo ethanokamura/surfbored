@@ -104,11 +104,13 @@ class ActionIconButton extends StatelessWidget {
     this.padding,
     this.size,
     this.background,
+    this.onSurface,
   });
   final IconData icon;
   final bool inverted;
   final String? label;
   final bool? background;
+  final bool? onSurface;
   final double? size;
   final double? padding;
   final void Function()? onTap;
@@ -119,9 +121,11 @@ class ActionIconButton extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       elevation: 0,
       shadowColor: Colors.black,
-      backgroundColor: inverted
-          ? Theme.of(context).accentColor
-          : Theme.of(context).colorScheme.surface,
+      backgroundColor: onSurface != null && onSurface!
+          ? Theme.of(context).colorScheme.primary
+          : inverted
+              ? Theme.of(context).accentColor
+              : Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
 

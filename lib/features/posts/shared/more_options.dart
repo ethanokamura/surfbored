@@ -16,12 +16,14 @@ class MoreOptions extends StatelessWidget {
     required this.isOwner,
     required this.onDelete,
     required this.onEdit,
+    this.onSurface,
     super.key,
   });
 
   final String postID;
   final String userID;
   final bool isOwner;
+  final bool? onSurface;
   final void Function() onDelete;
   final void Function() onEdit;
 
@@ -31,7 +33,9 @@ class MoreOptions extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       elevation: 0,
       shadowColor: Colors.black,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: onSurface != null && onSurface!
+          ? Theme.of(context).colorScheme.primary
+          : Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
     return PopupMenuButton<Options>(

@@ -17,13 +17,15 @@ class PostCard extends StatelessWidget {
         vertical: null,
         child: Row(
           children: [
-            SquareImage(
-              borderRadius: defaultBorderRadius,
-              photoURL: post.photoURL,
-              height: 64,
-              width: 64,
-            ),
-            const HorizontalSpacer(),
+            if (post.photoURL != null && post.photoURL! != '')
+              SquareImage(
+                borderRadius: defaultBorderRadius,
+                photoURL: post.photoURL,
+                height: 64,
+                width: 64,
+              ),
+            if (post.photoURL != null && post.photoURL! != '')
+              const HorizontalSpacer(),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

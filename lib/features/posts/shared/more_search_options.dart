@@ -11,11 +11,13 @@ class MoreSearchOptions extends StatelessWidget {
   const MoreSearchOptions({
     required this.postID,
     required this.userID,
+    this.onSurface,
     super.key,
   });
 
   final String postID;
   final String userID;
+  final bool? onSurface;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,9 @@ class MoreSearchOptions extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       elevation: 0,
       shadowColor: Colors.black,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: onSurface != null && onSurface!
+          ? Theme.of(context).colorScheme.primary
+          : Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
     return PopupMenuButton<Options>(

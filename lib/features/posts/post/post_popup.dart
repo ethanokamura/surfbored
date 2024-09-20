@@ -28,21 +28,23 @@ Future<dynamic> postPopUp(
       children: [
         Stack(
           children: [
-            ImageWidget(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(defaultRadius),
-                topRight: Radius.circular(defaultRadius),
+            if (post.photoURL != null && post.photoURL! != '')
+              ImageWidget(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(defaultRadius),
+                  topRight: Radius.circular(defaultRadius),
+                ),
+                photoURL: post.photoURL,
+                // height: 256,
+                width: double.infinity,
               ),
-              photoURL: post.photoURL,
-              // height: 256,
-              width: double.infinity,
-            ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   MoreOptions(
+                    onSurface: !(post.photoURL != null && post.photoURL! != ''),
                     postID: post.id,
                     userID: userID,
                     isOwner: isOwner,
@@ -71,6 +73,7 @@ Future<dynamic> postPopUp(
                     },
                   ),
                   ActionIconButton(
+                    onSurface: !(post.photoURL != null && post.photoURL! != ''),
                     icon: FontAwesomeIcons.xmark,
                     size: 20,
                     inverted: false,
@@ -82,10 +85,12 @@ Future<dynamic> postPopUp(
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
             left: defaultPadding,
             right: defaultPadding,
-            top: defaultPadding,
+            top: post.photoURL != null && post.photoURL! != ''
+                ? defaultPadding
+                : 0,
             bottom: 60,
           ),
           child: Column(

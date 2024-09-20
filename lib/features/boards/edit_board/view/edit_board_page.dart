@@ -125,6 +125,18 @@ class EditView extends StatelessWidget {
   }
 }
 
+// dynamic input length maximum
+int maxInputLength(String field) {
+  switch (field) {
+    case 'title':
+      return 40;
+    case 'description':
+      return 150;
+    default:
+      return 50;
+  }
+}
+
 class EditField extends StatelessWidget {
   const EditField({
     required this.field,
@@ -144,7 +156,6 @@ class EditField extends StatelessWidget {
         final newValue = await editTextField(
           context,
           field,
-          30,
           TextEditingController(),
         );
         if (newValue != null && context.mounted) {

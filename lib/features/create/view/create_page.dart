@@ -165,7 +165,7 @@ class _CreatePostState extends State<CreatePost> {
     }
 
     // edit
-    await editTextField(context, field, maxInputLength(field), textController);
+    await editTextField(context, field, textController);
 
     // update field
     if (textController.text.trim().isNotEmpty) {

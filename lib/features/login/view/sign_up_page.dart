@@ -55,7 +55,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 final newValue = await editTextField(
                   context,
                   'Username',
-                  30,
                   TextEditingController(),
                 );
                 if (newValue != null &&
@@ -78,7 +77,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 final newValue = await editTextField(
                   context,
                   'Name',
-                  30,
                   TextEditingController(),
                 );
                 if (newValue != null &&
@@ -96,7 +94,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 final newValue = await editTextField(
                   context,
                   'Bio',
-                  150,
                   TextEditingController(),
                 );
                 if (newValue != null &&

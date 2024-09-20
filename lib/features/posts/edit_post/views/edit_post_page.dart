@@ -118,7 +118,6 @@ class EditField extends StatelessWidget {
         final newValue = await editTextField(
           context,
           field,
-          30,
           TextEditingController(),
         );
         if (newValue != null && context.mounted) {

@@ -61,7 +61,6 @@ class EditProfile extends StatelessWidget {
               final newValue = await editTextField(
                 context,
                 'username',
-                20,
                 TextEditingController(),
               );
               if (newValue != null && context.mounted) {
@@ -79,7 +78,6 @@ class EditProfile extends StatelessWidget {
               final newValue = await editTextField(
                 context,
                 'name',
-                30,
                 TextEditingController(),
               );
               if (newValue != null && context.mounted) {
@@ -95,7 +93,6 @@ class EditProfile extends StatelessWidget {
               final newValue = await editTextField(
                 context,
                 'bio',
-                30,
                 TextEditingController(),
               );
               if (newValue != null && context.mounted) {

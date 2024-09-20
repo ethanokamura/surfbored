@@ -17,7 +17,6 @@ int maxInputLength(String field) {
 Future<String?> editTextField(
   BuildContext context,
   String field,
-  int maxLength,
   TextEditingController textController,
 ) async {
   return showDialog<String>(
@@ -29,7 +28,7 @@ Future<String?> editTextField(
         cursorColor: Theme.of(context).subtextColor,
         controller: textController,
         autofocus: true,
-        maxLength: maxLength,
+        maxLength: maxInputLength(field),
         maxLines: null,
         decoration: InputDecoration(
           hintText: 'Enter new $field',

@@ -554,7 +554,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
           children: [
             ActionIconButton(
               icon: Icons.camera_alt_outlined,
-              label: 'Camera',
+              label: AppStrings.camera,
               inverted: true,
               size: 40,
               onTap: () {
@@ -565,7 +565,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
             const SizedBox(width: 40),
             ActionIconButton(
               icon: Icons.photo_library_outlined,
-              label: 'Library',
+              label: AppStrings.photoLibrary,
               inverted: true,
               size: 40,
               onTap: () {

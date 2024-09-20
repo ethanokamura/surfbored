@@ -71,6 +71,7 @@ class AppStrings {
   static const String next = 'Next';
   static const String cancel = 'Cancel';
   static const String save = 'Save';
+  static const String enterField = 'Enter new';
   static const String darkMode = 'Dark Mode';
   static const String lightMode = 'Light Mode';
   static const String returnHome = 'Return Home';

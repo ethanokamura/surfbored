@@ -246,6 +246,7 @@ class ProfileInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (bio.isNotEmpty) About(bio: bio),
+          if (bio.isNotEmpty && url.isNotEmpty) const VerticalSpacer(),
           if (url.isNotEmpty) WebsiteLink(url: url),
         ],
       ),

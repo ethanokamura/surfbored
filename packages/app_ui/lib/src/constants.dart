@@ -119,6 +119,7 @@ class AppStrings {
   static const String toggleBlock = 'Block/Unblock';
   static const String interests = 'interests';
   static const String aboutMe = 'about me';
+  static const String website = 'website';
   static const String joined = 'joined';
   static const String blockedUser = 'User Not Avaliable.';
 

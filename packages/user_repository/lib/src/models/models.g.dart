@@ -12,7 +12,12 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       username: json['username'] as String? ?? '',
       name: json['name'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
+      website: json['website'] as String? ?? '',
       friends: (json['friends'] as num?)?.toInt() ?? 0,
+      blockedUsers: (json['blockedUsers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       posts:
           (json['posts'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
@@ -42,7 +47,9 @@ Map<String, dynamic> _$UserToJson(User instance) {
 
   writeNotNull('photoURL', instance.photoURL);
   val['bio'] = instance.bio;
+  val['website'] = instance.website;
   val['friends'] = instance.friends;
+  val['blockedUsers'] = instance.blockedUsers;
   val['posts'] = instance.posts;
   val['boards'] = instance.boards;
   val['tags'] = instance.tags;

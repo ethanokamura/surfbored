@@ -101,6 +101,23 @@ class EditProfile extends StatelessWidget {
             },
           ),
           const VerticalSpacer(),
+          CustomTextBox(
+            text: user.website,
+            label: 'website',
+            onPressed: () async {
+              final newValue = await editTextField(
+                context,
+                'website',
+                TextEditingController(),
+              );
+              if (newValue != null && context.mounted) {
+                await context
+                    .read<ProfileCubit>()
+                    .editField('website', newValue);
+              }
+            },
+          ),
+          const VerticalSpacer(),
           EditTagsBox(
             tags: user.tags,
             updateTags: (newTags) =>

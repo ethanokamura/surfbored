@@ -2,6 +2,7 @@ import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -60,39 +61,6 @@ class ActionButton extends StatelessWidget {
     );
   }
 }
-
-// class ActionIconButton extends StatelessWidget {
-//   const ActionIconButton({
-//     required this.icon,
-//     required this.inverted,
-//     required this.onTap,
-//     super.key,
-//     this.size,
-//     this.padding,
-//   });
-//   final IconData icon;
-//   final bool inverted;
-//   final double? size;
-//   final double? padding;
-//   final void Function()? onTap;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: Padding(
-//         padding: EdgeInsets.all(padding ?? 5),
-//         child: Icon(
-//           icon,
-//           color: inverted
-//               ? Theme.of(context).accentColor
-//               : Theme.of(context).textColor,
-//           size: size ?? 20,
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class ActionIconButton extends StatelessWidget {
   const ActionIconButton({
@@ -226,6 +194,42 @@ class ToggleButton extends StatelessWidget {
               fontSize: 14,
             ),
         ],
+      ),
+    );
+  }
+}
+
+class WebLink extends StatelessWidget {
+  const WebLink({required this.url, super.key});
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    String parsedURL(String url) {
+      var newURL = url;
+      final uri = Uri.tryParse(url);
+      if (uri == null || !uri.hasScheme) {
+        newURL = 'https://$url';
+      }
+      return newURL;
+    }
+
+    Future<void> launchParsedUrl(String url) async {
+      final uri = Uri.parse(parsedURL(url));
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        throw Exception('Could not launch $url');
+      }
+    }
+
+    return GestureDetector(
+      onTap: () => launchParsedUrl(url),
+      child: Text(
+        url,
+        style: TextStyle(
+          color: Theme.of(context).accentColor,
+        ),
       ),
     );
   }

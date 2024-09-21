@@ -37,6 +37,7 @@ class ProfileSettingsPage extends StatelessWidget {
           children: [
             ActionButton(
               text:
+                  // ignore: lines_longer_than_80_chars
                   '${AppStrings.theme}: ${isDarkMode ? AppStrings.darkMode : AppStrings.lightMode}',
               inverted: false,
               onTap: () => context.read<ThemeCubit>().toggleTheme(),

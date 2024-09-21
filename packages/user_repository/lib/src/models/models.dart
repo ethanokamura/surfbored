@@ -12,6 +12,7 @@ class User extends Equatable {
     this.username = '',
     this.name = '',
     this.bio = '',
+    this.website = '',
     this.friends = 0,
     this.blockedUsers = const [],
     this.posts = const [],
@@ -40,6 +41,7 @@ class User extends Equatable {
       username: data['username'] as String? ?? '',
       name: data['name'] as String? ?? '',
       bio: data['bio'] as String? ?? '',
+      website: data['website'] as String? ?? '',
       friends: data['friends'] as int? ?? 0,
       blockedUsers: (data['blockedUsers'] as List<dynamic>)
           .map((user) => user as String)
@@ -67,6 +69,7 @@ class User extends Equatable {
       username: json['username'] as String? ?? '',
       name: json['name'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
+      website: json['website'] as String? ?? '',
       friends: json['friends'] as int? ?? 0,
       lastSignInAt:
           DateTime.fromMillisecondsSinceEpoch(json['lastSignInAt'] as int),
@@ -87,6 +90,7 @@ class User extends Equatable {
   final String name;
   final String? photoURL;
   final String bio;
+  final String website;
   final int friends;
   final List<String> blockedUsers;
   final List<String> posts;
@@ -106,6 +110,7 @@ class User extends Equatable {
         name,
         photoURL,
         bio,
+        website,
         friends,
         blockedUsers,
         posts,

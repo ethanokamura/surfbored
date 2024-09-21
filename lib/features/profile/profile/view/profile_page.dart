@@ -84,7 +84,8 @@ class ProfileBuilder extends StatelessWidget {
                           const VerticalSpacer(),
                           ProfileHeader(user: user, isCurrent: isCurrent),
                           const VerticalSpacer(),
-                          About(bio: user.bio),
+                          if (user.bio.isNotEmpty || user.website.isNotEmpty)
+                            ProfileInfo(bio: user.bio, url: user.website),
                           const VerticalSpacer(),
                           FriendsBlock(
                             userID: user.uid,
@@ -92,7 +93,8 @@ class ProfileBuilder extends StatelessWidget {
                             isCurrent: isCurrent,
                           ),
                           const VerticalSpacer(),
-                          InterestsList(interests: user.tags),
+                          if (user.tags.isNotEmpty)
+                            InterestsList(interests: user.tags),
                         ],
                       ),
                     ),
@@ -204,9 +206,14 @@ class ProfileHeader extends StatelessWidget {
   }
 }
 
-class About extends StatelessWidget {
-  const About({required this.bio, super.key});
+class ProfileInfo extends StatelessWidget {
+  const ProfileInfo({
+    required this.bio,
+    required this.url,
+    super.key,
+  });
   final String bio;
+  final String url;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -216,10 +223,40 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SecondaryText(text: AppStrings.aboutMe),
-          PrimaryText(text: bio),
+          if (bio.isNotEmpty) About(bio: bio),
+          if (url.isNotEmpty) WebsiteLink(url: url),
         ],
       ),
+    );
+  }
+}
+
+class About extends StatelessWidget {
+  const About({required this.bio, super.key});
+  final String bio;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SecondaryText(text: AppStrings.aboutMe),
+        PrimaryText(text: bio),
+      ],
+    );
+  }
+}
+
+class WebsiteLink extends StatelessWidget {
+  const WebsiteLink({required this.url, super.key});
+  final String url;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SecondaryText(text: AppStrings.website),
+        WebLink(url: url),
+      ],
     );
   }
 }

@@ -227,8 +227,10 @@ class WebLink extends StatelessWidget {
       onTap: () => launchParsedUrl(url),
       child: Text(
         url,
+        maxLines: 1,
         style: TextStyle(
           color: Theme.of(context).accentColor,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

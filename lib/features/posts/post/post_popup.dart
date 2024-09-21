@@ -97,10 +97,13 @@ Future<dynamic> postPopUp(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TitleText(text: post.title),
-              DescriptionText(text: post.description),
-              const VerticalSpacer(),
-              TagList(tags: post.tags),
-              const VerticalSpacer(),
+              if (post.description.isNotEmpty)
+                DescriptionText(text: post.description),
+              if (post.description.isNotEmpty) const VerticalSpacer(),
+              if (post.website.isNotEmpty) WebLink(url: post.website),
+              if (post.website.isNotEmpty) const VerticalSpacer(),
+              if (post.tags.isNotEmpty) TagList(tags: post.tags),
+              if (post.tags.isNotEmpty) const VerticalSpacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -13,6 +13,7 @@ class Post extends Equatable {
     this.tags = const [],
     this.photoURL = '',
     this.description = '',
+    this.website = '',
     this.createdAt,
   });
 
@@ -27,6 +28,7 @@ class Post extends Equatable {
       uid: data['uid'] as String? ?? '',
       title: data['title'] as String? ?? '',
       description: data['description'] as String? ?? '',
+      website: data['website'] as String? ?? '',
       photoURL: data['photoURL'] as String? ?? '',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       likes: data['likes'] as int? ?? 0,
@@ -42,6 +44,7 @@ class Post extends Equatable {
       uid: json['uid'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
+      website: json['website'] as String? ?? '',
       photoURL: json['photoURL'] as String? ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
       likes: json['likes'] as int? ?? 0,
@@ -56,6 +59,7 @@ class Post extends Equatable {
   final String uid;
   final String title;
   final String description;
+  final String website;
   final int likes;
   final List<String> tags;
   @timestamp
@@ -73,6 +77,7 @@ class Post extends Equatable {
         photoURL,
         uid,
         description,
+        website,
         likes,
         tags,
         createdAt,

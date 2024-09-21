@@ -58,6 +58,7 @@ class _CreatePostState extends State<CreatePost> {
 
   String titleText = 'title';
   String descriptionText = 'description';
+  String websiteText = 'website';
   String tagsText = 'tags';
   List<String> tags = [];
   String docID = '';
@@ -113,8 +114,16 @@ class _CreatePostState extends State<CreatePost> {
                 text: descriptionText,
                 onPressed: () => editField('description'),
               ),
-
               const VerticalSpacer(),
+
+              // edit website
+              if (widget.type == 'post')
+                CustomTextBox(
+                  label: 'website',
+                  text: websiteText,
+                  onPressed: () => editField('website'),
+                ),
+              if (widget.type == 'post') const VerticalSpacer(),
 
               EditTagsBox(
                 tags: tags,
@@ -122,7 +131,6 @@ class _CreatePostState extends State<CreatePost> {
                   tags = newTags;
                 }),
               ),
-
               const VerticalSpacer(),
 
               // submit
@@ -134,6 +142,7 @@ class _CreatePostState extends State<CreatePost> {
                         userID: context.read<UserRepository>().user.uid,
                         title: titleText,
                         description: descriptionText,
+                        website: websiteText,
                         tags: tags,
                         imageFile: imageFile,
                       );
@@ -165,6 +174,8 @@ class _CreatePostState extends State<CreatePost> {
       textController.text = titleText;
     } else if (field == 'description' && field != descriptionText) {
       textController.text = descriptionText;
+    } else if (field == 'website' && field != websiteText) {
+      textController.text = websiteText;
     }
 
     // edit
@@ -177,6 +188,8 @@ class _CreatePostState extends State<CreatePost> {
           titleText = textController.text;
         } else if (field == 'description') {
           descriptionText = textController.text;
+        } else if (field == 'website') {
+          websiteText = textController.text;
         }
       });
       textController.clear();

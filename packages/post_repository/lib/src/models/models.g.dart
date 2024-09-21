@@ -16,6 +16,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
               const [],
       photoURL: json['photoURL'] as String? ?? '',
       description: json['description'] as String? ?? '',
+      website: json['website'] as String? ?? '',
       createdAt: timestamp.fromJson(json['createdAt']),
     );
 
@@ -34,6 +35,7 @@ Map<String, dynamic> _$PostToJson(Post instance) {
   val['uid'] = instance.uid;
   val['title'] = instance.title;
   val['description'] = instance.description;
+  val['website'] = instance.website;
   val['likes'] = instance.likes;
   val['tags'] = instance.tags;
   writeNotNull('createdAt', timestamp.toJson(instance.createdAt));

@@ -36,10 +36,14 @@ class PostView extends StatelessWidget {
               Header(post: post, userID: userID, postCubit: postCubit),
             if (post.photoURL != null && post.photoURL! != '')
               const VerticalSpacer(),
-            PostDetails(title: post.title, description: post.description),
-            const VerticalSpacer(),
-            TagList(tags: post.tags),
-            const VerticalSpacer(),
+            TitleText(text: post.title),
+            if (post.description.isNotEmpty)
+              DescriptionText(text: post.description),
+            if (post.description.isNotEmpty) const VerticalSpacer(),
+            if (post.website.isNotEmpty) WebLink(url: post.website),
+            if (post.website.isNotEmpty) const VerticalSpacer(),
+            if (post.tags.isNotEmpty) TagList(tags: post.tags),
+            if (post.tags.isNotEmpty) const VerticalSpacer(),
             Footer(post: post, userID: userID),
           ],
         ),

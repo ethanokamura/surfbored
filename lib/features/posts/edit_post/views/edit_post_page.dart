@@ -80,13 +80,19 @@ class EditView extends StatelessWidget {
           EditField(
             field: 'title',
             value: post.title,
-            boardID: post.id,
+            postID: post.id,
           ),
           const VerticalSpacer(),
           EditField(
             field: 'description',
             value: post.description,
-            boardID: post.id,
+            postID: post.id,
+          ),
+          const VerticalSpacer(),
+          EditField(
+            field: 'website',
+            value: post.website,
+            postID: post.id,
           ),
           const VerticalSpacer(),
           EditTagsBox(
@@ -103,12 +109,12 @@ class EditField extends StatelessWidget {
   const EditField({
     required this.field,
     required this.value,
-    required this.boardID,
+    required this.postID,
     super.key,
   });
   final String field;
   final String value;
-  final String boardID;
+  final String postID;
   @override
   Widget build(BuildContext context) {
     return CustomTextBox(
@@ -121,7 +127,7 @@ class EditField extends StatelessWidget {
           TextEditingController(),
         );
         if (newValue != null && context.mounted) {
-          await context.read<PostCubit>().editField(boardID, field, newValue);
+          await context.read<PostCubit>().editField(postID, field, newValue);
         }
       },
     );

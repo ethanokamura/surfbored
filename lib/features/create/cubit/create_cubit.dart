@@ -24,6 +24,7 @@ class CreateCubit extends Cubit<CreateState> {
     required String userID,
     required String title,
     required String description,
+    required String website,
     required List<String> tags,
     required File? imageFile,
   }) async {
@@ -32,6 +33,7 @@ class CreateCubit extends Cubit<CreateState> {
         userID: userID,
         title: title,
         description: description,
+        website: website,
         tags: tags,
         imageFile: imageFile,
       );
@@ -50,6 +52,7 @@ class CreateCubit extends Cubit<CreateState> {
     required String userID,
     required String title,
     required String description,
+    required String website,
     required List<String> tags,
     required File? imageFile,
   }) async {
@@ -59,6 +62,7 @@ class CreateCubit extends Cubit<CreateState> {
         Post(
           title: title,
           description: description,
+          website: website,
           uid: 'userId', // Replace with actual user ID
           tags: tags,
         ),

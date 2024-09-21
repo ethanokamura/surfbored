@@ -23,19 +23,11 @@ class MoreProfileOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = ElevatedButton.styleFrom(
-      padding: const EdgeInsets.all(8),
       elevation: 0,
-      shadowColor: Colors.black,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
     return PopupMenuButton<Options>(
       style: style,
       itemBuilder: (BuildContext context) => [
-        // share
-        // block
-        // settings
-
         // share
         const PopupMenuItem(
           value: Options.share,

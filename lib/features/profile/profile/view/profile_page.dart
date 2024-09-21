@@ -61,7 +61,32 @@ class ProfileBuilder extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: CustomPageView(
-        top: false,
+        top: true,
+        appBar: AppBar(
+          title: AppBarText(text: user.username),
+          actions: [
+            MoreProfileOptions(
+              isCurrent: isCurrent,
+              onEdit: () => Navigator.push(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (context) {
+                    return BlocProvider.value(
+                      value: context.read<ProfileCubit>(),
+                      child: ProfileSettingsPage(
+                        userID: user.uid,
+                        profileCubit: context.read<ProfileCubit>(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              onBlock: () =>
+                  context.read<UserRepository>().toggleBlockUser(user.uid),
+              onShare: () {},
+            ),
+          ],
+        ),
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
@@ -76,12 +101,12 @@ class ProfileBuilder extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ProfileTopBar(
-                            user: user,
-                            isCurrent: isCurrent,
-                            profileCubit: context.read<ProfileCubit>(),
-                          ),
-                          const VerticalSpacer(),
+                          // ProfileTopBar(
+                          //   user: user,
+                          //   isCurrent: isCurrent,
+                          //   profileCubit: context.read<ProfileCubit>(),
+                          // ),
+                          // const VerticalSpacer(),
                           ProfileHeader(user: user, isCurrent: isCurrent),
                           const VerticalSpacer(),
                           if (user.bio.isNotEmpty || user.website.isNotEmpty)

@@ -12,9 +12,6 @@ class PostCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => postPopUp(context, post),
       child: CustomContainer(
-        inverted: false,
-        horizontal: null,
-        vertical: null,
         child: Row(
           children: [
             if (post.photoURL != null && post.photoURL! != '')

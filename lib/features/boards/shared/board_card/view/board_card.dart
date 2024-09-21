@@ -26,9 +26,6 @@ class BoardCard extends StatelessWidget {
         );
       },
       child: CustomContainer(
-        inverted: false,
-        horizontal: null,
-        vertical: null,
         child: Row(
           children: [
             SquareImage(

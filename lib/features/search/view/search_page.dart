@@ -80,8 +80,6 @@ class _SearchPageState extends State<SearchPage> {
       body: Column(
         children: <Widget>[
           CustomContainer(
-            inverted: false,
-            horizontal: null,
             vertical: 0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

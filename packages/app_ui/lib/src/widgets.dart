@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 
 class CustomContainer extends StatelessWidget {
   const CustomContainer({
-    required this.inverted,
-    required this.horizontal,
-    required this.vertical,
     required this.child,
+    this.inverted,
+    this.horizontal,
+    this.vertical,
     super.key,
   });
 
-  final bool inverted;
+  final bool? inverted;
   final double? horizontal;
   final double? vertical;
   final Widget child;
@@ -21,7 +21,7 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: inverted == true
+      color: inverted != null && inverted!
           ? Theme.of(context).accentColor
           : Theme.of(context).colorScheme.surface,
       shadowColor: Theme.of(context).shadowColor,
@@ -52,8 +52,6 @@ class CustomInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      inverted: false,
-      horizontal: null,
       vertical: 0,
       child: Row(
         children: [
@@ -98,8 +96,6 @@ class CustomTextBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       inverted: false,
-      horizontal: null,
-      vertical: null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,

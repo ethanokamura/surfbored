@@ -12,9 +12,6 @@ class PostSearchCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => postSearchPopUp(context, post),
       child: CustomContainer(
-        inverted: false,
-        horizontal: null,
-        vertical: null,
         child: Row(
           children: [
             if (post.photoURL != null && post.photoURL! != '')

@@ -23,9 +23,6 @@ class PostView extends StatelessWidget {
     final userID = context.read<UserRepository>().user.uid;
     return Flexible(
       child: CustomContainer(
-        inverted: false,
-        horizontal: null,
-        vertical: null,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -17,9 +17,6 @@ class FriendsBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      inverted: false,
-      horizontal: null,
-      vertical: null,
       child: BlocProvider(
         create: (context) =>
             FriendCubit(context.read<UserRepository>())..fetchData(userID),

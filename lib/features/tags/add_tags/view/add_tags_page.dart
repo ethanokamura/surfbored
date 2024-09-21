@@ -52,9 +52,6 @@ class _AddTagsPageState extends State<AddTagsPage> {
           child: Column(
             children: [
               CustomContainer(
-                inverted: false,
-                horizontal: null,
-                vertical: null,
                 child: Row(
                   children: [
                     Flexible(

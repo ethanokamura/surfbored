@@ -32,9 +32,6 @@ class SelectBoardCard extends StatelessWidget {
                   .toggleSelection(board.id, postID, isSelected: isSelected);
             },
             child: CustomContainer(
-              inverted: false,
-              horizontal: null,
-              vertical: null,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

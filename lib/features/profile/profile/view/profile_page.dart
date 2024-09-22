@@ -6,7 +6,6 @@ import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/friends/friends.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
-import 'package:surfbored/features/profile/profile/view/more_profile_options.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
 import 'package:user_repository/user_repository.dart';
 

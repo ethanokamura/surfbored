@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:app_core/app_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:surfbored/app/app_bloc_observer.dart';
 
@@ -40,8 +41,8 @@ Future<void> bootstrap({
       // await Assets.covers.preload();
 
       final app = await builder();
-
-      runApp(app);
+      await SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp]).then((value) => runApp(app));
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );

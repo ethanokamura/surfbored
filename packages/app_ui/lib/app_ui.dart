@@ -10,6 +10,7 @@ export 'src/colors.dart';
 export 'src/constants.dart';
 export 'src/extensions.dart';
 export 'src/images.dart';
+export 'src/more_options.dart';
 export 'src/pop_ups.dart';
 export 'src/text.dart';
 export 'src/theme.dart';

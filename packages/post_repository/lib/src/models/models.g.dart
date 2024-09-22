@@ -11,6 +11,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       title: json['title'] as String,
       id: json['id'] as String? ?? '',
       likes: (json['likes'] as num?)?.toInt() ?? 0,
+      comments: (json['comments'] as num?)?.toInt() ?? 0,
       tags:
           (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
@@ -37,6 +38,7 @@ Map<String, dynamic> _$PostToJson(Post instance) {
   val['description'] = instance.description;
   val['website'] = instance.website;
   val['likes'] = instance.likes;
+  val['comments'] = instance.comments;
   val['tags'] = instance.tags;
   writeNotNull('createdAt', timestamp.toJson(instance.createdAt));
   return val;

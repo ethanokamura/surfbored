@@ -17,6 +17,8 @@ dependencies:
     path: packages/app_ui
   board_repository:
     path: packages/board_repository
+  comment_repository:
+    path: packages/comment_repository
   flow_builder: ^0.1.0
   flutter:
     sdk: flutter

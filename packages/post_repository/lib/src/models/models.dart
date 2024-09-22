@@ -10,6 +10,7 @@ class Post extends Equatable {
     required this.title,
     this.id = '',
     this.likes = 0,
+    this.comments = 0,
     this.tags = const [],
     this.photoURL = '',
     this.description = '',
@@ -32,6 +33,7 @@ class Post extends Equatable {
       photoURL: data['photoURL'] as String? ?? '',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       likes: data['likes'] as int? ?? 0,
+      comments: data['comments'] as int? ?? 0,
       tags:
           (data['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
     );
@@ -48,6 +50,7 @@ class Post extends Equatable {
       photoURL: json['photoURL'] as String? ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
       likes: json['likes'] as int? ?? 0,
+      comments: json['comments'] as int? ?? 0,
       tags:
           (json['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
     );
@@ -61,6 +64,7 @@ class Post extends Equatable {
   final String description;
   final String website;
   final int likes;
+  final int comments;
   final List<String> tags;
   @timestamp
   final DateTime? createdAt;
@@ -79,6 +83,7 @@ class Post extends Equatable {
         description,
         website,
         likes,
+        comments,
         tags,
         createdAt,
       ];
@@ -89,5 +94,6 @@ class Post extends Equatable {
 
 extension PostExtensions on Post {
   bool get isEmpty => this == Post.empty;
-  int totalLikes() => likes;
+  int get totalLikes => likes;
+  int get totalComments => comments;
 }

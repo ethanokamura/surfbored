@@ -62,7 +62,11 @@ class MoreOptions extends StatelessWidget {
       style: defaultStyle(context, onSurface: onSurface),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
-            context, Options.manage, AppIcons.boards, AppStrings.addOrRemove),
+          context,
+          Options.manage,
+          AppIcons.boards,
+          AppStrings.addOrRemove,
+        ),
         _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
         if (isOwner) ...[
           _menuItem(context, Options.edit, AppIcons.edit, AppStrings.edit),
@@ -105,7 +109,11 @@ class MoreSearchOptions extends StatelessWidget {
       style: defaultStyle(context, onSurface: onSurface),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
-            context, Options.manage, AppIcons.boards, AppStrings.addOrRemove),
+          context,
+          Options.manage,
+          AppIcons.boards,
+          AppStrings.addOrRemove,
+        ),
         _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
       ]),
       onSelected: (value) {

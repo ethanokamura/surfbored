@@ -116,31 +116,23 @@ class CommentRepository {
   }) async {
     try {
       if (liked) {
-        try {
-          await _firestore.updateCommentDoc(
-            postID,
-            commentID,
-            {
-              'likes': FieldValue.increment(1),
-              'likedBy': FieldValue.arrayUnion([userID]),
-            },
-          );
-        } catch (e) {
-          print(e);
-        }
+        await _firestore.updateCommentDoc(
+          postID,
+          commentID,
+          {
+            'likes': FieldValue.increment(1),
+            'likedBy': FieldValue.arrayUnion([userID]),
+          },
+        );
       } else {
-        try {
-          await _firestore.updateCommentDoc(
-            postID,
-            commentID,
-            {
-              'likes': FieldValue.increment(-1),
-              'likedBy': FieldValue.arrayRemove([userID]),
-            },
-          );
-        } catch (e) {
-          print(e);
-        }
+        await _firestore.updateCommentDoc(
+          postID,
+          commentID,
+          {
+            'likes': FieldValue.increment(-1),
+            'likedBy': FieldValue.arrayRemove([userID]),
+          },
+        );
       }
     } on FirebaseException {
       throw CommentFailure.fromUpdateComment();

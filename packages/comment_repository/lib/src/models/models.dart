@@ -13,7 +13,6 @@ class Comment extends Equatable {
     this.id = '',
     this.edited = false,
     this.likes = 0,
-    this.replies = const [],
     this.createdAt,
   });
 
@@ -33,9 +32,6 @@ class Comment extends Equatable {
       edited: data['edited'] as bool? ?? false,
       createdAt: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
       likes: data['likes'] as int? ?? 0,
-      replies: (data['replies'] as List<dynamic>)
-          .map((reply) => reply as String)
-          .toList(),
     );
   }
 
@@ -47,7 +43,6 @@ class Comment extends Equatable {
   final String message;
   final bool edited;
   final int likes;
-  final List<String> replies;
   @timestamp
   final DateTime? createdAt;
 
@@ -67,7 +62,6 @@ class Comment extends Equatable {
         message,
         edited,
         likes,
-        replies,
         createdAt,
       ];
 

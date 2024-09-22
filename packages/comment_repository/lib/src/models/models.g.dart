@@ -14,10 +14,6 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       id: json['id'] as String? ?? '',
       edited: json['edited'] as bool? ?? false,
       likes: (json['likes'] as num?)?.toInt() ?? 0,
-      replies: (json['replies'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
       createdAt: timestamp.fromJson(json['createdAt']),
     );
 
@@ -30,7 +26,6 @@ Map<String, dynamic> _$CommentToJson(Comment instance) {
     'message': instance.message,
     'edited': instance.edited,
     'likes': instance.likes,
-    'replies': instance.replies,
   };
 
   void writeNotNull(String key, dynamic value) {

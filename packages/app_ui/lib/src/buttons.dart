@@ -158,25 +158,30 @@ class ToggleButton extends StatelessWidget {
     super.key,
     this.icon,
     this.text,
+    this.background,
   });
 
-  final Icon? icon;
   final bool onSurface;
+  final bool? background;
+  final Icon? icon;
   final String? text;
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     final style = ElevatedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 10,
-      ),
+      padding: background != null && background! == false
+          ? EdgeInsets.zero
+          : const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 10,
+            ),
       elevation: 0,
-      shadowColor: Colors.black,
-      backgroundColor: onSurface
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.surface,
+      backgroundColor: background != null && background! == false
+          ? Colors.transparent
+          : onSurface
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
     );
     return ElevatedButton(

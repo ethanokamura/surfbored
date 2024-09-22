@@ -2,10 +2,10 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/edit_post/edit_post.dart';
 import 'package:surfbored/features/posts/likes/likes.dart';
-import 'package:surfbored/features/posts/shared/more_options.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
@@ -76,33 +76,10 @@ class ImageHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               MoreOptions(
-                postID: post.id,
-                userID: userID,
                 isOwner: isOwner,
-                onEdit: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: postCubit,
-                          child: EditPostPage(postID: post.id),
-                        );
-                      },
-                    ),
-                  );
-                },
-                onDelete: () async {
-                  if (Navigator.canPop(context)) Navigator.pop(context);
-                  await postCubit.deletePost(
-                    post.uid,
-                    post.id,
-                    post.photoURL.toString(),
-                  );
-                  if (context.mounted && Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  }
-                },
+                onManage: () => _manage(context, post.id, userID),
+                onEdit: () => _onEdit(context, post.id, postCubit),
+                onDelete: () => _onDelete(context, post, postCubit),
               ),
             ],
           ),
@@ -129,34 +106,10 @@ class Header extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         MoreOptions(
-          onSurface: true,
-          postID: post.id,
-          userID: userID,
           isOwner: isOwner,
-          onEdit: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (context) {
-                  return BlocProvider.value(
-                    value: postCubit,
-                    child: EditPostPage(postID: post.id),
-                  );
-                },
-              ),
-            );
-          },
-          onDelete: () async {
-            if (Navigator.canPop(context)) Navigator.pop(context);
-            await postCubit.deletePost(
-              post.uid,
-              post.id,
-              post.photoURL.toString(),
-            );
-            if (context.mounted && Navigator.canPop(context)) {
-              Navigator.pop(context);
-            }
-          },
+          onManage: () => _manage(context, post.id, userID),
+          onEdit: () => _onEdit(context, post.id, postCubit),
+          onDelete: () => _onDelete(context, post, postCubit),
         ),
       ],
     );
@@ -197,5 +150,53 @@ class Footer extends StatelessWidget {
         LikeButton(post: post, userID: userID),
       ],
     );
+  }
+}
+
+void _manage(
+  BuildContext context,
+  String postID,
+  String userID,
+) =>
+    Navigator.push(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (context) => SelectBoardPage(
+          postID: postID,
+          userID: userID,
+        ),
+      ),
+    );
+
+void _onEdit(
+  BuildContext context,
+  String postID,
+  PostCubit postCubit,
+) =>
+    Navigator.push(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (context) {
+          return BlocProvider.value(
+            value: postCubit,
+            child: EditPostPage(postID: postID),
+          );
+        },
+      ),
+    );
+
+Future<void> _onDelete(
+  BuildContext context,
+  Post post,
+  PostCubit postCubit,
+) async {
+  if (Navigator.canPop(context)) Navigator.pop(context);
+  await postCubit.deletePost(
+    post.uid,
+    post.id,
+    post.photoURL.toString(),
+  );
+  if (context.mounted && Navigator.canPop(context)) {
+    Navigator.pop(context);
   }
 }

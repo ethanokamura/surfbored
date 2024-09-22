@@ -2,8 +2,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/posts/likes/likes.dart';
-import 'package:surfbored/features/posts/shared/more_search_options.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
@@ -41,8 +41,15 @@ Future<dynamic> postSearchPopUp(
                     MoreSearchOptions(
                       onSurface:
                           !(post.photoURL != null && post.photoURL! != ''),
-                      postID: post.id,
-                      userID: userID,
+                      onManage: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (context) => SelectBoardPage(
+                            postID: post.id,
+                            userID: userID,
+                          ),
+                        ),
+                      ),
                     ),
                     ActionIconButton(
                       onSurface:

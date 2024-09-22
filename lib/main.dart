@@ -1,6 +1,7 @@
 import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:comment_repository/comment_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/app/app.dart';
 import 'package:surfbored/firebase_options.dart';
@@ -25,10 +26,12 @@ Future<void> main() async {
         await userRepository.getOpeningUser();
         final boardRepository = BoardRepository();
         final postRepository = PostRepository();
+        final commentRepository = CommentRepository();
         return App(
-          userRepository: userRepository,
           boardRepository: boardRepository,
+          commentRepository: commentRepository,
           postRepository: postRepository,
+          userRepository: userRepository,
         );
       },
     );

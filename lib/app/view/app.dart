@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:comment_repository/comment_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,13 +30,15 @@ List<Page<dynamic>> onGenerateAppPages(
 
 class App extends StatelessWidget {
   const App({
-    required this.postRepository,
     required this.boardRepository,
+    required this.commentRepository,
+    required this.postRepository,
     required this.userRepository,
     super.key,
   });
 
   final BoardRepository boardRepository;
+  final CommentRepository commentRepository;
   final PostRepository postRepository;
   final UserRepository userRepository;
 
@@ -51,6 +54,9 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<BoardRepository>.value(
           value: boardRepository,
+        ),
+        RepositoryProvider<CommentRepository>.value(
+          value: commentRepository,
         ),
       ],
       child: MultiBlocProvider(

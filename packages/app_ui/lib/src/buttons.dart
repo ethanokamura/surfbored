@@ -36,22 +36,28 @@ class ActionButton extends StatelessWidget {
           : inverted != null && inverted!
               ? inverseStyle(context)
               : defaultStyle(context, onSurface: onSurface),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (icon != null)
-            onSurface != null && onSurface!
-                ? surfaceIconStyle(context, icon!)
-                : inverted != null && inverted!
-                    ? accentIconStyle(context, icon!)
-                    : defaultIconStyle(context, icon!),
-          if (text != null && icon != null) const SizedBox(width: 10),
-          if (text != null)
-            ButtonText(
-              text: text!,
-              inverted: inverted ?? false,
-            ),
-        ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontal ?? 0,
+          vertical: vertical ?? 0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null)
+              onSurface != null && onSurface!
+                  ? surfaceIconStyle(context, icon!)
+                  : inverted != null && inverted!
+                      ? accentIconStyle(context, icon!)
+                      : defaultIconStyle(context, icon!),
+            if (text != null && icon != null) const SizedBox(width: 10),
+            if (text != null)
+              ButtonText(
+                text: text!,
+                inverted: inverted ?? false,
+              ),
+          ],
+        ),
       ),
     );
   }

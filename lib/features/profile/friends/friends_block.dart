@@ -37,13 +37,14 @@ class FriendsBlock extends StatelessWidget {
                 if (!isCurrent)
                   ActionButton(
                     onSurface: true,
-                    text: buttonText,
                     onTap: () => _handleAction(context, state, userID),
                     inverted: !state.isRequested,
+                    text: buttonText,
                   )
                 else
                   ActionButton(
                     onSurface: true,
+                    horizontal: defaultPadding,
                     onTap: () {},
                     inverted: false,
                     text: AppStrings.myFriends,

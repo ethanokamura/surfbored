@@ -139,13 +139,10 @@ class AppStrings {
   // comments
   static const String editComment = 'Edit Comment';
   static const String commentError = 'Error loading comment';
-  static const String emptyComment = 'No Comment found';
   static const String emptyComments = 'Be the first to leave a comment!';
   static const String deleteComment = 'Delete Comment';
   static const String createComment = 'Create a comment!';
   static const String createdComment = 'Comment was created!';
-  static const String updatedComment = 'Comment was updated successfully!';
-  static const String changedComment = 'Comment was changed. Reloading!';
   static const String changedComments = 'Comments were changed. Reloading!';
   static const String deletedComment = 'Comment was deleted.';
 

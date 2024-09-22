@@ -133,7 +133,7 @@ class MoreProfileOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: _menuStyle(context, onSurface),
+      style: _noBackgroundStyle(context, onSurface),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(Options.share, Icons.ios_share, AppStrings.share),
         if (isCurrent) _menuItem(Options.edit, Icons.settings, AppStrings.edit),

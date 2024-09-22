@@ -62,6 +62,7 @@ class ProfileBuilder extends StatelessWidget {
       child: CustomPageView(
         top: true,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: AppBarText(text: user.username),
           actions: [
             MoreProfileOptions(

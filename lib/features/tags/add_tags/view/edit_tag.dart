@@ -24,11 +24,7 @@ class EditTag extends StatelessWidget {
             children: [
               PrimaryText(text: tag, fontSize: 14),
               const SizedBox(width: 5),
-              Icon(
-                FontAwesomeIcons.xmark,
-                color: Theme.of(context).accentColor,
-                size: 18,
-              ),
+              defaultIconStyle(context, AppIcons.cancel),
             ],
           ),
         ),

@@ -52,29 +52,29 @@ class BottomNavBar extends StatelessWidget {
       },
       currentIndex: context
           .select((NavBarController controller) => controller.item.index),
-      selectedItemColor: Theme.of(context).accentColor,
+      selectedItemColor: Theme.of(context).textColor,
       backgroundColor: Theme.of(context).colorScheme.surface,
       showSelectedLabels: true,
       showUnselectedLabels: false,
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.house, size: 20),
+          icon: defaultIconStyle(context, AppIcons.home),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.magnifyingGlass, size: 20),
+          icon: defaultIconStyle(context, AppIcons.search),
           label: 'Search',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.plus, size: 20),
+          icon: defaultIconStyle(context, AppIcons.create),
           label: 'Create',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.inbox, size: 20),
+          icon: defaultIconStyle(context, AppIcons.inbox),
           label: 'Inbox',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.solidUser, size: 20),
+          icon: defaultIconStyle(context, AppIcons.user),
           label: 'Profile',
         ),
       ],
@@ -95,26 +95,38 @@ class BottomNavBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
-              icon: FontAwesomeIcons.mountain,
-              label: AppStrings.activity,
-              inverted: true,
-              size: 40,
-              onTap: () {
-                choice = 'Post';
-                Navigator.pop(currentContext);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.posts,
+                  inverted: true,
+                  onTap: () {
+                    choice = 'Post';
+                    Navigator.pop(currentContext);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.activity),
+              ],
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
-              icon: FontAwesomeIcons.list,
-              label: AppStrings.board,
-              inverted: true,
-              size: 40,
-              onTap: () {
-                choice = 'Board';
-                Navigator.pop(currentContext);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.boards,
+                  inverted: true,
+                  onTap: () {
+                    choice = 'Board';
+                    Navigator.pop(currentContext);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.board),
+              ],
             ),
           ],
         ),

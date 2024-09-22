@@ -5,6 +5,7 @@ import 'package:api_client/api_client.dart';
 import 'package:app_ui/src/buttons.dart';
 import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/extensions.dart';
+import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/pop_ups.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
@@ -79,26 +80,38 @@ class _EditImageState extends State<EditImage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
-              icon: Icons.camera_alt_outlined,
-              label: AppStrings.camera,
-              inverted: true,
-              size: 40,
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.camera);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.camera,
+                  inverted: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.camera);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.camera),
+              ],
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
-              icon: Icons.photo_library_outlined,
-              label: AppStrings.photoLibrary,
-              inverted: true,
-              size: 40,
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.gallery);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.posts,
+                  inverted: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.gallery);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.photoLibrary),
+              ],
             ),
           ],
         ),
@@ -235,26 +248,38 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
-              icon: Icons.camera_alt_outlined,
-              label: 'Camera',
-              inverted: true,
-              size: 40,
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.camera);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.camera,
+                  inverted: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.camera);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.camera),
+              ],
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
-              icon: Icons.photo_library_outlined,
-              label: 'Library',
-              inverted: true,
-              size: 40,
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.gallery);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.posts,
+                  inverted: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.gallery);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.photoLibrary),
+              ],
             ),
           ],
         ),
@@ -552,26 +577,38 @@ class _EditSquareImageState extends State<EditSquareImage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ActionIconButton(
-              icon: Icons.camera_alt_outlined,
-              label: AppStrings.camera,
-              inverted: true,
-              size: 40,
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.camera);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.camera,
+                  inverted: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.camera);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.camera),
+              ],
             ),
             const SizedBox(width: 40),
-            ActionIconButton(
-              icon: Icons.photo_library_outlined,
-              label: AppStrings.photoLibrary,
-              inverted: true,
-              size: 40,
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.gallery);
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionIconButton(
+                  icon: AppIcons.posts,
+                  inverted: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.gallery);
+                  },
+                ),
+                const VerticalSpacer(),
+                const PrimaryText(text: AppStrings.photoLibrary),
+              ],
             ),
           ],
         ),

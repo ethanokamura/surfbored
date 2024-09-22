@@ -65,7 +65,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
                     ),
                     ActionIconButton(
                       inverted: true,
-                      icon: Icons.add,
+                      icon: AppIcons.create,
                       onTap: () {
                         final tag = _tagController.text.trim();
                         if (tag != '') {

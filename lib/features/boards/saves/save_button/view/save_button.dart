@@ -31,13 +31,9 @@ class SaveButton extends StatelessWidget {
                   board.id,
                   saved: isSaved,
                 ),
-            icon: Icon(
-              isSaved ? Icons.bookmark_sharp : Icons.bookmark_outline_sharp,
-              color: isSaved
-                  ? Theme.of(context).accentColor
-                  : Theme.of(context).textColor,
-              size: 20,
-            ),
+            icon: isSaved
+                ? accentIconStyle(context, AppIcons.saved)
+                : defaultIconStyle(context, AppIcons.notSaved),
             text: '$saves ${AppStrings.saves}',
           );
         },

@@ -1,5 +1,6 @@
 import 'package:app_ui/src/buttons.dart';
 import 'package:app_ui/src/constants.dart';
+import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
@@ -63,10 +64,7 @@ class CustomInputField extends StatelessWidget {
           ),
           IconButton(
             onPressed: onPressed,
-            icon: Icon(
-              Icons.edit,
-              color: Theme.of(context).accentColor,
-            ),
+            icon: accentIconStyle(context, AppIcons.edit),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
             // splashColor: Colors.transparent,
@@ -90,7 +88,7 @@ class CustomTextBox extends StatelessWidget {
 
   final String text;
   final String label;
-  final void Function()? onPressed;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +107,7 @@ class CustomTextBox extends StatelessWidget {
               ActionIconButton(
                 background: false,
                 onTap: onPressed,
-                icon: Icons.settings,
+                icon: AppIcons.settings,
                 inverted: true,
               ),
             ],

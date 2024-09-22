@@ -30,10 +30,6 @@ class SelectBoardPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: AppStrings.addActivity),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => Navigator.pop(context),
-      //   child: const Icon(Icons.check_rounded),
-      // ),
       body: SelectBoardsList(userID: userID, postID: postID),
     );
   }

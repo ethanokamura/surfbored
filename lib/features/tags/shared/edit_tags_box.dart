@@ -21,7 +21,7 @@ class EditTagsBox extends StatelessWidget {
               const SecondaryText(text: AppStrings.editTags),
               ActionIconButton(
                 inverted: true,
-                icon: Icons.settings,
+                icon: AppIcons.settings,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute<dynamic>(

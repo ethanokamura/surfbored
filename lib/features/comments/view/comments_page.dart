@@ -122,7 +122,7 @@ class _CommentContorllerState extends State<CommentContorller> {
         ),
         ActionIconButton(
           inverted: true,
-          icon: FontAwesomeIcons.paperPlane,
+          icon: AppIcons.message,
           onTap: () async {
             if (textController.text.trim().isNotEmpty) {
               await context.read<CommentsCubit>().createComment(

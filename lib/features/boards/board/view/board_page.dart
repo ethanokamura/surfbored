@@ -56,7 +56,7 @@ class BoardPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  icon: const Icon(Icons.more_horiz),
+                  icon: defaultIconStyle(context, AppIcons.more),
                 ),
               ],
             ),

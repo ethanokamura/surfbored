@@ -190,7 +190,7 @@ class ProfileTopBar extends StatelessWidget {
               ActionIconButton(
                 inverted: false,
                 onTap: () => Navigator.pop(context),
-                icon: FontAwesomeIcons.xmark,
+                icon: AppIcons.cancel,
               ),
           ],
         ),
@@ -289,25 +289,16 @@ class ProfileTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CustomTabBarWidget(
+    return CustomTabBarWidget(
       tabs: [
         CustomTabWidget(
-          child: Icon(
-            FontAwesomeIcons.images,
-            size: 15,
-          ),
+          child: defaultIconStyle(context, AppIcons.posts),
         ),
         CustomTabWidget(
-          child: Icon(
-            FontAwesomeIcons.list,
-            size: 15,
-          ),
+          child: defaultIconStyle(context, AppIcons.boards),
         ),
         CustomTabWidget(
-          child: Icon(
-            FontAwesomeIcons.heart,
-            size: 15,
-          ),
+          child: defaultIconStyle(context, AppIcons.notLiked),
         ),
       ],
     );

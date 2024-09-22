@@ -84,7 +84,7 @@ class _SearchPageState extends State<SearchPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.search),
+                defaultIconStyle(context, AppIcons.search),
                 const HorizontalSpacer(),
                 Expanded(
                   child: TextField(

@@ -54,8 +54,7 @@ Future<dynamic> postSearchPopUp(
                     ActionIconButton(
                       onSurface:
                           !(post.photoURL != null && post.photoURL! != ''),
-                      icon: FontAwesomeIcons.xmark,
-                      size: 20,
+                      icon: AppIcons.cancel,
                       inverted: false,
                       onTap: () => Navigator.pop(context),
                     ),

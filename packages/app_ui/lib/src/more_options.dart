@@ -1,4 +1,5 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:app_ui/src/button_styles.dart';
 import 'package:flutter/material.dart';
 
 enum Options {
@@ -22,11 +23,12 @@ class MoreCommentOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: _noBackgroundStyle(context, onSurface),
+      style: noBackgroundStyle(context),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
+          context,
           Options.delete,
-          Icons.delete_outline_outlined,
+          AppIcons.delete,
           AppStrings.delete,
         ),
       ]),
@@ -57,15 +59,17 @@ class MoreOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: _menuStyle(context, onSurface),
+      style: defaultStyle(context, onSurface: onSurface),
       itemBuilder: (BuildContext context) => _buildMenuItems([
-        _menuItem(Options.manage, Icons.list, AppStrings.addOrRemove),
-        _menuItem(Options.share, Icons.ios_share, AppStrings.share),
+        _menuItem(
+            context, Options.manage, AppIcons.boards, AppStrings.addOrRemove),
+        _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
         if (isOwner) ...[
-          _menuItem(Options.edit, Icons.edit, AppStrings.edit),
+          _menuItem(context, Options.edit, AppIcons.edit, AppStrings.edit),
           _menuItem(
+            context,
             Options.delete,
-            Icons.delete_outline_outlined,
+            AppIcons.delete,
             AppStrings.delete,
           ),
         ],
@@ -98,10 +102,11 @@ class MoreSearchOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: _menuStyle(context, onSurface),
+      style: defaultStyle(context, onSurface: onSurface),
       itemBuilder: (BuildContext context) => _buildMenuItems([
-        _menuItem(Options.manage, Icons.list, AppStrings.addOrRemove),
-        _menuItem(Options.share, Icons.ios_share, AppStrings.share),
+        _menuItem(
+            context, Options.manage, AppIcons.boards, AppStrings.addOrRemove),
+        _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
       ]),
       onSelected: (value) {
         if (value == Options.manage) {
@@ -133,12 +138,23 @@ class MoreProfileOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: _noBackgroundStyle(context, onSurface),
+      style: noBackgroundStyle(context),
       itemBuilder: (BuildContext context) => _buildMenuItems([
-        _menuItem(Options.share, Icons.ios_share, AppStrings.share),
-        if (isCurrent) _menuItem(Options.edit, Icons.settings, AppStrings.edit),
+        _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
+        if (isCurrent)
+          _menuItem(
+            context,
+            Options.edit,
+            AppIcons.settings,
+            AppStrings.edit,
+          ),
         if (!isCurrent)
-          _menuItem(Options.block, Icons.block_flipped, AppStrings.toggleBlock),
+          _menuItem(
+            context,
+            Options.block,
+            AppIcons.block,
+            AppStrings.toggleBlock,
+          ),
       ]),
       onSelected: (value) {
         if (value == Options.edit) {
@@ -153,14 +169,19 @@ class MoreProfileOptions extends StatelessWidget {
   }
 }
 
-PopupMenuItem<Options> _menuItem(Options value, IconData icon, String text) {
+PopupMenuItem<Options> _menuItem(
+  BuildContext context,
+  Options value,
+  IconData icon,
+  String text,
+) {
   return PopupMenuItem<Options>(
     value: value,
     child: Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Icon(icon),
+        defaultIconStyle(context, icon),
         const HorizontalSpacer(),
         PrimaryText(text: text),
       ],
@@ -179,22 +200,4 @@ class MenuItem {
   final Options value;
   final IconData icon;
   final String text;
-}
-
-ButtonStyle _menuStyle(BuildContext context, bool? onSurface) {
-  return ElevatedButton.styleFrom(
-    padding: const EdgeInsets.all(defaultPadding),
-    elevation: 0,
-    backgroundColor: onSurface != null && onSurface
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.surface,
-    shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
-  );
-}
-
-ButtonStyle _noBackgroundStyle(BuildContext context, bool? onSurface) {
-  return ElevatedButton.styleFrom(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-  );
 }

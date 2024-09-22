@@ -57,6 +57,7 @@ class ProfileBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCurrent = user.uid == context.read<UserRepository>().user.uid;
+    final profileCubit = context.read<ProfileCubit>();
     return DefaultTabController(
       length: 3,
       child: CustomPageView(
@@ -72,10 +73,10 @@ class ProfileBuilder extends StatelessWidget {
                 MaterialPageRoute<dynamic>(
                   builder: (context) {
                     return BlocProvider.value(
-                      value: context.read<ProfileCubit>(),
+                      value: profileCubit,
                       child: ProfileSettingsPage(
                         userID: user.uid,
-                        profileCubit: context.read<ProfileCubit>(),
+                        profileCubit: profileCubit,
                       ),
                     );
                   },

@@ -10,12 +10,10 @@ Icon defaultIconStyle(BuildContext context, IconData icon) {
   );
 }
 
-Icon accentIconStyle(BuildContext context, IconData icon, {bool? inverted}) {
+Icon accentIconStyle(BuildContext context, IconData icon) {
   return Icon(
     icon,
-    color: inverted != null && inverted
-        ? Theme.of(context).accentColor
-        : Theme.of(context).surfaceColor,
+    color: Theme.of(context).accentColor,
     size: 14,
   );
 }

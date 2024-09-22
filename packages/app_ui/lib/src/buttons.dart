@@ -99,9 +99,7 @@ class ActionIconButton extends StatelessWidget {
                     : defaultStyle(context, onSurface: onSurface),
             icon: onSurface != null && onSurface!
                 ? surfaceIconStyle(context, icon)
-                : inverted != null && inverted!
-                    ? accentIconStyle(context, icon, inverted: false)
-                    : defaultIconStyle(context, icon),
+                : defaultIconStyle(context, icon),
           );
   }
 }

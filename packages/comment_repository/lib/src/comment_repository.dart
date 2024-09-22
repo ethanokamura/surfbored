@@ -36,11 +36,7 @@ class PostRepository {
   // read comment
   Future<Comment> readComment(String postID, String commentID) async {
     try {
-      final doc = await _firestore
-          .postDoc(postID)
-          .collection('comments')
-          .doc(commentID)
-          .get();
+      final doc = await _firestore.getCommentDoc(postID, commentID);
       if (!doc.exists) return Comment.empty;
       final data = doc.data();
       return Comment.fromJson(data!);
@@ -57,11 +53,7 @@ class PostRepository {
     String comment,
   ) async {
     try {
-      await _firestore
-          .postDoc(postID)
-          .collection('comments')
-          .doc(commentID)
-          .update({
+      await _firestore.updateCommentDoc(postID, commentID, {
         'message': comment,
         'edited': true,
       });
@@ -70,11 +62,27 @@ class PostRepository {
     }
   }
 
+  // update liked posts
+  Future<void> updateLikes({
+    required String postID,
+    required String commentID,
+    required bool liked,
+  }) async {
+    try {
+      await _firestore.updateCommentDoc(
+        postID,
+        commentID,
+        {'likes': FieldValue.increment(!liked ? 1 : -1)},
+      );
+    } on FirebaseException {
+      throw CommentFailure.fromUpdateComment();
+    }
+  }
+
   // delete comment
   Future<void> deleteComment(String postID, String commentID) async {
     final batch = _firestore.batch();
-    final commentRef =
-        _firestore.postDoc(postID).collection('comments').doc(commentID);
+    final commentRef = _firestore.commentDoc(postID, commentID);
     try {
       final commentDoc = await commentRef.get();
       if (!commentDoc.exists) {

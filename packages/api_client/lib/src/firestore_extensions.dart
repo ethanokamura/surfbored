@@ -104,6 +104,32 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
   Future<void> setPostDoc(String postID, Map<String, dynamic> data) =>
       postDoc(postID).set(data);
 
+  // comments
+  CollectionReference<Map<String, dynamic>> commentsCollection(String postID) =>
+      postDoc(postID).collection('comments');
+  DocumentReference<Map<String, dynamic>> commentDoc(
+    String postID,
+    String commentID,
+  ) =>
+      commentsCollection(postID).doc(commentID);
+  Future<DocumentSnapshot<Map<String, dynamic>>> getCommentDoc(
+    String postID,
+    String commentID,
+  ) =>
+      commentDoc(postID, commentID).get();
+  Future<void> updateCommentDoc(
+    String postID,
+    String commentID,
+    Map<String, dynamic> data,
+  ) =>
+      commentDoc(postID, commentID).update(data);
+  Future<void> setCommentDoc(
+    String postID,
+    String commentID,
+    Map<String, dynamic> data,
+  ) =>
+      commentDoc(postID, commentID).set(data);
+
   // boards
   CollectionReference<Map<String, dynamic>> boardsCollection() =>
       collection('boards');
@@ -141,18 +167,6 @@ extension FirebaseFirestoreExtensions on FirebaseFirestore {
       savesDoc(saveDocID).update(data);
   Future<void> setSavesDoc(String saveDocID, Map<String, dynamic> data) =>
       savesDoc(saveDocID).set(data);
-
-  // tags
-  CollectionReference<Map<String, dynamic>> tagsCollection() =>
-      collection('tags');
-  DocumentReference<Map<String, dynamic>> tagDoc(String tagID) =>
-      tagsCollection().doc(tagID);
-  Future<DocumentSnapshot<Map<String, dynamic>>> getTagDoc(String tagID) =>
-      tagDoc(tagID).get();
-  Future<void> updateTagDoc(String tagID, Map<String, dynamic> data) =>
-      tagDoc(tagID).update(data);
-  Future<void> setTagDoc(String tagID, Map<String, dynamic> data) =>
-      tagDoc(tagID).set(data);
 
   // friendRequests
   CollectionReference<Map<String, dynamic>> friendRequestCollection() =>

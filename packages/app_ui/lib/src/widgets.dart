@@ -162,12 +162,12 @@ class CustomTabBarWidget extends StatelessWidget {
 class CustomPageView extends StatelessWidget {
   const CustomPageView({
     required this.body,
-    required this.top,
+    this.top,
     this.appBar,
     super.key,
   });
   final Widget body;
-  final bool top;
+  final bool? top;
   final AppBar? appBar;
 
   @override
@@ -180,7 +180,7 @@ class CustomPageView extends StatelessWidget {
           padding: EdgeInsets.only(
             left: defaultPadding,
             right: defaultPadding,
-            top: (top == true) ? defaultPadding : 0,
+            top: (top != null && top!) ? defaultPadding : 0,
           ),
           child: body,
         ),

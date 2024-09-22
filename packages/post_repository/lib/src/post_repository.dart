@@ -95,6 +95,18 @@ extension Fetch on PostRepository {
     }
   }
 
+  // fetch post's likes
+  Future<int> fetchComments(String postID) async {
+    try {
+      final doc = await _firestore.getPostDoc(postID);
+      if (!doc.exists) return 0;
+      final data = Post.fromJson(doc.data()!);
+      return data.comments;
+    } on FirebaseException {
+      throw PostFailure.fromGetPost();
+    }
+  }
+
   Future<bool> hasUserLikedPost(String postID, String userID) async {
     try {
       final likeDoc = await _firestore.getLikeDoc('${postID}_$userID');

@@ -80,38 +80,22 @@ class _EditImageState extends State<EditImage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.camera,
-                  inverted: true,
-                  onTap: () {
-                    Navigator.pop(context);
-                    pickImage(ImageSource.camera);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.camera),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.camera,
+              label: AppStrings.camera,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.camera);
+              },
             ),
             const SizedBox(width: 40),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.posts,
-                  inverted: true,
-                  onTap: () {
-                    Navigator.pop(context);
-                    pickImage(ImageSource.gallery);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.photoLibrary),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.posts,
+              label: AppStrings.photoLibrary,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.gallery);
+              },
             ),
           ],
         ),
@@ -248,38 +232,22 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.camera,
-                  inverted: true,
-                  onTap: () {
-                    Navigator.pop(context);
-                    pickImage(ImageSource.camera);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.camera),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.camera,
+              label: AppStrings.camera,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.camera);
+              },
             ),
             const SizedBox(width: 40),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.posts,
-                  inverted: true,
-                  onTap: () {
-                    Navigator.pop(context);
-                    pickImage(ImageSource.gallery);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.photoLibrary),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.posts,
+              label: AppStrings.photoLibrary,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.gallery);
+              },
             ),
           ],
         ),
@@ -577,38 +545,22 @@ class _EditSquareImageState extends State<EditSquareImage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.camera,
-                  inverted: true,
-                  onTap: () {
-                    Navigator.pop(context);
-                    pickImage(ImageSource.camera);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.camera),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.camera,
+              label: AppStrings.camera,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.camera);
+              },
             ),
             const SizedBox(width: 40),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.posts,
-                  inverted: true,
-                  onTap: () {
-                    Navigator.pop(context);
-                    pickImage(ImageSource.gallery);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.photoLibrary),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.posts,
+              label: AppStrings.photoLibrary,
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.gallery);
+              },
             ),
           ],
         ),

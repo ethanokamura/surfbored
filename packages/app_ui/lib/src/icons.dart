@@ -28,6 +28,14 @@ Icon surfaceIconStyle(BuildContext context, IconData icon) {
   );
 }
 
+Icon selectionIconStyle(BuildContext context, IconData icon) {
+  return Icon(
+    icon,
+    color: Theme.of(context).surfaceColor,
+    size: 40,
+  );
+}
+
 class AppIcons {
   // buttons
   static const IconData settings = FontAwesomeIcons.gear;

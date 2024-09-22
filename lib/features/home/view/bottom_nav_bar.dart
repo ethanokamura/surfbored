@@ -95,38 +95,22 @@ class BottomNavBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.posts,
-                  inverted: true,
-                  onTap: () {
-                    choice = 'Post';
-                    Navigator.pop(currentContext);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.activity),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.posts,
+              label: AppStrings.activity,
+              onTap: () {
+                choice = 'Post';
+                Navigator.pop(currentContext);
+              },
             ),
             const SizedBox(width: 40),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ActionIconButton(
-                  icon: AppIcons.boards,
-                  inverted: true,
-                  onTap: () {
-                    choice = 'Board';
-                    Navigator.pop(currentContext);
-                  },
-                ),
-                const VerticalSpacer(),
-                const PrimaryText(text: AppStrings.board),
-              ],
+            ActionSelectButton(
+              icon: AppIcons.boards,
+              label: AppStrings.board,
+              onTap: () {
+                choice = 'Board';
+                Navigator.pop(currentContext);
+              },
             ),
           ],
         ),

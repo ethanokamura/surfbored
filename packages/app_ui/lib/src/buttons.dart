@@ -2,6 +2,7 @@ import 'package:app_ui/src/button_styles.dart';
 import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
+import 'package:app_ui/src/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,7 +33,7 @@ class ActionButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: background != null && background! == false
-          ? noBackgroundStyle(context)
+          ? noBackgroundStyle()
           : inverted != null && inverted!
               ? inverseStyle(context)
               : defaultStyle(context, onSurface: onSurface),
@@ -92,7 +93,7 @@ class ActionIconButton extends StatelessWidget {
         : IconButton(
             onPressed: onTap,
             style: background != null && background! == false
-                ? noBackgroundStyle(context)
+                ? noBackgroundStyle()
                 : inverted != null && inverted!
                     ? inverseStyle(context)
                     : defaultStyle(context, onSurface: onSurface),
@@ -102,6 +103,35 @@ class ActionIconButton extends StatelessWidget {
                     ? accentIconStyle(context, icon, inverted: false)
                     : defaultIconStyle(context, icon),
           );
+  }
+}
+
+class ActionSelectButton extends StatelessWidget {
+  const ActionSelectButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    super.key,
+  });
+  final IconData icon;
+  final String label;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          onPressed: onTap,
+          style: inversePaddedStyle(context),
+          icon: selectionIconStyle(context, icon),
+        ),
+        const VerticalSpacer(),
+        PrimaryText(text: label),
+      ],
+    );
   }
 }
 
@@ -141,7 +171,7 @@ class ToggleButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: background != null && background! == false
-          ? noBackgroundStyle(context)
+          ? noBackgroundStyle()
           : defaultStyle(context, onSurface: onSurface),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

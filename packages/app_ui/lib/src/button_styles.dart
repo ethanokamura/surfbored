@@ -13,6 +13,15 @@ ButtonStyle defaultStyle(BuildContext context, {bool? onSurface}) {
   );
 }
 
+ButtonStyle inversePaddedStyle(BuildContext context) {
+  return ElevatedButton.styleFrom(
+    padding: const EdgeInsets.all(defaultPadding),
+    elevation: 0,
+    backgroundColor: Theme.of(context).accentColor,
+    shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+  );
+}
+
 ButtonStyle inverseStyle(BuildContext context) {
   return ElevatedButton.styleFrom(
     padding: EdgeInsets.zero,
@@ -22,7 +31,7 @@ ButtonStyle inverseStyle(BuildContext context) {
   );
 }
 
-ButtonStyle noBackgroundStyle(BuildContext context) {
+ButtonStyle noBackgroundStyle() {
   return ElevatedButton.styleFrom(
     padding: EdgeInsets.zero,
     backgroundColor: Colors.transparent,

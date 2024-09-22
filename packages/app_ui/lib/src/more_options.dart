@@ -23,7 +23,7 @@ class MoreCommentOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: noBackgroundStyle(context),
+      style: noBackgroundStyle(),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
@@ -138,7 +138,7 @@ class MoreProfileOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: noBackgroundStyle(context),
+      style: noBackgroundStyle(),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
         if (isCurrent)

@@ -13,6 +13,7 @@ class Comment extends Equatable {
     this.id = '',
     this.edited = false,
     this.likes = 0,
+    this.likedBy = const [],
     this.createdAt,
   });
 
@@ -32,6 +33,9 @@ class Comment extends Equatable {
       edited: data['edited'] as bool? ?? false,
       createdAt: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
       likes: data['likes'] as int? ?? 0,
+      likedBy: (data['likedBy'] as List<dynamic>? ?? [])
+          .map((user) => user as String)
+          .toList(),
     );
   }
 
@@ -41,6 +45,7 @@ class Comment extends Equatable {
   final String senderID;
   final String ownerID;
   final String message;
+  final List<String> likedBy;
   final bool edited;
   final int likes;
   @timestamp
@@ -62,6 +67,7 @@ class Comment extends Equatable {
         message,
         edited,
         likes,
+        likedBy,
         createdAt,
       ];
 
@@ -73,4 +79,5 @@ extension CommentExtensions on Comment {
   bool get isEmpty => this == Comment.empty;
   bool get isEdited => edited;
   int get totalLikes => likes;
+  bool likedByUser(String userID) => likedBy.contains(userID);
 }

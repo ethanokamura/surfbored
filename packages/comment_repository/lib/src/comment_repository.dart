@@ -2,8 +2,17 @@ import 'package:api_client/api_client.dart';
 import 'package:comment_repository/src/failures.dart';
 import 'package:comment_repository/src/models/models.dart';
 
-class PostRepository {
-  PostRepository({
+class CommentPage {
+  CommentPage({
+    required this.comments,
+    required this.lastDocument,
+  });
+  final List<Comment> comments;
+  final DocumentSnapshot? lastDocument;
+}
+
+class CommentRepository {
+  CommentRepository({
     FirebaseFirestore? firestore,
   }) : _firestore = firestore ?? FirebaseFirestore.instance;
 
@@ -34,7 +43,7 @@ class PostRepository {
   }
 
   // read comment
-  Future<Comment> readComment(String postID, String commentID) async {
+  Future<Comment> fetchComment(String postID, String commentID) async {
     try {
       final doc = await _firestore.getCommentDoc(postID, commentID);
       if (!doc.exists) return Comment.empty;
@@ -42,6 +51,42 @@ class PostRepository {
       return Comment.fromJson(data!);
     } on FirebaseException {
       // return failure
+      throw CommentFailure.fromGetComment();
+    }
+  }
+
+  // fetch post's likes
+  Future<int> fetchLikes(String postID, String commentID) async {
+    try {
+      final doc = await _firestore.getCommentDoc(postID, commentID);
+      if (!doc.exists) return 0;
+      final data = Comment.fromJson(doc.data()!);
+      return data.likes;
+    } on FirebaseException {
+      throw CommentFailure.fromGetComment();
+    }
+  }
+
+  Stream<List<Comment>> streamComments({
+    required String postID,
+    int limit = 50,
+  }) {
+    try {
+      final query = _firestore
+          .commentsCollection(postID)
+          .orderBy('createdAt', descending: true)
+          .limit(limit);
+      return query.snapshots().map((snapshot) {
+        if (snapshot.docs.isEmpty) {
+          return [];
+        }
+        final comments = snapshot.docs
+            .map(Comment.fromFirestore)
+            .whereType<Comment>()
+            .toList();
+        return comments;
+      });
+    } on FirebaseException {
       throw CommentFailure.fromGetComment();
     }
   }
@@ -66,14 +111,37 @@ class PostRepository {
   Future<void> updateLikes({
     required String postID,
     required String commentID,
+    required String userID,
     required bool liked,
   }) async {
     try {
-      await _firestore.updateCommentDoc(
-        postID,
-        commentID,
-        {'likes': FieldValue.increment(!liked ? 1 : -1)},
-      );
+      if (liked) {
+        try {
+          await _firestore.updateCommentDoc(
+            postID,
+            commentID,
+            {
+              'likes': FieldValue.increment(1),
+              'likedBy': FieldValue.arrayUnion([userID]),
+            },
+          );
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        try {
+          await _firestore.updateCommentDoc(
+            postID,
+            commentID,
+            {
+              'likes': FieldValue.increment(-1),
+              'likedBy': FieldValue.arrayRemove([userID]),
+            },
+          );
+        } catch (e) {
+          print(e);
+        }
+      }
     } on FirebaseException {
       throw CommentFailure.fromUpdateComment();
     }

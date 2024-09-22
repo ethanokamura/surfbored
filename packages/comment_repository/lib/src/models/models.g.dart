@@ -14,6 +14,10 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       id: json['id'] as String? ?? '',
       edited: json['edited'] as bool? ?? false,
       likes: (json['likes'] as num?)?.toInt() ?? 0,
+      likedBy: (json['likedBy'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       createdAt: timestamp.fromJson(json['createdAt']),
     );
 
@@ -24,6 +28,7 @@ Map<String, dynamic> _$CommentToJson(Comment instance) {
     'senderID': instance.senderID,
     'ownerID': instance.ownerID,
     'message': instance.message,
+    'likedBy': instance.likedBy,
     'edited': instance.edited,
     'likes': instance.likes,
   };

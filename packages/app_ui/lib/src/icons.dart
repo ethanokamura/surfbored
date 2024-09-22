@@ -6,7 +6,7 @@ Icon defaultIconStyle(BuildContext context, IconData icon) {
   return Icon(
     icon,
     color: Theme.of(context).textColor,
-    size: 18,
+    size: 14,
   );
 }
 
@@ -16,7 +16,7 @@ Icon accentIconStyle(BuildContext context, IconData icon, {bool? inverted}) {
     color: inverted != null && inverted
         ? Theme.of(context).accentColor
         : Theme.of(context).surfaceColor,
-    size: 18,
+    size: 14,
   );
 }
 
@@ -24,7 +24,7 @@ Icon surfaceIconStyle(BuildContext context, IconData icon) {
   return Icon(
     icon,
     color: Theme.of(context).surfaceColor,
-    size: 18,
+    size: 14,
   );
 }
 

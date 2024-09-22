@@ -52,29 +52,29 @@ class BottomNavBar extends StatelessWidget {
       },
       currentIndex: context
           .select((NavBarController controller) => controller.item.index),
-      selectedItemColor: Theme.of(context).textColor,
+      selectedItemColor: Theme.of(context).accentColor,
       backgroundColor: Theme.of(context).colorScheme.surface,
       showSelectedLabels: true,
       showUnselectedLabels: false,
-      items: [
+      items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: defaultIconStyle(context, AppIcons.home),
+          icon: Icon(AppIcons.home, size: 20),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: defaultIconStyle(context, AppIcons.search),
+          icon: Icon(AppIcons.search, size: 20),
           label: 'Search',
         ),
         BottomNavigationBarItem(
-          icon: defaultIconStyle(context, AppIcons.create),
+          icon: Icon(AppIcons.create, size: 20),
           label: 'Create',
         ),
         BottomNavigationBarItem(
-          icon: defaultIconStyle(context, AppIcons.inbox),
+          icon: Icon(AppIcons.inbox, size: 20),
           label: 'Inbox',
         ),
         BottomNavigationBarItem(
-          icon: defaultIconStyle(context, AppIcons.user),
+          icon: Icon(AppIcons.user, size: 20),
           label: 'Profile',
         ),
       ],

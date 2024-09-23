@@ -2,6 +2,7 @@ import 'package:api_client/api_client.dart' as firebase show User;
 import 'package:api_client/api_client.dart' hide User;
 import 'package:app_core/app_core.dart';
 import 'package:user_repository/src/failures.dart';
+import 'package:user_repository/src/models/friend_model.dart';
 import 'package:user_repository/src/models/models.dart';
 
 class UserRepository {
@@ -156,73 +157,110 @@ extension Username on UserRepository {
 
 extension Friends on UserRepository {
   // modify the friend request to the desired user
-  Future<void> modifyFriendRequest(
-    String otherUserID, {
-    bool removed = false,
-  }) async {
+  Future<void> modifyFriendRequest(String otherUserID) async {
     try {
       final currentUserID = user.uid;
       final docID = _getSortedDocID(currentUserID, otherUserID);
+      final snapshot = await _firestore.getFriendRequestDoc(docID);
+      snapshot.exists
+          ? await cancelFriendRequest(docID)
+          : await sendFriendRequest(currentUserID, otherUserID, docID);
+    } on FirebaseException {
+      throw UserFailure.fromUpdateFriend();
+    }
+  }
 
-      removed
-          ? await _firestore.deleteFriendRequestDoc(docID)
-          : await _firestore.setFriendDoc(docID, {
-              'senderID': currentUserID,
-              'receiverID': otherUserID,
-              'timestamp': FieldValue.serverTimestamp(),
-            });
+  Future<void> sendFriendRequest(
+    String currentUserID,
+    String otherUserID,
+    String docID,
+  ) async {
+    try {
+      await _firestore.setFriendDoc(docID, {
+        'senderID': currentUserID,
+        'receiverID': otherUserID,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException {
+      throw UserFailure.fromUpdateFriend();
+    }
+  }
+
+  Future<void> cancelFriendRequest(String docID) async {
+    try {
+      await _firestore.deleteFriendRequestDoc(docID);
     } on FirebaseException {
       throw UserFailure.fromUpdateFriend();
     }
   }
 
   // modify friend status with the desired user
-  Future<void> modifyFriend(String otherUserID, int increment) async {
-    // get current user
+  Future<void> modifyFriend(String otherUserID) async {
     final currentUserID = user.uid;
     final docID = _getSortedDocID(currentUserID, otherUserID);
-
-    // batch
-    final batch = _firestore.batch();
-
-    // docs
-    final userRef = _firestore.userDoc(currentUserID);
-    final otherUserRef = _firestore.userDoc(otherUserID);
     final friendsRef = _firestore.friendDoc(docID);
-
+    final userRef = _firestore.friendDoc(currentUserID);
+    final otherUserRef = _firestore.friendDoc(otherUserID);
     try {
-      // make sure users exist
-      final userSnapshot = await userRef.get();
-      final otherUserSnapshot = await otherUserRef.get();
-      if (!userSnapshot.exists || !otherUserSnapshot.exists) {
-        throw UserFailure.fromGetUser();
-      }
-
-      batch
-        ..update(userRef, {'friends': FieldValue.increment(increment)})
-        ..update(otherUserRef, {'friends': FieldValue.increment(increment)});
-
-      if (increment == 1) {
-        // adding friend
-        final friendReqRef = _firestore.friendRequestDoc(docID);
-        batch
-          ..set(friendsRef, {
-            'userID1': currentUserID,
-            'userID2': otherUserID,
-            'timestamp': FieldValue.serverTimestamp(),
-          })
-          ..delete(friendReqRef);
+      final snapshot = await friendsRef.get();
+      if (snapshot.exists) {
+        await addFriend(
+          currentUserID,
+          otherUserID,
+          docID,
+          userRef,
+          otherUserRef,
+          friendsRef,
+        );
       } else {
-        // removing friend
-        batch.delete(friendsRef);
+        await removeFriend(userRef, otherUserRef, friendsRef);
       }
+    } on FirebaseException {
+      throw UserFailure.fromUpdateFriend();
+    }
+  }
 
-      // commit batch
+  Future<void> addFriend(
+    String currentUserID,
+    String otherUserID,
+    String docID,
+    DocumentReference userRef,
+    DocumentReference otherUserRef,
+    DocumentReference friendsRef,
+  ) async {
+    final batch = _firestore.batch();
+    try {
+      final friendReqRef = _firestore.friendRequestDoc(docID);
+      batch
+        ..update(userRef, {'friends': FieldValue.increment(1)})
+        ..update(otherUserRef, {'friends': FieldValue.increment(1)})
+        ..set(friendsRef, {
+          'userID1': currentUserID,
+          'userID2': otherUserID,
+          'createdAt': FieldValue.serverTimestamp(),
+        })
+        ..delete(friendReqRef);
       await batch.commit();
     } on FirebaseException {
-      increment == 0
-          ? throw UserFailure.fromCreateFriend()
-          : throw UserFailure.fromDeleteFriend();
+      throw UserFailure.fromCreateFriend();
+    }
+  }
+
+  Future<void> removeFriend(
+    DocumentReference userRef,
+    DocumentReference otherUserRef,
+    DocumentReference friendsRef,
+  ) async {
+    final batch = _firestore.batch();
+    try {
+      batch
+        ..delete(friendsRef)
+        ..update(userRef, {'friends': FieldValue.increment(-1)})
+        ..update(otherUserRef, {'friends': FieldValue.increment(-1)});
+
+      await batch.commit();
+    } on FirebaseException {
+      throw UserFailure.fromDeleteFriend();
     }
   }
 
@@ -327,6 +365,66 @@ extension Friends on UserRepository {
     } on FirebaseException {
       throw UserFailure.fromGetUser();
     }
+  }
+
+  Stream<List<String>> streamFriends(
+    String userID, {
+    int pageSize = 25,
+    int page = 0,
+  }) async* {
+    // Fetch documents where current user is either userID1 or userID2
+    final friendsQuery1 = _firestore
+        .collection('friends')
+        .where('userID1', isEqualTo: userID)
+        .limit(pageSize * (page + 1));
+
+    final friendsQuery2 = _firestore
+        .collection('friends')
+        .where('userID2', isEqualTo: userID)
+        .limit(pageSize * (page + 1));
+
+    // Combine the results from both queries
+    final friendsListSnapshot1 = await friendsQuery1.get();
+    final friendsListSnapshot2 = await friendsQuery2.get();
+
+    // Combine the user IDs from both lists (remove duplicates if needed)
+    final userIDs = {
+      ...friendsListSnapshot1.docs.map((doc) => _getFriendUserId(doc, userID)),
+      ...friendsListSnapshot2.docs.map((doc) => _getFriendUserId(doc, userID)),
+    }.toList();
+
+    // Stream the paginated users by their IDs
+    yield* streamFriendsByIds(pageSize, page, userIDs);
+  }
+
+  // Helper function to get the other user's ID
+  String _getFriendUserId(DocumentSnapshot doc, String currentUserId) {
+    final data = Friend.fromFirestore(doc);
+    return data.userID1 == currentUserId ? data.userID2 : data.userID1;
+  }
+
+  // Stream paginated users by their IDs
+  Stream<List<String>> streamFriendsByIds(
+    int pageSize,
+    int page,
+    List<String> userIDs,
+  ) async* {
+    final buffer = <String>[];
+    final startIndex = page * pageSize;
+
+    if (startIndex >= userIDs.length) {
+      yield buffer;
+      return;
+    }
+
+    final userIDsPage = userIDs.skip(startIndex).take(pageSize).toList();
+
+    // Process documents and add to buffer
+    for (final uid in userIDsPage) {
+      buffer.add(uid);
+    }
+
+    yield buffer;
   }
 }
 

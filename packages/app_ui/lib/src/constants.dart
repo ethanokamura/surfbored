@@ -121,6 +121,7 @@ class AppStrings {
   static const String website = 'website';
   static const String joined = 'joined';
   static const String blockedUser = 'User Not Avaliable.';
+  static const String emptyFriends = 'No friends yet!';
 
   // posts
   static const String editPost = 'Edit Post';

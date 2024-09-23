@@ -42,7 +42,8 @@ Future<void> bootstrap({
 
       final app = await builder();
       await SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitUp]).then((value) => runApp(app));
+        [DeviceOrientation.portraitUp],
+      ).then((value) => runApp(app));
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );

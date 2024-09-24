@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:surfbored/features/friends/friends_page/view/friend_card.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 
 class FriendsListView extends StatelessWidget {
   const FriendsListView({
@@ -33,7 +34,9 @@ class FriendsListView extends StatelessWidget {
           itemCount: friends.length,
           itemBuilder: (context, index) {
             final friend = friends[index];
-            return FriendCard(userID: friend);
+            return friend.isEmpty
+                ? const UnknownCard(message: 'User not found')
+                : FriendCard(userID: friend);
           },
         ),
       ),

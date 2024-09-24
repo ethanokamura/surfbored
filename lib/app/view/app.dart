@@ -8,7 +8,7 @@ import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/home/home.dart';
 import 'package:surfbored/features/login/login.dart';
-import 'package:surfbored/features/reroutes/reroutes.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 import 'package:surfbored/theme/theme_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -85,7 +85,7 @@ class AppView extends StatelessWidget {
           onGenerateTitle: (context) => AppStrings.appTitle,
           theme: context.read<ThemeCubit>().themeData,
           onUnknownRoute: (settings) {
-            return MaterialPageRoute(builder: (_) => const ReroutePage());
+            return MaterialPageRoute(builder: (_) => const UnkownPage());
           },
           debugShowCheckedModeBanner: false,
           home: BlocListener<AppCubit, AppState>(

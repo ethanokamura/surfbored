@@ -14,7 +14,7 @@ lib/features/
     ├── login/                    # Handles user login and registration pages
     ├── posts/                    # Handles the posts features such as viewing or editing a post
     ├── profile/                  # Handles user features such as viewing or editing your profile
-    ├── reroutes/                 # Handles unexpected routing
     ├── search/                   # Handles search
-    └── tags/                     # Handles tags
+    ├── tags/                     # Handles tags
+    └── unknown/                  # Handles unexpected data
 ```

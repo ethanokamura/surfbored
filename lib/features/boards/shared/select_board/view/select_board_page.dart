@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/boards/shared/select_board/view/board_card.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 
 class SelectBoardPage extends StatelessWidget {
   const SelectBoardPage({
@@ -112,10 +113,12 @@ class SelectBoardListView extends StatelessWidget {
         itemCount: boards.length,
         itemBuilder: (context, index) {
           final board = boards[index];
-          return SelectBoardCard(
-            postID: postID,
-            board: board,
-          );
+          return board.isEmpty
+              ? const UnknownCard(message: 'Board not found')
+              : SelectBoardCard(
+                  postID: postID,
+                  board: board,
+                );
         },
       ),
     );

@@ -5,8 +5,10 @@ import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
+import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -39,8 +41,7 @@ class _ProfilePageState extends State<ProfilePage>
       ),
       child: BlocBuilder<ProfileCubit, User>(
         builder: (context, user) {
-          if (!user.isEmpty) return ProfileBuilder(user: user);
-          return const Center(child: CircularProgressIndicator());
+          return user.isEmpty ? const UnkownPage() : ProfileBuilder(user: user);
         },
       ),
     );

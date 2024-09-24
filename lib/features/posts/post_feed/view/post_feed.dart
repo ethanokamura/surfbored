@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/post/post.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 
 class PostFeed extends StatelessWidget {
   const PostFeed({super.key});
@@ -29,10 +30,12 @@ class PostFeed extends StatelessWidget {
                 itemCount: posts.length,
                 itemBuilder: (context, index) {
                   final post = posts[index];
-                  return PostView(
-                    post: post,
-                    postCubit: context.read<PostCubit>(),
-                  );
+                  return post.isEmpty
+                      ? const UnknownCard(message: 'Post not found')
+                      : PostView(
+                          post: post,
+                          postCubit: context.read<PostCubit>(),
+                        );
                 },
               ),
             );

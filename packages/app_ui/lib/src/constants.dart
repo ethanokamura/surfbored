@@ -53,7 +53,8 @@ class AppStrings {
   static const String activityFeed = 'Activity Feed';
   static const String inbox = 'Inbox';
   static const String userSettings = 'User Settings';
-  static const String pageNotFound = 'Error 404: Page Not Found.';
+  static const String pageNotFoundTitle = 'Error 404';
+  static const String pageNotFound = 'Page Not Found.';
 
   // buttons
   static const String share = 'Share';
@@ -107,6 +108,7 @@ class AppStrings {
   // misc
   static const String requiredFields = '* required fields';
   static const String theme = 'Theme';
+  static const String nullData = 'Unable to get data.';
 
   // User
   static const String createUsername = 'Create Username';

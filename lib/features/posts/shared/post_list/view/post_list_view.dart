@@ -2,6 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/shared/post_list/view/post_card.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 
 class PostListView extends StatelessWidget {
   const PostListView({
@@ -34,7 +35,9 @@ class PostListView extends StatelessWidget {
           itemCount: posts.length,
           itemBuilder: (context, index) {
             final post = posts[index];
-            return PostCard(post: post);
+            return post.isEmpty
+                ? const UnknownCard(message: 'Post not found')
+                : PostCard(post: post);
           },
         ),
       ),

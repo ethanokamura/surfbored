@@ -3,6 +3,7 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 
 class UserBoardsList extends StatelessWidget {
   const UserBoardsList({required this.userID, super.key});
@@ -79,7 +80,9 @@ class BoardListView extends StatelessWidget {
           itemCount: boards.length,
           itemBuilder: (context, index) {
             final board = boards[index];
-            return BoardCard(board: board);
+            return board.isEmpty
+                ? const UnknownCard(message: 'Board not found')
+                : BoardCard(board: board);
           },
         ),
       ),

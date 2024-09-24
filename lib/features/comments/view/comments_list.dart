@@ -2,6 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:comment_repository/comment_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:surfbored/features/comments/comment/comment.dart';
+import 'package:surfbored/features/unknown/unknown.dart';
 
 class CommentListView extends StatelessWidget {
   const CommentListView({
@@ -21,7 +22,9 @@ class CommentListView extends StatelessWidget {
       itemCount: comments.length,
       itemBuilder: (context, index) {
         final comment = comments[index];
-        return CommentCard(comment: comment, postID: postID);
+        return comment.isEmpty
+            ? const UnknownCard(message: 'Comment not found.')
+            : CommentCard(comment: comment, postID: postID);
       },
     );
   }

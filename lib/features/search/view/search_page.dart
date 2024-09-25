@@ -6,7 +6,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/search/view/post_results.dart';
-import 'package:surfbored/features/search/view/search_metadata.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -30,10 +29,6 @@ class _SearchPageState extends State<SearchPage> {
     apiKey: dotenv.env['ALGOLIA_SEARCH_ID']!,
     indexName: 'Posts',
   );
-
-  // stream hits:
-  Stream<SearchMetadata> get _searchMetadata =>
-      _postsSearcher.responses.map(SearchMetadata.fromResponse);
 
   // stream results:
   Stream<PostResults> get _searchPage =>
@@ -75,43 +70,35 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      top: false,
-      body: Column(
-        children: <Widget>[
-          CustomContainer(
-            vertical: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                defaultIconStyle(context, AppIcons.search),
-                const HorizontalSpacer(),
-                Expanded(
-                  child: TextField(
-                    controller: _searchTextController,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search for something new',
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: CustomPageView(
+        top: false,
+        body: Column(
+          children: <Widget>[
+            CustomContainer(
+              vertical: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  defaultIconStyle(context, AppIcons.search),
+                  const HorizontalSpacer(),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchTextController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Search for something new',
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          StreamBuilder<SearchMetadata>(
-            stream: _searchMetadata,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const SizedBox.shrink();
-              }
-              return Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text('${snapshot.data!.nbHits} results'),
-              );
-            },
-          ),
-          Expanded(child: _results(context, _pagingController)),
-        ],
+            const VerticalSpacer(),
+            Expanded(child: _results(context, _pagingController)),
+          ],
+        ),
       ),
     );
   }
@@ -121,6 +108,7 @@ class _SearchPageState extends State<SearchPage> {
     PagingController<int, Post> pagingController,
   ) =>
       PagedListView<int, Post>.separated(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: const EdgeInsets.only(bottom: defaultPadding),
         pagingController: pagingController,
         separatorBuilder: (context, index) => const VerticalSpacer(),

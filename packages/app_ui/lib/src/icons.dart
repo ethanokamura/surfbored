@@ -18,6 +18,14 @@ Icon accentIconStyle(BuildContext context, IconData icon) {
   );
 }
 
+Icon inverseIconStyle(BuildContext context, IconData icon) {
+  return Icon(
+    icon,
+    color: Theme.of(context).inverseTextColor,
+    size: 14,
+  );
+}
+
 Icon surfaceIconStyle(BuildContext context, IconData icon) {
   return Icon(
     icon,

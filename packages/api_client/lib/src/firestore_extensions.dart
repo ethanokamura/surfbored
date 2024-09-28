@@ -1,30 +1,7 @@
-import 'dart:io';
-
 import 'package:api_client/api_client.dart';
 
 extension FirebaseFirestoreExtensions on FirebaseFirestore {
   String createId() => collection('_').doc().id;
-
-  // upload image
-  Future<String?> uploadImage(
-    String collection,
-    String doc,
-    File file,
-  ) async {
-    try {
-      // upload to firebase
-      final url = await FirebaseStorage.instance
-          .uploadFile('$collection/$doc/cover_image.jpeg', file);
-      // save photoURL to document
-      await FirebaseFirestore.instance
-          .collection(collection)
-          .doc(doc)
-          .update({'photoURL': url});
-      return url;
-    } catch (e) {
-      return null;
-    }
-  }
 
   Future<void> processQueryInBatches(
     Query query,

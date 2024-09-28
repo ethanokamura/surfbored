@@ -1,13 +1,13 @@
 import 'package:app_core/app_core.dart';
 import 'package:user_repository/user_repository.dart';
 
-class ProfileCubit extends Cubit<User> {
+class ProfileCubit extends Cubit<UserData> {
   ProfileCubit({
     required UserRepository userRepository,
     required String userID,
   })  : _userRepository = userRepository,
         _userID = userID,
-        super(User.empty) {
+        super(UserData.empty) {
     _watchUser();
   }
 
@@ -20,9 +20,9 @@ class ProfileCubit extends Cubit<User> {
     return super.close();
   }
 
-  void _onUserChanged(User user) => emit(user);
+  void _onUserChanged(UserData user) => emit(user);
 
-  late final StreamSubscription<User> _userSubscription;
+  late final StreamSubscription<UserData> _userSubscription;
   void _watchUser() {
     _userSubscription = _userRepository
         .watchUserByID(_userID)
@@ -36,9 +36,5 @@ class ProfileCubit extends Cubit<User> {
 
   Future<void> editField(String field, dynamic data) async {
     await _userRepository.updateField(_userID, field, data);
-  }
-
-  Future<void> setPhotoURL(String url) async {
-    await _userRepository.setPhotoURL(url);
   }
 }

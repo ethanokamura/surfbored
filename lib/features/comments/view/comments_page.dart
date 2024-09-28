@@ -128,7 +128,7 @@ class _CommentContorllerState extends State<CommentContorller> {
               await context.read<CommentsCubit>().createComment(
                     widget.postID,
                     widget.userID,
-                    context.read<UserRepository>().user.uid,
+                    context.read<UserRepository>().user.id,
                     textController.text,
                   );
             }

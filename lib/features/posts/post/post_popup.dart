@@ -16,7 +16,7 @@ Future<dynamic> postPopUp(
   Post post,
 ) async {
   final postCubit = context.read<PostCubit>();
-  final userID = context.read<UserRepository>().user.uid;
+  final userID = context.read<UserRepository>().user.id;
   final isOwner = userID == post.uid;
 
   await showModalBottomSheet<void>(
@@ -114,7 +114,7 @@ Future<dynamic> postPopUp(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  UserDetails(uid: post.uid),
+                  UserDetails(id: post.uid),
                   Row(
                     children: [
                       CommentButton(

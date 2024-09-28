@@ -139,7 +139,7 @@ class _CreatePostState extends State<CreatePost> {
                 onTap: () {
                   context.read<CreateCubit>().create(
                         type: widget.type.toLowerCase(),
-                        userID: context.read<UserRepository>().user.uid,
+                        userID: context.read<UserRepository>().user.id,
                         title: titleText,
                         description: descriptionText,
                         website: websiteText,

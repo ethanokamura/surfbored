@@ -20,7 +20,7 @@ class PostView extends StatelessWidget {
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    final userID = context.read<UserRepository>().user.uid;
+    final userID = context.read<UserRepository>().user.id;
     return Flexible(
       child: CustomContainer(
         child: Column(
@@ -146,7 +146,7 @@ class Footer extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        UserDetails(uid: post.uid),
+        UserDetails(id: post.uid),
         LikeButton(post: post, userID: userID),
       ],
     );

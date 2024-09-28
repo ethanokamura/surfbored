@@ -59,7 +59,7 @@ class ProfileSettingsPage extends StatelessWidget {
             ),
             ActionButton(
               inverted: false,
-              onTap: context.read<AppCubit>().logOut,
+              onTap: context.read<AppCubit>().signOut,
               text: AppStrings.logOut,
             ),
           ],

@@ -20,5 +20,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Supabase
+  supabase_flutter: ^2.6.0
+
 dev_dependencies:
   very_good_analysis: ^6.0.0

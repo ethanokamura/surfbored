@@ -13,6 +13,10 @@ Future<void> main() async {
       init: () async {
         try {
           await dotenv.load();
+          await Supabase.initialize(
+            url: dotenv.env['SUPABASE_URL']!,
+            anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+          );
           await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
           );

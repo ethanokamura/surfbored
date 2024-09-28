@@ -37,7 +37,11 @@ class AppStrings {
   static const String guestText = 'Sign in as guest';
 
   // auth error
-  static const String phoneNumber = 'Phone Number';
+  static const String phoneNumberPrompt = 'Enter phone number.';
+  static const String invalidPhoneNumber = 'Invalid phone number.';
+  static const String otpPrompt = 'Enter OTP.';
+  static const String invalidOtp = 'Invalid OTP.';
+
   static const String verificationCode = 'Verification Code';
   static const String verificationError = 'Verification error, try again.';
   static const String authFailure = 'Failure to authenticate.';
@@ -112,6 +116,7 @@ class AppStrings {
 
   // User
   static const String createUsername = 'Create Username';
+  static const String invalidUsername = 'Invalid Username';
   static const String username = 'Username';
   static const String name = 'Name';
   static const String bio = 'Bio';

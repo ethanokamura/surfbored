@@ -5,12 +5,12 @@ import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfileLink extends StatelessWidget {
-  const ProfileLink({required this.uid, super.key});
-  final String uid;
+  const ProfileLink({required this.id, super.key});
+  final String id;
 
   Future<String?> _fetchUsername(BuildContext context) async {
     final userRepository = context.read<UserRepository>();
-    return userRepository.fetchUsername(uid);
+    return userRepository.readUsername(id);
   }
 
   @override
@@ -23,7 +23,7 @@ class ProfileLink extends StatelessWidget {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (context) => ProfilePage(userID: uid),
+              builder: (context) => ProfilePage(userID: id),
             ),
           ),
           child: Flexible(child: UserText(text: '@$username', bold: false)),

@@ -12,9 +12,7 @@ class AppCubit extends Cubit<AppState> {
               ? const AppState.unauthenticated()
               : userRepository.user.hasUsername
                   ? AppState.newlyAuthenticated(userRepository.user)
-                  : AppState.newlyAuthenticatedWithoutUsername(
-                      userRepository.user,
-                    ),
+                  : AppState.needsUsername(userRepository.user),
         ) {
     _watchUser();
   }
@@ -27,7 +25,7 @@ class AppCubit extends Cubit<AppState> {
     return super.close();
   }
 
-  Future<void> logOut() async {
+  Future<void> signOut() async {
     try {
       await _userRepository.signOut();
     } on UserFailure catch (failure) {
@@ -35,19 +33,16 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
-  void confirmedUsername(User user) {
+  void confirmedUsername(UserData user) {
+    print('confirmed');
     emit(AppState.newlyAuthenticated(user));
   }
 
-  void _onUserChanged(User user) {
+  void _onUserChanged(UserData user) {
     if (user.isEmpty) {
       emit(const AppState.unauthenticated());
     } else if (state.isUnauthenticated) {
-      if (user.hasUsername) {
-        emit(AppState.newlyAuthenticated(user));
-      } else {
-        emit(AppState.newlyAuthenticatedWithoutUsername(user));
-      }
+      emit(AppState.newlyAuthenticated(user));
     } else {
       emit(AppState.authenticated(user));
     }
@@ -63,7 +58,7 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
-  late final StreamSubscription<User> _userSubscription;
+  late final StreamSubscription<UserData> _userSubscription;
   void _watchUser() {
     _userSubscription = _userRepository.watchUser
         .handleFailure(_onUserFailed)

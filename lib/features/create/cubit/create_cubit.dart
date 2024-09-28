@@ -69,7 +69,8 @@ class CreateCubit extends Cubit<CreateState> {
         userID,
       );
       if (imageFile != null) {
-        await FirebaseFirestore.instance.uploadImage('posts', docID, imageFile);
+        await Supabase.instance
+            .uploadFile('posts', docID, imageFile.readAsBytesSync());
       }
       emit(state.fromCreated());
     } on PostFailure catch (failure) {
@@ -96,8 +97,8 @@ class CreateCubit extends Cubit<CreateState> {
         userID,
       );
       if (imageFile != null) {
-        await FirebaseFirestore.instance
-            .uploadImage('boards', docID, imageFile);
+        await Supabase.instance
+            .uploadFile('boards', docID, imageFile.readAsBytesSync());
       }
       emit(state.fromCreated());
     } on BoardFailure catch (failure) {

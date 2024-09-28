@@ -24,7 +24,7 @@ class EditProfilePage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: AppStrings.editProfile),
       ),
-      body: BlocBuilder<ProfileCubit, User>(
+      body: BlocBuilder<ProfileCubit, UserData>(
         builder: (context, user) {
           return EditProfile(user: user);
         },
@@ -35,7 +35,7 @@ class EditProfilePage extends StatelessWidget {
 
 class EditProfile extends StatelessWidget {
   const EditProfile({required this.user, super.key});
-  final User user;
+  final UserData user;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -46,12 +46,9 @@ class EditProfile extends StatelessWidget {
             height: 200,
             photoURL: user.photoURL,
             collection: 'users',
-            docID: user.uid,
-            onFileChanged: (url) {
-              context.read<ProfileCubit>()
-                ..editField('photoURL', url)
-                ..setPhotoURL(url);
-            },
+            docID: user.id,
+            onFileChanged: (url) =>
+                context.read<ProfileCubit>().editField('photo_url', url),
           ),
           const VerticalSpacer(),
           CustomTextBox(
@@ -118,11 +115,11 @@ class EditProfile extends StatelessWidget {
             },
           ),
           const VerticalSpacer(),
-          EditTagsBox(
-            tags: user.tags,
-            updateTags: (newTags) =>
-                context.read<ProfileCubit>().editField('tags', newTags),
-          ),
+          // EditTagsBox(
+          //   tags: user.tags,
+          //   updateTags: (newTags) =>
+          //       context.read<ProfileCubit>().editField('tags', newTags),
+          // ),
         ],
       ),
     );

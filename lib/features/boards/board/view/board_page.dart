@@ -119,7 +119,7 @@ class BoardPageView extends StatelessWidget {
       body: Column(
         children: [
           BoardButtons(
-            isOwner: board.userOwnsBoard(userID: user.uid),
+            isOwner: board.userOwnsBoard(userID: user.id),
             user: user,
             board: board,
           ),
@@ -147,7 +147,7 @@ class BoardDetails extends StatelessWidget {
         ),
         DescriptionText(text: board.description),
         const VerticalSpacer(),
-        ProfileLink(uid: board.uid),
+        ProfileLink(id: board.uid),
       ],
     );
   }
@@ -162,7 +162,7 @@ class BoardButtons extends StatelessWidget {
   });
   final bool isOwner;
   final Board board;
-  final User user;
+  final UserData user;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -179,7 +179,7 @@ class BoardButtons extends StatelessWidget {
           Expanded(
             child: SaveButton(
               board: board,
-              userID: user.uid,
+              userID: user.id,
             ),
           ),
         const HorizontalSpacer(),

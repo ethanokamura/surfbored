@@ -12,7 +12,7 @@ Future<dynamic> postSearchPopUp(
   BuildContext context,
   Post post,
 ) async {
-  final userID = context.read<UserRepository>().user.uid;
+  final userID = context.read<UserRepository>().user.id;
   await showModalBottomSheet<void>(
     context: context,
     backgroundColor: Theme.of(context).colorScheme.surface,
@@ -86,7 +86,7 @@ Future<dynamic> postSearchPopUp(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    UserDetails(uid: post.uid),
+                    UserDetails(id: post.uid),
                     LikeButton(post: post, userID: userID),
                   ],
                 ),

@@ -5,17 +5,17 @@ import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class UserDetails extends StatelessWidget {
-  const UserDetails({required this.uid, super.key});
-  final String uid;
+  const UserDetails({required this.id, super.key});
+  final String id;
 
   Future<String?> _fetchUsername(BuildContext context) async {
     final userRepository = context.read<UserRepository>();
-    return userRepository.fetchUsername(uid);
+    return userRepository.readUsername(id);
   }
 
   Future<String?> _fetchPhotoURL(BuildContext context) async {
     final userRepository = context.read<UserRepository>();
-    return userRepository.fetchPhotoURL(uid);
+    return userRepository.readUserPhotoURL(id);
   }
 
   @override
@@ -24,7 +24,7 @@ class UserDetails extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute<dynamic>(
-          builder: (context) => ProfilePage(userID: uid),
+          builder: (context) => ProfilePage(userID: id),
         ),
       ),
       child: Flexible(

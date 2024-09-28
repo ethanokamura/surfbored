@@ -133,19 +133,22 @@ class _EditImageState extends State<EditImage> {
       // failed compression
       if (compressedImage == null) throw Exception('Image compression failed');
 
-      // get path
-      final path = '${widget.collection}/${widget.docID}/cover_image.jpeg';
+      setState(() {
+        pickedImage = compressedImage.readAsBytesSync();
+      });
+
+      if (pickedImage == null) return;
 
       // upload image
-      final uploadURL = await FirebaseStorage.instance.uploadFile(
-        path,
-        compressedImage,
+      final uploadURL = await Supabase.instance.uploadFile(
+        widget.collection,
+        widget.docID,
+        pickedImage!,
       );
 
       // set state
       setState(() {
         photoURL = uploadURL;
-        pickedImage = compressedImage.readAsBytesSync();
         isLoading = false;
       });
 
@@ -598,19 +601,22 @@ class _EditSquareImageState extends State<EditSquareImage> {
       // failed compression
       if (compressedImage == null) throw Exception('Image compression failed');
 
-      // get path
-      final path = '${widget.collection}/${widget.docID}/cover_image.jpeg';
+      setState(() {
+        pickedImage = compressedImage.readAsBytesSync();
+      });
+
+      if (pickedImage == null) return;
 
       // upload image
-      final uploadURL = await FirebaseStorage.instance.uploadFile(
-        path,
-        compressedImage,
+      final uploadURL = await Supabase.instance.uploadFile(
+        widget.collection,
+        widget.docID,
+        pickedImage!,
       );
 
       // set state
       setState(() {
         photoURL = uploadURL;
-        pickedImage = compressedImage.readAsBytesSync();
         isLoading = false;
       });
 

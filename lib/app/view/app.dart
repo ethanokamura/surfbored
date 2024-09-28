@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';
+import 'package:surfbored/features/authentication/create_user/create_user.dart';
+import 'package:surfbored/features/authentication/login/login.dart';
 import 'package:surfbored/features/home/home.dart';
-import 'package:surfbored/features/login/login.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
 import 'package:surfbored/theme/theme_cubit.dart';
 import 'package:user_repository/user_repository.dart';
@@ -22,8 +23,8 @@ List<Page<dynamic>> onGenerateAppPages(
   if (status.isNewlyAuthenticated) {
     return [HomePage.page()];
   }
-  if (status.isNewlyAuthenticatedWithoutUsername) {
-    return [SignUpPage.page()];
+  if (status.needsUsername) {
+    return [CreateUserPage.page()];
   }
   return pages;
 }

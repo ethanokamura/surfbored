@@ -4,12 +4,9 @@ import 'package:board_repository/board_repository.dart';
 class BoardRepository {
   BoardRepository({
     FirebaseFirestore? firestore,
-    FirebaseStorage? storage,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _storage = storage ?? FirebaseStorage.instance;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
-  final FirebaseStorage _storage;
 }
 
 extension Create on BoardRepository {
@@ -251,9 +248,9 @@ extension Delete on BoardRepository {
       await _firestore.deleteDocumentsByQuery(boardsQuery, batch);
 
       // Optionally delete the associated image file
-      if (photoURL.isNotEmpty) {
-        await _storage.refFromURL(photoURL).delete();
-      }
+      // if (photoURL.isNotEmpty) {
+      //   await _storage.refFromURL(photoURL).delete();
+      // }
 
       await batch.commit();
     } on FirebaseException {

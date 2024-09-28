@@ -5,12 +5,9 @@ import 'package:post_repository/src/models/models.dart';
 class PostRepository {
   PostRepository({
     FirebaseFirestore? firestore,
-    FirebaseStorage? storage,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _storage = storage ?? FirebaseStorage.instance;
+  }) : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
-  final FirebaseStorage _storage;
 }
 
 extension Create on PostRepository {
@@ -338,10 +335,10 @@ extension Delete on PostRepository {
         });
       });
 
-      // Optionally delete the associated image file
-      if (photoURL.isNotEmpty) {
-        await _storage.refFromURL(photoURL).delete();
-      }
+      // // Optionally delete the associated image file
+      // if (photoURL.isNotEmpty) {
+      //   await _storage.refFromURL(photoURL).delete();
+      // }
 
       await batch.commit();
     } on FirebaseException {

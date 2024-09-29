@@ -9,11 +9,10 @@ part of 'models.dart';
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       id: json['id'] as String,
       username: json['username'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      photoURL: json['photoURL'] as String?,
+      displayName: json['displayName'] as String? ?? '',
+      photoUrl: json['photoUrl'] as String?,
       bio: json['bio'] as String? ?? '',
-      website: json['website'] as String? ?? '',
-      friendsCount: (json['friendsCount'] as num?)?.toInt() ?? 0,
+      websiteUrl: json['websiteUrl'] as String? ?? '',
       lastSignIn: json['lastSignIn'] == null
           ? null
           : DateTime.parse(json['lastSignIn'] as String),
@@ -25,11 +24,10 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
-      'name': instance.name,
-      'photoURL': instance.photoURL,
+      'displayName': instance.displayName,
+      'photoUrl': instance.photoUrl,
       'bio': instance.bio,
-      'website': instance.website,
-      'friendsCount': instance.friendsCount,
+      'websiteUrl': instance.websiteUrl,
       'lastSignIn': instance.lastSignIn?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
     };

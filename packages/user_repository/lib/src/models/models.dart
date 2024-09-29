@@ -15,6 +15,10 @@ class UserData extends Equatable {
     this.createdAt,
   });
 
+  factory UserData.converterSingle(Map<String, dynamic> data) {
+    return UserData.fromJson(data);
+  }
+
   // factory constructor
   // this tells the json serializable what to do
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -81,29 +85,47 @@ class UserData extends Equatable {
     };
   }
 
-  static Map<String, dynamic> insert(UserData data) {
+  static Map<String, dynamic> insert({
+    String? id,
+    String? username,
+    String? displayName,
+    String? photoUrl,
+    String? bio,
+    String? websiteUrl,
+    DateTime? lastSignIn,
+    DateTime? createdAt,
+  }) {
     return _generateMap(
-      id: data.id,
-      username: data.username,
-      displayName: data.displayName,
-      photoUrl: data.photoUrl,
-      bio: data.bio,
-      websiteUrl: data.websiteUrl,
-      lastSignIn: data.lastSignIn,
-      createdAt: data.createdAt,
+      id: id,
+      username: username,
+      displayName: displayName,
+      photoUrl: photoUrl,
+      bio: bio,
+      websiteUrl: websiteUrl,
+      lastSignIn: lastSignIn,
+      createdAt: createdAt,
     );
   }
 
-  static Map<String, dynamic> update(UserData data) {
+  static Map<String, dynamic> update({
+    String? id,
+    String? username,
+    String? displayName,
+    String? photoUrl,
+    String? bio,
+    String? websiteUrl,
+    DateTime? lastSignIn,
+    DateTime? createdAt,
+  }) {
     return _generateMap(
-      id: data.id,
-      username: data.username,
-      displayName: data.displayName,
-      photoUrl: data.photoUrl,
-      bio: data.bio,
-      websiteUrl: data.websiteUrl,
-      lastSignIn: data.lastSignIn,
-      createdAt: data.createdAt,
+      id: id,
+      username: username,
+      displayName: displayName,
+      photoUrl: photoUrl,
+      bio: bio,
+      websiteUrl: websiteUrl,
+      lastSignIn: lastSignIn,
+      createdAt: createdAt,
     );
   }
 

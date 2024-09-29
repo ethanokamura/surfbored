@@ -2,9 +2,11 @@ import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:comment_repository/comment_repository.dart';
+import 'package:friend_repository/friend_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/app/app.dart';
 import 'package:surfbored/firebase_options.dart';
+import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {
@@ -31,10 +33,14 @@ Future<void> main() async {
         final boardRepository = BoardRepository();
         final postRepository = PostRepository();
         final commentRepository = CommentRepository();
+        final tagRepository = TagRepository();
+        final friendRepository = FriendRepository();
         return App(
           boardRepository: boardRepository,
           commentRepository: commentRepository,
           postRepository: postRepository,
+          tagRepository: tagRepository,
+          friendRepository: friendRepository,
           userRepository: userRepository,
         );
       },

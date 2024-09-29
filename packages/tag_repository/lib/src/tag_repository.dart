@@ -1,69 +1,112 @@
 import 'package:api_client/api_client.dart';
+import 'package:tag_repository/tag_repository.dart';
 
 class TagRepository {
   TagRepository({SupabaseClient? supabase})
       : _supabase = supabase ?? Supabase.instance.client;
 
   final SupabaseClient _supabase;
+}
 
-  // Create a new tag and associate it with a user, post, or board
-  Future<void> createTag(
-      String tagName, String userId, String postId, String boardId) async {
-    final response = await _supabase.from('tags').insert({
-      'name': tagName,
-      'user_id': userId,
-      'post_id': postId,
-      'board_id': boardId,
-    }).execute();
+extension Create on TagRepository {
+  Future<void> createUserTag(String tagName, String uuid) async =>
+      _createTag(tagName: tagName, uuid: uuid, type: 'user');
 
-    if (response.error != null) {
-      throw Exception('Failed to create tag: ${response.error!.message}');
-    }
-  }
+  Future<void> createPostTag(String tagName, String uuid) async =>
+      _createTag(tagName: tagName, uuid: uuid, type: 'post');
 
-  // Read all tags associated with a specific user
-  Future<List<Map<String, dynamic>>> readUserTags(String userId) async {
-    final response =
-        await _supabase.from('tags').select().eq('user_id', userId).execute();
+  Future<void> createBoardTag(String tagName, String uuid) async =>
+      _createTag(tagName: tagName, uuid: uuid, type: 'board');
+}
 
-    if (response.error != null) {
-      throw Exception('Failed to read user tags: ${response.error!.message}');
-    }
+extension Read on TagRepository {
+  Future<List<String>> readUserTags(String uuid) async =>
+      _readTags(type: 'user', uuid: uuid);
 
-    return response.data as List<Map<String, dynamic>>;
-  }
+  Future<List<String>> readPostTags(String uuid) async =>
+      _readTags(type: 'post', uuid: uuid);
 
-  // Read all tags associated with a specific post
-  Future<List<Map<String, dynamic>>> readPostTags(String postId) async {
-    final response =
-        await _supabase.from('tags').select().eq('post_id', postId).execute();
+  Future<List<String>> readBoardTags(String uuid) async =>
+      _readTags(type: 'board', uuid: uuid);
+}
 
-    if (response.error != null) {
-      throw Exception('Failed to read post tags: ${response.error!.message}');
-    }
-
-    return response.data as List<Map<String, dynamic>>;
-  }
-
-  // Read all tags associated with a specific board
-  Future<List<Map<String, dynamic>>> readBoardTags(String boardId) async {
-    final response =
-        await _supabase.from('tags').select().eq('board_id', boardId).execute();
-
-    if (response.error != null) {
-      throw Exception('Failed to read board tags: ${response.error!.message}');
-    }
-
-    return response.data as List<Map<String, dynamic>>;
-  }
-
+extension Delete on TagRepository {
   // Delete a tag by its ID
   Future<void> deleteTag(String tagId) async {
-    final response =
-        await _supabase.from('tags').delete().eq('id', tagId).execute();
+    try {
+      await _supabase.from('tags').delete().eq('id', tagId);
+    } catch (e) {
+      throw TagFailure.fromDeleteTag();
+    }
+  }
+}
 
-    if (response.error != null) {
-      throw Exception('Failed to delete tag: ${response.error!.message}');
+// private methods
+extension Private on TagRepository {
+  Future<void> _createTag({
+    required String tagName,
+    required String uuid,
+    required String type,
+  }) async {
+    final tagId = await _getOrCreateTagId(tagName: tagName);
+    try {
+      await _supabase.from('${type}_tags').insert({
+        'name': tagId,
+        '${type}_tags': uuid,
+      });
+    } catch (e) {
+      throw TagFailure.fromCreateTag();
+    }
+  }
+
+  Future<String> _getOrCreateTagId({required String tagName}) async {
+    try {
+      final existingTag = await _supabase
+          .from('tags')
+          .select('id')
+          .eq('name', tagName)
+          .maybeSingle();
+
+      if (existingTag == null || existingTag.isEmpty) {
+        return _createNewTag(tagName: tagName);
+      }
+      return existingTag['id'] as String;
+    } catch (e) {
+      throw TagFailure.fromCreateTag();
+    }
+  }
+
+  Future<String> _createNewTag({required String tagName}) async {
+    try {
+      final newTag = await _supabase
+          .from('tags')
+          .insert({'name': tagName})
+          .select()
+          .single();
+      if (newTag.isEmpty) {
+        throw TagFailure.fromCreateTag();
+      }
+      return newTag['id'] as String;
+    } catch (e) {
+      throw TagFailure.fromGetTag();
+    }
+  }
+
+  Future<List<String>> _readTags({
+    required String type,
+    required String uuid,
+  }) async {
+    try {
+      final response = await _supabase
+          .from('${type}_tags')
+          .select('tags(name)')
+          .eq('${type}_id', uuid);
+      if (response.isEmpty) return [];
+      return response
+          .map<String>((row) => (row as Map<String, String>)['name']!)
+          .toList();
+    } catch (e) {
+      throw TagFailure.fromGetTag();
     }
   }
 }

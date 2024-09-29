@@ -1,32 +1,32 @@
 import 'package:app_core/app_core.dart';
 
-class PostFailure extends Failure {
-  const PostFailure._();
+class TagFailure extends Failure {
+  const TagFailure._();
 
-  factory PostFailure.fromCreatePost() => const CreatePostFailure();
-  factory PostFailure.fromGetPost() => const GetPostFailure();
-  factory PostFailure.fromUpdatePost() => const UpdatePostFailure();
-  factory PostFailure.fromDeletePost() => const DeletePostFailure();
+  factory TagFailure.fromCreateTag() => const CreateTagFailure();
+  factory TagFailure.fromGetTag() => const GetTagFailure();
+  factory TagFailure.fromUpdateTag() => const UpdateTagFailure();
+  factory TagFailure.fromDeleteTag() => const DeleteTagFailure();
 
-  static const empty = EmptyPostFailure();
+  static const empty = EmptyTagFailure();
 }
 
-class CreatePostFailure extends PostFailure {
-  const CreatePostFailure() : super._();
+class CreateTagFailure extends TagFailure {
+  const CreateTagFailure() : super._();
 }
 
-class GetPostFailure extends PostFailure {
-  const GetPostFailure() : super._();
+class GetTagFailure extends TagFailure {
+  const GetTagFailure() : super._();
 }
 
-class UpdatePostFailure extends PostFailure {
-  const UpdatePostFailure() : super._();
+class UpdateTagFailure extends TagFailure {
+  const UpdateTagFailure() : super._();
 }
 
-class DeletePostFailure extends PostFailure {
-  const DeletePostFailure() : super._();
+class DeleteTagFailure extends TagFailure {
+  const DeleteTagFailure() : super._();
 }
 
-class EmptyPostFailure extends PostFailure {
-  const EmptyPostFailure() : super._();
+class EmptyTagFailure extends TagFailure {
+  const EmptyTagFailure() : super._();
 }

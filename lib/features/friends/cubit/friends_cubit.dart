@@ -1,12 +1,12 @@
 import 'package:app_core/app_core.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:friend_repository/friend_repository.dart';
 
 part 'friends_state.dart';
 
 class FriendsCubit extends Cubit<FriendsState> {
-  FriendsCubit(this._userRepository) : super(const FriendsState.initial());
+  FriendsCubit(this._friendRepository) : super(const FriendsState.initial());
 
-  final UserRepository _userRepository;
+  final FriendRepository _friendRepository;
 
   int _currentPage = 0;
   final int _pageSize = 10;
@@ -32,7 +32,7 @@ class FriendsCubit extends Cubit<FriendsState> {
 
   void _loadMoreFriends(String userID, {bool reset = false}) {
     try {
-      _userRepository
+      _friendRepository
           .streamFriends(userID, pageSize: _pageSize, page: _currentPage)
           .listen(
         (friends) {
@@ -53,12 +53,12 @@ class FriendsCubit extends Cubit<FriendsState> {
           emit(state.fromEmpty());
         },
       );
-    } on UserFailure catch (failure) {
+    } on FriendFailure catch (failure) {
       emit(state.fromFailure(failure));
     }
   }
 
   Future<void> modifiyFriend(String userID) async {
-    await _userRepository.modifyFriend(userID);
+    await _friendRepository.modifyFriend(userID);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
+import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class EditProfilePage extends StatelessWidget {
@@ -44,7 +45,7 @@ class EditProfile extends StatelessWidget {
           EditSquareImage(
             width: 200,
             height: 200,
-            photoURL: user.photoURL,
+            photoURL: user.photoUrl,
             collection: 'users',
             docID: user.id,
             onFileChanged: (url) =>
@@ -69,7 +70,7 @@ class EditProfile extends StatelessWidget {
           ),
           const VerticalSpacer(),
           CustomTextBox(
-            text: user.name,
+            text: user.displayName,
             label: 'name',
             onPressed: () async {
               final newValue = await editTextField(
@@ -99,7 +100,7 @@ class EditProfile extends StatelessWidget {
           ),
           const VerticalSpacer(),
           CustomTextBox(
-            text: user.website,
+            text: user.websiteUrl,
             label: 'website',
             onPressed: () async {
               final newValue = await editTextField(
@@ -115,13 +116,27 @@ class EditProfile extends StatelessWidget {
             },
           ),
           const VerticalSpacer(),
-          // EditTagsBox(
-          //   tags: user.tags,
-          //   updateTags: (newTags) =>
-          //       context.read<ProfileCubit>().editField('tags', newTags),
-          // ),
+          FutureBuilder<List<String>>(
+            future: _getUserTags(user.id),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: PrimaryText(text: AppStrings.fetchFailure),
+                );
+              }
+              final tags = snapshot.data;
+              return EditTagsBox(
+                tags: tags!,
+                updateTags: (newTags) =>
+                    context.read<ProfileCubit>().editField('tags', newTags),
+              );
+            },
+          ),
         ],
       ),
     );
   }
+
+  Future<List<String>> _getUserTags(String uuid) async =>
+      TagRepository().readUserTags(uuid);
 }

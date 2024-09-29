@@ -205,7 +205,7 @@ class ProfileHeader extends StatelessWidget {
     return Row(
       children: [
         SquareImage(
-          photoURL: user.photoURL,
+          photoURL: user.photoUrl,
           width: 96,
           height: 96,
           borderRadius: defaultBorderRadius,
@@ -215,8 +215,8 @@ class ProfileHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // UserText(text: '@${user.username}', bold: true, fontSize: 24),
-            TitleText(text: user.name),
-            WebLink(url: user.website),
+            TitleText(text: user.displayName),
+            WebLink(url: user.websiteUrl),
             SecondaryText(
               text: '${AppStrings.joined}: ${DateFormatter.formatTimestamp(
                 user.createdAt!,

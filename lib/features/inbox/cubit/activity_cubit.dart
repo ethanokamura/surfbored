@@ -1,4 +1,5 @@
 import 'package:app_core/app_core.dart';
+import 'package:friend_repository/friend_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 // State definitions
@@ -7,10 +8,13 @@ part 'activity_state.dart';
 class ActivityCubit extends Cubit<ActivityState> {
   ActivityCubit({
     required UserRepository userRepository,
+    required FriendRepository friendRepository,
   })  : _userRepository = userRepository,
+        _friendRepository = friendRepository,
         super(const ActivityState.initial());
 
   final UserRepository _userRepository;
+  final FriendRepository _friendRepository;
 
   Future<void> fetchUserActivity(String userID) async {
     await fetchFriendRequests();
@@ -22,7 +26,7 @@ class ActivityCubit extends Cubit<ActivityState> {
   Future<void> fetchFriendRequests() async {
     try {
       final senderIDs =
-          await _userRepository.fetchFriendRequests(_userRepository.user.uid);
+          await _friendRepository.fetchPendingRequests(_userRepository.user.id);
       if (senderIDs.isEmpty) {
         emit(state.fromEmpty());
       } else {

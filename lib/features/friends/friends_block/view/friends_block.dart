@@ -1,10 +1,10 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:friend_repository/friend_repository.dart';
 import 'package:surfbored/features/friends/friend_button/cubit/friend_controller_cubit.dart';
 import 'package:surfbored/features/friends/friend_button/view/friend_button.dart';
 import 'package:surfbored/features/friends/friends_block/view/friend_count.dart';
-import 'package:user_repository/user_repository.dart';
 
 class FriendsBlock extends StatelessWidget {
   const FriendsBlock({
@@ -21,7 +21,7 @@ class FriendsBlock extends StatelessWidget {
     return CustomContainer(
       child: BlocProvider(
         create: (context) =>
-            FriendControllerCubit(context.read<UserRepository>())
+            FriendControllerCubit(context.read<FriendRepository>())
               ..fetchData(userID),
         child: BlocBuilder<FriendControllerCubit, FriendControllerState>(
           builder: (context, state) {

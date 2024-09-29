@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:friend_repository/friend_repository.dart';
 import 'package:surfbored/features/inbox/cubit/activity_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -34,6 +35,7 @@ class FriendRequestList extends StatelessWidget {
     return BlocProvider(
       create: (context) => ActivityCubit(
         userRepository: context.read<UserRepository>(),
+        friendRepository: context.read<FriendRepository>(),
       )..fetchFriendRequests(),
       child: BlocBuilder<ActivityCubit, ActivityState>(
         builder: (context, state) {

@@ -14,7 +14,7 @@ class FriendCard extends StatelessWidget {
       child: Row(
         children: [
           // pfp && username
-          UserDetails(uid: userID),
+          UserDetails(id: userID),
           ActionButton(
             text: 'Remove Friend',
             onTap: () => context.read<FriendsCubit>().modifiyFriend(userID),

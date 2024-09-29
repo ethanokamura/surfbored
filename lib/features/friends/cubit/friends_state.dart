@@ -12,14 +12,14 @@ final class FriendsState extends Equatable {
   const FriendsState._({
     this.status = FriendsStatus.initial,
     this.friends = const [],
-    this.failure = UserFailure.empty,
+    this.failure = FriendFailure.empty,
   });
 
   // initial state
   const FriendsState.initial() : this._();
 
   final FriendsStatus status;
-  final UserFailure failure;
+  final FriendFailure failure;
   final List<String> friends;
 
   // rebuilds the app when the props change
@@ -32,7 +32,7 @@ final class FriendsState extends Equatable {
 
   FriendsState copyWith({
     FriendsStatus? status,
-    UserFailure? failure,
+    FriendFailure? failure,
     List<String>? friends,
   }) {
     return FriendsState._(
@@ -58,7 +58,7 @@ extension _FriendsStateExtensions on FriendsState {
   FriendsState fromLoaded(List<String> friends) =>
       copyWith(status: FriendsStatus.loaded, friends: friends);
 
-  FriendsState fromFailure(UserFailure failure) => copyWith(
+  FriendsState fromFailure(FriendFailure failure) => copyWith(
         status: FriendsStatus.failure,
         failure: failure,
       );

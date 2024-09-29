@@ -15,63 +15,55 @@ class UserRepository {
   final SupabaseClient _supabase;
   late final ValueStream<UserData> _user;
 
-  /// current user as a stream
+  /// Current user as a stream.
   Stream<UserData> get watchUser => _user.asBroadcastStream();
 
-  /// get the current user's data synchonously
+  /// Get the current user's data synchronously.
   UserData get user => _user.valueOrNull ?? UserData.empty;
 
   /// Gets the initial [watchUser] emission.
-  /// Returns [UserData.empty] when an error occurs.
   Future<UserData> getOpeningUser() {
     return watchUser.first.catchError((Object _) => UserData.empty);
   }
 
-  /// gets generic [watchUser] emmision
+  /// Gets a generic [watchUser] emission.
   Stream<UserData> watchUserByID(String uuid) {
     return _supabase
         .from('users')
         .stream(primaryKey: ['id'])
         .eq('id', uuid)
-        .map(
-          (event) {
-            if (event.isNotEmpty) {
-              final data = event.first;
-              return UserData.fromJson(data);
-            }
-            return UserData.empty;
-          },
-        );
+        .map((event) {
+          if (event.isNotEmpty) {
+            return UserData.fromJson(event.first);
+          }
+          return UserData.empty; // Fallback for no user found
+        });
   }
 
   /// Watch for auth state changes and emit user data.
   ValueStream<UserData> authUserChanges() {
     final controller = BehaviorSubject<UserData>();
 
-    // Listen for Supabase auth state changes
     _supabase.auth.onAuthStateChange.listen((event) async {
       final session = event.session;
       if (session?.user == null) {
-        // If user is null (logged out), yield an empty user
-        controller.add(UserData.empty);
+        controller.add(UserData.empty); // Logged out
         return;
       }
 
-      // Check if the user exists in the database
       var response = await _supabase
           .from('users')
           .select()
           .eq('id', session!.user.id)
           .maybeSingle();
 
-      // If the user doesn't exist, create them
+      // If user doesn't exist, create them
       if (response == null) {
         await _supabase.from('users').insert({
-          'id': _supabase.auth.currentUser!.id,
+          'id': session.user.id,
           'phone_number': session.user.phone,
         });
 
-        // Fetch the newly inserted user data
         response = await _supabase
             .from('users')
             .select()
@@ -79,14 +71,13 @@ class UserRepository {
             .maybeSingle();
       }
 
-      // Yield the user data from the database
+      // Yield the user data
       final userData = UserData.fromJson(response!);
       controller.add(userData);
     }).onError((error) {
       controller.addError(UserFailure.fromAuthUserChanges());
     });
 
-    // Convert to ValueStream and return
     return controller.stream.logOnEach('USER').shareValue();
   }
 }
@@ -111,6 +102,7 @@ extension Auth on UserRepository {
       } else {
         throw UserFailure.fromPhoneNumberSignIn();
       }
+      await _updateUserData(response.user);
     } on AuthException {
       throw UserFailure.fromPhoneNumberSignIn();
     }
@@ -207,7 +199,7 @@ extension Update on UserRepository {
         'last_sign_in': DateTime.now().toUtc(),
       }).eq('id', supabaseUser.id);
     } catch (e) {
-      print(e);
+      throw UserFailure.fromUpdateUser();
     }
   }
 

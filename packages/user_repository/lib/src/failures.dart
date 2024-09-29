@@ -15,12 +15,6 @@ class UserFailure extends Failure {
   factory UserFailure.fromUpdateUsername() => const UpdateUsernameFailure();
   factory UserFailure.fromDeleteUsername() => const DeleteUsernameFailure();
 
-  // friend data retrieval
-  factory UserFailure.fromGetFriend() => const GetFriendFailure();
-  factory UserFailure.fromCreateFriend() => const CreateFriendFailure();
-  factory UserFailure.fromUpdateFriend() => const UpdateFriendFailure();
-  factory UserFailure.fromDeleteFriend() => const DeleteFriendFailure();
-
   // auth
   factory UserFailure.fromAuthUserChanges() => const AuthUserChangesFailure();
   factory UserFailure.fromAnonymousSignIn() => const AnonymousSignInFailure();
@@ -90,20 +84,4 @@ class UpdateUsernameFailure extends UserFailure {
 
 class DeleteUsernameFailure extends UserFailure {
   const DeleteUsernameFailure() : super._();
-}
-
-class GetFriendFailure extends UserFailure {
-  const GetFriendFailure() : super._();
-}
-
-class CreateFriendFailure extends UserFailure {
-  const CreateFriendFailure() : super._();
-}
-
-class UpdateFriendFailure extends UserFailure {
-  const UpdateFriendFailure() : super._();
-}
-
-class DeleteFriendFailure extends UserFailure {
-  const DeleteFriendFailure() : super._();
 }

@@ -46,34 +46,25 @@ class UserRepository {
 
     _supabase.auth.onAuthStateChange.listen((event) async {
       final session = event.session;
+
+      // logged out
       if (session?.user == null) {
-        controller.add(UserData.empty); // Logged out
+        controller.add(UserData.empty);
         return;
       }
 
-      var response = await _supabase
+      await _ensureUserExists(session!.user);
+
+      // get user
+      final response = await _supabase
           .from('users')
           .select()
-          .eq('id', session!.user.id)
-          .maybeSingle();
-
-      // If user doesn't exist, create them
-      if (response == null) {
-        await _supabase.from('users').insert({
-          'id': session.user.id,
-          'phone_number': session.user.phone,
-        });
-
-        response = await _supabase
-            .from('users')
-            .select()
-            .eq('id', session.user.id)
-            .maybeSingle();
-      }
+          .eq('id', session.user.id)
+          .single()
+          .withConverter(UserData.converterSingle);
 
       // Yield the user data
-      final userData = UserData.fromJson(response!);
-      controller.add(userData);
+      controller.add(response);
     }).onError((error) {
       controller.addError(UserFailure.fromAuthUserChanges());
     });
@@ -161,17 +152,25 @@ extension Create on UserRepository {
         .update({'username': username})
         .eq('id', _supabase.auth.currentUser!.id)
         .select()
-        .single();
-    return UserData.fromJson(res);
+        .single()
+        .withConverter(UserData.converterSingle);
+    return res;
   }
 }
 
 extension Read on UserRepository {
   // gets the user data by ID
   Future<UserData> readUserData(String uuid) async {
-    final res =
-        await _supabase.from('users').select().eq('id', uuid).maybeSingle();
-    return res != null ? UserData.fromJson(res) : UserData.empty;
+    final res = await _supabase
+        .from('users')
+        .select()
+        .eq('id', uuid)
+        .maybeSingle()
+        .withConverter(
+          (data) =>
+              data == null ? UserData.empty : UserData.converterSingle(data),
+        );
+    return res;
   }
 
   // get image

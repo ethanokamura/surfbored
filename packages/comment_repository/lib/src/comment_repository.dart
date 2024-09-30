@@ -1,6 +1,6 @@
 import 'package:api_client/api_client.dart';
 import 'package:comment_repository/src/failures.dart';
-import 'package:comment_repository/src/models/models.dart';
+import 'package:comment_repository/src/models/comment.dart';
 
 class CommentPage {
   CommentPage({

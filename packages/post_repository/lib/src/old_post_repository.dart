@@ -1,6 +1,6 @@
 import 'package:api_client/api_client.dart';
 import 'package:post_repository/src/failures.dart';
-import 'package:post_repository/src/models/models.dart';
+import 'package:post_repository/src/models/post.dart';
 
 class PostRepository {
   PostRepository({

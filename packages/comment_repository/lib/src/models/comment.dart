@@ -1,6 +1,6 @@
 import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
-part 'models.g.dart';
+part 'board.g.dart';
 
 @JsonSerializable()
 class Comment extends Equatable {

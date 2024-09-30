@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
 import 'package:user_repository/src/failures.dart';
-import 'package:user_repository/src/models/models.dart';
+import 'package:user_repository/src/models/user.dart';
 
 class UserRepository {
   UserRepository({

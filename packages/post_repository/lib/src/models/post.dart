@@ -1,6 +1,5 @@
-import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
-part 'models.g.dart';
+part 'post.g.dart';
 
 @JsonSerializable()
 class Post extends Equatable {
@@ -11,39 +10,26 @@ class Post extends Equatable {
     this.description,
     this.photoUrl,
     this.websiteUrl,
-    this.isPublic = true,
+    this.isPublic,
     this.createdAt,
   });
 
-  // allows for easy way to access algolia data
+  factory Post.converterSingle(Map<String, dynamic> data) {
+    return Post.fromJson(data);
+  }
+
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json['id'] as String? ?? '',
-      creatorId: json['creator_id'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      websiteUrl: json['website_url'] as String? ?? '',
-      photoUrl: json['photo_url'] as String? ?? '',
+      id: json['id']?.toString() ?? '',
+      creatorId: json['creator_id']?.toString() ?? '',
+      title: json['title']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      websiteUrl: json['website_url']?.toString() ?? '',
+      photoUrl: json['photo_url']?.toString() ?? '',
       isPublic: json['is_public'] as bool? ?? true,
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
     );
   }
-
-  static const empty = Post(
-    id: '',
-    creatorId: '',
-    title: '',
-  );
-
-  // data fields
-  final String id;
-  final String creatorId;
-  final String title;
-  final String? description;
-  final String? photoUrl;
-  final String? websiteUrl;
-  final bool isPublic;
-  final DateTime? createdAt;
 
   static String get idConverter => 'id';
   static String get creatorIdConverter => 'creator_id';
@@ -53,8 +39,45 @@ class Post extends Equatable {
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
 
+  static const empty = Post(id: '', creatorId: '', title: '');
+
+  final String id;
+  final String creatorId;
+  final String title;
+  final String? description;
+  final String? photoUrl;
+  final String? websiteUrl;
+  final bool? isPublic;
+  final DateTime? createdAt;
+
+  @override
+  List<Object?> get props => [
+        id,
+        creatorId,
+        title,
+        description,
+        photoUrl,
+        websiteUrl,
+        isPublic,
+        createdAt,
+      ];
+
   static List<Post> converter(List<Map<String, dynamic>> data) {
     return data.map(Post.fromJson).toList();
+  }
+
+  // method for converting an instance to JSON
+  Map<String, dynamic> toJson() {
+    return _generateMap(
+      id: id,
+      title: title,
+      creatorId: creatorId,
+      photoUrl: photoUrl,
+      description: description,
+      websiteUrl: websiteUrl,
+      isPublic: isPublic,
+      createdAt: createdAt,
+    );
   }
 
   static Map<String, dynamic> _generateMap({
@@ -115,32 +138,6 @@ class Post extends Equatable {
       id: id,
       creatorId: creatorId,
       title: title,
-      photoUrl: photoUrl,
-      description: description,
-      websiteUrl: websiteUrl,
-      isPublic: isPublic,
-      createdAt: createdAt,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        id,
-        creatorId,
-        title,
-        description,
-        photoUrl,
-        websiteUrl,
-        isPublic,
-        createdAt,
-      ];
-
-  // method for converting an instance to JSON
-  Map<String, dynamic> toJson() {
-    return _generateMap(
-      id: id,
-      title: title,
-      creatorId: creatorId,
       photoUrl: photoUrl,
       description: description,
       websiteUrl: websiteUrl,

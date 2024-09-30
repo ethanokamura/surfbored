@@ -1,6 +1,7 @@
 import 'package:api_client/api_client.dart';
 import 'package:friend_repository/src/failures.dart';
-import 'package:friend_repository/src/models/models.dart';
+import 'package:friend_repository/src/models/friend.dart';
+import 'package:friend_repository/src/models/friend_request.dart';
 
 class FriendRepository {
   FriendRepository({

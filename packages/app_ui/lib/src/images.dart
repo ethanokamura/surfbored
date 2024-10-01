@@ -27,7 +27,7 @@ class EditImage extends StatefulWidget {
   });
 
   final String? photoUrl;
-  final String docID;
+  final int docID;
   final String collection;
   final double width;
   final dynamic Function(String url) onFileChanged;
@@ -494,7 +494,7 @@ class EditSquareImage extends StatefulWidget {
   });
 
   final String? photoUrl;
-  final String docID;
+  final int docID;
   final String collection;
   final double width;
   final double height;

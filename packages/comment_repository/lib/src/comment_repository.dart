@@ -1,4 +1,5 @@
 import 'package:api_client/api_client.dart';
+import 'package:app_core/app_core.dart';
 import 'package:comment_repository/src/failures.dart';
 import 'package:comment_repository/src/models/comment.dart';
 import 'package:comment_repository/src/models/comment_like.dart';
@@ -34,7 +35,7 @@ extension Create on CommentRepository {
 
 extension Read on CommentRepository {
   Future<Comment> fetchComment({
-    required String commentId,
+    required int commentId,
   }) async {
     try {
       final res = await _supabase
@@ -53,7 +54,7 @@ extension Read on CommentRepository {
   }
 
   Future<bool> hasUserLikedComment({
-    required String userId,
+    required int userId,
   }) async {
     try {
       final res = await _supabase
@@ -68,13 +69,16 @@ extension Read on CommentRepository {
   }
 
   Future<List<Comment>> fetchComments({
-    required String postId,
+    required int postId,
+    required int limit,
+    required int offset,
   }) async {
     try {
       final res = await _supabase
           .fromCommentsTable()
           .select()
           .eq(Comment.postIdConverter, postId)
+          .range(offset, offset + limit - 1)
           .withConverter(Comment.converter);
       return res;
     } catch (e) {
@@ -83,7 +87,7 @@ extension Read on CommentRepository {
   }
 
   Future<int> fetchCommentLikes({
-    required String commentId,
+    required int commentId,
   }) async {
     try {
       final likes = await _supabase
@@ -98,7 +102,7 @@ extension Read on CommentRepository {
   }
 
   Future<int> fetchTotalComments({
-    required String postId,
+    required int postId,
   }) async {
     try {
       final comments = await _supabase
@@ -113,9 +117,22 @@ extension Read on CommentRepository {
   }
 }
 
+extension StreamComments on CommentRepository {
+  Stream<List<Comment>> streamComments({
+    required int postId,
+  }) {
+    return _supabase
+        .fromCommentsTable()
+        .stream(primaryKey: [Comment.idConverter])
+        .eq(Comment.postIdConverter, postId)
+        .order('created_at')
+        .map(Comment.converter);
+  }
+}
+
 extension Delete on CommentRepository {
   Future<void> deleteComment({
-    required String commentId,
+    required int commentId,
   }) async {
     try {
       await _supabase
@@ -128,7 +145,7 @@ extension Delete on CommentRepository {
   }
 
   Future<void> removeLike({
-    required String commentId,
+    required int commentId,
   }) async {
     try {
       await _supabase

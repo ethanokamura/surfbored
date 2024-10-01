@@ -15,8 +15,8 @@ class BoardSave extends Equatable {
 
   factory BoardSave.fromJson(Map<String, dynamic> json) {
     return BoardSave(
-      userId: json[userIdConverter]?.toString() ?? '',
-      boardId: json[boardIdConverter]?.toString() ?? '',
+      userId: json[userIdConverter] as int,
+      boardId: json[boardIdConverter] as int,
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
@@ -27,10 +27,10 @@ class BoardSave extends Equatable {
   static String get boardIdConverter => 'board_id';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = BoardSave(userId: '', boardId: '');
+  static const empty = BoardSave(userId: 0, boardId: 0);
 
-  final String userId;
-  final String boardId;
+  final int userId;
+  final int boardId;
   final DateTime? createdAt;
 
   @override
@@ -54,8 +54,8 @@ class BoardSave extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? userId,
-    String? boardId,
+    int? userId,
+    int? boardId,
     DateTime? createdAt,
   }) {
     return {
@@ -66,9 +66,9 @@ class BoardSave extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? userId,
-    String? boardId,
-    String? title,
+    int? userId,
+    int? boardId,
+    int? title,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -79,9 +79,9 @@ class BoardSave extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? userId,
-    String? boardId,
-    String? title,
+    int? userId,
+    int? boardId,
+    int? title,
     DateTime? createdAt,
   }) {
     return _generateMap(

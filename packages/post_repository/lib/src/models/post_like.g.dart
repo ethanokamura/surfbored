@@ -7,8 +7,8 @@ part of 'post_like.dart';
 // **************************************************************************
 
 PostLike _$PostLikeFromJson(Map<String, dynamic> json) => PostLike(
-      userId: json['userId'] as String,
-      postId: json['postId'] as String,
+      userId: (json['userId'] as num).toInt(),
+      postId: (json['postId'] as num).toInt(),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),

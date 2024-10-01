@@ -7,8 +7,8 @@ part of 'user.dart';
 // **************************************************************************
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
-      id: json['id'] as String,
       username: json['username'] as String,
+      id: (json['id'] as num?)?.toInt(),
       photoUrl: json['photoUrl'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
@@ -25,10 +25,7 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
     );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'username': instance.username,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -36,6 +33,8 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) {
     }
   }
 
+  writeNotNull('id', instance.id);
+  val['username'] = instance.username;
   writeNotNull('photoUrl', instance.photoUrl);
   val['displayName'] = instance.displayName;
   val['bio'] = instance.bio;

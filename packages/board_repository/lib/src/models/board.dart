@@ -7,7 +7,7 @@ class Board extends Equatable {
   const Board({
     required this.creatorId,
     required this.title,
-    this.id = '',
+    this.id = 0,
     this.description = '',
     this.photoUrl,
     this.isPublic = true,
@@ -20,8 +20,8 @@ class Board extends Equatable {
 
   factory Board.fromJson(Map<String, dynamic> json) {
     return Board(
-      id: json[idConverter]?.toString() ?? '',
-      creatorId: json[creatorIdConverter]?.toString() ?? '',
+      id: json[idConverter] as int,
+      creatorId: json[creatorIdConverter] as int,
       title: json[titleConverter]?.toString() ?? '',
       description: json[descriptionConverter]?.toString() ?? '',
       photoUrl: json[photoUrlConverter]?.toString() ?? '',
@@ -41,12 +41,12 @@ class Board extends Equatable {
   static String get createdAtConverter => 'created_at';
 
   static const empty = Board(
-    creatorId: '',
+    creatorId: 0,
     title: '',
   );
 
-  final String id;
-  final String creatorId;
+  final int id;
+  final int creatorId;
   final String title;
   final String description;
   final String? photoUrl;
@@ -82,8 +82,8 @@ class Board extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? id,
-    String? creatorId,
+    int? id,
+    int? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -102,8 +102,8 @@ class Board extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? id,
-    String? creatorId,
+    int? id,
+    int? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -122,8 +122,8 @@ class Board extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? id,
-    String? creatorId,
+    int? id,
+    int? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -144,4 +144,5 @@ class Board extends Equatable {
 
 extension BoardExtensions on Board {
   bool get isEmpty => this == Board.empty;
+  bool userOwnsBoard(int userId) => creatorId == userId;
 }

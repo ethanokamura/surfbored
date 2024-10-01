@@ -8,8 +8,8 @@ part of 'friend_request.dart';
 
 FriendRequest _$FriendRequestFromJson(Map<String, dynamic> json) =>
     FriendRequest(
-      senderId: json['senderId'] as String,
-      recipientId: json['recipientId'] as String,
+      senderId: (json['senderId'] as num).toInt(),
+      recipientId: (json['recipientId'] as num).toInt(),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),

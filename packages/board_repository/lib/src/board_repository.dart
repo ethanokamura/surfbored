@@ -12,7 +12,7 @@ class BoardRepository {
 }
 
 extension Create on BoardRepository {
-  Future<String> createBoard({
+  Future<int> createBoard({
     required Board board,
   }) async {
     final res = await _supabase
@@ -20,7 +20,7 @@ extension Create on BoardRepository {
         .insert(board.toJson())
         .select('id')
         .single();
-    return res['id'] as String;
+    return res['id'] as int;
   }
 
   Future<void> saveBoard({
@@ -46,7 +46,7 @@ extension Create on BoardRepository {
 
 extension Read on BoardRepository {
   Future<Board> fetchBoard({
-    required String boardId,
+    required int boardId,
   }) async {
     try {
       final res = await _supabase
@@ -64,8 +64,8 @@ extension Read on BoardRepository {
   }
 
   Future<bool> hasPost({
-    required String boardId,
-    required String postId,
+    required int boardId,
+    required int postId,
   }) async {
     try {
       final res = await _supabase.fromBoardPostsTable().select().match({
@@ -79,8 +79,8 @@ extension Read on BoardRepository {
   }
 
   Future<bool> hasUserSavedBoard({
-    required String boardId,
-    required String userId,
+    required int boardId,
+    required int userId,
   }) async {
     try {
       final res = await _supabase.fromBoardSavesTable().select().match({
@@ -94,13 +94,34 @@ extension Read on BoardRepository {
   }
 
   Future<List<Board>> fetchUserBoards({
-    required String userId,
+    required int userId,
+    required int limit,
+    required int offset,
   }) async {
     try {
       final res = await _supabase
           .fromBoardsTable()
           .select()
           .eq(Board.creatorIdConverter, userId)
+          .range(offset, offset + limit - 1)
+          .withConverter(Board.converter);
+      return res;
+    } catch (e) {
+      throw BoardFailure.fromGetBoard();
+    }
+  }
+
+  Future<List<Board>> fetchUserSavedBoards({
+    required int userId,
+    required int limit,
+    required int offset,
+  }) async {
+    try {
+      final res = await _supabase
+          .fromBoardsTable()
+          .select()
+          .eq(BoardSave.userIdConverter, userId)
+          .range(offset, offset + limit - 1)
           .withConverter(Board.converter);
       return res;
     } catch (e) {
@@ -109,7 +130,7 @@ extension Read on BoardRepository {
   }
 
   Future<int> fetchBoardSaves({
-    required String boardId,
+    required int boardId,
   }) async {
     try {
       final likes = await _supabase
@@ -124,11 +145,24 @@ extension Read on BoardRepository {
   }
 }
 
+extension StreamData on BoardRepository {
+  Stream<List<Board>> streamUserBoards({
+    required int userId,
+  }) {
+    return _supabase
+        .fromBoardsTable()
+        .stream(primaryKey: [Board.idConverter])
+        .eq('creator_id', userId)
+        .order('created_at')
+        .map(Board.converter);
+  }
+}
+
 extension Update on BoardRepository {
   // update specific user profile field
   Future<void> updateBoard({
     required String field,
-    required String boardId,
+    required int boardId,
     required dynamic data,
   }) async {
     try {
@@ -143,7 +177,7 @@ extension Update on BoardRepository {
 
 extension Delete on BoardRepository {
   Future<void> deleteBoard({
-    required String boardId,
+    required int boardId,
   }) async {
     try {
       await _supabase.fromBoardsTable().delete().eq(Board.idConverter, boardId);
@@ -153,8 +187,8 @@ extension Delete on BoardRepository {
   }
 
   Future<void> removePost({
-    required String postId,
-    required String boardId,
+    required int postId,
+    required int boardId,
   }) async {
     try {
       await _supabase.fromBoardPostsTable().delete().match({
@@ -167,8 +201,8 @@ extension Delete on BoardRepository {
   }
 
   Future<void> removeSave({
-    required String boardId,
-    required String userId,
+    required int boardId,
+    required int userId,
   }) async {
     try {
       await _supabase.fromBoardSavesTable().delete().match({

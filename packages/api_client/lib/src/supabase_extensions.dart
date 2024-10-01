@@ -18,7 +18,7 @@ extension SupabaseExtensions on SupabaseClient {
   SupabaseQueryBuilder fromPostTagsTable() => from('post_tags');
   SupabaseQueryBuilder fromPostsTable() => from('posts');
   SupabaseQueryBuilder fromTagsTable() => from('tags');
-  SupabaseQueryBuilder fromUserProfilesTable() => from('user_profiles');
+  SupabaseQueryBuilder fromUserAccountTable() => from('user_account');
   SupabaseQueryBuilder fromUserTagsTable() => from('user_tags');
   SupabaseQueryBuilder fromUsersTable() => from('users');
 
@@ -28,7 +28,7 @@ extension SupabaseExtensions on SupabaseClient {
   /// [file] the file that needs to be uploaded
   Future<String> uploadFile(
     String collection,
-    String id,
+    int id,
     Uint8List file,
   ) async {
     // get path

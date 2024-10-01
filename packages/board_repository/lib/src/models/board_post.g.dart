@@ -7,8 +7,8 @@ part of 'board_post.dart';
 // **************************************************************************
 
 BoardPost _$BoardPostFromJson(Map<String, dynamic> json) => BoardPost(
-      postId: json['postId'] as String,
-      boardId: json['boardId'] as String,
+      postId: (json['postId'] as num).toInt(),
+      boardId: (json['boardId'] as num).toInt(),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),

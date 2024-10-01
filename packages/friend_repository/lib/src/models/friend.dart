@@ -19,12 +19,8 @@ class Friend extends Equatable {
   // this tells the json serializable what to do
   factory Friend.fromJson(Map<String, dynamic> json) {
     return Friend(
-      userA: json[userAIdConverter] != null
-          ? json[userAIdConverter].toString()
-          : '',
-      userB: json[userBIdConverter] != null
-          ? json[userBIdConverter].toString()
-          : '',
+      userA: json[userAIdConverter] as int,
+      userB: json[userBIdConverter] as int,
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
@@ -32,8 +28,8 @@ class Friend extends Equatable {
   }
 
   // data fields
-  final String userA;
-  final String userB;
+  final int userA;
+  final int userB;
   final DateTime? createdAt;
 
   static String get userAIdConverter => 'user_a_id';
@@ -45,8 +41,8 @@ class Friend extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? userA,
-    String? userB,
+    int? userA,
+    int? userB,
     DateTime? createdAt,
   }) {
     return {
@@ -57,8 +53,8 @@ class Friend extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? userA,
-    String? userB,
+    int? userA,
+    int? userB,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -69,8 +65,8 @@ class Friend extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? userA,
-    String? userB,
+    int? userA,
+    int? userB,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -80,7 +76,7 @@ class Friend extends Equatable {
     );
   }
 
-  static const empty = Friend(userA: '', userB: '');
+  static const empty = Friend(userA: 0, userB: 0);
 
   @override
   List<Object?> get props => [

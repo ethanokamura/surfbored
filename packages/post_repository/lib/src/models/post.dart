@@ -6,7 +6,7 @@ class Post extends Equatable {
   const Post({
     required this.creatorId,
     required this.title,
-    this.id = '',
+    this.id = 0,
     this.description = '',
     this.photoUrl,
     this.websiteUrl = '',
@@ -20,8 +20,8 @@ class Post extends Equatable {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json[idConverter]?.toString() ?? '',
-      creatorId: json[creatorIdConverter]?.toString() ?? '',
+      id: json[idConverter] as int,
+      creatorId: json[creatorIdConverter] as int,
       title: json[titleConverter]?.toString() ?? '',
       description: json[descriptionConverter]?.toString() ?? '',
       websiteUrl: json[websiteUrlConverter]?.toString() ?? '',
@@ -42,10 +42,10 @@ class Post extends Equatable {
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = Post(creatorId: '', title: '');
+  static const empty = Post(creatorId: 0, title: '');
 
-  final String id;
-  final String creatorId;
+  final int? id;
+  final int creatorId;
   final String title;
   final String description;
   final String? photoUrl;
@@ -84,8 +84,8 @@ class Post extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? id,
-    String? creatorId,
+    int? id,
+    int? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -106,8 +106,8 @@ class Post extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? id,
-    String? creatorId,
+    int? id,
+    int? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -128,8 +128,8 @@ class Post extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? id,
-    String? creatorId,
+    int? id,
+    int? creatorId,
     String? title,
     String? description,
     String? photoUrl,

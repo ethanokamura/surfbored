@@ -6,8 +6,8 @@ part 'user.g.dart';
 class UserData extends Equatable {
   // UserData constructor
   const UserData({
-    required this.id,
     required this.username,
+    this.id,
     this.photoUrl = '',
     this.displayName = '',
     this.bio = '',
@@ -25,7 +25,7 @@ class UserData extends Equatable {
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
-      id: json[idConverter]?.toString() ?? '',
+      id: json[idConverter] as int,
       username: json[usernameConverter]?.toString() ?? '',
       photoUrl: json[photoUrlConverter]?.toString() ?? '',
       displayName: json[displayNameConverter]?.toString() ?? '',
@@ -55,9 +55,9 @@ class UserData extends Equatable {
   static String get lastSignInConverter => 'last_sign_in';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = UserData(id: '', username: '');
+  static const empty = UserData(id: 0, username: '');
 
-  final String id;
+  final int? id;
   final String username;
   final String? photoUrl;
   final String displayName;
@@ -105,7 +105,7 @@ class UserData extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? id,
+    int? id,
     String? username,
     String? photoUrl,
     String? displayName,
@@ -118,7 +118,7 @@ class UserData extends Equatable {
     DateTime? createdAt,
   }) {
     return {
-      if (id != null) idConverter: id,
+      idConverter: id,
       if (username != null) usernameConverter: username,
       if (photoUrl != null) photoUrlConverter: photoUrl,
       if (displayName != null) displayNameConverter: displayName,
@@ -134,7 +134,7 @@ class UserData extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? id,
+    int? id,
     String? username,
     String? photoUrl,
     String? displayName,
@@ -159,7 +159,7 @@ class UserData extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? id,
+    int? id,
     String? username,
     String? photoUrl,
     String? displayName,
@@ -188,4 +188,5 @@ class UserData extends Equatable {
 // Extensions for UserData
 extension UserDataExtensions on UserData {
   bool get isEmpty => this == UserData.empty;
+  bool get hasUsername => username.isNotEmpty;
 }

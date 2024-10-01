@@ -15,8 +15,8 @@ class BoardPost extends Equatable {
 
   factory BoardPost.fromJson(Map<String, dynamic> json) {
     return BoardPost(
-      postId: json[postIdConverter]?.toString() ?? '',
-      boardId: json[boardIdConverter]?.toString() ?? '',
+      postId: json[postIdConverter] as int,
+      boardId: json[boardIdConverter] as int,
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
@@ -27,10 +27,10 @@ class BoardPost extends Equatable {
   static String get boardIdConverter => 'board_id';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = BoardPost(postId: '', boardId: '');
+  static const empty = BoardPost(postId: 0, boardId: 0);
 
-  final String postId;
-  final String boardId;
+  final int postId;
+  final int boardId;
   final DateTime? createdAt;
 
   @override
@@ -54,8 +54,8 @@ class BoardPost extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? postId,
-    String? boardId,
+    int? postId,
+    int? boardId,
     DateTime? createdAt,
   }) {
     return {
@@ -66,8 +66,8 @@ class BoardPost extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? postId,
-    String? boardId,
+    int? postId,
+    int? boardId,
     String? title,
     DateTime? createdAt,
   }) {
@@ -79,8 +79,8 @@ class BoardPost extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? postId,
-    String? boardId,
+    int? postId,
+    int? boardId,
     String? title,
     DateTime? createdAt,
   }) {

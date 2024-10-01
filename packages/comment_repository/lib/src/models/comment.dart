@@ -8,7 +8,7 @@ class Comment extends Equatable {
     required this.postId,
     required this.senderId,
     required this.message,
-    this.id = '',
+    this.id = 0,
     this.edited = false,
     this.createdAt,
   });
@@ -19,9 +19,9 @@ class Comment extends Equatable {
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: json[idConverter]?.toString() ?? '',
-      postId: json[postIdConverter]?.toString() ?? '',
-      senderId: json[senderIdConverter]?.toString() ?? '',
+      id: json[idConverter] as int,
+      postId: json[postIdConverter] as int,
+      senderId: json[senderIdConverter] as int,
       message: json[messageConverter]?.toString() ?? '',
       edited: json[editedConverter] as bool? ?? false,
       createdAt: json[createdAtConverter] != null
@@ -38,17 +38,16 @@ class Comment extends Equatable {
   static String get createdAtConverter => 'created_at';
 
   // data fields
-  final String id;
-  final String postId;
-  final String senderId;
+  final int id;
+  final int postId;
+  final int senderId;
   final String message;
   final bool edited;
   final DateTime? createdAt;
 
   static const empty = Comment(
-    id: '',
-    postId: '',
-    senderId: '',
+    postId: 0,
+    senderId: 0,
     message: '',
   );
 
@@ -78,9 +77,9 @@ class Comment extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? id,
-    String? postId,
-    String? senderId,
+    int? id,
+    int? postId,
+    int? senderId,
     String? message,
     bool? edited,
     DateTime? createdAt,
@@ -95,9 +94,9 @@ class Comment extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? id,
-    String? postId,
-    String? senderId,
+    int? id,
+    int? postId,
+    int? senderId,
     String? message,
     bool? edited,
     DateTime? createdAt,
@@ -113,9 +112,9 @@ class Comment extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? id,
-    String? postId,
-    String? senderId,
+    int? id,
+    int? postId,
+    int? senderId,
     String? message,
     bool? edited,
     DateTime? createdAt,

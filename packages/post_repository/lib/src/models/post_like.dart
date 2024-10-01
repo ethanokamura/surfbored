@@ -15,8 +15,8 @@ class PostLike extends Equatable {
 
   factory PostLike.fromJson(Map<String, dynamic> json) {
     return PostLike(
-      userId: json[userIdConverter]?.toString() ?? '',
-      postId: json[postIdConverter]?.toString() ?? '',
+      userId: json[userIdConverter] as int,
+      postId: json[postIdConverter] as int,
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
@@ -27,10 +27,10 @@ class PostLike extends Equatable {
   static String get postIdConverter => 'post_id';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = PostLike(userId: '', postId: '');
+  static const empty = PostLike(userId: 0, postId: 0);
 
-  final String userId;
-  final String postId;
+  final int userId;
+  final int postId;
   final DateTime? createdAt;
 
   @override
@@ -54,8 +54,8 @@ class PostLike extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? userId,
-    String? postId,
+    int? userId,
+    int? postId,
     DateTime? createdAt,
   }) {
     return {
@@ -66,8 +66,8 @@ class PostLike extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? userId,
-    String? postId,
+    int? userId,
+    int? postId,
     String? title,
     DateTime? createdAt,
   }) {
@@ -79,8 +79,8 @@ class PostLike extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? userId,
-    String? postId,
+    int? userId,
+    int? postId,
     String? title,
     DateTime? createdAt,
   }) {

@@ -19,12 +19,8 @@ class FriendRequest extends Equatable {
   // this tells the json serializable what to do
   factory FriendRequest.fromJson(Map<String, dynamic> json) {
     return FriendRequest(
-      senderId: json[senderIdConverter] != null
-          ? json[senderIdConverter].toString()
-          : '',
-      recipientId: json[recipientIdConverter] != null
-          ? json[recipientIdConverter].toString()
-          : '',
+      senderId: json[senderIdConverter] as int,
+      recipientId: json[recipientIdConverter] as int,
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
@@ -32,8 +28,8 @@ class FriendRequest extends Equatable {
   }
 
   // data fields
-  final String senderId;
-  final String recipientId;
+  final int senderId;
+  final int recipientId;
   final DateTime? createdAt;
 
   static String get senderIdConverter => 'sender_id';
@@ -45,8 +41,8 @@ class FriendRequest extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    String? senderId,
-    String? recipientId,
+    int? senderId,
+    int? recipientId,
     DateTime? createdAt,
   }) {
     return {
@@ -57,8 +53,8 @@ class FriendRequest extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    String? senderId,
-    String? recipientId,
+    int? senderId,
+    int? recipientId,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -69,8 +65,8 @@ class FriendRequest extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    String? senderId,
-    String? recipientId,
+    int? senderId,
+    int? recipientId,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -80,7 +76,7 @@ class FriendRequest extends Equatable {
     );
   }
 
-  static const empty = FriendRequest(senderId: '', recipientId: '');
+  static const empty = FriendRequest(senderId: 0, recipientId: 0);
 
   @override
   List<Object?> get props => [

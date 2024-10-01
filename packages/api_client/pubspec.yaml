@@ -21,6 +21,7 @@ dependencies:
     sdk: flutter
 
   # Supabase
+  http: ^1.2.2
   supabase_flutter: ^2.6.0
 
 dev_dependencies:

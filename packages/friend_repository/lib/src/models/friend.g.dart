@@ -7,8 +7,8 @@ part of 'friend.dart';
 // **************************************************************************
 
 Friend _$FriendFromJson(Map<String, dynamic> json) => Friend(
-      userA: json['userA'] as String,
-      userB: json['userB'] as String,
+      userA: (json['userA'] as num).toInt(),
+      userB: (json['userB'] as num).toInt(),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),

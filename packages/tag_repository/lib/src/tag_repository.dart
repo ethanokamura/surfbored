@@ -11,52 +11,52 @@ class TagRepository {
 extension Create on TagRepository {
   Future<void> createUserTag({
     required String tagName,
-    required String uuid,
+    required int id,
   }) async =>
-      _createTag(tagName: tagName, uuid: uuid, type: 'user');
+      _createTag(tagName: tagName, id: id, type: 'user');
 
   Future<void> createPostTag({
     required String tagName,
-    required String uuid,
+    required int id,
   }) async =>
-      _createTag(tagName: tagName, uuid: uuid, type: 'post');
+      _createTag(tagName: tagName, id: id, type: 'post');
 
   Future<void> createBoardTag({
     required String tagName,
-    required String uuid,
+    required int id,
   }) async =>
-      _createTag(tagName: tagName, uuid: uuid, type: 'board');
+      _createTag(tagName: tagName, id: id, type: 'board');
 }
 
 extension Read on TagRepository {
-  Future<List<String>> readUserTags({required String uuid}) async =>
-      _readTags(type: 'user', uuid: uuid);
+  Future<List<String>> fetchUserTags({required int id}) async =>
+      _fetchTags(type: 'user', id: id);
 
-  Future<List<String>> readPostTags({required String uuid}) async =>
-      _readTags(type: 'post', uuid: uuid);
+  Future<List<String>> fetchPostTags({required int id}) async =>
+      _fetchTags(type: 'post', id: id);
 
-  Future<List<String>> readBoardTags({required String uuid}) async =>
-      _readTags(type: 'board', uuid: uuid);
+  Future<List<String>> fetchBoardTags({required int id}) async =>
+      _fetchTags(type: 'board', id: id);
 }
 
 extension Update on TagRepository {
   Future<void> updateUserTags({
-    required String userId,
+    required int userId,
     required List<String> tags,
   }) async =>
-      _updateTags(type: 'user', uuid: userId, tags: tags);
+      _updateTags(type: 'user', id: userId, tags: tags);
 
   Future<void> updatePostTags({
-    required String postId,
+    required int postId,
     required List<String> tags,
   }) async =>
-      _updateTags(type: 'post', uuid: postId, tags: tags);
+      _updateTags(type: 'post', id: postId, tags: tags);
 
   Future<void> updateBoardTags({
-    required String boardId,
+    required int boardId,
     required List<String> tags,
   }) async =>
-      _updateTags(type: 'board', uuid: boardId, tags: tags);
+      _updateTags(type: 'board', id: boardId, tags: tags);
 }
 
 extension Delete on TagRepository {
@@ -74,21 +74,21 @@ extension Delete on TagRepository {
 extension Private on TagRepository {
   Future<void> _createTag({
     required String tagName,
-    required String uuid,
+    required int id,
     required String type,
   }) async {
     final tagId = await _getOrCreateTagId(tagName: tagName);
     try {
       await _supabase.from('${type}_tags').insert({
         'name': tagId,
-        '${type}_tags': uuid,
+        '${type}_tags': id,
       });
     } catch (e) {
       throw TagFailure.fromCreateTag();
     }
   }
 
-  Future<String> _getOrCreateTagId({required String tagName}) async {
+  Future<int> _getOrCreateTagId({required String tagName}) async {
     try {
       final existingTag = await _supabase
           .fromTagsTable()
@@ -99,13 +99,13 @@ extension Private on TagRepository {
       if (existingTag == null || existingTag.isEmpty) {
         return _createNewTag(tagName: tagName);
       }
-      return existingTag['id'] as String;
+      return existingTag['id'] as int;
     } catch (e) {
       throw TagFailure.fromCreateTag();
     }
   }
 
-  Future<String> _createNewTag({required String tagName}) async {
+  Future<int> _createNewTag({required String tagName}) async {
     try {
       final newTag = await _supabase
           .fromTagsTable()
@@ -115,21 +115,21 @@ extension Private on TagRepository {
       if (newTag.isEmpty) {
         throw TagFailure.fromCreateTag();
       }
-      return newTag['id'] as String;
+      return newTag['id'] as int;
     } catch (e) {
       throw TagFailure.fromGetTag();
     }
   }
 
-  Future<List<String>> _readTags({
+  Future<List<String>> _fetchTags({
     required String type,
-    required String uuid,
+    required int id,
   }) async {
     try {
       final response = await _supabase
           .from('${type}_tags')
           .select('tags(name)')
-          .eq('${type}_id', uuid);
+          .eq('${type}_id', id);
       if (response.isEmpty) return [];
       return response
           .map<String>((row) => (row as Map<String, String>)['name']!)
@@ -141,7 +141,7 @@ extension Private on TagRepository {
 
   Future<void> _updateTags({
     required String type,
-    required String uuid,
+    required int id,
     required List<String> tags,
   }) async {
     // Step 1: Upsert the new tags into the tags table
@@ -162,11 +162,11 @@ extension Private on TagRepository {
         upsertTagsResponse.map((tag) => tag['id']).toList().whereType<String>();
 
     // Step 2: Clear all existing tag associations for this user
-    await _supabase.from('${type}_tags').delete().match({'${type}_id': uuid});
+    await _supabase.from('${type}_tags').delete().match({'${type}_id': id});
 
     // Step 3: Insert new tag associations into user_tags
     await _supabase.from('${type}_tags').insert(
-          tagIds.map((tagId) => {'${type}_id': uuid, 'tag_id': tagId}).toList(),
+          tagIds.map((tagId) => {'${type}_id': id, 'tag_id': tagId}).toList(),
         );
   }
 }

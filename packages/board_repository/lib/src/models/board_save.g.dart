@@ -7,8 +7,8 @@ part of 'board_save.dart';
 // **************************************************************************
 
 BoardSave _$BoardSaveFromJson(Map<String, dynamic> json) => BoardSave(
-      userId: json['userId'] as String,
-      boardId: json['boardId'] as String,
+      userId: (json['userId'] as num).toInt(),
+      boardId: (json['boardId'] as num).toInt(),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),

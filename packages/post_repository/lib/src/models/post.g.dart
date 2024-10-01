@@ -7,9 +7,9 @@ part of 'post.dart';
 // **************************************************************************
 
 Post _$PostFromJson(Map<String, dynamic> json) => Post(
-      creatorId: json['creatorId'] as String,
+      creatorId: (json['creatorId'] as num).toInt(),
       title: json['title'] as String,
-      id: json['id'] as String? ?? '',
+      id: (json['id'] as num?)?.toInt() ?? 0,
       description: json['description'] as String? ?? '',
       photoUrl: json['photoUrl'] as String?,
       websiteUrl: json['websiteUrl'] as String? ?? '',
@@ -20,12 +20,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
     );
 
 Map<String, dynamic> _$PostToJson(Post instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'creatorId': instance.creatorId,
-    'title': instance.title,
-    'description': instance.description,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -33,6 +28,10 @@ Map<String, dynamic> _$PostToJson(Post instance) {
     }
   }
 
+  writeNotNull('id', instance.id);
+  val['creatorId'] = instance.creatorId;
+  val['title'] = instance.title;
+  val['description'] = instance.description;
   writeNotNull('photoUrl', instance.photoUrl);
   val['websiteUrl'] = instance.websiteUrl;
   val['isPublic'] = instance.isPublic;

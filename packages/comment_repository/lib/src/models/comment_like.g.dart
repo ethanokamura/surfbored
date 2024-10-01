@@ -7,8 +7,8 @@ part of 'comment_like.dart';
 // **************************************************************************
 
 CommentLike _$CommentLikeFromJson(Map<String, dynamic> json) => CommentLike(
-      userId: json['userId'] as String,
-      commentId: json['commentId'] as String,
+      userId: (json['userId'] as num).toInt(),
+      commentId: (json['commentId'] as num).toInt(),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),

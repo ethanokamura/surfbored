@@ -27,7 +27,7 @@ class UserRepository {
 
   /// Gets a generic [watchUser] emission.
   Stream<UserData> watchUserByID({
-    required String uuid,
+    required int uuid,
   }) {
     return _supabase
         .fromUsersTable()
@@ -118,13 +118,9 @@ extension Auth on UserRepository {
 
     // If user does not exist, insert them
     if (existingUser == null) {
-      final userData = UserData.insert(id: _supabase.auth.currentUser!.id);
-      final profileData = UserData.insert(
-        id: _supabase.auth.currentUser!.id,
-        phoneNumber: user.phone,
-      );
+      final userData = UserData.insert();
+      await submitPhoneNumber(phoneNumber: _supabase.auth.currentUser!.phone!);
       await _supabase.fromUsersTable().insert(userData);
-      await _supabase.fromUserProfilesTable().insert(profileData);
     }
   }
 
@@ -139,6 +135,16 @@ extension Auth on UserRepository {
 }
 
 extension Username on UserRepository {
+  Future<bool> userHasUsername() async {
+    if (user.id == null) return false;
+    final res = await _supabase
+        .fromUsersTable()
+        .select(UserData.usernameConverter)
+        .eq(UserData.idConverter, user.id!)
+        .maybeSingle();
+    return res != null;
+  }
+
   // Check if username is unique
   Future<bool> isUsernameUnique({
     required String username,
@@ -155,12 +161,18 @@ extension Username on UserRepository {
     required String username,
   }) async {
     try {
-      await _supabase
-          .fromUsersTable()
-          .update({UserData.usernameConverter: username}).eq(
-        UserData.idConverter,
-        user.id,
-      );
+      if (user.id != null) {
+        await _supabase
+            .fromUsersTable()
+            .update({UserData.usernameConverter: username}).eq(
+          UserData.idConverter,
+          user.id!,
+        );
+      } else {
+        await _supabase
+            .fromUsersTable()
+            .insert({UserData.usernameConverter: username});
+      }
     } catch (e) {
       throw UserFailure.fromUpdateUser();
     }
@@ -185,7 +197,7 @@ extension Create on UserRepository {
 extension Read on UserRepository {
   // gets the user data by ID
   Future<UserData> readUserData({
-    required String uuid,
+    required int uuid,
   }) async {
     final res = await _supabase
         .fromUsersTable()
@@ -200,7 +212,7 @@ extension Read on UserRepository {
   }
 
   Future<UserProfile> readUserProfile({
-    required String uuid,
+    required int uuid,
   }) async {
     final res = await _supabase
         .fromUsersTable()
@@ -223,7 +235,7 @@ extension Update on UserRepository {
   }) async {
     try {
       if (supabaseUser == null) return;
-      await _supabase.fromUserProfilesTable().upsert({
+      await _supabase.fromUsersTable().upsert({
         UserData.lastSignInConverter: DateTime.now().toUtc(),
       }).eq(UserData.idConverter, supabaseUser.id);
     } catch (e) {
@@ -232,14 +244,18 @@ extension Update on UserRepository {
   }
 
   // update specific user profile field
-  Future<void> updateUserProfile({
+  Future<void> updateUser({
     required String field,
     required dynamic data,
   }) async {
     try {
-      await _supabase
-          .fromUserProfilesTable()
-          .update({field: data}).eq(UserData.idConverter, user.id);
+      if (user.id != null) {
+        await _supabase
+            .fromUsersTable()
+            .update({field: data}).eq(UserData.idConverter, user.id!);
+      } else {
+        throw UserFailure.fromUpdateUser();
+      }
     } catch (e) {
       throw UserFailure.fromUpdateUser();
     }

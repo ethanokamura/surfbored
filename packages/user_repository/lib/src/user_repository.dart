@@ -1,8 +1,8 @@
 import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
 import 'package:user_repository/src/failures.dart';
-import 'package:user_repository/src/models/profile.dart';
 import 'package:user_repository/src/models/user.dart';
+import 'package:user_repository/src/models/user_profile.dart';
 
 class UserRepository {
   UserRepository({
@@ -31,7 +31,7 @@ class UserRepository {
   }) {
     return _supabase
         .fromUsersTable()
-        .stream(primaryKey: ['id'])
+        .stream(primaryKey: [UserData.idConverter])
         .eq(UserData.idConverter, uuid)
         .map((event) {
           if (event.isNotEmpty) {
@@ -119,8 +119,8 @@ extension Auth on UserRepository {
     // If user does not exist, insert them
     if (existingUser == null) {
       final userData = UserData.insert(id: _supabase.auth.currentUser!.id);
-      final profileData = ProfileData.insert(
-        userId: _supabase.auth.currentUser!.id,
+      final profileData = UserData.insert(
+        id: _supabase.auth.currentUser!.id,
         phoneNumber: user.phone,
       );
       await _supabase.fromUsersTable().insert(userData);
@@ -199,19 +199,18 @@ extension Read on UserRepository {
     return res;
   }
 
-  // gets the user data by ID
-  Future<ProfileData> readUserProfile({
+  Future<UserProfile> readUserProfile({
     required String uuid,
   }) async {
     final res = await _supabase
-        .fromUserProfilesTable()
-        .select()
-        .eq(ProfileData.userIdConverter, uuid)
+        .fromUsersTable()
+        .select('username, photo_url')
+        .eq(UserData.idConverter, uuid)
         .maybeSingle()
         .withConverter(
           (data) => data == null
-              ? ProfileData.empty
-              : ProfileData.converterSingle(data),
+              ? UserProfile.empty
+              : UserProfile.converterSingle(data),
         );
     return res;
   }
@@ -225,8 +224,8 @@ extension Update on UserRepository {
     try {
       if (supabaseUser == null) return;
       await _supabase.fromUserProfilesTable().upsert({
-        ProfileData.lastSignInConverter: DateTime.now().toUtc(),
-      }).eq(ProfileData.userIdConverter, supabaseUser.id);
+        UserData.lastSignInConverter: DateTime.now().toUtc(),
+      }).eq(UserData.idConverter, supabaseUser.id);
     } catch (e) {
       throw UserFailure.fromUpdateUser();
     }
@@ -240,19 +239,7 @@ extension Update on UserRepository {
     try {
       await _supabase
           .fromUserProfilesTable()
-          .update({field: data}).eq(ProfileData.userIdConverter, user.id);
-    } catch (e) {
-      throw UserFailure.fromUpdateUser();
-    }
-  }
-
-  Future<void> updateUsername({
-    required String url,
-  }) async {
-    try {
-      await _supabase.fromUsersTable().update({
-        UserData.photoUrlConverter: url,
-      }).eq(UserData.idConverter, user.id);
+          .update({field: data}).eq(UserData.idConverter, user.id);
     } catch (e) {
       throw UserFailure.fromUpdateUser();
     }

@@ -5,12 +5,12 @@ part 'board.g.dart';
 class Board extends Equatable {
   // constructor
   const Board({
-    required this.id,
     required this.creatorId,
     required this.title,
-    this.description,
+    this.id = '',
+    this.description = '',
     this.photoUrl,
-    this.isPublic,
+    this.isPublic = true,
     this.createdAt,
   });
 
@@ -41,7 +41,6 @@ class Board extends Equatable {
   static String get createdAtConverter => 'created_at';
 
   static const empty = Board(
-    id: '',
     creatorId: '',
     title: '',
   );
@@ -49,9 +48,9 @@ class Board extends Equatable {
   final String id;
   final String creatorId;
   final String title;
-  final String? description;
+  final String description;
   final String? photoUrl;
-  final bool? isPublic;
+  final bool isPublic;
   final DateTime? createdAt;
 
   @override

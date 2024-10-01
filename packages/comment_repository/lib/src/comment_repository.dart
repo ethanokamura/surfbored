@@ -11,7 +11,7 @@ class CommentRepository {
 }
 
 extension Create on CommentRepository {
-  Future<void> createPost({
+  Future<void> createComment({
     required Comment comment,
   }) async {
     try {
@@ -52,6 +52,21 @@ extension Read on CommentRepository {
     }
   }
 
+  Future<bool> hasUserLikedComment({
+    required String userId,
+  }) async {
+    try {
+      final res = await _supabase
+          .fromCommentLikesTable()
+          .select()
+          .eq(CommentLike.userIdConverter, userId)
+          .maybeSingle();
+      return res != null;
+    } catch (e) {
+      throw CommentFailure.fromGetComment();
+    }
+  }
+
   Future<List<Comment>> fetchComments({
     required String postId,
   }) async {
@@ -67,16 +82,31 @@ extension Read on CommentRepository {
     }
   }
 
-  Future<int> fetchPostLikes({
+  Future<int> fetchCommentLikes({
     required String commentId,
   }) async {
     try {
       final likes = await _supabase
           .fromCommentLikesTable()
           .select()
-          .eq(Comment.idConverter, commentId)
+          .eq(CommentLike.commentIdConverter, commentId)
           .count(CountOption.exact);
       return likes.count;
+    } catch (e) {
+      throw CommentFailure.fromGetComment();
+    }
+  }
+
+  Future<int> fetchTotalComments({
+    required String postId,
+  }) async {
+    try {
+      final comments = await _supabase
+          .fromCommentsTable()
+          .select()
+          .eq(Comment.postIdConverter, postId)
+          .count(CountOption.exact);
+      return comments.count;
     } catch (e) {
       throw CommentFailure.fromGetComment();
     }
@@ -84,7 +114,7 @@ extension Read on CommentRepository {
 }
 
 extension Delete on CommentRepository {
-  Future<void> deletePost({
+  Future<void> deleteComment({
     required String commentId,
   }) async {
     try {
@@ -99,13 +129,12 @@ extension Delete on CommentRepository {
 
   Future<void> removeLike({
     required String commentId,
-    required String userId,
   }) async {
     try {
-      await _supabase.fromCommentLikesTable().delete().match({
-        CommentLike.userIdConverter: userId,
-        CommentLike.commentIdConverter: commentId,
-      });
+      await _supabase
+          .fromCommentLikesTable()
+          .delete()
+          .eq(CommentLike.commentIdConverter, commentId);
     } catch (e) {
       throw CommentFailure.fromDeleteComment();
     }

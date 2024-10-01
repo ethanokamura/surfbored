@@ -5,10 +5,10 @@ part 'comment.g.dart';
 class Comment extends Equatable {
   // constructor
   const Comment({
-    required this.id,
     required this.postId,
     required this.senderId,
     required this.message,
+    this.id = '',
     this.edited = false,
     this.createdAt,
   });
@@ -42,7 +42,7 @@ class Comment extends Equatable {
   final String postId;
   final String senderId;
   final String message;
-  final bool? edited;
+  final bool edited;
   final DateTime? createdAt;
 
   static const empty = Comment(

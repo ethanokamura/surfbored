@@ -12,21 +12,22 @@ class BoardRepository {
 }
 
 extension Create on BoardRepository {
-  Future<void> createBoard({
+  Future<String> createBoard({
     required Board board,
   }) async {
-    try {
-      await _supabase.fromBoardsTable().insert(board.toJson());
-    } catch (e) {
-      throw BoardFailure.fromCreateBoard();
-    }
+    final res = await _supabase
+        .fromBoardsTable()
+        .insert(board.toJson())
+        .select('id')
+        .single();
+    return res['id'] as String;
   }
 
-  Future<void> likeBoard({
-    required BoardSave like,
+  Future<void> saveBoard({
+    required BoardSave save,
   }) async {
     try {
-      await _supabase.fromBoardSavesTable().insert(like.toJson());
+      await _supabase.fromBoardSavesTable().insert(save.toJson());
     } catch (e) {
       throw BoardFailure.fromCreateBoard();
     }
@@ -57,6 +58,36 @@ extension Read on BoardRepository {
             (data) => data == null ? Board.empty : Board.converterSingle(data),
           );
       return res;
+    } catch (e) {
+      throw BoardFailure.fromGetBoard();
+    }
+  }
+
+  Future<bool> hasPost({
+    required String boardId,
+    required String postId,
+  }) async {
+    try {
+      final res = await _supabase.fromBoardPostsTable().select().match({
+        BoardPost.boardIdConverter: boardId,
+        BoardPost.postIdConverter: postId,
+      }).maybeSingle();
+      return res != null;
+    } catch (e) {
+      throw BoardFailure.fromGetBoard();
+    }
+  }
+
+  Future<bool> hasUserSavedBoard({
+    required String boardId,
+    required String userId,
+  }) async {
+    try {
+      final res = await _supabase.fromBoardSavesTable().select().match({
+        BoardSave.boardIdConverter: boardId,
+        BoardSave.userIdConverter: userId,
+      }).maybeSingle();
+      return res != null;
     } catch (e) {
       throw BoardFailure.fromGetBoard();
     }

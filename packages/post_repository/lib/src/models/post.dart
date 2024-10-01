@@ -4,13 +4,13 @@ part 'post.g.dart';
 @JsonSerializable()
 class Post extends Equatable {
   const Post({
-    required this.id,
     required this.creatorId,
     required this.title,
-    this.description,
+    this.id = '',
+    this.description = '',
     this.photoUrl,
-    this.websiteUrl,
-    this.isPublic,
+    this.websiteUrl = '',
+    this.isPublic = true,
     this.createdAt,
   });
 
@@ -42,15 +42,15 @@ class Post extends Equatable {
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = Post(id: '', creatorId: '', title: '');
+  static const empty = Post(creatorId: '', title: '');
 
   final String id;
   final String creatorId;
   final String title;
-  final String? description;
+  final String description;
   final String? photoUrl;
-  final String? websiteUrl;
-  final bool? isPublic;
+  final String websiteUrl;
+  final bool isPublic;
   final DateTime? createdAt;
 
   @override

@@ -11,11 +11,16 @@ class PostRepository {
 }
 
 extension Create on PostRepository {
-  Future<void> createPost({
+  Future<String> createPost({
     required Post post,
   }) async {
     try {
-      await _supabase.fromPostsTable().insert(post.toJson());
+      final res = await _supabase
+          .fromPostsTable()
+          .insert(post.toJson())
+          .select('id')
+          .single();
+      return res['id'] as String;
     } catch (e) {
       throw PostFailure.fromCreatePost();
     }
@@ -46,6 +51,21 @@ extension Read on PostRepository {
             (data) => data == null ? Post.empty : Post.converterSingle(data),
           );
       return res;
+    } catch (e) {
+      throw PostFailure.fromGetPost();
+    }
+  }
+
+  Future<bool> hasUserLikedPost({
+    required String postId,
+    required String userId,
+  }) async {
+    try {
+      final res = await _supabase.fromPostLikesTable().select().match({
+        PostLike.userIdConverter: postId,
+        PostLike.postIdConverter: userId,
+      }).maybeSingle();
+      return res != null;
     } catch (e) {
       throw PostFailure.fromGetPost();
     }

@@ -39,6 +39,26 @@ extension Read on TagRepository {
       _readTags(type: 'board', uuid: uuid);
 }
 
+extension Update on TagRepository {
+  Future<void> updateUserTags({
+    required String userId,
+    required List<String> tags,
+  }) async =>
+      _updateTags(type: 'user', uuid: userId, tags: tags);
+
+  Future<void> updatePostTags({
+    required String postId,
+    required List<String> tags,
+  }) async =>
+      _updateTags(type: 'post', uuid: postId, tags: tags);
+
+  Future<void> updateBoardTags({
+    required String boardId,
+    required List<String> tags,
+  }) async =>
+      _updateTags(type: 'board', uuid: boardId, tags: tags);
+}
+
 extension Delete on TagRepository {
   // Delete a tag by its ID
   Future<void> deleteTag({required String tagId}) async {
@@ -117,5 +137,36 @@ extension Private on TagRepository {
     } catch (e) {
       throw TagFailure.fromGetTag();
     }
+  }
+
+  Future<void> _updateTags({
+    required String type,
+    required String uuid,
+    required List<String> tags,
+  }) async {
+    // Step 1: Upsert the new tags into the tags table
+    final upsertTagsResponse = await _supabase
+        .fromTagsTable()
+        .upsert(
+          tags.map((tagName) => {'name': tagName}).toList(),
+          onConflict: 'name',
+        )
+        .select();
+
+    if (upsertTagsResponse.isEmpty) {
+      throw TagFailure.fromUpdateTag();
+    }
+
+    // Extract tag IDs from the response
+    final tagIds =
+        upsertTagsResponse.map((tag) => tag['id']).toList().whereType<String>();
+
+    // Step 2: Clear all existing tag associations for this user
+    await _supabase.from('${type}_tags').delete().match({'${type}_id': uuid});
+
+    // Step 3: Insert new tag associations into user_tags
+    await _supabase.from('${type}_tags').insert(
+          tagIds.map((tagId) => {'${type}_id': uuid, 'tag_id': tagId}).toList(),
+        );
   }
 }

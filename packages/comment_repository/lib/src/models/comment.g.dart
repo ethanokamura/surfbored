@@ -7,10 +7,10 @@ part of 'comment.dart';
 // **************************************************************************
 
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
-      id: json['id'] as String,
       postId: json['postId'] as String,
       senderId: json['senderId'] as String,
       message: json['message'] as String,
+      id: json['id'] as String? ?? '',
       edited: json['edited'] as bool? ?? false,
       createdAt: json['createdAt'] == null
           ? null
@@ -23,6 +23,7 @@ Map<String, dynamic> _$CommentToJson(Comment instance) {
     'postId': instance.postId,
     'senderId': instance.senderId,
     'message': instance.message,
+    'edited': instance.edited,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -31,7 +32,6 @@ Map<String, dynamic> _$CommentToJson(Comment instance) {
     }
   }
 
-  writeNotNull('edited', instance.edited);
   writeNotNull('createdAt', instance.createdAt?.toIso8601String());
   return val;
 }

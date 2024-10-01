@@ -9,7 +9,6 @@ export 'package:firebase_core/firebase_core.dart';
 export 'package:supabase_flutter/supabase_flutter.dart';
 
 // api files
-export 'src/firestore_extensions.dart';
 export 'src/json_converters.dart';
 
 // api files

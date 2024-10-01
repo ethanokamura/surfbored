@@ -3,9 +3,9 @@ import 'package:app_core/app_core.dart';
 part 'profile.g.dart';
 
 @JsonSerializable()
-class UserProfile extends Equatable {
-  // UserProfile constructor
-  const UserProfile({
+class ProfileData extends Equatable {
+  // ProfileData constructor
+  const ProfileData({
     required this.userId,
     this.displayName,
     this.bio,
@@ -17,12 +17,12 @@ class UserProfile extends Equatable {
     this.createdAt,
   });
 
-  factory UserProfile.converterSingle(Map<String, dynamic> data) {
-    return UserProfile.fromJson(data);
+  factory ProfileData.converterSingle(Map<String, dynamic> data) {
+    return ProfileData.fromJson(data);
   }
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
+  factory ProfileData.fromJson(Map<String, dynamic> json) {
+    return ProfileData(
       userId: json['user_id'] != null ? json['user_id'].toString() : '',
       displayName: json['display_name']?.toString(),
       bio: json['bio']?.toString() ?? '',
@@ -49,7 +49,7 @@ class UserProfile extends Equatable {
   static String get lastSignInConverter => 'last_sign_in';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = UserProfile(userId: '');
+  static const empty = ProfileData(userId: '');
 
   final String userId;
   final String? displayName;
@@ -74,8 +74,8 @@ class UserProfile extends Equatable {
         createdAt,
       ];
 
-  static List<UserProfile> converter(List<Map<String, dynamic>> data) {
-    return data.map(UserProfile.fromJson).toList();
+  static List<ProfileData> converter(List<Map<String, dynamic>> data) {
+    return data.map(ProfileData.fromJson).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -161,7 +161,7 @@ class UserProfile extends Equatable {
   }
 }
 
-// Extensions for UserProfile
-extension UserProfileExtensions on UserProfile {
-  bool get isEmpty => this == UserProfile.empty;
+// Extensions for ProfileData
+extension ProfileDataExtensions on ProfileData {
+  bool get isEmpty => this == ProfileData.empty;
 }

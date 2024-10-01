@@ -16,49 +16,10 @@ class FriendsCubit extends Cubit<FriendsState> {
     return _hasMore;
   }
 
-  void streamFriends(String userID) {
-    emit(state.fromLoading());
-    _currentPage = 0;
-    _hasMore = true;
-    _loadMoreFriends(userID, reset: true);
-  }
+  Future<List<String>> fetchFriends(String userId) async =>
+      _friendRepository.fetchFriends(userId: userId);
 
-  void loadMoreFriends(String userID) {
-    if (_hasMore) {
-      _currentPage++;
-      _loadMoreFriends(userID);
-    }
-  }
-
-  void _loadMoreFriends(String userID, {bool reset = false}) {
-    try {
-      _friendRepository
-          .streamFriends(userID, pageSize: _pageSize, page: _currentPage)
-          .listen(
-        (friends) {
-          if (friends.isEmpty) {
-            emit(state.fromEmpty());
-            return;
-          }
-          if (friends.length < _pageSize) {
-            _hasMore = false;
-          }
-          if (reset) {
-            emit(state.fromLoaded(friends));
-          } else {
-            emit(state.fromLoaded(List.of(state.friends)..addAll(friends)));
-          }
-        },
-        onError: (error) {
-          emit(state.fromEmpty());
-        },
-      );
-    } on FriendFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
-  Future<void> modifiyFriend(String userID) async {
-    await _friendRepository.modifyFriend(userID);
-  }
+  // Future<void> modifiyFriend(String userID) async {
+  //   await _friendRepository.modifyFriend(userID);
+  // }
 }

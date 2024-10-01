@@ -15,8 +15,8 @@ class LikeButton extends StatelessWidget {
       child: BlocBuilder<LikeCubit, LikeState>(
         builder: (context, state) {
           context.read<LikeCubit>().fetchData(post.id, userID);
-          var likes = post.likes;
           var isLiked = false;
+          var likes = 0;
           if (state.isLoading) {
             // Show a loading indicator in the button if needed
           } else if (state.isSuccess) {
@@ -27,7 +27,7 @@ class LikeButton extends StatelessWidget {
             onSurface: true,
             onTap: () => context.read<LikeCubit>().toggleLike(
                   userID,
-                  post.uid,
+                  post.creatorId,
                   post.id,
                   liked: isLiked,
                 ),

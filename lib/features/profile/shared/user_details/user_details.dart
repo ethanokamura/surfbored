@@ -8,15 +8,8 @@ class UserDetails extends StatelessWidget {
   const UserDetails({required this.id, super.key});
   final String id;
 
-  Future<String?> _fetchUsername(BuildContext context) async {
-    final userRepository = context.read<UserRepository>();
-    return userRepository.readUsername(id);
-  }
-
-  Future<String?> _fetchPhotoURL(BuildContext context) async {
-    final userRepository = context.read<UserRepository>();
-    return userRepository.readUserPhotoURL(id);
-  }
+  Future<UserProfile> _fetchUserDetails(BuildContext context) async =>
+      context.read<UserRepository>().readUserProfile(uuid: id);
 
   @override
   Widget build(BuildContext context) {
@@ -28,30 +21,25 @@ class UserDetails extends StatelessWidget {
         ),
       ),
       child: Flexible(
-        child: Row(
-          children: [
-            FutureBuilder<String?>(
-              future: _fetchPhotoURL(context),
-              builder: (context, snapshot) {
-                final photoURL = snapshot.data;
-                return SquareImage(
-                  photoURL: photoURL,
-                  width: 32,
-                  height: 32,
-                  borderRadius: BorderRadius.circular(100),
-                );
-              },
-            ),
-            const SizedBox(width: 10),
-            FutureBuilder<String?>(
-              future: _fetchUsername(context),
-              builder: (context, snapshot) {
-                final username = snapshot.data ?? 'Unknown User';
-                return UserText(text: '@$username', bold: false);
-              },
-            ),
-          ],
-        ),
+        child: FutureBuilder<UserProfile>(
+            future: _fetchUserDetails(context),
+            builder: (context, snapshot) {
+              final profile = snapshot.data;
+              final username = profile?.username ?? 'Unknown User';
+              final photoUrl = profile?.photoUrl;
+              return Row(
+                children: [
+                  SquareImage(
+                    photoUrl: photoUrl,
+                    width: 32,
+                    height: 32,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  const SizedBox(width: 10),
+                  UserText(text: '@$username', bold: false),
+                ],
+              );
+            }),
       ),
     );
   }

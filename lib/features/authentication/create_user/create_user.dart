@@ -45,7 +45,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     context.mounted) {
                   final isUnique = await context
                       .read<UserRepository>()
-                      .isUsernameUnique(newValue);
+                      .isUsernameUnique(username: newValue);
                   if (isUnique) {
                     setState(() => username = newValue);
                   }
@@ -57,8 +57,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
               ActionButton(
                 inverted: true,
                 onTap: () async {
-                  final newUser =
-                      await context.read<UserRepository>().createUser(username);
+                  final newUser = await context
+                      .read<UserRepository>()
+                      .createUser(username: username);
                   if (context.mounted) {
                     context.read<AppCubit>().confirmedUsername(newUser);
                   }

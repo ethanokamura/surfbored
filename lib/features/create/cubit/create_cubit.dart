@@ -4,6 +4,7 @@ import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:tag_repository/tag_repository.dart';
 
 // State definitions
 part 'create_state.dart';
@@ -12,12 +13,15 @@ class CreateCubit extends Cubit<CreateState> {
   CreateCubit({
     required PostRepository postRepository,
     required BoardRepository boardRepository,
+    required TagRepository tagRepository,
   })  : _postRepository = postRepository,
         _boardRepository = boardRepository,
+        _tagRepository = tagRepository,
         super(const CreateState.initial());
 
   final BoardRepository _boardRepository;
   final PostRepository _postRepository;
+  final TagRepository _tagRepository;
 
   Future<void> create({
     required String type,
@@ -59,17 +63,22 @@ class CreateCubit extends Cubit<CreateState> {
     emit(state.fromLoading());
     try {
       final docID = await _postRepository.createPost(
-        Post(
+        post: Post(
           title: title,
+          creatorId: userID,
           description: description,
-          website: website,
-          uid: 'userId', // Replace with actual user ID
-          tags: tags,
+          websiteUrl: website,
         ),
-        userID,
       );
+
+      if (tags.isNotEmpty) {
+        tags.map(
+          (tag) => _tagRepository.createPostTag(tagName: tag, uuid: docID),
+        );
+      }
+
       if (imageFile != null) {
-        await Supabase.instance
+        await Supabase.instance.client
             .uploadFile('posts', docID, imageFile.readAsBytesSync());
       }
       emit(state.fromCreated());
@@ -88,16 +97,19 @@ class CreateCubit extends Cubit<CreateState> {
     emit(state.fromLoading());
     try {
       final docID = await _boardRepository.createBoard(
-        Board(
+        board: Board(
+          creatorId: userID,
           title: title,
           description: description,
-          uid: 'userId', // Replace with actual user ID
-          tags: tags,
         ),
-        userID,
       );
+      if (tags.isNotEmpty) {
+        tags.map(
+          (tag) => _tagRepository.createBoardTag(tagName: tag, uuid: docID),
+        );
+      }
       if (imageFile != null) {
-        await Supabase.instance
+        await Supabase.instance.client
             .uploadFile('boards', docID, imageFile.readAsBytesSync());
       }
       emit(state.fromCreated());

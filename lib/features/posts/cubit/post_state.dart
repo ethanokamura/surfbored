@@ -16,6 +16,7 @@ final class PostState extends Equatable {
     this.status = PostStatus.initial,
     this.post = Post.empty,
     this.posts = const [],
+    this.tags = const [],
     this.failure = PostFailure.empty,
   });
 
@@ -25,6 +26,7 @@ final class PostState extends Equatable {
   final PostStatus status;
   final Post post;
   final List<Post> posts;
+  final List<String> tags;
   final PostFailure failure;
 
   // rebuilds the app when the props change
@@ -32,6 +34,7 @@ final class PostState extends Equatable {
   List<Object?> get props => [
         status,
         post,
+        tags,
         posts,
         failure,
       ];
@@ -40,11 +43,13 @@ final class PostState extends Equatable {
     PostStatus? status,
     Post? post,
     List<Post>? posts,
+    List<String>? tags,
     PostFailure? failure,
   }) {
     return PostState._(
       status: status ?? this.status,
       post: post ?? this.post,
+      tags: tags ?? this.tags,
       posts: posts ?? this.posts,
       failure: failure ?? this.failure,
     );
@@ -70,9 +75,10 @@ extension _PostStateExtensions on PostState {
 
   PostState fromUpdate() => copyWith(status: PostStatus.updated);
 
-  PostState fromPostLoaded(Post post) => copyWith(
+  PostState fromPostLoaded(Post post, List<String> tags) => copyWith(
         status: PostStatus.loaded,
         post: post,
+        tags: tags,
       );
 
   PostState fromPostsLoaded(List<Post> posts) => copyWith(

@@ -8,28 +8,35 @@ class LikeCubit extends Cubit<LikeState> {
 
   final PostRepository _postRepository;
 
-  Future<void> fetchData(String postID, String userID) async {
+  Future<void> fetchData(String postId, String userId) async {
     final userLikesPost =
-        await _postRepository.hasUserLikedPost(postID, userID);
-    final likes = await _postRepository.fetchLikes(postID);
+        await _postRepository.hasUserLikedPost(postId: postId, userId: userId);
+    final likes = await _postRepository.fetchPostLikes(postId: postId);
     emit(state.fromLikeSuccess(isLiked: userLikesPost, likes: likes));
   }
 
   Future<void> toggleLike(
-    String userID,
+    String userId,
     String ownerID,
-    String postID, {
+    String postId, {
     required bool liked,
   }) async {
     try {
       emit(state.fromLoading());
-      await _postRepository.updateLikes(
-        userID: userID,
-        ownerID: ownerID,
-        postID: postID,
-        isLiked: liked,
-      );
-      final likes = await _postRepository.fetchLikes(postID);
+      if (liked) {
+        await _postRepository.likePost(
+          like: PostLike(
+            userId: userId,
+            postId: postId,
+          ),
+        );
+      } else {
+        await _postRepository.removeLike(
+          postId: postId,
+          userId: userId,
+        );
+      }
+      final likes = await _postRepository.fetchPostLikes(postId: postId);
       emit(state.fromLikeSuccess(isLiked: !liked, likes: likes));
     } catch (e) {
       throw Exception(e);

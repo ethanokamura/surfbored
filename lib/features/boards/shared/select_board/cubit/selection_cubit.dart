@@ -8,18 +8,20 @@ class SelectionCubit extends Cubit<SelectionState> {
 
   final BoardRepository _boardRepository;
 
-  Future<void> toggleSelection(
-    String boardID,
-    String postID, {
+  Future<void> toggleSelection({
+    required String boardId,
+    required String postId,
     required bool isSelected,
   }) async {
     emit(SelectionLoading());
     try {
-      await _boardRepository.updateBoardPosts(
-        boardID: boardID,
-        postID: postID,
-        isSelected: isSelected,
-      );
+      if (isSelected) {
+        await _boardRepository.addPost(
+          post: BoardPost(postId: postId, boardId: boardId),
+        );
+      } else {
+        await _boardRepository.removePost(postId: postId, boardId: boardId);
+      }
       emit(SelectionSuccess(isSelected: !isSelected));
     } catch (e) {
       emit(SelectionFailure(message: e.toString()));

@@ -19,7 +19,7 @@ class SelectBoardCard extends StatelessWidget {
       create: (context) => SelectionCubit(context.read<BoardRepository>()),
       child: BlocBuilder<SelectionCubit, SelectionState>(
         builder: (context, state) {
-          var isSelected = board.hasPost(postID: postID);
+          var isSelected = false;
           if (state is SelectionLoading) {
             // Show a loading indicator in the button if needed
           } else if (state is SelectionSuccess) {
@@ -27,9 +27,11 @@ class SelectBoardCard extends StatelessWidget {
           }
           return GestureDetector(
             onTap: () {
-              context
-                  .read<SelectionCubit>()
-                  .toggleSelection(board.id, postID, isSelected: isSelected);
+              context.read<SelectionCubit>().toggleSelection(
+                    boardId: board.id,
+                    postId: postID,
+                    isSelected: isSelected,
+                  );
             },
             child: CustomContainer(
               child: Row(
@@ -37,7 +39,7 @@ class SelectBoardCard extends StatelessWidget {
                 children: [
                   SquareImage(
                     borderRadius: defaultBorderRadius,
-                    photoURL: board.photoURL,
+                    photoUrl: board.photoUrl,
                     height: 64,
                     width: 64,
                   ),

@@ -9,8 +9,9 @@ class ProfileLink extends StatelessWidget {
   final String id;
 
   Future<String?> _fetchUsername(BuildContext context) async {
-    final userRepository = context.read<UserRepository>();
-    return userRepository.readUsername(id);
+    final profile =
+        await context.read<UserRepository>().readUserProfile(uuid: id);
+    return profile.username;
   }
 
   @override

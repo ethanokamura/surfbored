@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/posts/shared/shuffle_posts/cubit/shuffle_index_cubit.dart';
+import 'package:tag_repository/tag_repository.dart';
 
 class ShuffledPostsPage extends StatelessWidget {
   const ShuffledPostsPage({required this.boardID, super.key});
@@ -19,6 +20,7 @@ class ShuffledPostsPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) => PostCubit(
           postRepository: context.read<PostRepository>(),
+          tagRepository: context.read<TagRepository>(),
         )..shufflePostList(boardID),
         child: BlocBuilder<PostCubit, PostState>(
           builder: (context, state) {

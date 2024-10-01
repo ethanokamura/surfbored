@@ -1,12 +1,13 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:surfbored/features/boards/boards.dart';
-// import 'package:surfbored/features/friends/friends.dart';
-// import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/friends/friends.dart';
+import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
+import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -35,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage>
     return BlocProvider(
       create: (_) => ProfileCubit(
         userRepository: context.read<UserRepository>(),
+        tagRepository: context.read<TagRepository>(),
         userID: widget.userID,
       ),
       child: BlocBuilder<ProfileCubit, UserData>(
@@ -106,14 +108,28 @@ class ProfileBuilder extends StatelessWidget {
                           const VerticalSpacer(),
                           if (user.bio.isNotEmpty) About(bio: user.bio),
                           if (user.bio.isNotEmpty) const VerticalSpacer(),
-                          // FriendsBlock(
-                          //   userID: user.id,
-                          //   friends: user.friends,
-                          //   isCurrent: isCurrent,
-                          // ),
-                          // const VerticalSpacer(),
-                          // if (user.tags.isNotEmpty)
-                          //   InterestsList(interests: user.tags),
+                          FriendsBlock(
+                            userID: user.id,
+                            isCurrent: isCurrent,
+                          ),
+                          FutureBuilder(
+                            future: context
+                                .read<ProfileCubit>()
+                                .fetchUserTags(user.id),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return const SizedBox.shrink();
+                              }
+                              final tags = snapshot.data;
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const VerticalSpacer(),
+                                  InterestsList(interests: tags!),
+                                ],
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -129,12 +145,9 @@ class ProfileBuilder extends StatelessWidget {
               Flexible(
                 child: TabBarView(
                   children: [
-                    const Placeholder(),
-                    const Placeholder(),
-                    const Placeholder(),
-                    // PostsList(type: 'user', docID: user.id),
-                    // UserBoardsList(userID: user.id),
-                    // PostsList(type: 'likes', docID: user.id),
+                    PostsList(type: 'user', docID: user.id),
+                    UserBoardsList(userID: user.id),
+                    PostsList(type: 'likes', docID: user.id),
                   ],
                 ),
               ),
@@ -205,7 +218,7 @@ class ProfileHeader extends StatelessWidget {
     return Row(
       children: [
         SquareImage(
-          photoURL: user.photoUrl,
+          photoUrl: user.photoUrl,
           width: 96,
           height: 96,
           borderRadius: defaultBorderRadius,

@@ -1,17 +1,21 @@
 import 'package:app_core/app_core.dart';
+import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfileCubit extends Cubit<UserData> {
   ProfileCubit({
     required UserRepository userRepository,
+    required TagRepository tagRepository,
     required String userID,
   })  : _userRepository = userRepository,
+        _tagRepository = tagRepository,
         _userID = userID,
         super(UserData.empty) {
     _watchUser();
   }
 
   final UserRepository _userRepository;
+  final TagRepository _tagRepository;
   final String _userID;
 
   @override
@@ -25,7 +29,7 @@ class ProfileCubit extends Cubit<UserData> {
   late final StreamSubscription<UserData> _userSubscription;
   void _watchUser() {
     _userSubscription = _userRepository
-        .watchUserByID(_userID)
+        .watchUserByID(uuid: _userID)
         .handleFailure()
         .listen(_onUserChanged);
   }
@@ -34,7 +38,9 @@ class ProfileCubit extends Cubit<UserData> {
     return _userSubscription.cancel();
   }
 
-  Future<void> editField(String field, dynamic data) async {
-    await _userRepository.updateField(_userID, field, data);
-  }
+  Future<List<String>> fetchUserTags(String userId) =>
+      _tagRepository.readUserTags(uuid: userId);
+
+  Future<void> editField(String field, dynamic data) async =>
+      _userRepository.updateUserProfile(field: field, data: data);
 }

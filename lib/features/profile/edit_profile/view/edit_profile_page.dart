@@ -45,7 +45,7 @@ class EditProfile extends StatelessWidget {
           EditSquareImage(
             width: 200,
             height: 200,
-            photoURL: user.photoUrl,
+            photoUrl: user.photoUrl,
             collection: 'users',
             docID: user.id,
             onFileChanged: (url) =>
@@ -138,5 +138,5 @@ class EditProfile extends StatelessWidget {
   }
 
   Future<List<String>> _getUserTags(String uuid) async =>
-      TagRepository().readUserTags(uuid);
+      TagRepository().readUserTags(uuid: uuid);
 }

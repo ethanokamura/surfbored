@@ -8,28 +8,30 @@ class SaveCubit extends Cubit<SaveState> {
 
   final BoardRepository _boardRepository;
 
-  Future<void> fetchData(String boardID, String userID) async {
-    final userSavedBoard =
-        await _boardRepository.hasUserSavedBoard(boardID, userID);
-    final saves = await _boardRepository.fetchSaves(boardID);
+  Future<void> fetchData(String boardId, String userId) async {
+    final userSavedBoard = await _boardRepository.hasUserSavedBoard(
+      boardId: boardId,
+      userId: userId,
+    );
+    final saves = await _boardRepository.fetchBoardSaves(boardId: boardId);
     emit(state.fromSaveSuccess(isSaved: userSavedBoard, saves: saves));
   }
 
-  Future<void> toggleSave(
-    String userID,
-    String ownerID,
-    String boardID, {
+  Future<void> toggleSave({
+    required String userId,
+    required String boardId,
     required bool saved,
   }) async {
     try {
       emit(state.fromLoading());
-      await _boardRepository.updateSaves(
-        userID: userID,
-        ownerID: ownerID,
-        boardID: boardID,
-        isSaved: saved,
-      );
-      final saves = await _boardRepository.fetchSaves(boardID);
+      if (saved) {
+        await _boardRepository.saveBoard(
+          save: BoardSave(userId: userId, boardId: boardId),
+        );
+      } else {
+        await _boardRepository.removeSave(boardId: boardId, userId: userId);
+      }
+      final saves = await _boardRepository.fetchBoardSaves(boardId: boardId);
       emit(state.fromSaveSuccess(isSaved: !saved, saves: saves));
     } catch (e) {
       throw Exception(e);

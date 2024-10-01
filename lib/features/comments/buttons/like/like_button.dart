@@ -7,22 +7,22 @@ import 'package:surfbored/features/comments/buttons/like/cubit/comment_likes_cub
 class CommentLikeButton extends StatelessWidget {
   const CommentLikeButton({
     required this.comment,
-    required this.postID,
-    required this.userID,
+    required this.postId,
+    required this.userId,
     super.key,
   });
 
   final Comment comment;
-  final String postID;
-  final String userID;
+  final String postId;
+  final String userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CommentLikesCubit(context.read<CommentRepository>())
-        ..fetchCommentData(postID, comment.id, userID),
+        ..fetchCommentData(postId, comment.id),
       child: BlocBuilder<CommentLikesCubit, CommentLikesState>(
         builder: (context, state) {
-          var likes = comment.likes;
+          var likes = 0;
           var isLiked = false;
           if (state.isLoading) {
             // print('loading');
@@ -36,9 +36,8 @@ class CommentLikeButton extends StatelessWidget {
             onSurface: true,
             background: false,
             onTap: () async => context.read<CommentLikesCubit>().toggleLike(
-                  postID,
-                  comment.id,
-                  userID,
+                  commentId: comment.id,
+                  userId: userId,
                   liked: isLiked,
                 ),
             icon: isLiked

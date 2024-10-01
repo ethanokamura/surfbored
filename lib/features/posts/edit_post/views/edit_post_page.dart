@@ -40,6 +40,7 @@ class EditPostPage extends StatelessWidget {
             } else if (state.isLoaded) {
               return EditView(
                 post: state.post,
+                postTags: state.tags,
                 postCubit: context.read<PostCubit>(),
               );
             } else if (state.isDeleted) {
@@ -58,8 +59,14 @@ class EditPostPage extends StatelessWidget {
 }
 
 class EditView extends StatelessWidget {
-  const EditView({required this.postCubit, required this.post, super.key});
+  const EditView({
+    required this.postCubit,
+    required this.post,
+    required this.postTags,
+    super.key,
+  });
   final Post post;
+  final List<String> postTags;
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
@@ -70,9 +77,9 @@ class EditView extends StatelessWidget {
           EditImage(
             width: 200,
             // height: 200,
-            photoURL: post.photoURL,
+            photoUrl: post.photoUrl,
             collection: 'users',
-            docID: post.uid,
+            docID: post.creatorId,
             onFileChanged: (url) =>
                 postCubit.editField(post.id, 'photoURL', url),
           ),
@@ -91,13 +98,13 @@ class EditView extends StatelessWidget {
           const VerticalSpacer(),
           EditField(
             field: 'website',
-            value: post.website,
+            value: post.websiteUrl,
             postID: post.id,
           ),
           const VerticalSpacer(),
           EditTagsBox(
-            tags: post.tags,
-            updateTags: (tags) => postCubit.editField(post.id, 'tags', tags),
+            tags: postTags,
+            updateTags: (tags) => postCubit.updateTags(post.id, tags),
           ),
         ],
       ),

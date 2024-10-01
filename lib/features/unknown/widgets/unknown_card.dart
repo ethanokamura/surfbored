@@ -11,7 +11,7 @@ class UnknownCard extends StatelessWidget {
         children: [
           const SquareImage(
             borderRadius: defaultBorderRadius,
-            photoURL: null,
+            photoUrl: null,
             height: 64,
             width: 64,
           ),

@@ -35,7 +35,7 @@ class FriendsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          FriendsCubit(context.read<FriendRepository>())..streamFriends(userID),
+          FriendsCubit(context.read<FriendRepository>())..fetchFriends(userID),
       child: BlocBuilder<FriendsCubit, FriendsState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -48,7 +48,7 @@ class FriendsList extends StatelessWidget {
               onLoadMore: () async =>
                   context.read<FriendsCubit>().loadMoreFriends(userID),
               onRefresh: () async =>
-                  context.read<FriendsCubit>().streamFriends(userID),
+                  context.read<FriendsCubit>().fetchFriends(userID),
             );
           } else if (state.isEmpty) {
             return const Center(

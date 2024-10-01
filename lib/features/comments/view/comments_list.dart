@@ -7,11 +7,11 @@ import 'package:surfbored/features/unknown/unknown.dart';
 class CommentListView extends StatelessWidget {
   const CommentListView({
     required this.comments,
-    required this.postID,
+    required this.postId,
     super.key,
   });
   final List<Comment> comments;
-  final String postID;
+  final String postId;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -24,7 +24,7 @@ class CommentListView extends StatelessWidget {
         final comment = comments[index];
         return comment.isEmpty
             ? const UnknownCard(message: 'Comment not found.')
-            : CommentCard(comment: comment, postID: postID);
+            : CommentCard(comment: comment, postId: postId);
       },
     );
   }

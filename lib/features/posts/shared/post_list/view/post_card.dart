@@ -14,14 +14,14 @@ class PostCard extends StatelessWidget {
       child: CustomContainer(
         child: Row(
           children: [
-            if (post.photoURL != null && post.photoURL! != '')
+            if (post.photoUrl != null && post.photoUrl! != '')
               SquareImage(
                 borderRadius: defaultBorderRadius,
-                photoURL: post.photoURL,
+                photoUrl: post.photoUrl,
                 height: 64,
                 width: 64,
               ),
-            if (post.photoURL != null && post.photoURL! != '')
+            if (post.photoUrl != null && post.photoUrl! != '')
               const HorizontalSpacer(),
             Flexible(
               child: Column(

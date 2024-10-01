@@ -49,6 +49,7 @@ class EditBoardPage extends StatelessWidget {
             } else if (state.isLoaded) {
               return EditView(
                 board: state.board,
+                boardTags: state.tags,
                 boardCubit: context.read<BoardCubit>(),
                 onDelete: onDelete,
               );
@@ -70,11 +71,13 @@ class EditBoardPage extends StatelessWidget {
 class EditView extends StatelessWidget {
   const EditView({
     required this.board,
+    required this.boardTags,
     required this.boardCubit,
     required this.onDelete,
     super.key,
   });
   final Board board;
+  final List<String> boardTags;
   final BoardCubit boardCubit;
   final void Function() onDelete;
   @override
@@ -86,11 +89,11 @@ class EditView extends StatelessWidget {
           EditImage(
             width: 200,
             // height: 200,
-            photoURL: board.photoURL,
+            photoUrl: board.photoUrl,
             collection: 'users',
-            docID: board.uid,
+            docID: board.creatorId,
             onFileChanged: (url) {
-              boardCubit.editField(board.id, 'photoURL', url);
+              boardCubit.editField(board.id, 'photoUrl', url);
             },
           ),
           const VerticalSpacer(),
@@ -107,8 +110,8 @@ class EditView extends StatelessWidget {
           ),
           const VerticalSpacer(),
           EditTagsBox(
-            tags: board.tags,
-            updateTags: (tags) => boardCubit.editField(board.id, 'tags', tags),
+            tags: boardTags,
+            updateTags: (tags) => boardCubit.updateTags(board.id, tags),
           ),
           const VerticalSpacer(),
           ActionButton(

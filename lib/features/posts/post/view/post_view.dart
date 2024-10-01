@@ -1,8 +1,10 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:comment_repository/comment_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/comments/comments.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/edit_post/edit_post.dart';
 import 'package:surfbored/features/posts/likes/likes.dart';
@@ -13,10 +15,12 @@ import 'package:user_repository/user_repository.dart';
 class PostView extends StatelessWidget {
   const PostView({
     required this.post,
+    required this.tags,
     required this.postCubit,
     super.key,
   });
   final Post post;
+  final List<String> tags;
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
@@ -27,20 +31,20 @@ class PostView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (post.photoURL != null && post.photoURL! != '')
+            if (post.photoUrl != null && post.photoUrl! != '')
               ImageHeader(post: post, userID: userID, postCubit: postCubit)
             else
               Header(post: post, userID: userID, postCubit: postCubit),
-            if (post.photoURL != null && post.photoURL! != '')
+            if (post.photoUrl != null && post.photoUrl! != '')
               const VerticalSpacer(),
             TitleText(text: post.title),
             if (post.description.isNotEmpty)
               DescriptionText(text: post.description),
             if (post.description.isNotEmpty) const VerticalSpacer(),
-            if (post.website.isNotEmpty) WebLink(url: post.website),
-            if (post.website.isNotEmpty) const VerticalSpacer(),
-            if (post.tags.isNotEmpty) TagList(tags: post.tags),
-            if (post.tags.isNotEmpty) const VerticalSpacer(),
+            if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
+            if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
+            if (tags.isNotEmpty) TagList(tags: tags),
+            if (tags.isNotEmpty) const VerticalSpacer(),
             Footer(post: post, userID: userID),
           ],
         ),
@@ -61,12 +65,12 @@ class ImageHeader extends StatelessWidget {
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    final isOwner = userID == post.uid;
+    final isOwner = userID == post.creatorId;
     return Stack(
       children: [
         ImageWidget(
           borderRadius: defaultBorderRadius,
-          photoURL: post.photoURL,
+          photoUrl: post.photoUrl,
           // height: 256,
           width: double.infinity,
         ),
@@ -101,7 +105,7 @@ class Header extends StatelessWidget {
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    final isOwner = userID == post.uid;
+    final isOwner = userID == post.creatorId;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -146,8 +150,28 @@ class Footer extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        UserDetails(id: post.uid),
-        LikeButton(post: post, userID: userID),
+        UserDetails(id: post.creatorId),
+        FutureBuilder(
+          future: context
+              .read<CommentRepository>()
+              .fetchTotalComments(postId: post.id),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Row(
+                children: [
+                  CommentButton(
+                    postID: post.id,
+                    userID: post.creatorId,
+                    comments: snapshot.data!,
+                  ),
+                  const HorizontalSpacer(),
+                  LikeButton(post: post, userID: userID),
+                ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ],
     );
   }
@@ -192,9 +216,9 @@ Future<void> _onDelete(
 ) async {
   if (Navigator.canPop(context)) Navigator.pop(context);
   await postCubit.deletePost(
-    post.uid,
+    post.creatorId,
     post.id,
-    post.photoURL.toString(),
+    post.photoUrl.toString(),
   );
   if (context.mounted && Navigator.canPop(context)) {
     Navigator.pop(context);

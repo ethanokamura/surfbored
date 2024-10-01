@@ -25,8 +25,9 @@ class ActivityCubit extends Cubit<ActivityState> {
 
   Future<void> fetchFriendRequests() async {
     try {
-      final senderIDs =
-          await _friendRepository.fetchPendingRequests(_userRepository.user.id);
+      final senderIDs = await _friendRepository.fetchPendingRequests(
+        userId: _userRepository.user.id,
+      );
       if (senderIDs.isEmpty) {
         emit(state.fromEmpty());
       } else {

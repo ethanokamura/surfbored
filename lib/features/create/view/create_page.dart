@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
+import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CreatePage extends StatelessWidget {
@@ -35,6 +36,7 @@ class CreatePage extends StatelessWidget {
         create: (context) => CreateCubit(
           postRepository: context.read<PostRepository>(),
           boardRepository: context.read<BoardRepository>(),
+          tagRepository: context.read<TagRepository>(),
         ),
         child: CreatePost(type: type),
       ),
@@ -62,7 +64,7 @@ class _CreatePostState extends State<CreatePost> {
   String tagsText = 'tags';
   List<String> tags = [];
   String docID = '';
-  String? photoURL;
+  String? photoUrl;
 
   File? imageFile;
   String? filename;
@@ -91,7 +93,7 @@ class _CreatePostState extends State<CreatePost> {
               // upload image
               UploadImageWidget(
                 width: 200,
-                photoURL: photoURL,
+                photoUrl: photoUrl,
                 onFileChanged: (file) {
                   setState(() {
                     imageFile = file;

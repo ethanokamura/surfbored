@@ -10,33 +10,35 @@ class CommentLikesCubit extends Cubit<CommentLikesState> {
   final CommentRepository _commentRepository;
 
   Future<void> fetchCommentData(
-    String postID,
-    String commentID,
-    String userID,
+    String userId,
+    String commentId,
   ) async {
     emit(state.fromLoading());
-    final data = await _commentRepository.fetchComment(postID, commentID);
-    final liked = data.likedByUser(userID);
-    final likes = data.likes;
+    final liked = await _commentRepository.hasUserLikedComment(userId: userId);
+    final likes =
+        await _commentRepository.fetchCommentLikes(commentId: commentId);
     emit(state.fromLoaded(liked: liked, likes: likes));
   }
 
-  Future<void> toggleLike(
-    String postID,
-    String commentID,
-    String userID, {
+  Future<void> toggleLike({
+    required String commentId,
+    required String userId,
     required bool liked,
   }) async {
     liked = !liked;
     try {
       emit(state.fromLoading());
-      await _commentRepository.updateLikes(
-        postID: postID,
-        commentID: commentID,
-        userID: userID,
-        liked: liked,
-      );
-      final likes = await _commentRepository.fetchLikes(postID, commentID);
+      if (liked) {
+        await _commentRepository.likeComment(
+          like: CommentLike(userId: userId, commentId: commentId),
+        );
+      } else {
+        await _commentRepository.removeLike(
+          commentId: commentId,
+        );
+      }
+      final likes =
+          await _commentRepository.fetchCommentLikes(commentId: commentId);
       emit(state.fromLoaded(liked: liked, likes: likes));
     } catch (e) {
       throw Exception(e);

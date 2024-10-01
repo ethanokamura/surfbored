@@ -8,18 +8,15 @@ import 'package:user_repository/user_repository.dart';
 
 class CommentsPage extends StatelessWidget {
   const CommentsPage({
-    required this.postID,
-    required this.userID,
+    required this.postId,
     super.key,
   });
-  final String postID;
-  final String userID;
+  final String postId;
   static MaterialPage<void> page({
-    required String postID,
-    required String userID,
+    required String postId,
   }) {
     return MaterialPage<void>(
-      child: CommentsPage(postID: postID, userID: userID),
+      child: CommentsPage(postId: postId),
     );
   }
 
@@ -35,13 +32,13 @@ class CommentsPage extends StatelessWidget {
         body: BlocProvider<CommentsCubit>(
           create: (context) => CommentsCubit(
             commentRepository: context.read<CommentRepository>(),
-          )..readComments(postID),
+          )..readComments(postId),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(child: CommentsView(postID: postID, userID: userID)),
+              Expanded(child: CommentsView(postId: postId)),
               const VerticalSpacer(),
-              CommentContorller(postID: postID, userID: userID),
+              CommentContorller(postId: postId),
               const VerticalSpacer(),
             ],
           ),
@@ -53,12 +50,10 @@ class CommentsPage extends StatelessWidget {
 
 class CommentsView extends StatelessWidget {
   const CommentsView({
-    required this.postID,
-    required this.userID,
+    required this.postId,
     super.key,
   });
-  final String postID;
-  final String userID;
+  final String postId;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +63,7 @@ class CommentsView extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (state.isLoaded) {
           final comments = state.comments;
-          return CommentListView(comments: comments, postID: postID);
+          return CommentListView(comments: comments, postId: postId);
         } else if (state.isEmpty) {
           return const Center(
             child: PrimaryText(text: AppStrings.emptyComments),
@@ -84,12 +79,10 @@ class CommentsView extends StatelessWidget {
 
 class CommentContorller extends StatefulWidget {
   const CommentContorller({
-    required this.postID,
-    required this.userID,
+    required this.postId,
     super.key,
   });
-  final String postID;
-  final String userID;
+  final String postId;
 
   @override
   State<CommentContorller> createState() => _CommentContorllerState();
@@ -126,8 +119,7 @@ class _CommentContorllerState extends State<CommentContorller> {
           onTap: () async {
             if (textController.text.trim().isNotEmpty) {
               await context.read<CommentsCubit>().createComment(
-                    widget.postID,
-                    widget.userID,
+                    widget.postId,
                     context.read<UserRepository>().user.id,
                     textController.text,
                   );

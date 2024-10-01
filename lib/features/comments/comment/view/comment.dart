@@ -10,16 +10,16 @@ import 'package:user_repository/user_repository.dart';
 class CommentCard extends StatelessWidget {
   const CommentCard({
     required this.comment,
-    required this.postID,
+    required this.postId,
     super.key,
   });
   final Comment comment;
-  final String postID;
+  final String postId;
 
   @override
   Widget build(BuildContext context) {
     final userID = context.read<UserRepository>().user.id;
-    final isOwner = userID == comment.senderID;
+    final isOwner = userID == comment.senderId;
     return CustomContainer(
       vertical: 0,
       child: Column(
@@ -28,13 +28,12 @@ class CommentCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              UserDetails(id: comment.senderID),
+              UserDetails(id: comment.senderId),
               if (isOwner)
                 MoreCommentOptions(
                   onSurface: true,
-                  onDelete: () async => context
-                      .read<CommentsCubit>()
-                      .deleteComment(postID, comment.id),
+                  onDelete: () async =>
+                      context.read<CommentsCubit>().deleteComment(comment.id),
                 ),
             ],
           ),
@@ -45,8 +44,8 @@ class CommentCard extends StatelessWidget {
             children: [
               CommentLikeButton(
                 comment: comment,
-                postID: postID,
-                userID: context.read<UserRepository>().user.id,
+                postId: postId,
+                userId: context.read<UserRepository>().user.id,
               ),
             ],
           ),

@@ -27,7 +27,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signInWithOTP(String otp) async {
     try {
       emit(state.fromLoading());
-      await _userRepository.verifyOTP(state.phoneNumber, otp);
+      await _userRepository.verifyOTP(phoneNumber: state.phoneNumber, otp: otp);
       emit(state.fromSuccess());
     } on PhoneNumberSignInFailure {
       emit(const AuthState.initial());

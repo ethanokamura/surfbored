@@ -1,4 +1,5 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:comment_repository/comment_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
@@ -14,10 +15,11 @@ import 'package:user_repository/user_repository.dart';
 Future<dynamic> postPopUp(
   BuildContext context,
   Post post,
+  List<String> tags,
 ) async {
   final postCubit = context.read<PostCubit>();
   final userID = context.read<UserRepository>().user.id;
-  final isOwner = userID == post.uid;
+  final isOwner = userID == post.creatorId;
 
   await showModalBottomSheet<void>(
     context: context,
@@ -29,13 +31,13 @@ Future<dynamic> postPopUp(
       children: [
         Stack(
           children: [
-            if (post.photoURL != null && post.photoURL! != '')
+            if (post.photoUrl != null && post.photoUrl! != '')
               ImageWidget(
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(defaultRadius),
                   topRight: Radius.circular(defaultRadius),
                 ),
-                photoURL: post.photoURL,
+                photoUrl: post.photoUrl,
                 // height: 256,
                 width: double.infinity,
               ),
@@ -45,7 +47,7 @@ Future<dynamic> postPopUp(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   MoreOptions(
-                    onSurface: !(post.photoURL != null && post.photoURL! != ''),
+                    onSurface: !(post.photoUrl != null && post.photoUrl! != ''),
                     isOwner: isOwner,
                     onManage: () => Navigator.push(
                       context,
@@ -73,15 +75,15 @@ Future<dynamic> postPopUp(
                     onDelete: () async {
                       Navigator.pop(context);
                       await postCubit.deletePost(
-                        post.uid,
+                        post.creatorId,
                         post.id,
-                        post.photoURL.toString(),
+                        post.photoUrl.toString(),
                       );
                       if (context.mounted) Navigator.pop(context);
                     },
                   ),
                   ActionIconButton(
-                    onSurface: !(post.photoURL != null && post.photoURL! != ''),
+                    onSurface: !(post.photoUrl != null && post.photoUrl! != ''),
                     icon: AppIcons.cancel,
                     inverted: false,
                     onTap: () => Navigator.pop(context),
@@ -95,7 +97,7 @@ Future<dynamic> postPopUp(
           padding: EdgeInsets.only(
             left: defaultPadding,
             right: defaultPadding,
-            top: post.photoURL != null && post.photoURL! != ''
+            top: post.photoUrl != null && post.photoUrl! != ''
                 ? defaultPadding
                 : 0,
             bottom: 60,
@@ -107,24 +109,34 @@ Future<dynamic> postPopUp(
               if (post.description.isNotEmpty)
                 DescriptionText(text: post.description),
               if (post.description.isNotEmpty) const VerticalSpacer(),
-              if (post.website.isNotEmpty) WebLink(url: post.website),
-              if (post.website.isNotEmpty) const VerticalSpacer(),
-              if (post.tags.isNotEmpty) TagList(tags: post.tags),
-              if (post.tags.isNotEmpty) const VerticalSpacer(),
+              if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
+              if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
+              if (tags.isNotEmpty) TagList(tags: tags),
+              if (tags.isNotEmpty) const VerticalSpacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  UserDetails(id: post.uid),
-                  Row(
-                    children: [
-                      CommentButton(
-                        postID: post.id,
-                        userID: post.uid,
-                        comments: post.comments,
-                      ),
-                      const HorizontalSpacer(),
-                      LikeButton(post: post, userID: userID),
-                    ],
+                  UserDetails(id: post.creatorId),
+                  FutureBuilder(
+                    future: context
+                        .read<CommentRepository>()
+                        .fetchTotalComments(postId: post.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Row(
+                          children: [
+                            CommentButton(
+                              postID: post.id,
+                              userID: post.creatorId,
+                              comments: snapshot.data!,
+                            ),
+                            const HorizontalSpacer(),
+                            LikeButton(post: post, userID: userID),
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ],
               ),

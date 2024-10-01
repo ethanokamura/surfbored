@@ -13,19 +13,16 @@ class CommentsCubit extends Cubit<CommentsState> {
 
   Future<void> createComment(
     String postID,
-    String userID,
     String senderID,
     String comment,
   ) async {
     try {
       await _commentRepository.createComment(
-        Comment(
-          docID: postID,
-          ownerID: userID,
-          senderID: senderID,
+        comment: Comment(
+          postId: postID,
+          senderId: senderID,
           message: comment,
         ),
-        postID,
       );
     } on CommentFailure catch (failure) {
       emit(state.fromFailure(failure));
@@ -52,24 +49,11 @@ class CommentsCubit extends Cubit<CommentsState> {
     }
   }
 
-  Future<void> updateComment(
-    String postID,
-    String commentID,
-    String comment,
-  ) async {
-    try {
-      await _commentRepository.updateComment(postID, commentID, comment);
-    } on CommentFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
   Future<void> deleteComment(
-    String postID,
-    String commentID,
+    String commentId,
   ) async {
     try {
-      await _commentRepository.deleteComment(postID, commentID);
+      await _commentRepository.deleteComment(commentId: commentId);
     } on CommentFailure catch (failure) {
       emit(state.fromFailure(failure));
     }

@@ -9,13 +9,11 @@ import 'package:surfbored/features/friends/friends_block/view/friend_count.dart'
 class FriendsBlock extends StatelessWidget {
   const FriendsBlock({
     required this.userID,
-    required this.friends,
     required this.isCurrent,
     super.key,
   });
   final String userID;
   final bool isCurrent;
-  final int friends;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(

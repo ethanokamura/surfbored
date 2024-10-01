@@ -44,11 +44,7 @@ class BoardPage extends StatelessWidget {
                             boardID: board.id,
                             onDelete: () async {
                               Navigator.pop(context);
-                              await boardCubit.deleteBoard(
-                                board.uid,
-                                board.id,
-                                board.photoURL,
-                              );
+                              await boardCubit.deleteBoard(board.id);
                               if (context.mounted) Navigator.pop(context);
                             },
                           ),
@@ -101,7 +97,7 @@ class BoardPageView extends StatelessWidget {
                     children: [
                       ImageWidget(
                         borderRadius: defaultBorderRadius,
-                        photoURL: board.photoURL,
+                        photoUrl: board.photoUrl,
                         width: double.infinity,
                       ),
                       const VerticalSpacer(),
@@ -147,7 +143,7 @@ class BoardDetails extends StatelessWidget {
         ),
         DescriptionText(text: board.description),
         const VerticalSpacer(),
-        ProfileLink(id: board.uid),
+        ProfileLink(id: board.creatorId),
       ],
     );
   }
@@ -179,7 +175,7 @@ class BoardButtons extends StatelessWidget {
           Expanded(
             child: SaveButton(
               board: board,
-              userID: user.id,
+              userId: user.id,
             ),
           ),
         const HorizontalSpacer(),

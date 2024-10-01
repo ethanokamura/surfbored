@@ -17,9 +17,9 @@ class UserData extends Equatable {
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
-      id: json['id'] != null ? json['id'].toString() : '',
-      username: json['username'] != null ? json['username'].toString() : '',
-      photoUrl: json['photo_url']?.toString(),
+      id: json[idConverter]?.toString() ?? '',
+      username: json[usernameConverter]?.toString() ?? '',
+      photoUrl: json[photoUrlConverter]?.toString() ?? '',
     );
   }
 
@@ -46,9 +46,9 @@ class UserData extends Equatable {
     String? photoUrl,
   }) {
     return {
-      if (id != null) 'id': id,
-      if (username != null) 'username': username,
-      if (photoUrl != null) 'photo_url': photoUrl,
+      if (id != null) idConverter: id,
+      if (username != null) usernameConverter: username,
+      if (photoUrl != null) photoUrlConverter: photoUrl,
     };
   }
 

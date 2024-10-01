@@ -19,12 +19,15 @@ class FriendRequest extends Equatable {
   // this tells the json serializable what to do
   factory FriendRequest.fromJson(Map<String, dynamic> json) {
     return FriendRequest(
-      senderId: json['sender_id'] != null ? json['sender_id'].toString() : '',
-      recipientId:
-          json['recipient_id'] != null ? json['recipient_id'].toString() : '',
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())!
-          : null,
+      senderId: json[senderIdConverter] != null
+          ? json[senderIdConverter].toString()
+          : '',
+      recipientId: json[recipientIdConverter] != null
+          ? json[recipientIdConverter].toString()
+          : '',
+      createdAt: json[createdAtConverter] != null
+          ? DateTime.tryParse(json[createdAtConverter].toString())
+          : DateTime.now().toUtc(),
     );
   }
 
@@ -47,9 +50,9 @@ class FriendRequest extends Equatable {
     DateTime? createdAt,
   }) {
     return {
-      if (senderId != null) 'sender_id': senderId,
-      if (recipientId != null) 'recipient_id': recipientId,
-      if (createdAt != null) 'created_at': createdAt.toUtc().toString(),
+      if (senderId != null) senderIdConverter: senderId,
+      if (recipientId != null) recipientIdConverter: recipientId,
+      if (createdAt != null) createdAtConverter: createdAt.toUtc().toString(),
     };
   }
 

@@ -9,32 +9,41 @@ class TagRepository {
 }
 
 extension Create on TagRepository {
-  Future<void> createUserTag(String tagName, String uuid) async =>
+  Future<void> createUserTag({
+    required String tagName,
+    required String uuid,
+  }) async =>
       _createTag(tagName: tagName, uuid: uuid, type: 'user');
 
-  Future<void> createPostTag(String tagName, String uuid) async =>
+  Future<void> createPostTag({
+    required String tagName,
+    required String uuid,
+  }) async =>
       _createTag(tagName: tagName, uuid: uuid, type: 'post');
 
-  Future<void> createBoardTag(String tagName, String uuid) async =>
+  Future<void> createBoardTag({
+    required String tagName,
+    required String uuid,
+  }) async =>
       _createTag(tagName: tagName, uuid: uuid, type: 'board');
 }
 
 extension Read on TagRepository {
-  Future<List<String>> readUserTags(String uuid) async =>
+  Future<List<String>> readUserTags({required String uuid}) async =>
       _readTags(type: 'user', uuid: uuid);
 
-  Future<List<String>> readPostTags(String uuid) async =>
+  Future<List<String>> readPostTags({required String uuid}) async =>
       _readTags(type: 'post', uuid: uuid);
 
-  Future<List<String>> readBoardTags(String uuid) async =>
+  Future<List<String>> readBoardTags({required String uuid}) async =>
       _readTags(type: 'board', uuid: uuid);
 }
 
 extension Delete on TagRepository {
   // Delete a tag by its ID
-  Future<void> deleteTag(String tagId) async {
+  Future<void> deleteTag({required String tagId}) async {
     try {
-      await _supabase.from('tags').delete().eq('id', tagId);
+      await _supabase.fromTagsTable().delete().eq('id', tagId);
     } catch (e) {
       throw TagFailure.fromDeleteTag();
     }
@@ -62,7 +71,7 @@ extension Private on TagRepository {
   Future<String> _getOrCreateTagId({required String tagName}) async {
     try {
       final existingTag = await _supabase
-          .from('tags')
+          .fromTagsTable()
           .select('id')
           .eq('name', tagName)
           .maybeSingle();
@@ -79,7 +88,7 @@ extension Private on TagRepository {
   Future<String> _createNewTag({required String tagName}) async {
     try {
       final newTag = await _supabase
-          .from('tags')
+          .fromTagsTable()
           .insert({'name': tagName})
           .select()
           .single();

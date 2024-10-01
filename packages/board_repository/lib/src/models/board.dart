@@ -1,100 +1,148 @@
-import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
-part 'models.g.dart';
+part 'board.g.dart';
 
 @JsonSerializable()
 class Board extends Equatable {
   // constructor
   const Board({
-    required this.uid,
+    required this.id,
+    required this.creatorId,
     required this.title,
-    this.id = '',
-    this.photoURL,
-    this.description = '',
-    this.saves = 0,
-    this.posts = const [],
-    this.tags = const [],
+    this.description,
+    this.photoUrl,
+    this.isPublic,
     this.createdAt,
   });
 
-  // factory constructor
-  // this tells the json serializable what to do
-  factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);
+  factory Board.converterSingle(Map<String, dynamic> data) {
+    return Board.fromJson(data);
+  }
 
-  // allows for an easy way to stream data
-  factory Board.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
+  factory Board.fromJson(Map<String, dynamic> json) {
     return Board(
-      id: doc.id,
-      uid: data['uid'] as String? ?? '',
-      title: data['title'] as String? ?? '',
-      description: data['description'] as String? ?? '',
-      photoURL: data['photoURL'] as String? ?? '',
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      saves: data['saves'] as int? ?? 0,
-      posts: (data['posts'] as List<dynamic>)
-          .map((post) => post as String)
-          .toList(),
-      tags:
-          (data['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
+      id: json[idConverter]?.toString() ?? '',
+      creatorId: json[creatorIdConverter]?.toString() ?? '',
+      title: json[titleConverter]?.toString() ?? '',
+      description: json[descriptionConverter]?.toString() ?? '',
+      photoUrl: json[photoUrlConverter]?.toString() ?? '',
+      isPublic: json[isPublicConverter] as bool? ?? true,
+      createdAt: json[createdAtConverter] != null
+          ? DateTime.tryParse(json[createdAtConverter].toString())
+          : DateTime.now().toUtc(),
     );
   }
 
-  // allows for easy way to access algolia data
-  factory Board.fromAlgolia(Map<String, dynamic> json) {
-    return Board(
-      id: json['objectID'] as String? ?? '',
-      uid: json['uid'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      photoURL: json['photoURL'] as String? ?? '',
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
-      saves: json['saves'] as int? ?? 0,
-      posts: (json['posts'] as List<dynamic>)
-          .map((post) => post as String)
-          .toList(),
-      tags:
-          (json['tags'] as List<dynamic>).map((tag) => tag as String).toList(),
-    );
-  }
-
-  // data fields
-  final String id;
-  final String uid;
-  final String? photoURL;
-  final String title;
-  final String description;
-  final int saves;
-  final List<String> posts;
-  final List<String> tags;
-  @timestamp
-  final DateTime? createdAt;
+  static String get idConverter => 'id';
+  static String get creatorIdConverter => 'creator_id';
+  static String get titleConverter => 'title';
+  static String get descriptionConverter => 'description';
+  static String get photoUrlConverter => 'photo_url';
+  static String get isPublicConverter => 'is_public';
+  static String get createdAtConverter => 'created_at';
 
   static const empty = Board(
-    uid: '',
+    id: '',
+    creatorId: '',
     title: '',
   );
+
+  final String id;
+  final String creatorId;
+  final String title;
+  final String? description;
+  final String? photoUrl;
+  final bool? isPublic;
+  final DateTime? createdAt;
 
   @override
   List<Object?> get props => [
         id,
+        creatorId,
         title,
-        photoURL,
-        uid,
         description,
-        saves,
-        posts,
-        tags,
+        photoUrl,
+        isPublic,
         createdAt,
       ];
 
+  static List<Board> converter(List<Map<String, dynamic>> data) {
+    return data.map(Board.fromJson).toList();
+  }
+
   // method for converting an instance to JSON
-  Map<String, dynamic> toJson() => _$BoardToJson(this);
+  Map<String, dynamic> toJson() {
+    return _generateMap(
+      id: id,
+      creatorId: creatorId,
+      title: title,
+      description: description,
+      photoUrl: photoUrl,
+      isPublic: isPublic,
+      createdAt: createdAt,
+    );
+  }
+
+  static Map<String, dynamic> _generateMap({
+    String? id,
+    String? creatorId,
+    String? title,
+    String? description,
+    String? photoUrl,
+    bool? isPublic,
+    DateTime? createdAt,
+  }) {
+    return {
+      if (id != null) idConverter: id,
+      if (creatorId != null) creatorIdConverter: creatorId,
+      if (title != null) titleConverter: title,
+      if (photoUrl != null) photoUrlConverter: photoUrl,
+      if (description != null) descriptionConverter: description,
+      if (isPublic != null) isPublicConverter: isPublic,
+      if (createdAt != null) createdAtConverter: createdAt.toUtc().toString(),
+    };
+  }
+
+  static Map<String, dynamic> insert({
+    String? id,
+    String? creatorId,
+    String? title,
+    String? description,
+    String? photoUrl,
+    bool? isPublic,
+    DateTime? createdAt,
+  }) {
+    return _generateMap(
+      id: id,
+      creatorId: creatorId,
+      title: title,
+      photoUrl: photoUrl,
+      description: description,
+      isPublic: isPublic,
+      createdAt: createdAt,
+    );
+  }
+
+  static Map<String, dynamic> update({
+    String? id,
+    String? creatorId,
+    String? title,
+    String? description,
+    String? photoUrl,
+    bool? isPublic,
+    DateTime? createdAt,
+  }) {
+    return _generateMap(
+      id: id,
+      creatorId: creatorId,
+      title: title,
+      photoUrl: photoUrl,
+      description: description,
+      isPublic: isPublic,
+      createdAt: createdAt,
+    );
+  }
 }
 
 extension BoardExtensions on Board {
   bool get isEmpty => this == Board.empty;
-  int totalSaves() => saves;
-  bool hasPost({required String postID}) => posts.contains(postID);
-  bool userOwnsBoard({required String userID}) => uid == userID;
 }

@@ -1,160 +1,112 @@
 import 'package:api_client/api_client.dart';
 import 'package:comment_repository/src/failures.dart';
 import 'package:comment_repository/src/models/comment.dart';
-
-class CommentPage {
-  CommentPage({
-    required this.comments,
-    required this.lastDocument,
-  });
-  final List<Comment> comments;
-  final DocumentSnapshot? lastDocument;
-}
+import 'package:comment_repository/src/models/comment_like.dart';
 
 class CommentRepository {
-  CommentRepository({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  CommentRepository({SupabaseClient? supabase})
+      : _supabase = supabase ?? Supabase.instance.client;
 
-  final FirebaseFirestore _firestore;
+  final SupabaseClient _supabase;
+}
 
-  // create comment
-  Future<String> createComment(
-    Comment comment,
-    String postID,
-  ) async {
-    final batch = _firestore.batch();
-    final postRef = _firestore.postDoc(postID);
-    final commentRef = postRef.collection('comments').doc();
+extension Create on CommentRepository {
+  Future<void> createPost({
+    required Comment comment,
+  }) async {
     try {
-      final newComment = comment.toJson()
-        ..addAll({
-          'id': commentRef.id,
-          'createdAt': Timestamp.now(),
-        });
-      batch
-        ..set(commentRef, newComment)
-        ..update(postRef, {'comments': FieldValue.increment(1)});
-      await batch.commit();
-      return commentRef.id;
-    } on FirebaseException {
+      await _supabase.fromCommentsTable().insert(comment.toJson());
+    } catch (e) {
       throw CommentFailure.fromCreateComment();
     }
   }
 
-  // read comment
-  Future<Comment> fetchComment(String postID, String commentID) async {
-    try {
-      final doc = await _firestore.getCommentDoc(postID, commentID);
-      if (!doc.exists) return Comment.empty;
-      final data = doc.data();
-      return Comment.fromJson(data!);
-    } on FirebaseException {
-      // return failure
-      throw CommentFailure.fromGetComment();
-    }
-  }
-
-  // fetch post's likes
-  Future<int> fetchLikes(String postID, String commentID) async {
-    try {
-      final doc = await _firestore.getCommentDoc(postID, commentID);
-      if (!doc.exists) return 0;
-      final data = Comment.fromJson(doc.data()!);
-      return data.likes;
-    } on FirebaseException {
-      throw CommentFailure.fromGetComment();
-    }
-  }
-
-  Stream<List<Comment>> streamComments({
-    required String postID,
-    int limit = 50,
-  }) {
-    try {
-      final query = _firestore
-          .commentsCollection(postID)
-          .orderBy('createdAt', descending: true)
-          .limit(limit);
-      return query.snapshots().map((snapshot) {
-        if (snapshot.docs.isEmpty) {
-          return [];
-        }
-        final comments = snapshot.docs
-            .map(Comment.fromFirestore)
-            .whereType<Comment>()
-            .toList();
-        return comments;
-      });
-    } on FirebaseException {
-      throw CommentFailure.fromGetComment();
-    }
-  }
-
-  // update comment
-  Future<void> updateComment(
-    String postID,
-    String commentID,
-    String comment,
-  ) async {
-    try {
-      await _firestore.updateCommentDoc(postID, commentID, {
-        'message': comment,
-        'edited': true,
-      });
-    } on FirebaseException {
-      throw CommentFailure.fromUpdateComment();
-    }
-  }
-
-  // update liked posts
-  Future<void> updateLikes({
-    required String postID,
-    required String commentID,
-    required String userID,
-    required bool liked,
+  Future<void> likeComment({
+    required CommentLike like,
   }) async {
     try {
-      if (liked) {
-        await _firestore.updateCommentDoc(
-          postID,
-          commentID,
-          {
-            'likes': FieldValue.increment(1),
-            'likedBy': FieldValue.arrayUnion([userID]),
-          },
-        );
-      } else {
-        await _firestore.updateCommentDoc(
-          postID,
-          commentID,
-          {
-            'likes': FieldValue.increment(-1),
-            'likedBy': FieldValue.arrayRemove([userID]),
-          },
-        );
-      }
-    } on FirebaseException {
-      throw CommentFailure.fromUpdateComment();
+      await _supabase.fromCommentLikesTable().insert(like.toJson());
+    } catch (e) {
+      throw CommentFailure.fromCreateComment();
+    }
+  }
+}
+
+extension Read on CommentRepository {
+  Future<Comment> fetchComment({
+    required String commentId,
+  }) async {
+    try {
+      final res = await _supabase
+          .fromCommentsTable()
+          .select()
+          .eq(Comment.idConverter, commentId)
+          .maybeSingle()
+          .withConverter(
+            (data) =>
+                data == null ? Comment.empty : Comment.converterSingle(data),
+          );
+      return res;
+    } catch (e) {
+      throw CommentFailure.fromGetComment();
     }
   }
 
-  // delete comment
-  Future<void> deleteComment(String postID, String commentID) async {
-    final batch = _firestore.batch();
-    final commentRef = _firestore.commentDoc(postID, commentID);
+  Future<List<Comment>> fetchComments({
+    required String postId,
+  }) async {
     try {
-      final commentDoc = await commentRef.get();
-      if (!commentDoc.exists) {
-        throw CommentFailure.fromGetComment();
-      }
-      batch
-        ..delete(commentRef)
-        ..update(_firestore.postDoc(postID), {
-          'comments': FieldValue.increment(-1),
-        });
-      await batch.commit();
-    } on FirebaseException {
+      final res = await _supabase
+          .fromCommentsTable()
+          .select()
+          .eq(Comment.postIdConverter, postId)
+          .withConverter(Comment.converter);
+      return res;
+    } catch (e) {
+      throw CommentFailure.fromGetComment();
+    }
+  }
+
+  Future<int> fetchPostLikes({
+    required String commentId,
+  }) async {
+    try {
+      final likes = await _supabase
+          .fromCommentLikesTable()
+          .select()
+          .eq(Comment.idConverter, commentId)
+          .count(CountOption.exact);
+      return likes.count;
+    } catch (e) {
+      throw CommentFailure.fromGetComment();
+    }
+  }
+}
+
+extension Delete on CommentRepository {
+  Future<void> deletePost({
+    required String commentId,
+  }) async {
+    try {
+      await _supabase
+          .fromPostsTable()
+          .delete()
+          .eq(Comment.idConverter, commentId);
+    } catch (e) {
+      throw CommentFailure.fromDeleteComment();
+    }
+  }
+
+  Future<void> removeLike({
+    required String commentId,
+    required String userId,
+  }) async {
+    try {
+      await _supabase.fromCommentLikesTable().delete().match({
+        CommentLike.userIdConverter: userId,
+        CommentLike.commentIdConverter: commentId,
+      });
+    } catch (e) {
       throw CommentFailure.fromDeleteComment();
     }
   }

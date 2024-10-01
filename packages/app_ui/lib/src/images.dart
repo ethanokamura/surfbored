@@ -140,7 +140,7 @@ class _EditImageState extends State<EditImage> {
       if (pickedImage == null) return;
 
       // upload image
-      final uploadURL = await Supabase.instance.uploadFile(
+      final uploadURL = await Supabase.instance.client.uploadFile(
         widget.collection,
         widget.docID,
         pickedImage!,
@@ -608,7 +608,7 @@ class _EditSquareImageState extends State<EditSquareImage> {
       if (pickedImage == null) return;
 
       // upload image
-      final uploadURL = await Supabase.instance.uploadFile(
+      final uploadURL = await Supabase.instance.client.uploadFile(
         widget.collection,
         widget.docID,
         pickedImage!,

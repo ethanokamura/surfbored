@@ -20,14 +20,16 @@ class Post extends Equatable {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json['id']?.toString() ?? '',
-      creatorId: json['creator_id']?.toString() ?? '',
-      title: json['title']?.toString() ?? '',
-      description: json['description']?.toString() ?? '',
-      websiteUrl: json['website_url']?.toString() ?? '',
-      photoUrl: json['photo_url']?.toString() ?? '',
-      isPublic: json['is_public'] as bool? ?? true,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
+      id: json[idConverter]?.toString() ?? '',
+      creatorId: json[creatorIdConverter]?.toString() ?? '',
+      title: json[titleConverter]?.toString() ?? '',
+      description: json[descriptionConverter]?.toString() ?? '',
+      websiteUrl: json[websiteUrlConverter]?.toString() ?? '',
+      photoUrl: json[photoUrlConverter]?.toString() ?? '',
+      isPublic: json[isPublicConverter] as bool? ?? true,
+      createdAt: json[createdAtConverter] != null
+          ? DateTime.tryParse(json[createdAtConverter].toString())
+          : DateTime.now().toUtc(),
     );
   }
 
@@ -36,6 +38,7 @@ class Post extends Equatable {
   static String get titleConverter => 'title';
   static String get descriptionConverter => 'description';
   static String get photoUrlConverter => 'photo_url';
+  static String get websiteUrlConverter => 'website_url';
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
 
@@ -91,14 +94,14 @@ class Post extends Equatable {
     DateTime? createdAt,
   }) {
     return {
-      if (id != null) 'id': id,
-      if (creatorId != null) 'creator_id': creatorId,
-      if (title != null) 'title': title,
-      if (photoUrl != null) 'photo_url': photoUrl,
-      if (description != null) 'description': description,
-      if (websiteUrl != null) 'website_url': websiteUrl,
-      if (isPublic != null) 'is_public': isPublic,
-      if (createdAt != null) 'created_at': createdAt.toUtc().toString(),
+      if (id != null) idConverter: id,
+      if (creatorId != null) creatorIdConverter: creatorId,
+      if (title != null) titleConverter: title,
+      if (photoUrl != null) photoUrlConverter: photoUrl,
+      if (description != null) descriptionConverter: description,
+      if (websiteUrl != null) websiteUrlConverter: websiteUrl,
+      if (isPublic != null) isPublicConverter: isPublic,
+      if (createdAt != null) createdAtConverter: createdAt.toUtc().toString(),
     };
   }
 

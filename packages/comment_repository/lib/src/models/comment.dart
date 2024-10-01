@@ -1,83 +1,136 @@
-import 'package:api_client/api_client.dart';
 import 'package:app_core/app_core.dart';
-part 'board.g.dart';
+part 'comment.g.dart';
 
 @JsonSerializable()
 class Comment extends Equatable {
   // constructor
   const Comment({
-    required this.docID,
-    required this.senderID,
-    required this.ownerID,
+    required this.id,
+    required this.postId,
+    required this.senderId,
     required this.message,
-    this.id = '',
     this.edited = false,
-    this.likes = 0,
-    this.likedBy = const [],
     this.createdAt,
   });
 
-  // factory constructor for creating an instance from JSON
-  factory Comment.fromJson(Map<String, dynamic> json) =>
-      _$CommentFromJson(json);
+  factory Comment.converterSingle(Map<String, dynamic> data) {
+    return Comment.fromJson(data);
+  }
 
-  // allows for an easy way to stream data
-  factory Comment.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
+  factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: doc.id,
-      docID: data['docID'] as String? ?? '',
-      senderID: data['senderID'] as String? ?? '',
-      ownerID: data['ownerID'] as String? ?? '',
-      message: data['message'] as String? ?? '',
-      edited: data['edited'] as bool? ?? false,
-      createdAt: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      likes: data['likes'] as int? ?? 0,
-      likedBy: (data['likedBy'] as List<dynamic>? ?? [])
-          .map((user) => user as String)
-          .toList(),
+      id: json[idConverter]?.toString() ?? '',
+      postId: json[postIdConverter]?.toString() ?? '',
+      senderId: json[senderIdConverter]?.toString() ?? '',
+      message: json[messageConverter]?.toString() ?? '',
+      edited: json[editedConverter] as bool? ?? false,
+      createdAt: json[createdAtConverter] != null
+          ? DateTime.tryParse(json[createdAtConverter].toString())
+          : DateTime.now().toUtc(),
     );
   }
 
+  static String get idConverter => 'id';
+  static String get postIdConverter => 'post_id';
+  static String get senderIdConverter => 'sender_id';
+  static String get messageConverter => 'message';
+  static String get editedConverter => 'edited';
+  static String get createdAtConverter => 'created_at';
+
   // data fields
   final String id;
-  final String docID;
-  final String senderID;
-  final String ownerID;
+  final String postId;
+  final String senderId;
   final String message;
-  final List<String> likedBy;
-  final bool edited;
-  final int likes;
-  @timestamp
+  final bool? edited;
   final DateTime? createdAt;
 
   static const empty = Comment(
-    docID: '',
-    senderID: '',
-    ownerID: '',
+    id: '',
+    postId: '',
+    senderId: '',
     message: '',
   );
 
   @override
   List<Object?> get props => [
         id,
-        docID,
-        senderID,
-        ownerID,
+        postId,
+        senderId,
         message,
         edited,
-        likes,
-        likedBy,
         createdAt,
       ];
 
-  // method for converting an instance to JSON
-  Map<String, dynamic> toJson() => _$CommentToJson(this);
+  static List<Comment> converter(List<Map<String, dynamic>> data) {
+    return data.map(Comment.fromJson).toList();
+  }
+
+  Map<String, dynamic> toJson() {
+    return _generateMap(
+      id: id,
+      postId: postId,
+      senderId: senderId,
+      message: message,
+      edited: edited,
+      createdAt: createdAt,
+    );
+  }
+
+  static Map<String, dynamic> _generateMap({
+    String? id,
+    String? postId,
+    String? senderId,
+    String? message,
+    bool? edited,
+    DateTime? createdAt,
+  }) {
+    return {
+      if (id != null) idConverter: id,
+      if (postId != null) postIdConverter: postId,
+      if (senderId != null) senderIdConverter: senderId,
+      if (edited != null) editedConverter: edited,
+      if (createdAt != null) createdAtConverter: createdAt.toUtc().toString(),
+    };
+  }
+
+  static Map<String, dynamic> insert({
+    String? id,
+    String? postId,
+    String? senderId,
+    String? message,
+    bool? edited,
+    DateTime? createdAt,
+  }) {
+    return _generateMap(
+      id: id,
+      postId: postId,
+      senderId: senderId,
+      message: message,
+      edited: edited,
+      createdAt: createdAt,
+    );
+  }
+
+  static Map<String, dynamic> update({
+    String? id,
+    String? postId,
+    String? senderId,
+    String? message,
+    bool? edited,
+    DateTime? createdAt,
+  }) {
+    return _generateMap(
+      id: id,
+      postId: postId,
+      senderId: senderId,
+      message: message,
+      edited: edited,
+      createdAt: createdAt,
+    );
+  }
 }
 
 extension CommentExtensions on Comment {
   bool get isEmpty => this == Comment.empty;
-  bool get isEdited => edited;
-  int get totalLikes => likes;
-  bool likedByUser(String userID) => likedBy.contains(userID);
 }

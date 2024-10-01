@@ -23,23 +23,24 @@ class ProfileData extends Equatable {
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
     return ProfileData(
-      userId: json['user_id'] != null ? json['user_id'].toString() : '',
-      displayName: json['display_name']?.toString(),
-      bio: json['bio']?.toString() ?? '',
-      websiteUrl: json['website_url']?.toString() ?? '',
-      phoneNumber: json['phone_number']?.toString() ?? '',
-      isPublic: json['is_public'] as bool? ?? true,
-      isSupporter: json['is_supporter'] as bool? ?? false,
-      lastSignIn: json['last_sign_in'] != null
-          ? DateTime.tryParse(json['last_sign_in'].toString())
-          : null,
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
+      userId:
+          json[userIdConverter] != null ? json[userIdConverter].toString() : '',
+      displayName: json[displayNameConverter]?.toString() ?? '',
+      bio: json[bioConverter]?.toString() ?? '',
+      websiteUrl: json[websiteUrlConverter]?.toString() ?? '',
+      phoneNumber: json[phoneNumberConverter]?.toString() ?? '',
+      isPublic: json[isPublicConverter] as bool? ?? true,
+      isSupporter: json[isSupporterConverter] as bool? ?? false,
+      lastSignIn: json[lastSignInConverter] != null
+          ? DateTime.tryParse(json[lastSignInConverter].toString())
+          : DateTime.now().toUtc(),
+      createdAt: json[createdAtConverter] != null
+          ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
     );
   }
 
-  static String get userIdConverter => 'id';
+  static String get userIdConverter => 'user_id';
   static String get displayNameConverter => 'display_name';
   static String get bioConverter => 'bio';
   static String get websiteUrlConverter => 'website_url';
@@ -104,16 +105,16 @@ class ProfileData extends Equatable {
     DateTime? createdAt,
   }) {
     return {
-      'user_id': userId,
-      if (displayName != null) 'display_name': displayName,
-      if (bio != null) 'bio': bio,
-      if (websiteUrl != null) 'website_url': websiteUrl,
-      if (phoneNumber != null) 'phone_number': phoneNumber,
-      if (isPublic != null) 'is_public': isPublic,
-      if (isSupporter != null) 'is_supporter': isSupporter,
+      userIdConverter: userId,
+      if (displayName != null) displayNameConverter: displayName,
+      if (bio != null) bioConverter: bio,
+      if (websiteUrl != null) websiteUrlConverter: websiteUrl,
+      if (phoneNumber != null) phoneNumberConverter: phoneNumber,
+      if (isPublic != null) isPublicConverter: isPublic,
+      if (isSupporter != null) isSupporterConverter: isSupporter,
       if (lastSignIn != null)
-        'last_sign_in': lastSignIn.toUtc().toIso8601String(),
-      if (createdAt != null) 'created_at': createdAt.toUtc().toIso8601String(),
+        lastSignInConverter: lastSignIn.toUtc().toString(),
+      if (createdAt != null) createdAtConverter: createdAt.toUtc().toString(),
     };
   }
 

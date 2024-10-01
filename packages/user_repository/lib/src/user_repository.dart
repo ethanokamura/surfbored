@@ -26,9 +26,11 @@ class UserRepository {
   }
 
   /// Gets a generic [watchUser] emission.
-  Stream<UserData> watchUserByID(String uuid) {
+  Stream<UserData> watchUserByID({
+    required String uuid,
+  }) {
     return _supabase
-        .from('users')
+        .fromUsersTable()
         .stream(primaryKey: ['id'])
         .eq(UserData.idConverter, uuid)
         .map((event) {
@@ -52,11 +54,11 @@ class UserRepository {
         return;
       }
 
-      await _ensureUserExists(session!.user);
+      await _ensureUserExists(user: session!.user);
 
       // get user
       final response = await _supabase
-          .from('users')
+          .fromUsersTable()
           .select()
           .eq(UserData.idConverter, session.user.id)
           .single()
@@ -74,12 +76,17 @@ class UserRepository {
 
 extension Auth on UserRepository {
   // send OTP
-  Future<void> sendOTP({required String phoneNumber}) async {
+  Future<void> sendOTP({
+    required String phoneNumber,
+  }) async {
     await _supabase.auth.signInWithOtp(phone: phoneNumber);
   }
 
   // verify OTP
-  Future<void> verifyOTP(String phoneNumber, String otp) async {
+  Future<void> verifyOTP({
+    required String phoneNumber,
+    required String otp,
+  }) async {
     try {
       final response = await _supabase.auth.verifyOTP(
         type: OtpType.sms,
@@ -88,21 +95,23 @@ extension Auth on UserRepository {
       );
 
       if (response.user != null) {
-        await _ensureUserExists(response.user!);
+        await _ensureUserExists(user: response.user!);
       } else {
         throw UserFailure.fromPhoneNumberSignIn();
       }
-      await _updateUserData(response.user);
+      await _updateUserData(supabaseUser: response.user);
     } on AuthException {
       throw UserFailure.fromPhoneNumberSignIn();
     }
   }
 
   // Ensure user exists in the database
-  Future<void> _ensureUserExists(User user) async {
+  Future<void> _ensureUserExists({
+    required User user,
+  }) async {
     // Check if the user exists in the 'users' table
     final existingUser = await _supabase
-        .from('users')
+        .fromUsersTable()
         .select()
         .eq(UserData.idConverter, user.id)
         .maybeSingle();
@@ -114,8 +123,8 @@ extension Auth on UserRepository {
         userId: _supabase.auth.currentUser!.id,
         phoneNumber: user.phone,
       );
-      await _supabase.from('users').insert(userData);
-      await _supabase.from('user_profiles').insert(profileData);
+      await _supabase.fromUsersTable().insert(userData);
+      await _supabase.fromUserProfilesTable().insert(profileData);
     }
   }
 
@@ -131,19 +140,23 @@ extension Auth on UserRepository {
 
 extension Username on UserRepository {
   // Check if username is unique
-  Future<bool> isUsernameUnique(String username) async {
+  Future<bool> isUsernameUnique({
+    required String username,
+  }) async {
     final res = await _supabase
-        .from('users')
+        .fromUsersTable()
         .select()
         .eq(UserData.usernameConverter, username)
         .maybeSingle();
     return res == null;
   }
 
-  Future<void> updateUsername(String username) async {
+  Future<void> updateUsername({
+    required String username,
+  }) async {
     try {
       await _supabase
-          .from('users')
+          .fromUsersTable()
           .update({UserData.usernameConverter: username}).eq(
         UserData.idConverter,
         user.id,
@@ -155,9 +168,11 @@ extension Username on UserRepository {
 }
 
 extension Create on UserRepository {
-  Future<UserData> createUser(String username) async {
+  Future<UserData> createUser({
+    required String username,
+  }) async {
     final res = await _supabase
-        .from('users')
+        .fromUsersTable()
         .update({UserData.usernameConverter: username})
         .eq(UserData.idConverter, _supabase.auth.currentUser!.id)
         .select()
@@ -169,9 +184,11 @@ extension Create on UserRepository {
 
 extension Read on UserRepository {
   // gets the user data by ID
-  Future<UserData> readUserData(String uuid) async {
+  Future<UserData> readUserData({
+    required String uuid,
+  }) async {
     final res = await _supabase
-        .from('users')
+        .fromUsersTable()
         .select()
         .eq(UserData.idConverter, uuid)
         .maybeSingle()
@@ -183,9 +200,11 @@ extension Read on UserRepository {
   }
 
   // gets the user data by ID
-  Future<ProfileData> readUserProfile(String uuid) async {
+  Future<ProfileData> readUserProfile({
+    required String uuid,
+  }) async {
     final res = await _supabase
-        .from('user_profiles')
+        .fromUserProfilesTable()
         .select()
         .eq(ProfileData.userIdConverter, uuid)
         .maybeSingle()
@@ -200,10 +219,12 @@ extension Read on UserRepository {
 
 extension Update on UserRepository {
   // update user data
-  Future<void> _updateUserData(User? supabaseUser) async {
+  Future<void> _updateUserData({
+    required User? supabaseUser,
+  }) async {
     try {
       if (supabaseUser == null) return;
-      await _supabase.from('user_profiles').upsert({
+      await _supabase.fromUserProfilesTable().upsert({
         ProfileData.lastSignInConverter: DateTime.now().toUtc(),
       }).eq(ProfileData.userIdConverter, supabaseUser.id);
     } catch (e) {
@@ -212,22 +233,24 @@ extension Update on UserRepository {
   }
 
   // update specific user profile field
-  Future<void> updateUserProfile(
-    String field,
-    dynamic data,
-  ) async {
+  Future<void> updateUserProfile({
+    required String field,
+    required dynamic data,
+  }) async {
     try {
       await _supabase
-          .from('user_profiles')
+          .fromUserProfilesTable()
           .update({field: data}).eq(ProfileData.userIdConverter, user.id);
     } catch (e) {
       throw UserFailure.fromUpdateUser();
     }
   }
 
-  Future<void> updateUsername(String url) async {
+  Future<void> updateUsername({
+    required String url,
+  }) async {
     try {
-      await _supabase.from('users').update({
+      await _supabase.fromUsersTable().update({
         UserData.photoUrlConverter: url,
       }).eq(UserData.idConverter, user.id);
     } catch (e) {

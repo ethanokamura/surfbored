@@ -9,17 +9,17 @@ import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {
-  const BoardPage({required this.boardID, super.key});
-  final String boardID;
-  static MaterialPage<void> page({required String boardID}) {
+  const BoardPage({required this.boardId, super.key});
+  final int boardId;
+  static MaterialPage<void> page({required int boardId}) {
     return MaterialPage<void>(
-      child: BoardPage(boardID: boardID),
+      child: BoardPage(boardId: boardId),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    context.read<BoardCubit>().fetchBoard(boardID);
+    context.read<BoardCubit>().fetchBoard(boardId);
     return BlocBuilder<BoardCubit, BoardState>(
       builder: (context, state) {
         if (state.isLoading) {
@@ -41,7 +41,7 @@ class BoardPage extends StatelessWidget {
                         return BlocProvider.value(
                           value: boardCubit,
                           child: EditBoardPage(
-                            boardID: board.id,
+                            boardId: board.id,
                             onDelete: () async {
                               Navigator.pop(context);
                               await boardCubit.deleteBoard(board.id);
@@ -115,7 +115,7 @@ class BoardPageView extends StatelessWidget {
       body: Column(
         children: [
           BoardButtons(
-            isOwner: board.userOwnsBoard(userID: user.id),
+            isOwner: board.userOwnsBoard(user.id!),
             user: user,
             board: board,
           ),
@@ -175,7 +175,7 @@ class BoardButtons extends StatelessWidget {
           Expanded(
             child: SaveButton(
               board: board,
-              userId: user.id,
+              userId: user.id!,
             ),
           ),
         const HorizontalSpacer(),
@@ -185,7 +185,7 @@ class BoardButtons extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => ShuffledPostsPage(boardID: board.id),
+                builder: (context) => ShuffledPostsPage(boardId: board.id),
               ),
             ),
             text: AppStrings.shuffle,

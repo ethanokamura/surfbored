@@ -13,8 +13,8 @@ class CommentLikeButton extends StatelessWidget {
   });
 
   final Comment comment;
-  final String postId;
-  final String userId;
+  final int postId;
+  final int userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

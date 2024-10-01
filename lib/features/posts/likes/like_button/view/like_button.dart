@@ -5,16 +5,16 @@ import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/likes/cubit/like_cubit.dart';
 
 class LikeButton extends StatelessWidget {
-  const LikeButton({required this.post, required this.userID, super.key});
+  const LikeButton({required this.post, required this.userId, super.key});
   final Post post;
-  final String userID;
+  final int userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LikeCubit(context.read<PostRepository>()),
       child: BlocBuilder<LikeCubit, LikeState>(
         builder: (context, state) {
-          context.read<LikeCubit>().fetchData(post.id, userID);
+          context.read<LikeCubit>().fetchData(post.id!, userId);
           var isLiked = false;
           var likes = 0;
           if (state.isLoading) {
@@ -26,9 +26,8 @@ class LikeButton extends StatelessWidget {
           return ToggleButton(
             onSurface: true,
             onTap: () => context.read<LikeCubit>().toggleLike(
-                  userID,
-                  post.creatorId,
-                  post.id,
+                  userId,
+                  post.id!,
                   liked: isLiked,
                 ),
             icon: isLiked

@@ -16,221 +16,144 @@ class PostCubit extends Cubit<PostState> {
   final PostRepository _postRepository;
   final TagRepository _tagRepository;
 
-  int _currentPage = 0;
-  final int _pageSize = 10;
-  bool _hasMore = true;
+  int currentPage = 0;
+  final int pageSize = 10;
+  bool hasMore = true;
 
-  Future<void> fetchPost(String postId) async {
+  Future<void> fetchPost(int postId) async {
     emit(state.fromLoading());
     try {
       final post = await _postRepository.fetchPost(postId: postId);
-      final tags = await _tagRepository.readPostTags(uuid: postId);
+      final tags = await _tagRepository.fetchPostTags(id: postId);
       emit(state.fromPostLoaded(post, tags));
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));
     }
   }
 
-  Future<void> shufflePostList(String boardId) async {
+  Future<void> fetchPosts({
+    required String type,
+    required int docId,
+    required bool refresh,
+  }) async {
+    if (type == 'user') {
+      await fetchUserPosts(docId, refresh: refresh);
+    } else if (type == 'board') {
+      await fetchBoardPosts(docId, refresh: refresh);
+    }
+  }
+
+  Future<void> fetchAllPosts({bool refresh = false}) async {
+    if (refresh) {
+      currentPage = 0;
+      hasMore = true;
+      emit(state.fromEmpty());
+    }
+
+    if (!hasMore) return;
+
     emit(state.fromLoading());
     try {
-      final posts = await _postRepository.fetchBoardPosts(boardId: boardId);
+      final posts = await _postRepository.fetchAllPosts(
+        offset: currentPage * pageSize,
+        limit: pageSize,
+      );
+
       if (posts.isEmpty) {
+        hasMore = false; // No more boards to load
         emit(state.fromEmpty());
-        return;
+      } else {
+        currentPage++; // Increment the page number
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
-      posts.shuffle();
-      emit(state.fromPostsLoaded(posts));
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));
     }
   }
 
-  // void streamPost(String postId) {
-  //   emit(state.fromLoading());
-  //   try {
-  //     _postRepository.streamPost(postId).listen(
-  //       (snapshot) {
-  //         emit(state.fromPostLoaded(snapshot));
-  //       },
-  //       onError: (dynamic error) {
-  //         emit(state.fromFailure(PostFailure.fromGetPost()));
-  //       },
-  //     );
-  //   } on PostFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
+  Future<void> fetchBoardPosts(int boardId, {bool refresh = false}) async {
+    if (refresh) {
+      currentPage = 0;
+      hasMore = true;
+      emit(state.fromEmpty());
+    }
 
-  // void streamPosts(String type, String docID) {
-  //   if (type == 'user') {
-  //     streamUserPosts(docID);
-  //   } else if (type == 'likes') {
-  //     streamUserLikedPosts(docID);
-  //   } else if (type == 'board') {
-  //     streamBoardPosts(docID);
-  //   }
-  //   // error
-  // }
+    if (!hasMore) return;
 
-  // void loadMorePosts(String type, String docID) {
-  //   if (type == 'user') {
-  //     loadMoreUserPosts(docID);
-  //   } else if (type == 'likes') {
-  //     loadMoreUserLikedPosts(docID);
-  //   } else if (type == 'board') {
-  //     loadMoreBoardPosts(docID);
-  //   }
-  //   // error
-  // }
+    emit(state.fromLoading());
+    try {
+      final posts = await _postRepository.fetchBoardPosts(
+        boardId: boardId,
+        offset: currentPage * pageSize,
+        limit: pageSize,
+      );
 
-  // bool hasMore() {
-  //   return _hasMore;
-  // }
+      if (posts.isEmpty) {
+        hasMore = false; // No more boards to load
+        emit(state.fromEmpty());
+      } else {
+        currentPage++; // Increment the page number
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
+      }
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
 
-  // void streamUserPosts(String userId) {
-  //   emit(state.fromLoading());
-  //   _currentPage = 0;
-  //   _hasMore = true;
-  //   _loadMoreUserPosts(userId, reset: true);
-  // }
+  Future<void> fetchUserPosts(int userId, {bool refresh = false}) async {
+    if (refresh) {
+      currentPage = 0;
+      hasMore = true;
+      emit(state.fromEmpty());
+    }
 
-  // void loadMoreUserPosts(String userId) {
-  //   if (_hasMore) {
-  //     _currentPage++;
-  //     _loadMoreUserPosts(userId);
-  //   }
-  // }
+    if (!hasMore) return;
 
-  // void _loadMoreUserPosts(String userId, {bool reset = false}) {
-  //   try {
-  //     _postRepository
-  //         .streamUserPosts(userId, pageSize: _pageSize, page: _currentPage)
-  //         .listen(
-  //       (posts) {
-  //         if (posts.length < _pageSize) {
-  //           _hasMore = false;
-  //         }
-  //         if (reset) {
-  //           emit(state.fromPostsLoaded(posts));
-  //         } else {
-  //           emit(state.fromPostsLoaded(List.of(state.posts)..addAll(posts)));
-  //         }
-  //       },
-  //       onError: (error) {
-  //         emit(state.fromEmpty());
-  //       },
-  //     );
-  //   } on PostFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
+    emit(state.fromLoading());
+    try {
+      final posts = await _postRepository.fetchUserPosts(
+        userId: userId,
+        offset: currentPage * pageSize,
+        limit: pageSize,
+      );
 
-  // void streamUserLikedPosts(String userId) {
-  //   emit(state.fromLoading());
-  //   _currentPage = 0;
-  //   _hasMore = true;
-  //   _loadMoreUserLikedPosts(userId, reset: true);
-  // }
+      if (posts.isEmpty) {
+        hasMore = false; // No more boards to load
+        emit(state.fromEmpty());
+      } else {
+        currentPage++; // Increment the page number
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
+      }
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
 
-  // void loadMoreUserLikedPosts(String userId) {
-  //   if (_hasMore) {
-  //     _currentPage++;
-  //     _loadMoreUserLikedPosts(userId);
-  //   }
-  // }
+  Future<void> shufflePostList(int boardId) async {
+    emit(state.fromLoading());
+    try {
+      state.posts.shuffle();
+      emit(state.fromPostsLoaded(state.posts));
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
 
-  // void _loadMoreUserLikedPosts(String userId, {bool reset = false}) {
-  //   try {
-  //     _postRepository
-  //         .streamUserLikedPosts(userId, pageSize: _pageSize, page: _currentPage)
-  //         .listen(
-  //       (posts) {
-  //         if (posts.length < _pageSize) {
-  //           _hasMore = false;
-  //         }
-  //         if (reset) {
-  //           emit(state.fromPostsLoaded(posts));
-  //         } else {
-  //           emit(state.fromPostsLoaded(List.of(state.posts)..addAll(posts)));
-  //         }
-  //       },
-  //       onError: (error) {
-  //         emit(state.fromEmpty());
-  //       },
-  //     );
-  //   } on PostFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
-
-  // void streamBoardPosts(String boardID) {
-  //   emit(state.fromLoading());
-  //   _currentPage = 0;
-  //   _hasMore = true;
-  //   _loadMoreBoardPosts(boardID, reset: true);
-  // }
-
-  // void loadMoreBoardPosts(String boardID) {
-  //   if (_hasMore) {
-  //     _currentPage++;
-  //     _loadMoreBoardPosts(boardID);
-  //   }
-  // }
-
-  // void _loadMoreBoardPosts(String boardID, {bool reset = false}) {
-  //   try {
-  //     _postRepository
-  //         .streamBoardPosts(boardID, pageSize: _pageSize, page: _currentPage)
-  //         .listen(
-  //       (posts) {
-  //         if (posts.length < _pageSize) {
-  //           _hasMore = false;
-  //         }
-  //         if (reset) {
-  //           emit(state.fromPostsLoaded(posts));
-  //         } else {
-  //           emit(state.fromPostsLoaded(List.of(state.posts)..addAll(posts)));
-  //         }
-  //       },
-  //       onError: (error) {
-  //         emit(state.fromEmpty());
-  //       },
-  //     );
-  //   } on PostFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
-
-  // void streamAllPosts() {
-  //   emit(state.fromLoading());
-  //   try {
-  //     _postRepository.streamPosts().listen(
-  //       (posts) {
-  //         emit(state.fromPostsLoaded(posts));
-  //       },
-  //       onError: (dynamic error) {
-  //         emit(state.fromEmpty());
-  //       },
-  //     );
-  //   } on PostFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
-
-  Future<void> editField(String postId, String field, dynamic data) async {
+  Future<void> editField(int postId, String field, dynamic data) async {
     emit(state.fromLoading());
     await _postRepository.updatePost(postId: postId, field: field, data: data);
     emit(state.fromUpdate());
   }
 
-  Future<void> updateTags(String postId, List<String> tags) async {
-    await _tagRepository.updatePostTags(postId: postId, tags: tags);
-  }
+  Future<void> updateTags(int postId, List<String> tags) async =>
+      _tagRepository.updatePostTags(postId: postId, tags: tags);
+
+  Future<List<String>> fetchTags(int postId) async =>
+      _tagRepository.fetchPostTags(id: postId);
 
   Future<void> deletePost(
-    String userId,
-    String postId,
+    int userId,
+    int postId,
     String photoURL,
   ) async {
     emit(state.fromLoading());

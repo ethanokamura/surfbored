@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:tag_repository/tag_repository.dart';
 
 class UserBoardsList extends StatelessWidget {
-  const UserBoardsList({required this.userID, super.key});
-  final String userID;
+  const UserBoardsList({required this.userId, super.key});
+  final int userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BoardCubit(
         boardRepository: context.read<BoardRepository>(),
-      )..streamUserBoards(userID),
+        tagRepository: context.read<TagRepository>(),
+      )..fetchBoards(userId),
       child: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -21,19 +23,18 @@ class UserBoardsList extends StatelessWidget {
           } else if (state.isLoaded) {
             final boards = state.boards;
             return BoardListView(
-              hasMore: context.read<BoardCubit>().hasMore(),
               boards: boards,
               onLoadMore: () async =>
-                  context.read<BoardCubit>().loadMoreUserBoards(userID),
+                  context.read<BoardCubit>().fetchBoards(userId),
               onRefresh: () async =>
-                  context.read<BoardCubit>().streamUserBoards(userID),
+                  context.read<BoardCubit>().fetchBoards(userId, refresh: true),
             );
           } else if (state.isEmpty) {
             return const Center(
               child: PrimaryText(text: AppStrings.emptyBoards),
             );
           } else if (state.isDeleted || state.isUpdated) {
-            context.read<BoardCubit>().streamUserBoards(userID);
+            context.read<BoardCubit>().streamUserBoards(userId);
             return const Center(
               child: PrimaryText(text: AppStrings.changedBoards),
             );
@@ -54,11 +55,9 @@ class BoardListView extends StatelessWidget {
     required this.boards,
     required this.onLoadMore,
     required this.onRefresh,
-    required this.hasMore,
     super.key,
   });
   final List<Board> boards;
-  final bool hasMore;
   final Future<void> Function() onLoadMore;
   final Future<void> Function() onRefresh;
   @override
@@ -69,7 +68,7 @@ class BoardListView extends StatelessWidget {
         onNotification: (scrollNotification) {
           if (scrollNotification.metrics.pixels - 25 >=
               scrollNotification.metrics.maxScrollExtent) {
-            if (hasMore) onLoadMore();
+            onLoadMore();
           }
           return false;
         },

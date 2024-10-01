@@ -15,11 +15,10 @@ import 'package:user_repository/user_repository.dart';
 Future<dynamic> postPopUp(
   BuildContext context,
   Post post,
-  List<String> tags,
 ) async {
   final postCubit = context.read<PostCubit>();
-  final userID = context.read<UserRepository>().user.id;
-  final isOwner = userID == post.creatorId;
+  final userId = context.read<UserRepository>().user.id;
+  final isOwner = userId == post.creatorId;
 
   await showModalBottomSheet<void>(
     context: context,
@@ -53,8 +52,8 @@ Future<dynamic> postPopUp(
                       context,
                       MaterialPageRoute<dynamic>(
                         builder: (context) => SelectBoardPage(
-                          postID: post.id,
-                          userID: userID,
+                          postId: post.id!,
+                          userId: userId!,
                         ),
                       ),
                     ),
@@ -66,7 +65,7 @@ Future<dynamic> postPopUp(
                           builder: (context) {
                             return BlocProvider.value(
                               value: postCubit,
-                              child: EditPostPage(postID: post.id),
+                              child: EditPostPage(postId: post.id!),
                             );
                           },
                         ),
@@ -76,7 +75,7 @@ Future<dynamic> postPopUp(
                       Navigator.pop(context);
                       await postCubit.deletePost(
                         post.creatorId,
-                        post.id,
+                        post.id!,
                         post.photoUrl.toString(),
                       );
                       if (context.mounted) Navigator.pop(context);
@@ -111,8 +110,21 @@ Future<dynamic> postPopUp(
               if (post.description.isNotEmpty) const VerticalSpacer(),
               if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
               if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
-              if (tags.isNotEmpty) TagList(tags: tags),
-              if (tags.isNotEmpty) const VerticalSpacer(),
+              FutureBuilder(
+                future: context.read<PostCubit>().fetchTags(post.id!),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    final tags = snapshot.data!;
+                    return Column(
+                      children: [
+                        TagList(tags: tags),
+                        const VerticalSpacer(),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -120,18 +132,17 @@ Future<dynamic> postPopUp(
                   FutureBuilder(
                     future: context
                         .read<CommentRepository>()
-                        .fetchTotalComments(postId: post.id),
+                        .fetchTotalComments(postId: post.id!),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Row(
                           children: [
                             CommentButton(
-                              postID: post.id,
-                              userID: post.creatorId,
+                              postId: post.id!,
                               comments: snapshot.data!,
                             ),
                             const HorizontalSpacer(),
-                            LikeButton(post: post, userID: userID),
+                            LikeButton(post: post, userId: userId!),
                           ],
                         );
                       }

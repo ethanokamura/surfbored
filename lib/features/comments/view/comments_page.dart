@@ -11,9 +11,9 @@ class CommentsPage extends StatelessWidget {
     required this.postId,
     super.key,
   });
-  final String postId;
+  final int postId;
   static MaterialPage<void> page({
-    required String postId,
+    required int postId,
   }) {
     return MaterialPage<void>(
       child: CommentsPage(postId: postId),
@@ -53,7 +53,7 @@ class CommentsView extends StatelessWidget {
     required this.postId,
     super.key,
   });
-  final String postId;
+  final int postId;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class CommentContorller extends StatefulWidget {
     required this.postId,
     super.key,
   });
-  final String postId;
+  final int postId;
 
   @override
   State<CommentContorller> createState() => _CommentContorllerState();
@@ -120,7 +120,7 @@ class _CommentContorllerState extends State<CommentContorller> {
             if (textController.text.trim().isNotEmpty) {
               await context.read<CommentsCubit>().createComment(
                     widget.postId,
-                    context.read<UserRepository>().user.id,
+                    context.read<UserRepository>().user.id!,
                     textController.text,
                   );
             }

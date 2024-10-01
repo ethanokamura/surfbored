@@ -14,17 +14,15 @@ import 'package:user_repository/user_repository.dart';
 
 class PostView extends StatelessWidget {
   const PostView({
-    required this.post,
-    required this.tags,
     required this.postCubit,
+    required this.post,
     super.key,
   });
-  final Post post;
-  final List<String> tags;
   final PostCubit postCubit;
+  final Post post;
   @override
   Widget build(BuildContext context) {
-    final userID = context.read<UserRepository>().user.id;
+    final userId = context.read<UserRepository>().user.id;
     return Flexible(
       child: CustomContainer(
         child: Column(
@@ -32,9 +30,9 @@ class PostView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (post.photoUrl != null && post.photoUrl! != '')
-              ImageHeader(post: post, userID: userID, postCubit: postCubit)
+              ImageHeader(post: post, userId: userId!, postCubit: postCubit)
             else
-              Header(post: post, userID: userID, postCubit: postCubit),
+              Header(post: post, userId: userId!, postCubit: postCubit),
             if (post.photoUrl != null && post.photoUrl! != '')
               const VerticalSpacer(),
             TitleText(text: post.title),
@@ -43,9 +41,22 @@ class PostView extends StatelessWidget {
             if (post.description.isNotEmpty) const VerticalSpacer(),
             if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
             if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
-            if (tags.isNotEmpty) TagList(tags: tags),
-            if (tags.isNotEmpty) const VerticalSpacer(),
-            Footer(post: post, userID: userID),
+            FutureBuilder(
+              future: context.read<PostCubit>().fetchTags(post.id!),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  final tags = snapshot.data!;
+                  return Column(
+                    children: [
+                      TagList(tags: tags),
+                      const VerticalSpacer(),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+            Footer(post: post, userId: userId),
           ],
         ),
       ),
@@ -56,16 +67,16 @@ class PostView extends StatelessWidget {
 class ImageHeader extends StatelessWidget {
   const ImageHeader({
     required this.post,
-    required this.userID,
+    required this.userId,
     required this.postCubit,
     super.key,
   });
   final Post post;
-  final String userID;
+  final int userId;
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    final isOwner = userID == post.creatorId;
+    final isOwner = userId == post.creatorId;
     return Stack(
       children: [
         ImageWidget(
@@ -81,8 +92,8 @@ class ImageHeader extends StatelessWidget {
             children: [
               MoreOptions(
                 isOwner: isOwner,
-                onManage: () => _manage(context, post.id, userID),
-                onEdit: () => _onEdit(context, post.id, postCubit),
+                onManage: () => _manage(context, post.id!, userId),
+                onEdit: () => _onEdit(context, post.id!, postCubit),
                 onDelete: () => _onDelete(context, post, postCubit),
               ),
             ],
@@ -96,23 +107,23 @@ class ImageHeader extends StatelessWidget {
 class Header extends StatelessWidget {
   const Header({
     required this.post,
-    required this.userID,
+    required this.userId,
     required this.postCubit,
     super.key,
   });
   final Post post;
-  final String userID;
+  final int userId;
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
-    final isOwner = userID == post.creatorId;
+    final isOwner = userId == post.creatorId;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         MoreOptions(
           isOwner: isOwner,
-          onManage: () => _manage(context, post.id, userID),
-          onEdit: () => _onEdit(context, post.id, postCubit),
+          onManage: () => _manage(context, post.id!, userId),
+          onEdit: () => _onEdit(context, post.id!, postCubit),
           onDelete: () => _onDelete(context, post, postCubit),
         ),
       ],
@@ -141,9 +152,9 @@ class PostDetails extends StatelessWidget {
 }
 
 class Footer extends StatelessWidget {
-  const Footer({required this.post, required this.userID, super.key});
+  const Footer({required this.post, required this.userId, super.key});
   final Post post;
-  final String userID;
+  final int userId;
 
   @override
   Widget build(BuildContext context) {
@@ -154,18 +165,17 @@ class Footer extends StatelessWidget {
         FutureBuilder(
           future: context
               .read<CommentRepository>()
-              .fetchTotalComments(postId: post.id),
+              .fetchTotalComments(postId: post.id!),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Row(
                 children: [
                   CommentButton(
-                    postID: post.id,
-                    userID: post.creatorId,
+                    postId: post.id!,
                     comments: snapshot.data!,
                   ),
                   const HorizontalSpacer(),
-                  LikeButton(post: post, userID: userID),
+                  LikeButton(post: post, userId: userId),
                 ],
               );
             }
@@ -179,22 +189,22 @@ class Footer extends StatelessWidget {
 
 void _manage(
   BuildContext context,
-  String postID,
-  String userID,
+  int postId,
+  int userId,
 ) =>
     Navigator.push(
       context,
       MaterialPageRoute<dynamic>(
         builder: (context) => SelectBoardPage(
-          postID: postID,
-          userID: userID,
+          postId: postId,
+          userId: userId,
         ),
       ),
     );
 
 void _onEdit(
   BuildContext context,
-  String postID,
+  int postId,
   PostCubit postCubit,
 ) =>
     Navigator.push(
@@ -203,7 +213,7 @@ void _onEdit(
         builder: (context) {
           return BlocProvider.value(
             value: postCubit,
-            child: EditPostPage(postID: postID),
+            child: EditPostPage(postId: postId),
           );
         },
       ),
@@ -217,7 +227,7 @@ Future<void> _onDelete(
   if (Navigator.canPop(context)) Navigator.pop(context);
   await postCubit.deletePost(
     post.creatorId,
-    post.id,
+    post.id!,
     post.photoUrl.toString(),
   );
   if (context.mounted && Navigator.canPop(context)) {

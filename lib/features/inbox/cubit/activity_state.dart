@@ -16,7 +16,7 @@ enum ActivityStatus {
 final class ActivityState extends Equatable {
   const ActivityState._({
     this.status = ActivityStatus.initial,
-    this.failure = UserFailure.empty,
+    this.failure = FriendFailure.empty,
     this.friendRequests = const [],
   });
 
@@ -24,8 +24,8 @@ final class ActivityState extends Equatable {
   const ActivityState.initial() : this._();
 
   final ActivityStatus status;
-  final UserFailure failure;
-  final List<String> friendRequests;
+  final FriendFailure failure;
+  final List<int> friendRequests;
 
   // rebuilds the app when the props change
   @override
@@ -37,8 +37,8 @@ final class ActivityState extends Equatable {
 
   ActivityState copyWith({
     ActivityStatus? status,
-    UserFailure? failure,
-    List<String>? friendRequests,
+    FriendFailure? failure,
+    List<int>? friendRequests,
   }) {
     return ActivityState._(
       status: status ?? this.status,
@@ -62,13 +62,14 @@ extension ActivityStateExtensions on ActivityState {
 
 extension _ActivityStateExtensions on ActivityState {
   ActivityState fromEmpty() => copyWith(status: ActivityStatus.empty);
+  ActivityState fromLoading() => copyWith(status: ActivityStatus.loading);
 
-  ActivityState fromFriendRequestsLoaded(List<String> senderIDs) => copyWith(
+  ActivityState fromFriendRequestsLoaded(List<int> friendRequests) => copyWith(
         status: ActivityStatus.loaded,
-        friendRequests: senderIDs,
+        friendRequests: friendRequests,
       );
 
-  ActivityState fromFailure(UserFailure failure) => copyWith(
+  ActivityState fromFailure(FriendFailure failure) => copyWith(
         status: ActivityStatus.failure,
         failure: failure,
       );

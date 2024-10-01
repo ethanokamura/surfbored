@@ -9,8 +9,8 @@ class SelectionCubit extends Cubit<SelectionState> {
   final BoardRepository _boardRepository;
 
   Future<void> toggleSelection({
-    required String boardId,
-    required String postId,
+    required int boardId,
+    required int postId,
     required bool isSelected,
   }) async {
     emit(SelectionLoading());

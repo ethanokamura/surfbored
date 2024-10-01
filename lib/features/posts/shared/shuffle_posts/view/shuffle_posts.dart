@@ -7,8 +7,8 @@ import 'package:surfbored/features/posts/shared/shuffle_posts/cubit/shuffle_inde
 import 'package:tag_repository/tag_repository.dart';
 
 class ShuffledPostsPage extends StatelessWidget {
-  const ShuffledPostsPage({required this.boardID, super.key});
-  final String boardID;
+  const ShuffledPostsPage({required this.boardId, super.key});
+  final int boardId;
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
@@ -21,7 +21,7 @@ class ShuffledPostsPage extends StatelessWidget {
         create: (context) => PostCubit(
           postRepository: context.read<PostRepository>(),
           tagRepository: context.read<TagRepository>(),
-        )..shufflePostList(boardID),
+        )..shufflePostList(boardId),
         child: BlocBuilder<PostCubit, PostState>(
           builder: (context, state) {
             if (state.isLoading) {

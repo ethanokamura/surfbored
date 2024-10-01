@@ -12,14 +12,14 @@ class CommentsCubit extends Cubit<CommentsState> {
   final CommentRepository _commentRepository;
 
   Future<void> createComment(
-    String postID,
-    String senderID,
+    int postId,
+    int senderID,
     String comment,
   ) async {
     try {
       await _commentRepository.createComment(
         comment: Comment(
-          postId: postID,
+          postId: postId,
           senderId: senderID,
           message: comment,
         ),
@@ -29,10 +29,10 @@ class CommentsCubit extends Cubit<CommentsState> {
     }
   }
 
-  void readComments(String postID, {bool isLoadMore = false}) {
+  void readComments(int postId, {bool isLoadMore = false}) {
     emit(state.fromLoading());
     try {
-      _commentRepository.streamComments(postID: postID).listen(
+      _commentRepository.streamComments(postId: postId).listen(
         (comments) {
           if (comments.isEmpty) {
             emit(state.fromEmpty());
@@ -50,7 +50,7 @@ class CommentsCubit extends Cubit<CommentsState> {
   }
 
   Future<void> deleteComment(
-    String commentId,
+    int commentId,
   ) async {
     try {
       await _commentRepository.deleteComment(commentId: commentId);

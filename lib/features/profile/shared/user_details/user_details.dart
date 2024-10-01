@@ -6,7 +6,7 @@ import 'package:user_repository/user_repository.dart';
 
 class UserDetails extends StatelessWidget {
   const UserDetails({required this.id, super.key});
-  final String id;
+  final int id;
 
   Future<UserProfile> _fetchUserDetails(BuildContext context) async =>
       context.read<UserRepository>().readUserProfile(uuid: id);
@@ -17,7 +17,7 @@ class UserDetails extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute<dynamic>(
-          builder: (context) => ProfilePage(userID: id),
+          builder: (context) => ProfilePage(userId: id),
         ),
       ),
       child: Flexible(

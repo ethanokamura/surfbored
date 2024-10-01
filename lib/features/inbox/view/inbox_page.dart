@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_repository/friend_repository.dart';
 import 'package:surfbored/features/inbox/cubit/activity_cubit.dart';
+import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class InboxPage extends StatelessWidget {
@@ -36,7 +37,7 @@ class FriendRequestList extends StatelessWidget {
       create: (context) => ActivityCubit(
         userRepository: context.read<UserRepository>(),
         friendRepository: context.read<FriendRepository>(),
-      )..fetchFriendRequests(),
+      )..fetchUserActivity(),
       child: BlocBuilder<ActivityCubit, ActivityState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -49,10 +50,9 @@ class FriendRequestList extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: requests.length,
               itemBuilder: (context, index) {
-                final userID = requests[index];
+                final userId = requests[index];
                 // create a user card with pfp and username!
-                // return UserCard(userID: userID);
-                return PrimaryText(text: userID); // placeholder
+                return UserDetails(id: userId);
               },
             );
           } else if (state.isEmpty) {

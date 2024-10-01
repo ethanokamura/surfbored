@@ -9,11 +9,9 @@ class CommentButton extends StatelessWidget {
   const CommentButton({
     required this.comments,
     required this.postId,
-    required this.userID,
     super.key,
   });
-  final String postId;
-  final String userID;
+  final int postId;
   final int comments;
   @override
   Widget build(BuildContext context) {

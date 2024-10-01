@@ -10,23 +10,27 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
 
   final FriendRepository _friendRepository;
 
-  Future<void> fetchFriendCount(String userId) async {
+  Future<void> fetchFriendCount(int userId) async {
     final friends = await _friendRepository.fetchFriendCount(userId: userId);
     emit(state.copyWith(friends: friends));
   }
 
-  Future<void> fetchData(String userId) async {
+  Future<void> fetchData(int userId) async {
+    final currentUser = UserRepository().user.id!;
     emit(state.fromLoading());
     try {
       final areFriends = await _friendRepository.areFriends(
         userAId: userId,
-        userBId: UserRepository().user.id,
+        userBId: currentUser,
       );
       if (areFriends) {
         emit(state.fromFriendAccepted());
         return;
       } else {
-        final isRecipient = await _friendRepository.isRecipient(userId: userId);
+        final isRecipient = await _friendRepository.isRecipient(
+          userId: userId,
+          currentUserId: currentUser,
+        );
         isRecipient == null
             ? emit(state.fromNoRequest())
             : isRecipient
@@ -38,15 +42,28 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
     }
   }
 
-  Future<void> friendStateSelection(String userId) async {
+  Future<void> friendStateSelection(int userId) async {
+    final currentUser = UserRepository().user.id!;
     if (state.isRecieved) {
-      await _friendRepository.addFriend(otherUserId: userId);
+      await _friendRepository.addFriend(
+        otherUserId: userId,
+        currentUserId: currentUser,
+      );
     } else if (state.areFriends) {
-      await _friendRepository.removeFriend(otherUserId: userId);
+      await _friendRepository.removeFriend(
+        otherUserId: userId,
+        currentUserId: currentUser,
+      );
     } else if (state.isRequested) {
-      await _friendRepository.removeFriendRequest(otherUserId: userId);
+      await _friendRepository.removeFriendRequest(
+        otherUserId: userId,
+        currentUserId: currentUser,
+      );
     } else {
-      await _friendRepository.sendFriendRequest(recipientId: userId);
+      await _friendRepository.sendFriendRequest(
+        recipientId: userId,
+        senderId: currentUser,
+      );
     }
     updateState();
   }

@@ -8,12 +8,12 @@ class FriendButton extends StatelessWidget {
   const FriendButton({
     required this.state,
     required this.isCurrent,
-    required this.userID,
+    required this.userId,
     super.key,
   });
   final FriendControllerState state;
   final bool isCurrent;
-  final String userID;
+  final int userId;
   @override
   Widget build(BuildContext context) {
     final buttonText = _getButtonText(state);
@@ -24,10 +24,10 @@ class FriendButton extends StatelessWidget {
           ? Navigator.push(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => FriendsPage(userID: userID),
+                builder: (context) => FriendsPage(userId: userId),
               ),
             )
-          : context.read<FriendControllerCubit>().friendStateSelection(userID),
+          : context.read<FriendControllerCubit>().friendStateSelection(userId),
       inverted: (!isCurrent && !state.isRequested) || !isCurrent,
       text: isCurrent ? AppStrings.myFriends : buttonText,
     );

@@ -8,7 +8,7 @@ class SaveCubit extends Cubit<SaveState> {
 
   final BoardRepository _boardRepository;
 
-  Future<void> fetchData(String boardId, String userId) async {
+  Future<void> fetchData(int boardId, int userId) async {
     final userSavedBoard = await _boardRepository.hasUserSavedBoard(
       boardId: boardId,
       userId: userId,
@@ -18,8 +18,8 @@ class SaveCubit extends Cubit<SaveState> {
   }
 
   Future<void> toggleSave({
-    required String userId,
-    required String boardId,
+    required int userId,
+    required int boardId,
     required bool saved,
   }) async {
     try {

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/comments/comments.dart';
+import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/likes/likes.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/features/tags/tags.dart';
@@ -13,9 +14,8 @@ import 'package:user_repository/user_repository.dart';
 Future<dynamic> postSearchPopUp(
   BuildContext context,
   Post post,
-  List<String> tags,
 ) async {
-  final userID = context.read<UserRepository>().user.id;
+  final userId = context.read<UserRepository>().user.id;
   await showModalBottomSheet<void>(
     context: context,
     backgroundColor: Theme.of(context).colorScheme.surface,
@@ -48,8 +48,8 @@ Future<dynamic> postSearchPopUp(
                         context,
                         MaterialPageRoute<dynamic>(
                           builder: (context) => SelectBoardPage(
-                            postID: post.id,
-                            userID: userID,
+                            postId: post.id!,
+                            userId: userId!,
                           ),
                         ),
                       ),
@@ -84,8 +84,21 @@ Future<dynamic> postSearchPopUp(
                 if (post.description.isNotEmpty) const VerticalSpacer(),
                 if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
                 if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
-                if (tags.isNotEmpty) TagList(tags: tags),
-                if (tags.isNotEmpty) const VerticalSpacer(),
+                FutureBuilder(
+                  future: context.read<PostCubit>().fetchTags(post.id!),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      final tags = snapshot.data!;
+                      return Column(
+                        children: [
+                          TagList(tags: tags),
+                          const VerticalSpacer(),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -93,18 +106,17 @@ Future<dynamic> postSearchPopUp(
                     FutureBuilder(
                       future: context
                           .read<CommentRepository>()
-                          .fetchTotalComments(postId: post.id),
+                          .fetchTotalComments(postId: post.id!),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Row(
                             children: [
                               CommentButton(
-                                postID: post.id,
-                                userID: post.creatorId,
+                                postId: post.id!,
                                 comments: snapshot.data!,
                               ),
                               const HorizontalSpacer(),
-                              LikeButton(post: post, userID: userID),
+                              LikeButton(post: post, userId: userId!),
                             ],
                           );
                         }

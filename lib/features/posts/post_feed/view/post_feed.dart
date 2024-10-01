@@ -5,6 +5,7 @@ import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/post/post.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:tag_repository/tag_repository.dart';
 
 class PostFeed extends StatelessWidget {
   const PostFeed({super.key});
@@ -14,7 +15,8 @@ class PostFeed extends StatelessWidget {
     return BlocProvider(
       create: (context) => PostCubit(
         postRepository: context.read<PostRepository>(),
-      )..streamAllPosts(),
+        tagRepository: context.read<TagRepository>(),
+      )..fetchAllPosts(),
       child: BlocBuilder<PostCubit, PostState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -22,7 +24,8 @@ class PostFeed extends StatelessWidget {
           } else if (state.isLoaded) {
             final posts = state.posts;
             return RefreshIndicator(
-              onRefresh: () async => context.read<PostCubit>().streamAllPosts(),
+              onRefresh: () async =>
+                  context.read<PostCubit>().fetchAllPosts(refresh: true),
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 separatorBuilder: (context, index) => const VerticalSpacer(),
@@ -44,7 +47,7 @@ class PostFeed extends StatelessWidget {
               child: PrimaryText(text: AppStrings.emptyPosts),
             );
           } else if (state.isDeleted || state.isUpdated) {
-            context.read<PostCubit>().streamAllPosts();
+            context.read<PostCubit>().fetchAllPosts(refresh: true);
             return const Center(
               child: PrimaryText(text: AppStrings.changedPosts),
             );

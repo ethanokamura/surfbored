@@ -6,7 +6,7 @@ import 'package:user_repository/user_repository.dart';
 
 class ProfileLink extends StatelessWidget {
   const ProfileLink({required this.id, super.key});
-  final String id;
+  final int id;
 
   Future<String?> _fetchUsername(BuildContext context) async {
     final profile =
@@ -24,7 +24,7 @@ class ProfileLink extends StatelessWidget {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (context) => ProfilePage(userID: id),
+              builder: (context) => ProfilePage(userId: id),
             ),
           ),
           child: Flexible(child: UserText(text: '@$username', bold: false)),

@@ -81,6 +81,11 @@ extension _PostStateExtensions on PostState {
         tags: tags,
       );
 
+  PostState fromTagsLoaded(List<String> tags) => copyWith(
+        status: PostStatus.loaded,
+        tags: tags,
+      );
+
   PostState fromPostsLoaded(List<Post> posts) => copyWith(
         status: PostStatus.loaded,
         posts: posts,

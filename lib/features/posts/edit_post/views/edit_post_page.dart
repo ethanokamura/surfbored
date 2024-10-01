@@ -7,19 +7,19 @@ import 'package:surfbored/features/tags/tags.dart';
 
 class EditPostPage extends StatelessWidget {
   const EditPostPage({
-    required this.postID,
+    required this.postId,
     super.key,
   });
-  final String postID;
-  static MaterialPage<void> page({required String postID}) {
+  final int postId;
+  static MaterialPage<void> page({required int postId}) {
     return MaterialPage<void>(
-      child: EditPostPage(postID: postID),
+      child: EditPostPage(postId: postId),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    context.read<PostCubit>().fetchPost(postID);
+    context.read<PostCubit>().fetchPost(postId);
     return CustomPageView(
       top: true,
       appBar: AppBar(
@@ -81,30 +81,30 @@ class EditView extends StatelessWidget {
             collection: 'users',
             docID: post.creatorId,
             onFileChanged: (url) =>
-                postCubit.editField(post.id, 'photoURL', url),
+                postCubit.editField(post.id!, 'photoURL', url),
           ),
           const VerticalSpacer(),
           EditField(
             field: 'title',
             value: post.title,
-            postID: post.id,
+            postId: post.id!,
           ),
           const VerticalSpacer(),
           EditField(
             field: 'description',
             value: post.description,
-            postID: post.id,
+            postId: post.id!,
           ),
           const VerticalSpacer(),
           EditField(
             field: 'website',
             value: post.websiteUrl,
-            postID: post.id,
+            postId: post.id!,
           ),
           const VerticalSpacer(),
           EditTagsBox(
             tags: postTags,
-            updateTags: (tags) => postCubit.updateTags(post.id, tags),
+            updateTags: (tags) => postCubit.updateTags(post.id!, tags),
           ),
         ],
       ),
@@ -116,12 +116,12 @@ class EditField extends StatelessWidget {
   const EditField({
     required this.field,
     required this.value,
-    required this.postID,
+    required this.postId,
     super.key,
   });
   final String field;
   final String value;
-  final String postID;
+  final int postId;
   @override
   Widget build(BuildContext context) {
     return CustomTextBox(
@@ -134,7 +134,7 @@ class EditField extends StatelessWidget {
           TextEditingController(),
         );
         if (newValue != null && context.mounted) {
-          await context.read<PostCubit>().editField(postID, field, newValue);
+          await context.read<PostCubit>().editField(postId, field, newValue);
         }
       },
     );

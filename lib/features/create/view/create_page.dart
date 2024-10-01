@@ -63,7 +63,7 @@ class _CreatePostState extends State<CreatePost> {
   String websiteText = 'website';
   String tagsText = 'tags';
   List<String> tags = [];
-  String docID = '';
+  int docID = 0;
   String? photoUrl;
 
   File? imageFile;
@@ -141,7 +141,7 @@ class _CreatePostState extends State<CreatePost> {
                 onTap: () {
                   context.read<CreateCubit>().create(
                         type: widget.type.toLowerCase(),
-                        userID: context.read<UserRepository>().user.id,
+                        userId: context.read<UserRepository>().user.id!,
                         title: titleText,
                         description: descriptionText,
                         website: websiteText,

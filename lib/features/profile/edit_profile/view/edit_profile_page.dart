@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
-import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({required this.userID, super.key});
+  const EditProfilePage({required this.userId, super.key});
 
-  static MaterialPage<void> page({required String userID}) {
+  static MaterialPage<void> page({required int userId}) {
     return MaterialPage<void>(
-      child: EditProfilePage(userID: userID),
+      child: EditProfilePage(userId: userId),
     );
   }
 
-  final String userID;
+  final int userId;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class EditProfile extends StatelessWidget {
             height: 200,
             photoUrl: user.photoUrl,
             collection: 'users',
-            docID: user.id,
+            docID: user.id!,
             onFileChanged: (url) =>
                 context.read<ProfileCubit>().editField('photo_url', url),
           ),
@@ -117,7 +116,7 @@ class EditProfile extends StatelessWidget {
           ),
           const VerticalSpacer(),
           FutureBuilder<List<String>>(
-            future: _getUserTags(user.id),
+            future: context.read<ProfileCubit>().fetchUserTags(user.id!),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
@@ -136,7 +135,4 @@ class EditProfile extends StatelessWidget {
       ),
     );
   }
-
-  Future<List<String>> _getUserTags(String uuid) async =>
-      TagRepository().readUserTags(uuid: uuid);
 }

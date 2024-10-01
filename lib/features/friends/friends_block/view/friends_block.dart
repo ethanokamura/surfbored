@@ -8,11 +8,11 @@ import 'package:surfbored/features/friends/friends_block/view/friend_count.dart'
 
 class FriendsBlock extends StatelessWidget {
   const FriendsBlock({
-    required this.userID,
+    required this.userId,
     required this.isCurrent,
     super.key,
   });
-  final String userID;
+  final int userId;
   final bool isCurrent;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class FriendsBlock extends StatelessWidget {
       child: BlocProvider(
         create: (context) =>
             FriendControllerCubit(context.read<FriendRepository>())
-              ..fetchData(userID),
+              ..fetchData(userId),
         child: BlocBuilder<FriendControllerCubit, FriendControllerState>(
           builder: (context, state) {
             if (state.isLoading) {
@@ -35,7 +35,7 @@ class FriendsBlock extends StatelessWidget {
                 FriendButton(
                   state: state,
                   isCurrent: isCurrent,
-                  userID: userID,
+                  userId: userId,
                 ),
               ],
             );

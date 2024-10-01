@@ -8,17 +8,17 @@ import 'package:surfbored/theme/theme_cubit.dart';
 class ProfileSettingsPage extends StatelessWidget {
   const ProfileSettingsPage({
     required this.profileCubit,
-    required this.userID,
+    required this.userId,
     super.key,
   });
-  final String userID;
+  final int userId;
   final ProfileCubit profileCubit;
   static MaterialPage<void> page({
-    required String userID,
+    required int userId,
     required ProfileCubit profileCubit,
   }) {
     return MaterialPage<void>(
-      child: ProfileSettingsPage(userID: userID, profileCubit: profileCubit),
+      child: ProfileSettingsPage(userId: userId, profileCubit: profileCubit),
     );
   }
 
@@ -50,7 +50,7 @@ class ProfileSettingsPage extends StatelessWidget {
                   builder: (context) {
                     return BlocProvider.value(
                       value: profileCubit,
-                      child: EditProfilePage(userID: userID),
+                      child: EditProfilePage(userId: userId),
                     );
                   },
                 ),

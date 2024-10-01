@@ -16,23 +16,22 @@ class BoardCubit extends Cubit<BoardState> {
   final TagRepository _tagRepository;
 
   int index = 0;
+  int currentPage = 0;
+  final int pageSize = 10;
+  bool hasMore = true;
 
-  int _currentPage = 0;
-  final int _pageSize = 10;
-  bool _hasMore = true;
-
-  Future<void> fetchBoard(String boardId) async {
+  Future<void> fetchBoard(int boardId) async {
     emit(state.fromLoading());
     try {
       final board = await _boardRepository.fetchBoard(boardId: boardId);
-      final tags = await _tagRepository.readBoardTags(uuid: boardId);
+      final tags = await _tagRepository.fetchBoardTags(id: boardId);
       emit(state.fromBoardLoaded(board, tags));
     } on BoardFailure catch (failure) {
       emit(state.fromFailure(failure));
     }
   }
 
-  Future<void> isSelected(String boardId, String postId) async {
+  Future<void> isSelected(int boardId, int postId) async {
     emit(state.fromLoading());
     try {
       final selected =
@@ -43,111 +42,43 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  // void streamBoard(String boardId) {
-  //   emit(state.fromLoading());
-  //   try {
-  //     _boardRepository.streamBoard(boardId).listen(
-  //       (snapshot) {
-  //         emit(state.fromBoardLoaded(snapshot));
-  //       },
-  //       onError: (dynamic error) {
-  //         emit(state.fromFailure(BoardFailure.fromGetBoard()));
-  //       },
-  //     );
-  //   } on BoardFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
+  Future<void> fetchBoards(int userId, {bool refresh = false}) async {
+    if (refresh) {
+      currentPage = 0;
+      hasMore = true;
+      emit(state.fromEmpty());
+    }
 
-  // bool hasMore() {
-  //   return _hasMore;
-  // }
+    if (!hasMore) return;
 
-  // void streamUserBoards(String userID) {
-  //   emit(state.fromLoading());
-  //   _currentPage = 0;
-  //   _hasMore = true;
-  //   _loadMoreUserBoards(userID, reset: true);
-  // }
+    emit(state.fromLoading());
+    try {
+      final boards = await _boardRepository.fetchUserBoards(
+        userId: userId,
+        offset: currentPage * pageSize,
+        limit: pageSize,
+      );
 
-  // void loadMoreUserBoards(String userID) {
-  //   if (_hasMore) {
-  //     _currentPage++;
-  //     _loadMoreUserBoards(userID);
-  //   }
-  // }
+      if (boards.isEmpty) {
+        hasMore = false; // No more boards to load
+        emit(state.fromEmpty());
+      } else {
+        currentPage++; // Increment the page number
+        emit(state.fromBoardsLoaded([...state.boards, ...boards]));
+      }
+    } on BoardFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
 
-  // void _loadMoreUserBoards(String userID, {bool reset = false}) {
-  //   try {
-  //     _boardRepository
-  //         .streamUserBoards(userID, pageSize: _pageSize, page: _currentPage)
-  //         .listen(
-  //       (boards) {
-  //         if (boards.length < _pageSize) {
-  //           _hasMore = false;
-  //         }
-  //         if (reset) {
-  //           emit(state.fromBoardsLoaded(boards));
-  //         } else {
-  //           emit(state.fromBoardsLoaded(List.of(state.boards)..addAll(boards)));
-  //         }
-  //       },
-  //       onError: (error) {
-  //         emit(state.fromEmpty());
-  //       },
-  //     );
-  //   } on BoardFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
+  Stream<List<Board>> streamUserBoards(int userId) =>
+      _boardRepository.streamUserBoards(userId: userId);
 
-  // void streamUserSavedBoards(String userID) {
-  //   emit(state.fromLoading());
-  //   _currentPage = 0;
-  //   _hasMore = true;
-  //   _loadMoreUserSavedBoards(userID, reset: true);
-  // }
-
-  // void loadMoreUserSavedBoards(String userID) {
-  //   if (_hasMore) {
-  //     _currentPage++;
-  //     _loadMoreUserSavedBoards(userID);
-  //   }
-  // }
-
-  // void _loadMoreUserSavedBoards(String userID, {bool reset = false}) {
-  //   try {
-  //     _boardRepository
-  //         .streamUserSavedBoards(
-  //       userID,
-  //       pageSize: _pageSize,
-  //       page: _currentPage,
-  //     )
-  //         .listen(
-  //       (boards) {
-  //         if (boards.length < _pageSize) {
-  //           _hasMore = false;
-  //         }
-  //         if (reset) {
-  //           emit(state.fromBoardsLoaded(boards));
-  //         } else {
-  //           emit(state.fromBoardsLoaded(List.of(state.boards)..addAll(boards)));
-  //         }
-  //       },
-  //       onError: (error) {
-  //         emit(state.fromEmpty());
-  //       },
-  //     );
-  //   } on BoardFailure catch (failure) {
-  //     emit(state.fromFailure(failure));
-  //   }
-  // }
-
-  Future<void> updateTags(String boardId, List<String> tags) async {
+  Future<void> updateTags(int boardId, List<String> tags) async {
     await _tagRepository.updateBoardTags(boardId: boardId, tags: tags);
   }
 
-  Future<void> editField(String boardId, String field, dynamic data) async {
+  Future<void> editField(int boardId, String field, dynamic data) async {
     emit(state.fromLoading());
     await _boardRepository.updateBoard(
       boardId: boardId,
@@ -159,7 +90,7 @@ class BoardCubit extends Cubit<BoardState> {
   }
 
   Future<void> deleteBoard(
-    String boardId,
+    int boardId,
   ) async {
     emit(state.fromLoading());
     try {

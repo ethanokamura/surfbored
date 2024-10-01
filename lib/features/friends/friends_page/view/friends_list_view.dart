@@ -8,11 +8,9 @@ class FriendsListView extends StatelessWidget {
     required this.friends,
     required this.onLoadMore,
     required this.onRefresh,
-    required this.hasMore,
     super.key,
   });
-  final List<String> friends;
-  final bool hasMore;
+  final List<int> friends;
   final Future<void> Function() onLoadMore;
   final Future<void> Function() onRefresh;
   @override
@@ -23,7 +21,7 @@ class FriendsListView extends StatelessWidget {
         onNotification: (scrollNotification) {
           if (scrollNotification.metrics.pixels - 25 >=
               scrollNotification.metrics.maxScrollExtent) {
-            if (hasMore) onLoadMore();
+            onLoadMore();
           }
           return false;
         },
@@ -34,9 +32,9 @@ class FriendsListView extends StatelessWidget {
           itemCount: friends.length,
           itemBuilder: (context, index) {
             final friend = friends[index];
-            return friend.isEmpty
+            return friend == 0
                 ? const UnknownCard(message: 'User not found')
-                : FriendCard(userID: friend);
+                : FriendCard(userId: friend);
           },
         ),
       ),

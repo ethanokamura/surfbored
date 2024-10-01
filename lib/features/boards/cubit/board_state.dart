@@ -27,7 +27,7 @@ final class BoardState extends Equatable {
   final BoardStatus status;
   final Board board;
   final List<Board> boards;
-  final List<String> posts;
+  final List<int> posts;
   final List<String> tags;
   final BoardFailure failure;
   final bool selected;
@@ -49,7 +49,7 @@ final class BoardState extends Equatable {
     BoardStatus? status,
     Board? board,
     List<Board>? boards,
-    List<String>? posts,
+    List<int>? posts,
     List<String>? tags,
     BoardFailure? failure,
     bool? selected,

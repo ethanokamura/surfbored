@@ -8,18 +8,52 @@ class FriendsCubit extends Cubit<FriendsState> {
 
   final FriendRepository _friendRepository;
 
-  int _currentPage = 0;
-  final int _pageSize = 10;
-  bool _hasMore = true;
+  int currentPage = 0;
+  final int pageSize = 10;
+  bool hasMore = true;
+  bool remove = true;
 
-  bool hasMore() {
-    return _hasMore;
+  Future<void> fetchFriends(int userId, {bool refresh = false}) async {
+    if (refresh) {
+      currentPage = 0;
+      hasMore = true;
+      emit(state.fromEmpty());
+    }
+
+    if (!hasMore) return;
+
+    emit(state.fromLoading());
+    try {
+      final friends = await _friendRepository.fetchFriends(
+        userId: userId,
+        offset: currentPage * pageSize,
+        limit: pageSize,
+      );
+
+      if (friends.isEmpty) {
+        hasMore = false; // No more boards to load
+        emit(state.fromEmpty());
+      } else {
+        currentPage++; // Increment the page number
+        emit(state.fromLoaded([...state.friends, ...friends]));
+      }
+    } on FriendFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
   }
 
-  Future<List<String>> fetchFriends(String userId) async =>
-      _friendRepository.fetchFriends(userId: userId);
-
-  // Future<void> modifiyFriend(String userID) async {
-  //   await _friendRepository.modifyFriend(userID);
-  // }
+  Future<void> modifiyFriend(int currentUserId, int userId) async {
+    if (remove) {
+      await _friendRepository.removeFriend(
+        currentUserId: currentUserId,
+        otherUserId: userId,
+      );
+    } else {
+      await _friendRepository.sendFriendRequest(
+        senderId: currentUserId,
+        recipientId: userId,
+      );
+    }
+    remove = !remove;
+  }
 }

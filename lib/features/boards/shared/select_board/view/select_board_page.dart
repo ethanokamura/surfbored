@@ -5,21 +5,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/boards/shared/select_board/view/board_card.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:tag_repository/tag_repository.dart';
 
 class SelectBoardPage extends StatelessWidget {
   const SelectBoardPage({
-    required this.userID,
-    required this.postID,
+    required this.userId,
+    required this.postId,
     super.key,
   });
-  final String userID;
-  final String postID;
+  final int userId;
+  final int postId;
   static MaterialPage<void> page({
-    required String postID,
-    required String userID,
+    required int postId,
+    required int userId,
   }) {
     return MaterialPage<void>(
-      child: SelectBoardPage(postID: postID, userID: userID),
+      child: SelectBoardPage(postId: postId, userId: userId),
     );
   }
 
@@ -31,25 +32,26 @@ class SelectBoardPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: AppStrings.addActivity),
       ),
-      body: SelectBoardsList(userID: userID, postID: postID),
+      body: SelectBoardsList(userId: userId, postId: postId),
     );
   }
 }
 
 class SelectBoardsList extends StatelessWidget {
   const SelectBoardsList({
-    required this.userID,
-    required this.postID,
+    required this.userId,
+    required this.postId,
     super.key,
   });
-  final String userID;
-  final String postID;
+  final int userId;
+  final int postId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BoardCubit(
         boardRepository: context.read<BoardRepository>(),
-      )..streamUserBoards(userID),
+        tagRepository: context.read<TagRepository>(),
+      )..fetchBoards(userId),
       child: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -58,17 +60,16 @@ class SelectBoardsList extends StatelessWidget {
             final boards = state.boards;
             return SelectBoardListView(
               boards: boards,
-              postID: postID,
-              hasMore: context.read<BoardCubit>().hasMore(),
+              postId: postId,
               onLoadMore: () async =>
-                  context.read<BoardCubit>().loadMoreUserBoards(userID),
+                  context.read<BoardCubit>().fetchBoards(userId),
             );
           } else if (state.isEmpty) {
             return const Center(
               child: PrimaryText(text: AppStrings.emptyPosts),
             );
           } else if (state.isDeleted || state.isUpdated) {
-            context.read<BoardCubit>().streamUserBoards(userID);
+            context.read<BoardCubit>().streamUserBoards(userId);
             return const Center(
               child: PrimaryText(text: AppStrings.changedPosts),
             );
@@ -87,14 +88,12 @@ class SelectBoardsList extends StatelessWidget {
 class SelectBoardListView extends StatelessWidget {
   const SelectBoardListView({
     required this.boards,
-    required this.postID,
+    required this.postId,
     required this.onLoadMore,
-    required this.hasMore,
     super.key,
   });
   final List<Board> boards;
-  final String postID;
-  final bool hasMore;
+  final int postId;
   final Future<void> Function() onLoadMore;
   @override
   Widget build(BuildContext context) {
@@ -102,7 +101,7 @@ class SelectBoardListView extends StatelessWidget {
       onNotification: (scrollNotification) {
         if (scrollNotification.metrics.pixels - 25 >=
             scrollNotification.metrics.maxScrollExtent) {
-          if (hasMore) onLoadMore();
+          onLoadMore();
         }
         return false;
       },
@@ -116,7 +115,7 @@ class SelectBoardListView extends StatelessWidget {
           return board.isEmpty
               ? const UnknownCard(message: 'Board not found')
               : SelectBoardCard(
-                  postID: postID,
+                  postId: postId,
                   board: board,
                 );
         },

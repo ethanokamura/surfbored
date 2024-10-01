@@ -7,11 +7,11 @@ import 'package:surfbored/features/boards/shared/select_board/cubit/selection_cu
 class SelectBoardCard extends StatelessWidget {
   const SelectBoardCard({
     required this.board,
-    required this.postID,
+    required this.postId,
     super.key,
   });
   final Board board;
-  final String postID;
+  final int postId;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class SelectBoardCard extends StatelessWidget {
             onTap: () {
               context.read<SelectionCubit>().toggleSelection(
                     boardId: board.id,
-                    postId: postID,
+                    postId: postId,
                     isSelected: isSelected,
                   );
             },

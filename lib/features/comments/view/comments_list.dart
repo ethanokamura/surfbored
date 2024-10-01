@@ -11,7 +11,7 @@ class CommentListView extends StatelessWidget {
     super.key,
   });
   final List<Comment> comments;
-  final String postId;
+  final int postId;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(

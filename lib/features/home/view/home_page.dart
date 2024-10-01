@@ -79,7 +79,7 @@ class HomeBody extends StatelessWidget {
   const HomeBody({super.key});
   @override
   Widget build(BuildContext context) {
-    final userID = context.read<UserRepository>().user.id;
+    final userId = context.read<UserRepository>().user.id;
     final pageController = context.watch<NavBarController>();
 
     return PageView(
@@ -88,7 +88,7 @@ class HomeBody extends StatelessWidget {
       children: [
         const FeedPage(),
         const SearchPage(),
-        ProfilePage(userID: userID),
+        ProfilePage(userId: userId!),
       ],
     );
   }

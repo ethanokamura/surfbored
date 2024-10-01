@@ -6,11 +6,11 @@ import 'package:surfbored/features/friends/cubit/friends_cubit.dart';
 import 'package:surfbored/features/friends/friends_page/view/friends_list_view.dart';
 
 class FriendsPage extends StatelessWidget {
-  const FriendsPage({required this.userID, super.key});
-  final String userID;
-  static MaterialPage<void> page({required String userID}) {
+  const FriendsPage({required this.userId, super.key});
+  final int userId;
+  static MaterialPage<void> page({required int userId}) {
     return MaterialPage<void>(
-      child: FriendsPage(userID: userID),
+      child: FriendsPage(userId: userId),
     );
   }
 
@@ -22,20 +22,20 @@ class FriendsPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       body: Expanded(
-        child: FriendsList(userID: userID),
+        child: FriendsList(userId: userId),
       ),
     );
   }
 }
 
 class FriendsList extends StatelessWidget {
-  const FriendsList({required this.userID, super.key});
-  final String userID;
+  const FriendsList({required this.userId, super.key});
+  final int userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          FriendsCubit(context.read<FriendRepository>())..fetchFriends(userID),
+          FriendsCubit(context.read<FriendRepository>())..fetchFriends(userId),
       child: BlocBuilder<FriendsCubit, FriendsState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -44,11 +44,11 @@ class FriendsList extends StatelessWidget {
             final friends = state.friends;
             return FriendsListView(
               friends: friends,
-              hasMore: context.read<FriendsCubit>().hasMore(),
-              onLoadMore: () async =>
-                  context.read<FriendsCubit>().loadMoreFriends(userID),
+              onLoadMore: () async => context
+                  .read<FriendsCubit>()
+                  .fetchFriends(userId, refresh: true),
               onRefresh: () async =>
-                  context.read<FriendsCubit>().fetchFriends(userID),
+                  context.read<FriendsCubit>().fetchFriends(userId),
             );
           } else if (state.isEmpty) {
             return const Center(

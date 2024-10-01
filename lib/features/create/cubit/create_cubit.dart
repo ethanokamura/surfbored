@@ -25,7 +25,7 @@ class CreateCubit extends Cubit<CreateState> {
 
   Future<void> create({
     required String type,
-    required String userID,
+    required int userId,
     required String title,
     required String description,
     required String website,
@@ -34,7 +34,7 @@ class CreateCubit extends Cubit<CreateState> {
   }) async {
     if (type == 'post') {
       await createPost(
-        userID: userID,
+        userId: userId,
         title: title,
         description: description,
         website: website,
@@ -43,7 +43,7 @@ class CreateCubit extends Cubit<CreateState> {
       );
     } else if (type == 'board') {
       await createBoard(
-        userID: userID,
+        userId: userId,
         title: title,
         description: description,
         tags: tags,
@@ -53,7 +53,7 @@ class CreateCubit extends Cubit<CreateState> {
   }
 
   Future<void> createPost({
-    required String userID,
+    required int userId,
     required String title,
     required String description,
     required String website,
@@ -65,7 +65,7 @@ class CreateCubit extends Cubit<CreateState> {
       final docID = await _postRepository.createPost(
         post: Post(
           title: title,
-          creatorId: userID,
+          creatorId: userId,
           description: description,
           websiteUrl: website,
         ),
@@ -73,7 +73,7 @@ class CreateCubit extends Cubit<CreateState> {
 
       if (tags.isNotEmpty) {
         tags.map(
-          (tag) => _tagRepository.createPostTag(tagName: tag, uuid: docID),
+          (tag) => _tagRepository.createPostTag(tagName: tag, id: docID),
         );
       }
 
@@ -88,7 +88,7 @@ class CreateCubit extends Cubit<CreateState> {
   }
 
   Future<void> createBoard({
-    required String userID,
+    required int userId,
     required String title,
     required String description,
     required List<String> tags,
@@ -98,14 +98,14 @@ class CreateCubit extends Cubit<CreateState> {
     try {
       final docID = await _boardRepository.createBoard(
         board: Board(
-          creatorId: userID,
+          creatorId: userId,
           title: title,
           description: description,
         ),
       );
       if (tags.isNotEmpty) {
         tags.map(
-          (tag) => _tagRepository.createBoardTag(tagName: tag, uuid: docID),
+          (tag) => _tagRepository.createBoardTag(tagName: tag, id: docID),
         );
       }
       if (imageFile != null) {

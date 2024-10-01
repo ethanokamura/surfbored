@@ -9,7 +9,7 @@ class CommentButtonCubit extends Cubit<CommentButtonState> {
 
   final CommentRepository _commentRepository;
 
-  Future<void> fetchData(String postId) async {
+  Future<void> fetchData(int postId) async {
     emit(state.fromLoading());
     final comments =
         await _commentRepository.fetchTotalComments(postId: postId);

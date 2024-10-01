@@ -33,8 +33,10 @@ packages/
   ├── app_core/                  # Core functions of the project; main backbone for the backend
   ├── app_ui/                    # UI elements including theme, commonly used widgets, and constants
   ├── board_repository/          # Handles board data and its interaction with API's
+  ├── comment_repository/        # Handles the interaction between comments and the API's
+  ├── friend_repository/         # Handles the interaction between users and the API's
   ├── post_repository/           # Handles post data and its interaction with API's
-  ├── tag_repository/            # Handles tag data and its interaction with API's
+  ├── tag_repository/            # Handles the interaction between tags and the API's
   └── user_repository/           # Handles user data and its interaction with API's
 
 ```
@@ -55,14 +57,14 @@ Repositories -> handle requests and responses to the API's
 
 The current tech stack for this project:
 
-```
-Frontend:
-  └── Flutter App
-
-Backend:
-  ├── Firebase Auth (auth)
-  ├── Firebase Storage (images)
-  ├── Firebase Firestore (documents)
-  ├── Firebase Cloud Functions (cloud functions)
-  └── Algolia (search)
-```
+**Frontend:**
+  - Flutter App
+  - Supabase Flutter SDK's (API Calls)
+  + Redis (caching / realtime data)
+**Backend:**
+  - Twillio Verify (auth)
+  - Supabase Storage (images)
+  - Postgres/Supabase (documents)
+  - Supabase (cloud functions)
+  - Postgres/Supabase Text Search (search)
+  - FCM (push notifications)

@@ -13,11 +13,11 @@ class SelectBoardPage extends StatelessWidget {
     required this.postId,
     super.key,
   });
-  final int userId;
+  final String userId;
   final int postId;
   static MaterialPage<void> page({
     required int postId,
-    required int userId,
+    required String userId,
   }) {
     return MaterialPage<void>(
       child: SelectBoardPage(postId: postId, userId: userId),
@@ -43,7 +43,7 @@ class SelectBoardsList extends StatelessWidget {
     required this.postId,
     super.key,
   });
-  final int userId;
+  final String userId;
   final int postId;
   @override
   Widget build(BuildContext context) {

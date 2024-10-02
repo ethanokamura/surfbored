@@ -13,7 +13,7 @@ class CommentsCubit extends Cubit<CommentsState> {
 
   Future<void> createComment(
     int postId,
-    int senderID,
+    String senderID,
     String comment,
   ) async {
     try {

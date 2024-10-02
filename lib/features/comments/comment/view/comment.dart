@@ -18,7 +18,7 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userId = context.read<UserRepository>().user.id;
+    final userId = context.read<UserRepository>().user.uuid;
     final isOwner = userId == comment.senderId;
     return CustomContainer(
       vertical: 0,
@@ -44,8 +44,7 @@ class CommentCard extends StatelessWidget {
             children: [
               CommentLikeButton(
                 comment: comment,
-                postId: postId,
-                userId: context.read<UserRepository>().user.id!,
+                userId: userId,
               ),
             ],
           ),

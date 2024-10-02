@@ -25,7 +25,7 @@ class CreateCubit extends Cubit<CreateState> {
 
   Future<void> create({
     required String type,
-    required int userId,
+    required String userId,
     required String title,
     required String description,
     required String website,
@@ -53,7 +53,7 @@ class CreateCubit extends Cubit<CreateState> {
   }
 
   Future<void> createPost({
-    required int userId,
+    required String userId,
     required String title,
     required String description,
     required String website,
@@ -88,7 +88,7 @@ class CreateCubit extends Cubit<CreateState> {
   }
 
   Future<void> createBoard({
-    required int userId,
+    required String userId,
     required String title,
     required String description,
     required List<String> tags,

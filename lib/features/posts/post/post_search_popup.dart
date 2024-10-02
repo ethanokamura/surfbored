@@ -15,7 +15,7 @@ Future<dynamic> postSearchPopUp(
   BuildContext context,
   Post post,
 ) async {
-  final userId = context.read<UserRepository>().user.id;
+  final userId = context.read<UserRepository>().user.uuid;
   await showModalBottomSheet<void>(
     context: context,
     backgroundColor: Theme.of(context).colorScheme.surface,

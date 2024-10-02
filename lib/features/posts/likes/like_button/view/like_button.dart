@@ -7,7 +7,7 @@ import 'package:surfbored/features/posts/likes/cubit/like_cubit.dart';
 class LikeButton extends StatelessWidget {
   const LikeButton({required this.post, required this.userId, super.key});
   final Post post;
-  final int userId;
+  final String userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

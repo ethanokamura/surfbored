@@ -8,13 +8,13 @@ import 'package:user_repository/user_repository.dart';
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({required this.userId, super.key});
 
-  static MaterialPage<void> page({required int userId}) {
+  static MaterialPage<void> page({required String userId}) {
     return MaterialPage<void>(
       child: EditProfilePage(userId: userId),
     );
   }
 
-  final int userId;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class EditProfile extends StatelessWidget {
           ),
           const VerticalSpacer(),
           FutureBuilder<List<String>>(
-            future: context.read<ProfileCubit>().fetchUserTags(user.id!),
+            future: context.read<ProfileCubit>().fetchUserTags(user.uuid),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(

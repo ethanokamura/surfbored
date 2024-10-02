@@ -14,36 +14,41 @@ class LoginPage extends StatelessWidget {
       );
   @override
   Widget build(BuildContext context) {
-    print('login page');
-    return CustomPageView(
-      appBar: AppBar(
-        title: const AppBarText(text: AppStrings.signIn),
-      ),
-      body: BlocProvider(
-        create: (context) => AuthCubit(
-          userRepository: context.read<UserRepository>(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: CustomPageView(
+        appBar: AppBar(
+          title: const AppBarText(text: AppStrings.signIn),
         ),
-        child: BlocListener<AuthCubit, AuthState>(
-          listenWhen: (_, current) => current.isFailure,
-          listener: (context, state) {
-            if (state.isFailure) {
-              final message = switch (state.failure) {
-                PhoneNumberSignInFailure() =>
-                  AppStrings.phoneSignInFailureMessage,
-                _ => AppStrings.unknownFailure,
-              };
-              return context.showSnackBar(message);
-            }
-          },
-          child: BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state.needsOtp) {
-                return const OtpPrompt();
+        top: true,
+        body: BlocProvider(
+          create: (context) => AuthCubit(
+            userRepository: context.read<UserRepository>(),
+          ),
+          child: BlocListener<AuthCubit, AuthState>(
+            listenWhen: (_, current) => current.isFailure,
+            listener: (context, state) {
+              if (state.isFailure) {
+                final message = switch (state.failure) {
+                  PhoneNumberSignInFailure() =>
+                    AppStrings.phoneSignInFailureMessage,
+                  _ => AppStrings.unknownFailure,
+                };
+                return context.showSnackBar(message);
               }
-              return const PhonePrompt();
             },
+            child: BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state.needsOtp) {
+                  print('needs otp');
+                  return const Center(child: OtpPrompt());
+                }
+                print('needs phone');
+                return const Center(child: PhonePrompt());
+              },
+            ),
           ),
         ),
       ),

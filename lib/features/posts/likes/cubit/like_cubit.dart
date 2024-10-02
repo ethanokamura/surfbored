@@ -8,7 +8,7 @@ class LikeCubit extends Cubit<LikeState> {
 
   final PostRepository _postRepository;
 
-  Future<void> fetchData(int postId, int userId) async {
+  Future<void> fetchData(int postId, String userId) async {
     final userLikesPost =
         await _postRepository.hasUserLikedPost(postId: postId, userId: userId);
     final likes = await _postRepository.fetchPostLikes(postId: postId);
@@ -16,7 +16,7 @@ class LikeCubit extends Cubit<LikeState> {
   }
 
   Future<void> toggleLike(
-    int userId,
+    String userId,
     int postId, {
     required bool liked,
   }) async {

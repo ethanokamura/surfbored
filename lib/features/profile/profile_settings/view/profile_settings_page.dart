@@ -11,10 +11,10 @@ class ProfileSettingsPage extends StatelessWidget {
     required this.userId,
     super.key,
   });
-  final int userId;
+  final String userId;
   final ProfileCubit profileCubit;
   static MaterialPage<void> page({
-    required int userId,
+    required String userId,
     required ProfileCubit profileCubit,
   }) {
     return MaterialPage<void>(
@@ -59,7 +59,7 @@ class ProfileSettingsPage extends StatelessWidget {
             ),
             ActionButton(
               inverted: false,
-              onTap: context.read<AppCubit>().signOut,
+              onTap: context.read<AppCubit>().logOut,
               text: AppStrings.logOut,
             ),
           ],

@@ -25,7 +25,7 @@ final class ActivityState extends Equatable {
 
   final ActivityStatus status;
   final FriendFailure failure;
-  final List<int> friendRequests;
+  final List<String> friendRequests;
 
   // rebuilds the app when the props change
   @override
@@ -38,7 +38,7 @@ final class ActivityState extends Equatable {
   ActivityState copyWith({
     ActivityStatus? status,
     FriendFailure? failure,
-    List<int>? friendRequests,
+    List<String>? friendRequests,
   }) {
     return ActivityState._(
       status: status ?? this.status,
@@ -64,7 +64,8 @@ extension _ActivityStateExtensions on ActivityState {
   ActivityState fromEmpty() => copyWith(status: ActivityStatus.empty);
   ActivityState fromLoading() => copyWith(status: ActivityStatus.loading);
 
-  ActivityState fromFriendRequestsLoaded(List<int> friendRequests) => copyWith(
+  ActivityState fromFriendRequestsLoaded(List<String> friendRequests) =>
+      copyWith(
         status: ActivityStatus.loaded,
         friendRequests: friendRequests,
       );

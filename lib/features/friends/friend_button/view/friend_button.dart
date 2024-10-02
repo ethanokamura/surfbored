@@ -13,7 +13,7 @@ class FriendButton extends StatelessWidget {
   });
   final FriendControllerState state;
   final bool isCurrent;
-  final int userId;
+  final String userId;
   @override
   Widget build(BuildContext context) {
     final buttonText = _getButtonText(state);

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/posts/shared/post_list/view/user_likes_list.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
@@ -16,13 +17,13 @@ class ProfilePage extends StatefulWidget {
     super.key,
   });
 
-  static MaterialPage<void> page({required int userId}) {
+  static MaterialPage<void> page({required String userId}) {
     return MaterialPage<void>(
       child: ProfilePage(userId: userId),
     );
   }
 
-  final int userId;
+  final String userId;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -58,7 +59,8 @@ class ProfileBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isCurrent = user.id == context.read<UserRepository>().user.id!;
+    final userId = user.uuid;
+    final isCurrent = userId == context.read<UserRepository>().user.uuid;
     final profileCubit = context.read<ProfileCubit>();
     return DefaultTabController(
       length: 3,
@@ -77,7 +79,7 @@ class ProfileBuilder extends StatelessWidget {
                     return BlocProvider.value(
                       value: profileCubit,
                       child: ProfileSettingsPage(
-                        userId: user.id!,
+                        userId: user.uuid,
                         profileCubit: profileCubit,
                       ),
                     );
@@ -85,7 +87,7 @@ class ProfileBuilder extends StatelessWidget {
                 ),
               ),
               onBlock: () => {},
-              // context.read<UserRepository>().toggleBlockUser(user.id!),
+              // context.read<UserRepository>().toggleBlockUser(userId),
               onShare: () {},
             ),
           ],
@@ -109,13 +111,13 @@ class ProfileBuilder extends StatelessWidget {
                           if (user.bio.isNotEmpty) About(bio: user.bio),
                           if (user.bio.isNotEmpty) const VerticalSpacer(),
                           FriendsBlock(
-                            userId: user.id!,
+                            userId: userId,
                             isCurrent: isCurrent,
                           ),
                           FutureBuilder(
                             future: context
                                 .read<ProfileCubit>()
-                                .fetchUserTags(user.id!),
+                                .fetchUserTags(userId),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
                                 return const SizedBox.shrink();
@@ -145,9 +147,9 @@ class ProfileBuilder extends StatelessWidget {
               Flexible(
                 child: TabBarView(
                   children: [
-                    PostsList(type: 'user', docID: user.id!),
-                    UserBoardsList(userId: user.id!),
-                    PostsList(type: 'likes', docID: user.id!),
+                    UserPostList(userId: userId),
+                    UserBoardsList(userId: userId),
+                    // UserLikesList(userId: userId),
                   ],
                 ),
               ),
@@ -185,7 +187,7 @@ class ProfileTopBar extends StatelessWidget {
                     return BlocProvider.value(
                       value: profileCubit,
                       child: ProfileSettingsPage(
-                        userId: user.id!,
+                        userId: user.uuid,
                         profileCubit: profileCubit,
                       ),
                     );
@@ -193,7 +195,7 @@ class ProfileTopBar extends StatelessWidget {
                 ),
               ),
               onBlock: () => {},
-              // context.read<UserRepository>().toggleBlockUser(user.id!),
+              // context.read<UserRepository>().toggleBlockUser(user.uuid),
               onShare: () {},
             ),
             if (Navigator.of(context).canPop())

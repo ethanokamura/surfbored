@@ -22,7 +22,7 @@ class PostView extends StatelessWidget {
   final Post post;
   @override
   Widget build(BuildContext context) {
-    final userId = context.read<UserRepository>().user.id;
+    final userId = context.read<UserRepository>().user.uuid;
     return Flexible(
       child: CustomContainer(
         child: Column(
@@ -72,7 +72,7 @@ class ImageHeader extends StatelessWidget {
     super.key,
   });
   final Post post;
-  final int userId;
+  final String userId;
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
@@ -112,7 +112,7 @@ class Header extends StatelessWidget {
     super.key,
   });
   final Post post;
-  final int userId;
+  final String userId;
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class PostDetails extends StatelessWidget {
 class Footer extends StatelessWidget {
   const Footer({required this.post, required this.userId, super.key});
   final Post post;
-  final int userId;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +190,7 @@ class Footer extends StatelessWidget {
 void _manage(
   BuildContext context,
   int postId,
-  int userId,
+  String userId,
 ) =>
     Navigator.push(
       context,

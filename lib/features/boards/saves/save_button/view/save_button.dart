@@ -7,7 +7,7 @@ import 'package:surfbored/features/boards/saves/cubit/save_cubit.dart';
 class SaveButton extends StatelessWidget {
   const SaveButton({required this.board, required this.userId, super.key});
   final Board board;
-  final int userId;
+  final String userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

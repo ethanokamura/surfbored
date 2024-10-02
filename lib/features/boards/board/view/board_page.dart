@@ -115,12 +115,12 @@ class BoardPageView extends StatelessWidget {
       body: Column(
         children: [
           BoardButtons(
-            isOwner: board.userOwnsBoard(user.id!),
+            isOwner: board.userOwnsBoard(user.uuid),
             user: user,
             board: board,
           ),
           const VerticalSpacer(),
-          Flexible(child: PostsList(type: 'board', docID: board.id)),
+          Flexible(child: BoardPostList(boardId: board.id)),
         ],
       ),
     );
@@ -175,7 +175,7 @@ class BoardButtons extends StatelessWidget {
           Expanded(
             child: SaveButton(
               board: board,
-              userId: user.id!,
+              userId: user.uuid,
             ),
           ),
         const HorizontalSpacer(),

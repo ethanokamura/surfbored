@@ -10,7 +10,7 @@ class FriendsListView extends StatelessWidget {
     required this.onRefresh,
     super.key,
   });
-  final List<int> friends;
+  final List<String> friends;
   final Future<void> Function() onLoadMore;
   final Future<void> Function() onRefresh;
   @override
@@ -32,7 +32,7 @@ class FriendsListView extends StatelessWidget {
           itemCount: friends.length,
           itemBuilder: (context, index) {
             final friend = friends[index];
-            return friend == 0
+            return friend.isEmpty
                 ? const UnknownCard(message: 'User not found')
                 : FriendCard(userId: friend);
           },

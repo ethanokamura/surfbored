@@ -10,13 +10,13 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
 
   final FriendRepository _friendRepository;
 
-  Future<void> fetchFriendCount(int userId) async {
+  Future<void> fetchFriendCount(String userId) async {
     final friends = await _friendRepository.fetchFriendCount(userId: userId);
     emit(state.copyWith(friends: friends));
   }
 
-  Future<void> fetchData(int userId) async {
-    final currentUser = UserRepository().user.id!;
+  Future<void> fetchData(String userId) async {
+    final currentUser = UserRepository().user.uuid;
     emit(state.fromLoading());
     try {
       final areFriends = await _friendRepository.areFriends(
@@ -42,8 +42,8 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
     }
   }
 
-  Future<void> friendStateSelection(int userId) async {
-    final currentUser = UserRepository().user.id!;
+  Future<void> friendStateSelection(String userId) async {
+    final currentUser = UserRepository().user.uuid;
     if (state.isRecieved) {
       await _friendRepository.addFriend(
         otherUserId: userId,

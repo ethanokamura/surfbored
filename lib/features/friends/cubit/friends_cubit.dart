@@ -13,7 +13,7 @@ class FriendsCubit extends Cubit<FriendsState> {
   bool hasMore = true;
   bool remove = true;
 
-  Future<void> fetchFriends(int userId, {bool refresh = false}) async {
+  Future<void> fetchFriends(String userId, {bool refresh = false}) async {
     if (refresh) {
       currentPage = 0;
       hasMore = true;
@@ -42,7 +42,7 @@ class FriendsCubit extends Cubit<FriendsState> {
     }
   }
 
-  Future<void> modifiyFriend(int currentUserId, int userId) async {
+  Future<void> modifiyFriend(String currentUserId, String userId) async {
     if (remove) {
       await _friendRepository.removeFriend(
         currentUserId: currentUserId,

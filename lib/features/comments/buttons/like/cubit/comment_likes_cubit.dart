@@ -10,7 +10,7 @@ class CommentLikesCubit extends Cubit<CommentLikesState> {
   final CommentRepository _commentRepository;
 
   Future<void> fetchCommentData(
-    int userId,
+    String userId,
     int commentId,
   ) async {
     emit(state.fromLoading());
@@ -22,7 +22,7 @@ class CommentLikesCubit extends Cubit<CommentLikesState> {
 
   Future<void> toggleLike({
     required int commentId,
-    required int userId,
+    required String userId,
     required bool liked,
   }) async {
     liked = !liked;

@@ -6,7 +6,7 @@ import 'package:user_repository/user_repository.dart';
 
 class ProfileLink extends StatelessWidget {
   const ProfileLink({required this.id, super.key});
-  final int id;
+  final String id;
 
   Future<String?> _fetchUsername(BuildContext context) async {
     final profile =

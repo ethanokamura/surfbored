@@ -120,7 +120,7 @@ class _CommentContorllerState extends State<CommentContorller> {
             if (textController.text.trim().isNotEmpty) {
               await context.read<CommentsCubit>().createComment(
                     widget.postId,
-                    context.read<UserRepository>().user.id!,
+                    context.read<UserRepository>().user.uuid,
                     textController.text,
                   );
             }

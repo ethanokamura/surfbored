@@ -31,18 +31,6 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> fetchPosts({
-    required String type,
-    required int docId,
-    required bool refresh,
-  }) async {
-    if (type == 'user') {
-      await fetchUserPosts(docId, refresh: refresh);
-    } else if (type == 'board') {
-      await fetchBoardPosts(docId, refresh: refresh);
-    }
-  }
-
   Future<void> fetchAllPosts({bool refresh = false}) async {
     if (refresh) {
       currentPage = 0;
@@ -100,7 +88,7 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> fetchUserPosts(int userId, {bool refresh = false}) async {
+  Future<void> fetchUserPosts(String userId, {bool refresh = false}) async {
     if (refresh) {
       currentPage = 0;
       hasMore = true;
@@ -129,6 +117,38 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  // Future<void> fetchUserLikedPosts(
+  //   String userId, {
+  //   bool refresh = false,
+  // }) async {
+  //   if (refresh) {
+  //     currentPage = 0;
+  //     hasMore = true;
+  //     emit(state.fromEmpty());
+  //   }
+
+  //   if (!hasMore) return;
+
+  //   emit(state.fromLoading());
+  //   try {
+  //     final posts = await _postRepository.fetchUserLikedPosts(
+  //       userId: userId,
+  //       offset: currentPage * pageSize,
+  //       limit: pageSize,
+  //     );
+
+  //     if (posts.isEmpty) {
+  //       hasMore = false; // No more boards to load
+  //       emit(state.fromEmpty());
+  //     } else {
+  //       currentPage++; // Increment the page number
+  //       emit(state.fromPostsLoaded([...state.posts, ...posts]));
+  //     }
+  //   } on PostFailure catch (failure) {
+  //     emit(state.fromFailure(failure));
+  //   }
+  // }
+
   Future<void> shufflePostList(int boardId) async {
     emit(state.fromLoading());
     try {
@@ -152,7 +172,7 @@ class PostCubit extends Cubit<PostState> {
       _tagRepository.fetchPostTags(id: postId);
 
   Future<void> deletePost(
-    int userId,
+    String userId,
     int postId,
     String photoURL,
   ) async {

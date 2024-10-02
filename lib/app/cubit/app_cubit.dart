@@ -7,17 +7,20 @@ class AppCubit extends Cubit<AppState> {
   AppCubit({
     required UserRepository userRepository,
   })  : _userRepository = userRepository,
-        super(
-          userRepository.user.isEmpty
-              ? const AppState.unauthenticated()
-              : userRepository.user.hasUsername
-                  ? AppState.newlyAuthenticated(userRepository.user)
-                  : AppState.needsUsername(userRepository.user),
-        ) {
+        super(_initialState(userRepository.user)) {
     _watchUser();
   }
 
   final UserRepository _userRepository;
+
+  static AppState _initialState(UserData user) {
+    if (user.isEmpty) {
+      return const AppState.unauthenticated();
+    }
+    return user.hasUsername
+        ? AppState.newlyAuthenticated(user)
+        : AppState.needsUsername(user);
+  }
 
   @override
   Future<void> close() async {
@@ -25,7 +28,7 @@ class AppCubit extends Cubit<AppState> {
     return super.close();
   }
 
-  Future<void> signOut() async {
+  Future<void> logOut() async {
     try {
       await _userRepository.signOut();
     } on UserFailure catch (failure) {
@@ -34,17 +37,22 @@ class AppCubit extends Cubit<AppState> {
   }
 
   void confirmedUsername(UserData user) {
-    print('confirmed');
     emit(AppState.newlyAuthenticated(user));
   }
 
   void _onUserChanged(UserData user) {
     if (user.isEmpty) {
       emit(const AppState.unauthenticated());
-    } else if (state.isUnauthenticated) {
-      emit(AppState.newlyAuthenticated(user));
     } else {
-      emit(AppState.authenticated(user));
+      if (state.isUnauthenticated) {
+        emit(
+          user.hasUsername
+              ? AppState.newlyAuthenticated(user)
+              : AppState.needsUsername(user),
+        );
+      } else {
+        emit(AppState.authenticated(user));
+      }
     }
   }
 
@@ -53,12 +61,11 @@ class AppCubit extends Cubit<AppState> {
     emit(AppState.failure(failure: failure, user: currentState.user));
     if (failure.needsReauthentication) {
       emit(const AppState.unauthenticated());
-    } else {
-      emit(currentState);
     }
   }
 
   late final StreamSubscription<UserData> _userSubscription;
+
   void _watchUser() {
     _userSubscription = _userRepository.watchUser
         .handleFailure(_onUserFailed)

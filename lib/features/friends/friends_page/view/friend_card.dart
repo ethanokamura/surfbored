@@ -7,11 +7,11 @@ import 'package:user_repository/user_repository.dart';
 
 class FriendCard extends StatelessWidget {
   const FriendCard({required this.userId, super.key});
-  final int userId;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.read<UserRepository>().user.id!;
+    final currentUser = context.read<UserRepository>().user.uuid;
     return CustomContainer(
       child: Row(
         children: [

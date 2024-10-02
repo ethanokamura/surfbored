@@ -20,14 +20,18 @@ List<Page<dynamic>> onGenerateAppPages(
   List<Page<dynamic>> pages,
 ) {
   if (status.isUnauthenticated) {
+    print('unauth');
     return [LoginPage.page()];
   }
   if (status.isNewlyAuthenticated) {
+    print('new auth');
     return [HomePage.page()];
   }
   if (status.needsUsername) {
+    print('needs');
     return [CreateUserPage.page()];
   }
+  print('failure');
   return pages;
 }
 

@@ -6,7 +6,7 @@ import 'package:user_repository/user_repository.dart';
 
 class UserDetails extends StatelessWidget {
   const UserDetails({required this.id, super.key});
-  final int id;
+  final String id;
 
   Future<UserProfile> _fetchUserDetails(BuildContext context) async =>
       context.read<UserRepository>().readUserProfile(uuid: id);
@@ -22,24 +22,25 @@ class UserDetails extends StatelessWidget {
       ),
       child: Flexible(
         child: FutureBuilder<UserProfile>(
-            future: _fetchUserDetails(context),
-            builder: (context, snapshot) {
-              final profile = snapshot.data;
-              final username = profile?.username ?? 'Unknown User';
-              final photoUrl = profile?.photoUrl;
-              return Row(
-                children: [
-                  SquareImage(
-                    photoUrl: photoUrl,
-                    width: 32,
-                    height: 32,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  const SizedBox(width: 10),
-                  UserText(text: '@$username', bold: false),
-                ],
-              );
-            }),
+          future: _fetchUserDetails(context),
+          builder: (context, snapshot) {
+            final profile = snapshot.data;
+            final username = profile?.username ?? 'Unknown User';
+            final photoUrl = profile?.photoUrl;
+            return Row(
+              children: [
+                SquareImage(
+                  photoUrl: photoUrl,
+                  width: 32,
+                  height: 32,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                const SizedBox(width: 10),
+                UserText(text: '@$username', bold: false),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

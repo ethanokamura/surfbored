@@ -8,7 +8,7 @@ import 'package:tag_repository/tag_repository.dart';
 
 class UserBoardsList extends StatelessWidget {
   const UserBoardsList({required this.userId, super.key});
-  final int userId;
+  final String userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

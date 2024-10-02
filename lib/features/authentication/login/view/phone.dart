@@ -21,36 +21,58 @@ class _PhonePromptState extends State<PhonePrompt> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextFormField(
-          controller: _phoneController,
-          decoration: const InputDecoration(
-            label: Text(AppStrings.phoneNumberPrompt),
+    return CustomContainer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFormField(
+            controller: _phoneController,
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(
+              prefixText: '+1 ',
+              prefixStyle: const TextStyle(fontSize: 18),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: defaultPadding,
+              ),
+              labelStyle: TextStyle(
+                color: Theme.of(context).subtextColor,
+              ),
+              label: const Text(AppStrings.phoneNumberPrompt),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: defaultBorderRadius,
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 4,
+                ),
+              ),
+            ),
           ),
-        ),
-        ActionButton(
-          onTap: () async {
-            try {
-              final phoneNumber = _phoneController.text.trim();
-              if (phoneNumber.length == 10) {
-                await context
-                    .read<AuthCubit>()
-                    .signInWithPhone('+1$phoneNumber');
-              } else {
-                context.showSnackBar(AppStrings.invalidPhoneNumber);
-                _phoneController.clear();
+          const VerticalSpacer(),
+          ActionButton(
+            onSurface: true,
+            onTap: () async {
+              try {
+                final phoneNumber = _phoneController.text.trim();
+                if (phoneNumber.length == 10) {
+                  await context
+                      .read<AuthCubit>()
+                      .signInWithPhone('+1$phoneNumber');
+                } else {
+                  context.showSnackBar(AppStrings.invalidPhoneNumber);
+                  _phoneController.clear();
+                }
+              } catch (e) {
+                // handle error
+                if (mounted) {
+                  // ignore: use_build_context_synchronously
+                  context.showSnackBar('error occured. please retry');
+                }
               }
-            } catch (e) {
-              // handle error
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('error occured. please retry')),
-              );
-            }
-          },
-          text: AppStrings.confirm,
-        ),
-      ],
+            },
+            text: AppStrings.confirm,
+          ),
+        ],
+      ),
     );
   }
 }

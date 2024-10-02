@@ -7,19 +7,17 @@ import 'package:surfbored/features/comments/buttons/like/cubit/comment_likes_cub
 class CommentLikeButton extends StatelessWidget {
   const CommentLikeButton({
     required this.comment,
-    required this.postId,
     required this.userId,
     super.key,
   });
 
   final Comment comment;
-  final int postId;
-  final int userId;
+  final String userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CommentLikesCubit(context.read<CommentRepository>())
-        ..fetchCommentData(postId, comment.id),
+        ..fetchCommentData(userId, comment.id),
       child: BlocBuilder<CommentLikesCubit, CommentLikesState>(
         builder: (context, state) {
           var likes = 0;

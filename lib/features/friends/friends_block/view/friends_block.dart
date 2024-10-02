@@ -12,7 +12,7 @@ class FriendsBlock extends StatelessWidget {
     required this.isCurrent,
     super.key,
   });
-  final int userId;
+  final String userId;
   final bool isCurrent;
   @override
   Widget build(BuildContext context) {

@@ -91,7 +91,7 @@ class EditView extends StatelessWidget {
             // height: 200,
             photoUrl: board.photoUrl,
             collection: 'users',
-            docID: board.creatorId,
+            docID: board.id,
             onFileChanged: (url) {
               boardCubit.editField(board.id, 'photoUrl', url);
             },

@@ -7,8 +7,8 @@ import 'package:surfbored/features/friends/friends_page/view/friends_list_view.d
 
 class FriendsPage extends StatelessWidget {
   const FriendsPage({required this.userId, super.key});
-  final int userId;
-  static MaterialPage<void> page({required int userId}) {
+  final String userId;
+  static MaterialPage<void> page({required String userId}) {
     return MaterialPage<void>(
       child: FriendsPage(userId: userId),
     );
@@ -30,7 +30,7 @@ class FriendsPage extends StatelessWidget {
 
 class FriendsList extends StatelessWidget {
   const FriendsList({required this.userId, super.key});
-  final int userId;
+  final String userId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

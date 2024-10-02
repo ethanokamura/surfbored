@@ -42,7 +42,7 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  Future<void> fetchBoards(int userId, {bool refresh = false}) async {
+  Future<void> fetchBoards(String userId, {bool refresh = false}) async {
     if (refresh) {
       currentPage = 0;
       hasMore = true;
@@ -71,7 +71,7 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  Stream<List<Board>> streamUserBoards(int userId) =>
+  Stream<List<Board>> streamUserBoards(String userId) =>
       _boardRepository.streamUserBoards(userId: userId);
 
   Future<void> updateTags(int boardId, List<String> tags) async {

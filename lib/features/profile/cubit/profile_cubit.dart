@@ -6,7 +6,7 @@ class ProfileCubit extends Cubit<UserData> {
   ProfileCubit({
     required UserRepository userRepository,
     required TagRepository tagRepository,
-    required int userId,
+    required String userId,
   })  : _userRepository = userRepository,
         _tagRepository = tagRepository,
         _userID = userId,
@@ -16,7 +16,7 @@ class ProfileCubit extends Cubit<UserData> {
 
   final UserRepository _userRepository;
   final TagRepository _tagRepository;
-  final int _userID;
+  final String _userID;
 
   @override
   Future<void> close() async {
@@ -29,7 +29,7 @@ class ProfileCubit extends Cubit<UserData> {
   late final StreamSubscription<UserData> _userSubscription;
   void _watchUser() {
     _userSubscription = _userRepository
-        .watchUserByID(uuid: _userID)
+        .watchUserByID(id: _userID)
         .handleFailure()
         .listen(_onUserChanged);
   }
@@ -38,7 +38,7 @@ class ProfileCubit extends Cubit<UserData> {
     return _userSubscription.cancel();
   }
 
-  Future<List<String>> fetchUserTags(int userId) =>
+  Future<List<String>> fetchUserTags(String userId) =>
       _tagRepository.fetchUserTags(id: userId);
 
   Future<void> editField(String field, dynamic data) async =>

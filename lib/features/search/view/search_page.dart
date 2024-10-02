@@ -1,8 +1,5 @@
-import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/posts/posts.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});

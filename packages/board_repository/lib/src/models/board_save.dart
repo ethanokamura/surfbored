@@ -1,7 +1,5 @@
 import 'package:app_core/app_core.dart';
-part 'board_save.g.dart';
 
-@JsonSerializable()
 class BoardSave extends Equatable {
   const BoardSave({
     required this.userId,
@@ -15,7 +13,7 @@ class BoardSave extends Equatable {
 
   factory BoardSave.fromJson(Map<String, dynamic> json) {
     return BoardSave(
-      userId: json[userIdConverter] as int,
+      userId: json[userIdConverter]?.toString() ?? '',
       boardId: json[boardIdConverter] as int,
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
@@ -27,9 +25,9 @@ class BoardSave extends Equatable {
   static String get boardIdConverter => 'board_id';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = BoardSave(userId: 0, boardId: 0);
+  static const empty = BoardSave(userId: '', boardId: 0);
 
-  final int userId;
+  final String userId;
   final int boardId;
   final DateTime? createdAt;
 
@@ -54,7 +52,7 @@ class BoardSave extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    int? userId,
+    String? userId,
     int? boardId,
     DateTime? createdAt,
   }) {
@@ -66,7 +64,7 @@ class BoardSave extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    int? userId,
+    String? userId,
     int? boardId,
     int? title,
     DateTime? createdAt,
@@ -79,7 +77,7 @@ class BoardSave extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    int? userId,
+    String? userId,
     int? boardId,
     int? title,
     DateTime? createdAt,

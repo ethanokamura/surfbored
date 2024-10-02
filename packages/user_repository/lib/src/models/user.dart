@@ -1,12 +1,10 @@
 import 'package:app_core/app_core.dart';
 
-part 'user.g.dart';
-
-@JsonSerializable()
 class UserData extends Equatable {
   // UserData constructor
   const UserData({
     required this.username,
+    required this.uuid,
     this.id,
     this.photoUrl = '',
     this.displayName = '',
@@ -26,6 +24,7 @@ class UserData extends Equatable {
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
       id: json[idConverter] as int,
+      uuid: json[uuidConverter]?.toString() ?? '',
       username: json[usernameConverter]?.toString() ?? '',
       photoUrl: json[photoUrlConverter]?.toString() ?? '',
       displayName: json[displayNameConverter]?.toString() ?? '',
@@ -44,6 +43,7 @@ class UserData extends Equatable {
   }
 
   static String get idConverter => 'id';
+  static String get uuidConverter => 'uuid';
   static String get usernameConverter => 'username';
   static String get photoUrlConverter => 'photo_url';
   static String get displayNameConverter => 'display_name';
@@ -55,10 +55,11 @@ class UserData extends Equatable {
   static String get lastSignInConverter => 'last_sign_in';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = UserData(id: 0, username: '');
+  static const empty = UserData(id: 0, uuid: '', username: '');
 
   final int? id;
   final String username;
+  final String uuid;
   final String? photoUrl;
   final String displayName;
   final String bio;
@@ -72,6 +73,7 @@ class UserData extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        uuid,
         username,
         photoUrl,
         displayName,
@@ -91,6 +93,7 @@ class UserData extends Equatable {
   Map<String, dynamic> toJson() {
     return _generateMap(
       id: id,
+      uuid: uuid,
       username: username,
       photoUrl: photoUrl,
       displayName: displayName,
@@ -106,6 +109,7 @@ class UserData extends Equatable {
 
   static Map<String, dynamic> _generateMap({
     int? id,
+    String? uuid,
     String? username,
     String? photoUrl,
     String? displayName,
@@ -119,6 +123,7 @@ class UserData extends Equatable {
   }) {
     return {
       idConverter: id,
+      if (uuid != null) uuidConverter: uuid,
       if (username != null) usernameConverter: username,
       if (photoUrl != null) photoUrlConverter: photoUrl,
       if (displayName != null) displayNameConverter: displayName,
@@ -135,6 +140,7 @@ class UserData extends Equatable {
 
   static Map<String, dynamic> insert({
     int? id,
+    String? uuid,
     String? username,
     String? photoUrl,
     String? displayName,
@@ -146,6 +152,7 @@ class UserData extends Equatable {
   }) {
     return _generateMap(
       id: id,
+      uuid: uuid,
       username: username,
       photoUrl: photoUrl,
       displayName: displayName,
@@ -160,6 +167,7 @@ class UserData extends Equatable {
 
   static Map<String, dynamic> update({
     int? id,
+    String? uuid,
     String? username,
     String? photoUrl,
     String? displayName,
@@ -171,6 +179,7 @@ class UserData extends Equatable {
   }) {
     return _generateMap(
       id: id,
+      uuid: uuid,
       username: username,
       photoUrl: photoUrl,
       displayName: displayName,

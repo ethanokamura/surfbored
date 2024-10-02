@@ -1,7 +1,5 @@
 import 'package:app_core/app_core.dart';
-part 'comment_like.g.dart';
 
-@JsonSerializable()
 class CommentLike extends Equatable {
   const CommentLike({
     required this.userId,
@@ -15,7 +13,7 @@ class CommentLike extends Equatable {
 
   factory CommentLike.fromJson(Map<String, dynamic> json) {
     return CommentLike(
-      userId: json[userIdConverter] as int,
+      userId: json[userIdConverter]?.toString() ?? '',
       commentId: json[commentIdConverter] as int,
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
@@ -27,9 +25,9 @@ class CommentLike extends Equatable {
   static String get commentIdConverter => 'comment_id';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = CommentLike(userId: 0, commentId: 0);
+  static const empty = CommentLike(userId: '', commentId: 0);
 
-  final int userId;
+  final String userId;
   final int commentId;
   final DateTime? createdAt;
 
@@ -54,7 +52,7 @@ class CommentLike extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    int? userId,
+    String? userId,
     int? commentId,
     DateTime? createdAt,
   }) {
@@ -66,7 +64,7 @@ class CommentLike extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    int? userId,
+    String? userId,
     int? commentId,
     String? title,
     DateTime? createdAt,
@@ -79,7 +77,7 @@ class CommentLike extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    int? userId,
+    String? userId,
     int? commentId,
     String? title,
     DateTime? createdAt,

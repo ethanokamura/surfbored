@@ -1,7 +1,5 @@
 import 'package:app_core/app_core.dart';
-part 'comment.g.dart';
 
-@JsonSerializable()
 class Comment extends Equatable {
   // constructor
   const Comment({
@@ -21,7 +19,7 @@ class Comment extends Equatable {
     return Comment(
       id: json[idConverter] as int,
       postId: json[postIdConverter] as int,
-      senderId: json[senderIdConverter] as int,
+      senderId: json[senderIdConverter]?.toString() ?? '',
       message: json[messageConverter]?.toString() ?? '',
       edited: json[editedConverter] as bool? ?? false,
       createdAt: json[createdAtConverter] != null
@@ -40,14 +38,14 @@ class Comment extends Equatable {
   // data fields
   final int id;
   final int postId;
-  final int senderId;
+  final String senderId;
   final String message;
   final bool edited;
   final DateTime? createdAt;
 
   static const empty = Comment(
     postId: 0,
-    senderId: 0,
+    senderId: '',
     message: '',
   );
 
@@ -79,7 +77,7 @@ class Comment extends Equatable {
   static Map<String, dynamic> _generateMap({
     int? id,
     int? postId,
-    int? senderId,
+    String? senderId,
     String? message,
     bool? edited,
     DateTime? createdAt,
@@ -96,7 +94,7 @@ class Comment extends Equatable {
   static Map<String, dynamic> insert({
     int? id,
     int? postId,
-    int? senderId,
+    String? senderId,
     String? message,
     bool? edited,
     DateTime? createdAt,
@@ -114,7 +112,7 @@ class Comment extends Equatable {
   static Map<String, dynamic> update({
     int? id,
     int? postId,
-    int? senderId,
+    String? senderId,
     String? message,
     bool? edited,
     DateTime? createdAt,

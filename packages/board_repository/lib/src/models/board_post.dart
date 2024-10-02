@@ -1,7 +1,5 @@
 import 'package:app_core/app_core.dart';
-part 'board_post.g.dart';
 
-@JsonSerializable()
 class BoardPost extends Equatable {
   const BoardPost({
     required this.postId,

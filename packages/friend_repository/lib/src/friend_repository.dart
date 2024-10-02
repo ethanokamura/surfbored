@@ -13,8 +13,8 @@ class FriendRepository {
 
 extension Create on FriendRepository {
   Future<void> sendFriendRequest({
-    required int senderId,
-    required int recipientId,
+    required String senderId,
+    required String recipientId,
   }) async {
     try {
       final data = FriendRequest.insert(
@@ -28,8 +28,8 @@ extension Create on FriendRepository {
   }
 
   Future<void> addFriend({
-    required int currentUserId,
-    required int otherUserId,
+    required String currentUserId,
+    required String otherUserId,
   }) async {
     try {
       final data = Friend.insert(
@@ -49,7 +49,7 @@ extension Create on FriendRepository {
 
 extension Read on FriendRepository {
   Future<int> fetchFriendCount({
-    required int userId,
+    required String userId,
   }) async {
     try {
       final friends = await _supabase
@@ -65,8 +65,8 @@ extension Read on FriendRepository {
   }
 
   Future<bool> areFriends({
-    required int userAId,
-    required int userBId,
+    required String userAId,
+    required String userBId,
   }) async {
     try {
       final friendship = await _supabase.fromFriendsTable().select().match({
@@ -81,8 +81,8 @@ extension Read on FriendRepository {
   }
 
   Future<bool?> isRecipient({
-    required int userId,
-    required int currentUserId,
+    required String userId,
+    required String currentUserId,
   }) async {
     try {
       final request = await _supabase
@@ -101,8 +101,8 @@ extension Read on FriendRepository {
     }
   }
 
-  Future<List<int>> fetchFriends({
-    required int userId,
+  Future<List<String>> fetchFriends({
+    required String userId,
     required int limit,
     required int offset,
   }) async {
@@ -123,8 +123,8 @@ extension Read on FriendRepository {
     }
   }
 
-  Future<List<int>> fetchPendingRequests({
-    required int userId,
+  Future<List<String>> fetchPendingRequests({
+    required String userId,
     required int limit,
     required int offset,
   }) async {
@@ -132,7 +132,8 @@ extension Read on FriendRepository {
       final friendRequests = await _supabase
           .fromFriendRequestsTable()
           .select(
-              '${FriendRequest.senderIdConverter}, ${FriendRequest.recipientIdConverter}')
+            '${FriendRequest.senderIdConverter}, ${FriendRequest.recipientIdConverter}',
+          )
           .eq(FriendRequest.recipientIdConverter, userId)
           .range(offset, offset + limit - 1)
           .withConverter(FriendRequest.converter);
@@ -149,30 +150,32 @@ extension Update on FriendRepository {}
 
 extension Delete on FriendRepository {
   Future<void> removeFriendRequest({
-    required int currentUserId,
-    required int otherUserId,
+    required String currentUserId,
+    required String otherUserId,
   }) async {
     try {
       await _supabase.fromFriendRequestsTable().delete().match({
         FriendRequest.senderIdConverter: currentUserId,
         FriendRequest.recipientIdConverter: otherUserId,
       }).or(
-          '${FriendRequest.recipientIdConverter}.eq.${currentUserId}.and.${FriendRequest.senderIdConverter}.eq.$otherUserId');
+        '${FriendRequest.recipientIdConverter}.eq.$currentUserId.and.${FriendRequest.senderIdConverter}.eq.$otherUserId',
+      );
     } catch (e) {
       throw FriendFailure.fromDeleteFriend();
     }
   }
 
   Future<void> removeFriend({
-    required int currentUserId,
-    required int otherUserId,
+    required String currentUserId,
+    required String otherUserId,
   }) async {
     try {
       await _supabase.fromFriendsTable().delete().match({
         Friend.userAIdConverter: currentUserId,
         Friend.userBIdConverter: otherUserId,
       }).or(
-          '${Friend.userBIdConverter}.eq.${currentUserId}.and.${Friend.userAIdConverter}.eq.$otherUserId');
+        '${Friend.userBIdConverter}.eq.$currentUserId.and.${Friend.userAIdConverter}.eq.$otherUserId',
+      );
     } catch (e) {
       throw FriendFailure.fromDeleteFriend();
     }

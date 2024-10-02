@@ -14,25 +14,21 @@ class UserRepository {
   final SupabaseClient _supabase;
   late final ValueStream<UserData> _user;
 
-  /// Current user as a stream.
   Stream<UserData> get watchUser => _user.asBroadcastStream();
-
-  /// Get the current user's data synchronously.
   UserData get user => _user.valueOrNull ?? UserData.empty;
 
   /// Gets the initial [watchUser] emission.
+  /// Returns [UserData.empty] when an error occurs.
   Future<UserData> getOpeningUser() {
     return watchUser.first.catchError((Object _) => UserData.empty);
   }
 
   /// Gets a generic [watchUser] emission.
-  Stream<UserData> watchUserByID({
-    required int uuid,
-  }) {
+  Stream<UserData> watchUserByID({required String id}) {
     return _supabase
         .fromUsersTable()
-        .stream(primaryKey: [UserData.idConverter])
-        .eq(UserData.idConverter, uuid)
+        .stream(primaryKey: [UserData.uuidConverter])
+        .eq(UserData.uuidConverter, id)
         .map((event) {
           if (event.isNotEmpty) {
             return UserData.fromJson(event.first);
@@ -41,36 +37,24 @@ class UserRepository {
         });
   }
 
-  /// Watch for auth state changes and emit user data.
   ValueStream<UserData> authUserChanges() {
-    final controller = BehaviorSubject<UserData>();
-
-    _supabase.auth.onAuthStateChange.listen((event) async {
-      final session = event.session;
-
-      // logged out
-      if (session?.user == null) {
-        controller.add(UserData.empty);
-        return;
-      }
-
-      await _ensureUserExists(user: session!.user);
-
-      // get user
-      final response = await _supabase
-          .fromUsersTable()
-          .select()
-          .eq(UserData.idConverter, session.user.id)
-          .single()
-          .withConverter(UserData.converterSingle);
-
-      // Yield the user data
-      controller.add(response);
-    }).onError((error) {
-      controller.addError(UserFailure.fromAuthUserChanges());
-    });
-
-    return controller.stream.logOnEach('USER').shareValue();
+    return _supabase.auth.onAuthStateChange
+        .switchMap<UserData>((auth) async* {
+          if (auth.session?.user == null) {
+            yield UserData.empty;
+          } else {
+            try {
+              final userData =
+                  await readUserDataWithUUID(uuid: auth.session!.user.id);
+              yield userData;
+            } catch (e) {
+              yield UserData.empty; // Handle error and emit empty user
+            }
+          }
+        })
+        .handleError((Object _) => throw UserFailure.fromAuthUserChanges())
+        .logOnEach('USER')
+        .shareValue();
   }
 }
 
@@ -79,7 +63,11 @@ extension Auth on UserRepository {
   Future<void> sendOTP({
     required String phoneNumber,
   }) async {
-    await _supabase.auth.signInWithOtp(phone: phoneNumber);
+    try {
+      await _supabase.auth.signInWithOtp(phone: phoneNumber);
+    } catch (e) {
+      throw Exception('failure to send otp: $e');
+    }
   }
 
   // verify OTP
@@ -94,33 +82,12 @@ extension Auth on UserRepository {
         token: otp,
       );
 
-      if (response.user != null) {
-        await _ensureUserExists(user: response.user!);
-      } else {
+      if (response.user == null) {
         throw UserFailure.fromPhoneNumberSignIn();
       }
       await _updateUserData(supabaseUser: response.user);
     } on AuthException {
       throw UserFailure.fromPhoneNumberSignIn();
-    }
-  }
-
-  // Ensure user exists in the database
-  Future<void> _ensureUserExists({
-    required User user,
-  }) async {
-    // Check if the user exists in the 'users' table
-    final existingUser = await _supabase
-        .fromUsersTable()
-        .select()
-        .eq(UserData.idConverter, user.id)
-        .maybeSingle();
-
-    // If user does not exist, insert them
-    if (existingUser == null) {
-      final userData = UserData.insert();
-      await submitPhoneNumber(phoneNumber: _supabase.auth.currentUser!.phone!);
-      await _supabase.fromUsersTable().insert(userData);
     }
   }
 
@@ -135,16 +102,6 @@ extension Auth on UserRepository {
 }
 
 extension Username on UserRepository {
-  Future<bool> userHasUsername() async {
-    if (user.id == null) return false;
-    final res = await _supabase
-        .fromUsersTable()
-        .select(UserData.usernameConverter)
-        .eq(UserData.idConverter, user.id!)
-        .maybeSingle();
-    return res != null;
-  }
-
   // Check if username is unique
   Future<bool> isUsernameUnique({
     required String username,
@@ -169,9 +126,11 @@ extension Username on UserRepository {
           user.id!,
         );
       } else {
-        await _supabase
-            .fromUsersTable()
-            .insert({UserData.usernameConverter: username});
+        final data = UserData.insert(
+          username: username,
+          uuid: _supabase.auth.currentUser!.id,
+        );
+        await _supabase.fromUsersTable().insert(data);
       }
     } catch (e) {
       throw UserFailure.fromUpdateUser();
@@ -186,7 +145,7 @@ extension Create on UserRepository {
     final res = await _supabase
         .fromUsersTable()
         .update({UserData.usernameConverter: username})
-        .eq(UserData.idConverter, _supabase.auth.currentUser!.id)
+        .eq(UserData.uuidConverter, _supabase.auth.currentUser!.id)
         .select()
         .single()
         .withConverter(UserData.converterSingle);
@@ -197,12 +156,28 @@ extension Create on UserRepository {
 extension Read on UserRepository {
   // gets the user data by ID
   Future<UserData> readUserData({
-    required int uuid,
+    required int id,
   }) async {
     final res = await _supabase
         .fromUsersTable()
         .select()
-        .eq(UserData.idConverter, uuid)
+        .eq(UserData.idConverter, id)
+        .maybeSingle()
+        .withConverter(
+          (data) =>
+              data == null ? UserData.empty : UserData.converterSingle(data),
+        );
+    return res;
+  }
+
+  // gets the user data by ID
+  Future<UserData> readUserDataWithUUID({
+    required String uuid,
+  }) async {
+    final res = await _supabase
+        .fromUsersTable()
+        .select()
+        .eq(UserData.uuidConverter, uuid)
         .maybeSingle()
         .withConverter(
           (data) =>
@@ -212,12 +187,12 @@ extension Read on UserRepository {
   }
 
   Future<UserProfile> readUserProfile({
-    required int uuid,
+    required String uuid,
   }) async {
     final res = await _supabase
         .fromUsersTable()
         .select('username, photo_url')
-        .eq(UserData.idConverter, uuid)
+        .eq(UserData.uuidConverter, uuid)
         .maybeSingle()
         .withConverter(
           (data) => data == null
@@ -237,7 +212,7 @@ extension Update on UserRepository {
       if (supabaseUser == null) return;
       await _supabase.fromUsersTable().upsert({
         UserData.lastSignInConverter: DateTime.now().toUtc(),
-      }).eq(UserData.idConverter, supabaseUser.id);
+      }).eq(UserData.uuidConverter, supabaseUser.id);
     } catch (e) {
       throw UserFailure.fromUpdateUser();
     }

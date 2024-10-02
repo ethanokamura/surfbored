@@ -54,7 +54,7 @@ extension Read on CommentRepository {
   }
 
   Future<bool> hasUserLikedComment({
-    required int userId,
+    required String userId,
   }) async {
     try {
       final res = await _supabase

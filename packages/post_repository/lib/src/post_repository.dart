@@ -58,7 +58,7 @@ extension Read on PostRepository {
 
   Future<bool> hasUserLikedPost({
     required int postId,
-    required int userId,
+    required String userId,
   }) async {
     try {
       final res = await _supabase.fromPostLikesTable().select().match({
@@ -88,7 +88,7 @@ extension Read on PostRepository {
   }
 
   Future<List<Post>> fetchUserPosts({
-    required int userId,
+    required String userId,
     required int limit,
     required int offset,
   }) async {
@@ -104,6 +104,26 @@ extension Read on PostRepository {
       throw PostFailure.fromGetPost();
     }
   }
+
+  // Future<List<Post>> fetchUserLikedPosts({
+  //   required String userId,
+  //   required int limit,
+  //   required int offset,
+  // }) async {
+  //   try {
+  //     final res = await _supabase
+  //         .fromPostLikesTable()
+  //         .select()
+  //         .eq(PostLike.userIdConverter, userId)
+  //         .range(offset, offset + limit - 1);
+  //     final posts = res
+  //         .map((post) async => fetchPost(postId: post['post_id'] as int))
+  //         .toList();
+  //     Post.converter(posts);
+  //   } catch (e) {
+  //     throw PostFailure.fromGetPost();
+  //   }
+  // }
 
   Future<List<Post>> fetchBoardPosts({
     required int boardId,
@@ -141,7 +161,7 @@ extension Read on PostRepository {
 
 extension StreamData on PostRepository {
   Stream<List<Post>> streamUserPosts({
-    required int userId,
+    required String userId,
     required DateTime? lastMarkedTime,
   }) {
     return _supabase
@@ -194,7 +214,7 @@ extension Delete on PostRepository {
 
   Future<void> removeLike({
     required int postId,
-    required int userId,
+    required String userId,
   }) async {
     try {
       await _supabase.fromPostLikesTable().delete().match({
@@ -203,27 +223,6 @@ extension Delete on PostRepository {
       });
     } catch (e) {
       throw PostFailure.fromDeletePost();
-    }
-  }
-}
-
-extension Private on PostRepository {
-  Future<List<Post>> _fetchPosts({
-    required String type,
-    required int uuid,
-    required int limit,
-    required int offset,
-  }) async {
-    try {
-      final res = await _supabase
-          .from('${type}_posts')
-          .select()
-          .eq('${type}_id', uuid)
-          .range(offset, offset + limit - 1)
-          .withConverter(Post.converter);
-      return res;
-    } catch (e) {
-      throw PostFailure.fromGetPost();
     }
   }
 }

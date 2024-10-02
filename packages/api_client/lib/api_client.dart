@@ -12,5 +12,4 @@ export 'package:http/http.dart';
 export 'package:supabase_flutter/supabase_flutter.dart';
 
 // api files
-export 'src/encrypt.dart';
 export 'src/supabase_extensions.dart';

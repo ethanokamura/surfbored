@@ -80,7 +80,7 @@ extension Read on BoardRepository {
 
   Future<bool> hasUserSavedBoard({
     required int boardId,
-    required int userId,
+    required String userId,
   }) async {
     try {
       final res = await _supabase.fromBoardSavesTable().select().match({
@@ -94,7 +94,7 @@ extension Read on BoardRepository {
   }
 
   Future<List<Board>> fetchUserBoards({
-    required int userId,
+    required String userId,
     required int limit,
     required int offset,
   }) async {
@@ -112,7 +112,7 @@ extension Read on BoardRepository {
   }
 
   Future<List<Board>> fetchUserSavedBoards({
-    required int userId,
+    required String userId,
     required int limit,
     required int offset,
   }) async {
@@ -147,7 +147,7 @@ extension Read on BoardRepository {
 
 extension StreamData on BoardRepository {
   Stream<List<Board>> streamUserBoards({
-    required int userId,
+    required String userId,
   }) {
     return _supabase
         .fromBoardsTable()
@@ -202,7 +202,7 @@ extension Delete on BoardRepository {
 
   Future<void> removeSave({
     required int boardId,
-    required int userId,
+    required String userId,
   }) async {
     try {
       await _supabase.fromBoardSavesTable().delete().match({

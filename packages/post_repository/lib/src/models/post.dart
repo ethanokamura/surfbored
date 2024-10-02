@@ -1,7 +1,5 @@
 import 'package:app_core/app_core.dart';
-part 'post.g.dart';
 
-@JsonSerializable()
 class Post extends Equatable {
   const Post({
     required this.creatorId,
@@ -21,7 +19,7 @@ class Post extends Equatable {
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json[idConverter] as int,
-      creatorId: json[creatorIdConverter] as int,
+      creatorId: json[creatorIdConverter]?.toString() ?? '',
       title: json[titleConverter]?.toString() ?? '',
       description: json[descriptionConverter]?.toString() ?? '',
       websiteUrl: json[websiteUrlConverter]?.toString() ?? '',
@@ -42,10 +40,10 @@ class Post extends Equatable {
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
 
-  static const empty = Post(creatorId: 0, title: '');
+  static const empty = Post(creatorId: '', title: '');
 
   final int? id;
-  final int creatorId;
+  final String creatorId;
   final String title;
   final String description;
   final String? photoUrl;
@@ -85,7 +83,7 @@ class Post extends Equatable {
 
   static Map<String, dynamic> _generateMap({
     int? id,
-    int? creatorId,
+    String? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -107,7 +105,7 @@ class Post extends Equatable {
 
   static Map<String, dynamic> insert({
     int? id,
-    int? creatorId,
+    String? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -129,7 +127,7 @@ class Post extends Equatable {
 
   static Map<String, dynamic> update({
     int? id,
-    int? creatorId,
+    String? creatorId,
     String? title,
     String? description,
     String? photoUrl,

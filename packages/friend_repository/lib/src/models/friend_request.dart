@@ -1,8 +1,5 @@
 import 'package:app_core/app_core.dart';
 
-part 'friend_request.g.dart';
-
-@JsonSerializable()
 class FriendRequest extends Equatable {
   // FriendRequest data constructor
   const FriendRequest({
@@ -19,8 +16,8 @@ class FriendRequest extends Equatable {
   // this tells the json serializable what to do
   factory FriendRequest.fromJson(Map<String, dynamic> json) {
     return FriendRequest(
-      senderId: json[senderIdConverter] as int,
-      recipientId: json[recipientIdConverter] as int,
+      senderId: json[senderIdConverter]?.toString() ?? '',
+      recipientId: json[recipientIdConverter]?.toString() ?? '',
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
@@ -28,8 +25,8 @@ class FriendRequest extends Equatable {
   }
 
   // data fields
-  final int senderId;
-  final int recipientId;
+  final String senderId;
+  final String recipientId;
   final DateTime? createdAt;
 
   static String get senderIdConverter => 'sender_id';
@@ -41,8 +38,8 @@ class FriendRequest extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    int? senderId,
-    int? recipientId,
+    String? senderId,
+    String? recipientId,
     DateTime? createdAt,
   }) {
     return {
@@ -53,8 +50,8 @@ class FriendRequest extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    int? senderId,
-    int? recipientId,
+    String? senderId,
+    String? recipientId,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -65,8 +62,8 @@ class FriendRequest extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    int? senderId,
-    int? recipientId,
+    String? senderId,
+    String? recipientId,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -76,7 +73,7 @@ class FriendRequest extends Equatable {
     );
   }
 
-  static const empty = FriendRequest(senderId: 0, recipientId: 0);
+  static const empty = FriendRequest(senderId: '', recipientId: '');
 
   @override
   List<Object?> get props => [

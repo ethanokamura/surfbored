@@ -1,8 +1,5 @@
 import 'package:app_core/app_core.dart';
 
-part 'friend.g.dart';
-
-@JsonSerializable()
 class Friend extends Equatable {
   // Friend data constructor
   const Friend({
@@ -19,8 +16,8 @@ class Friend extends Equatable {
   // this tells the json serializable what to do
   factory Friend.fromJson(Map<String, dynamic> json) {
     return Friend(
-      userA: json[userAIdConverter] as int,
-      userB: json[userBIdConverter] as int,
+      userA: json[userAIdConverter]?.toString() ?? '',
+      userB: json[userBIdConverter]?.toString() ?? '',
       createdAt: json[createdAtConverter] != null
           ? DateTime.tryParse(json[createdAtConverter].toString())
           : DateTime.now().toUtc(),
@@ -28,8 +25,8 @@ class Friend extends Equatable {
   }
 
   // data fields
-  final int userA;
-  final int userB;
+  final String userA;
+  final String userB;
   final DateTime? createdAt;
 
   static String get userAIdConverter => 'user_a_id';
@@ -41,8 +38,8 @@ class Friend extends Equatable {
   }
 
   static Map<String, dynamic> _generateMap({
-    int? userA,
-    int? userB,
+    String? userA,
+    String? userB,
     DateTime? createdAt,
   }) {
     return {
@@ -53,8 +50,8 @@ class Friend extends Equatable {
   }
 
   static Map<String, dynamic> insert({
-    int? userA,
-    int? userB,
+    String? userA,
+    String? userB,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -65,8 +62,8 @@ class Friend extends Equatable {
   }
 
   static Map<String, dynamic> update({
-    int? userA,
-    int? userB,
+    String? userA,
+    String? userB,
     DateTime? createdAt,
   }) {
     return _generateMap(
@@ -76,7 +73,7 @@ class Friend extends Equatable {
     );
   }
 
-  static const empty = Friend(userA: 0, userB: 0);
+  static const empty = Friend(userA: '', userB: '');
 
   @override
   List<Object?> get props => [

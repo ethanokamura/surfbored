@@ -1,7 +1,5 @@
 import 'package:app_core/app_core.dart';
-part 'board.g.dart';
 
-@JsonSerializable()
 class Board extends Equatable {
   // constructor
   const Board({
@@ -21,7 +19,7 @@ class Board extends Equatable {
   factory Board.fromJson(Map<String, dynamic> json) {
     return Board(
       id: json[idConverter] as int,
-      creatorId: json[creatorIdConverter] as int,
+      creatorId: json[creatorIdConverter]?.toString() ?? '',
       title: json[titleConverter]?.toString() ?? '',
       description: json[descriptionConverter]?.toString() ?? '',
       photoUrl: json[photoUrlConverter]?.toString() ?? '',
@@ -41,12 +39,12 @@ class Board extends Equatable {
   static String get createdAtConverter => 'created_at';
 
   static const empty = Board(
-    creatorId: 0,
+    creatorId: '',
     title: '',
   );
 
   final int id;
-  final int creatorId;
+  final String creatorId;
   final String title;
   final String description;
   final String? photoUrl;
@@ -83,7 +81,7 @@ class Board extends Equatable {
 
   static Map<String, dynamic> _generateMap({
     int? id,
-    int? creatorId,
+    String? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -103,7 +101,7 @@ class Board extends Equatable {
 
   static Map<String, dynamic> insert({
     int? id,
-    int? creatorId,
+    String? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -123,7 +121,7 @@ class Board extends Equatable {
 
   static Map<String, dynamic> update({
     int? id,
-    int? creatorId,
+    String? creatorId,
     String? title,
     String? description,
     String? photoUrl,
@@ -144,5 +142,5 @@ class Board extends Equatable {
 
 extension BoardExtensions on Board {
   bool get isEmpty => this == Board.empty;
-  bool userOwnsBoard(int userId) => creatorId == userId;
+  bool userOwnsBoard(String userId) => creatorId == userId;
 }

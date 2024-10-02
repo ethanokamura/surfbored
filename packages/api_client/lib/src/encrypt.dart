@@ -15,7 +15,9 @@ Future<void> submitPhoneNumber({required String phoneNumber}) async {
     }
 
     final data = jsonDecode(response.body);
+    // ignore: avoid_dynamic_calls
     if (data['error'] != null) {
+      // ignore: avoid_dynamic_calls
       throw Exception(data['error']);
     }
   } catch (e) {

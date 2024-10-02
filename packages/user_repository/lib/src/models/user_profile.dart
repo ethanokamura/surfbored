@@ -1,8 +1,5 @@
 import 'package:app_core/app_core.dart';
 
-part 'user_profile.g.dart';
-
-@JsonSerializable()
 class UserProfile extends Equatable {
   const UserProfile({
     required this.username,

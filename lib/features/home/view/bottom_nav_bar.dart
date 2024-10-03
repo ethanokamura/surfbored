@@ -1,11 +1,13 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:surfbored/features/create/create.dart';
 
-enum NavBarItem { home, search, profile }
+enum NavBarItem { home, create, profile }
 
 extension NavBarItemExtensions on NavBarItem {
   bool get isHome => this == NavBarItem.home;
+  bool get isCreate => this == NavBarItem.create;
 }
 
 final class NavBarController extends PageController {
@@ -41,7 +43,13 @@ class BottomNavBar extends StatelessWidget {
     final navBarController = context.watch<NavBarController>();
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      onTap: (index) => navBarController.item = NavBarItem.values[index],
+      onTap: (index) async {
+        if (NavBarItem.values[index].isCreate) {
+          await showCreateModal(context);
+        } else {
+          navBarController.item = NavBarItem.values[index];
+        }
+      },
       currentIndex: context
           .select((NavBarController controller) => controller.item.index),
       selectedItemColor: Theme.of(context).accentColor,
@@ -54,8 +62,8 @@ class BottomNavBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(AppIcons.search, size: 20),
-          label: 'Search',
+          icon: Icon(AppIcons.create, size: 20),
+          label: 'Create',
         ),
         BottomNavigationBarItem(
           icon: Icon(AppIcons.user, size: 20),
@@ -63,5 +71,51 @@ class BottomNavBar extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future<void> showCreateModal(BuildContext currentContext) async {
+    String? choice;
+    await showBottomModal(
+      currentContext,
+      <Widget>[
+        const TitleText(
+          text: AppStrings.createSomething,
+          fontSize: 24,
+          // textAlign: TextAlign.center,
+        ),
+        const VerticalSpacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ActionSelectButton(
+              icon: AppIcons.posts,
+              label: AppStrings.activity,
+              onTap: () {
+                choice = 'Post';
+                Navigator.pop(currentContext);
+              },
+            ),
+            const SizedBox(width: 40),
+            ActionSelectButton(
+              icon: AppIcons.boards,
+              label: AppStrings.board,
+              onTap: () {
+                choice = 'Board';
+                Navigator.pop(currentContext);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+    if (choice == null) return;
+    if (currentContext.mounted) {
+      await Navigator.push(
+        currentContext,
+        MaterialPageRoute<Page<dynamic>>(
+          builder: (context) => CreatePage(type: choice!),
+        ),
+      );
+    }
   }
 }

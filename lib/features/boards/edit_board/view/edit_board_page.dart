@@ -90,10 +90,10 @@ class EditView extends StatelessWidget {
             width: 200,
             // height: 200,
             photoUrl: board.photoUrl,
-            collection: 'users',
+            collection: 'boards',
             docID: board.id,
             onFileChanged: (url) {
-              boardCubit.editField(board.id, 'photoUrl', url);
+              boardCubit.editField(board.id, 'photo_url', url);
             },
           ),
           const VerticalSpacer(),

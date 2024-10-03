@@ -78,10 +78,10 @@ class EditView extends StatelessWidget {
             width: 200,
             // height: 200,
             photoUrl: post.photoUrl,
-            collection: 'users',
+            collection: 'posts',
             docID: post.id!,
             onFileChanged: (url) =>
-                postCubit.editField(post.id!, 'photoURL', url),
+                postCubit.editField(post.id!, 'photo_url', url),
           ),
           const VerticalSpacer(),
           EditField(

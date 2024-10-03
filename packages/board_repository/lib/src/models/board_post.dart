@@ -16,7 +16,7 @@ class BoardPost extends Equatable {
       postId: json[postIdConverter] as int,
       boardId: json[boardIdConverter] as int,
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

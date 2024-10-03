@@ -23,7 +23,7 @@ class Comment extends Equatable {
       message: json[messageConverter]?.toString() ?? '',
       edited: json[editedConverter] as bool? ?? false,
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

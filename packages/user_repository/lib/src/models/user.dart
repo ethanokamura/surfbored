@@ -34,10 +34,10 @@ class UserData extends Equatable {
       isPublic: json[isPublicConverter] as bool? ?? true,
       isSupporter: json[isSupporterConverter] as bool? ?? false,
       lastSignIn: json[lastSignInConverter] != null
-          ? DateTime.tryParse(json[lastSignInConverter].toString())
-          : DateTime.now().toUtc(),
+          ? DateTime.tryParse(json[lastSignInConverter].toString())?.toUtc()
+          : DateTime.now().toUtc(), // Ensuring fallback to UTC
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

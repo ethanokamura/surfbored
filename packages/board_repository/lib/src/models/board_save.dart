@@ -16,7 +16,7 @@ class BoardSave extends Equatable {
       userId: json[userIdConverter]?.toString() ?? '',
       boardId: json[boardIdConverter] as int,
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

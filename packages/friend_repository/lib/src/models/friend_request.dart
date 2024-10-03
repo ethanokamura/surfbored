@@ -19,7 +19,7 @@ class FriendRequest extends Equatable {
       senderId: json[senderIdConverter]?.toString() ?? '',
       recipientId: json[recipientIdConverter]?.toString() ?? '',
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

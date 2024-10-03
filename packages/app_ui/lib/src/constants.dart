@@ -133,16 +133,16 @@ class AppStrings {
   // posts
   static const String editPost = 'Edit Post';
   static const String postError = 'Error loading post';
-  static const String emptyPost = 'No Post found';
-  static const String emptyPosts = 'No Posts found';
-  static const String deletePost = 'Delete Post';
+  static const String emptyPost = 'No post found';
+  static const String emptyPosts = 'No posts found';
+  static const String deletePost = 'Delete post';
   static const String createPost = 'Create a post!';
   static const String createdPost = 'Post was created!';
   static const String updatedPost = 'Post was updated successfully!';
   static const String changedPost = 'Post was changed. Reloading!';
   static const String changedPosts = 'Posts were changed. Reloading!';
   static const String deletedPost = 'Post was deleted.';
-  static const String addOrRemove = 'Add Or Remove';
+  static const String addOrRemove = 'Add or remove';
 
   // comments
   static const String editComment = 'Edit Comment';

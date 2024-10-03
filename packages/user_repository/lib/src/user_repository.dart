@@ -86,8 +86,11 @@ extension Auth on UserRepository {
         throw UserFailure.fromPhoneNumberSignIn();
       }
       await _updateUserData(supabaseUser: response.user);
-    } on AuthException {
+    } on AuthException catch (e) {
+      print('failure to authenticate $e');
       throw UserFailure.fromPhoneNumberSignIn();
+    } catch (e) {
+      print('unknown failure $e');
     }
   }
 
@@ -211,9 +214,11 @@ extension Update on UserRepository {
     try {
       if (supabaseUser == null) return;
       await _supabase.fromUsersTable().upsert({
-        UserData.lastSignInConverter: DateTime.now().toUtc(),
+        UserData.uuidConverter: supabaseUser.id,
+        UserData.lastSignInConverter: DateTime.now().toUtc().toIso8601String(),
       }).eq(UserData.uuidConverter, supabaseUser.id);
     } catch (e) {
+      print('failure to update user: $e');
       throw UserFailure.fromUpdateUser();
     }
   }

@@ -16,7 +16,7 @@ class PostLike extends Equatable {
       userId: json[userIdConverter]?.toString() ?? '',
       postId: json[postIdConverter] as int,
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

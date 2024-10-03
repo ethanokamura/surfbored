@@ -25,7 +25,7 @@ class Board extends Equatable {
       photoUrl: json[photoUrlConverter]?.toString() ?? '',
       isPublic: json[isPublicConverter] as bool? ?? true,
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

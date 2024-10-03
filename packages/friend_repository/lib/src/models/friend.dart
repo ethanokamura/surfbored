@@ -19,7 +19,7 @@ class Friend extends Equatable {
       userA: json[userAIdConverter]?.toString() ?? '',
       userB: json[userBIdConverter]?.toString() ?? '',
       createdAt: json[createdAtConverter] != null
-          ? DateTime.tryParse(json[createdAtConverter].toString())
+          ? DateTime.tryParse(json[createdAtConverter].toString())?.toUtc()
           : DateTime.now().toUtc(),
     );
   }

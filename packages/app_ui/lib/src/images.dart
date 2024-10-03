@@ -627,7 +627,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
       // return new fileURL
       widget.onFileChanged(uploadUrl);
     } catch (e) {
-      print('failed to upload image $e');
       if (mounted) {
         setState(() {
           isLoading = false;

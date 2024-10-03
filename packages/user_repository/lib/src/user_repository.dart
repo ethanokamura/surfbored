@@ -247,11 +247,9 @@ extension Update on UserRepository {
             .fromUsersTable()
             .update({field: data}).eq(UserData.idConverter, user.id!);
       } else {
-        print('failed to update user because user does not exist.');
         throw UserFailure.fromUpdateUser();
       }
     } catch (e) {
-      print('failed to update user $e');
       throw UserFailure.fromUpdateUser();
     }
   }

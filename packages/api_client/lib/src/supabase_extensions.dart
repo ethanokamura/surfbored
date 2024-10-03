@@ -17,6 +17,7 @@ extension SupabaseExtensions on SupabaseClient {
   SupabaseQueryBuilder fromPostTagsTable() => from('post_tags');
   SupabaseQueryBuilder fromPostsTable() => from('posts');
   SupabaseQueryBuilder fromTagsTable() => from('tags');
+  SupabaseQueryBuilder fromUserTagsTable() => from('user_tags');
   SupabaseQueryBuilder fromUsersTable() => from('users');
 
   /// Upload A File

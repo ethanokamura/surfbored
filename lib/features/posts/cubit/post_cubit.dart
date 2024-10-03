@@ -168,11 +168,14 @@ class PostCubit extends Cubit<PostState> {
     emit(state.fromUpdate());
   }
 
-  Future<void> updateTags(int postId, List<String> tags) async =>
-      _tagRepository.updatePostTags(id: postId, tags: tags);
-
-  Future<List<String>> fetchTags(int postId) async =>
-      _tagRepository.fetchPostTags(id: postId);
+  Future<void> updateTags(int postId, List<String> tags) async {
+    await _tagRepository.updatePostTags(id: postId, tags: tags);
+    await _postRepository.updatePost(
+      field: Post.tagsConverter,
+      postId: postId,
+      data: tags.join(' '),
+    );
+  }
 
   Future<void> deletePost(
     String userId,

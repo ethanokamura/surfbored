@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/comments/comments.dart';
-import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/likes/likes.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/features/tags/tags.dart';
@@ -84,21 +83,8 @@ Future<dynamic> postSearchPopUp(
                 if (post.description.isNotEmpty) const VerticalSpacer(),
                 if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
                 if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
-                FutureBuilder(
-                  future: context.read<PostCubit>().fetchTags(post.id!),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      final tags = snapshot.data!;
-                      return Column(
-                        children: [
-                          TagList(tags: tags),
-                          const VerticalSpacer(),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
+                if (post.tags.isNotEmpty) TagList(tags: post.tags.split(' ')),
+                if (post.tags.isNotEmpty) const VerticalSpacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

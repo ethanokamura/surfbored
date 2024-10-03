@@ -7,6 +7,7 @@ import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
+import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -35,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage>
     return BlocProvider(
       create: (_) => ProfileCubit(
         userRepository: context.read<UserRepository>(),
+        tagRepository: context.read<TagRepository>(),
         userId: widget.userId,
       ),
       child: BlocBuilder<ProfileCubit, UserData>(

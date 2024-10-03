@@ -110,21 +110,8 @@ Future<dynamic> postPopUp(
               if (post.description.isNotEmpty) const VerticalSpacer(),
               if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
               if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
-              FutureBuilder(
-                future: context.read<PostCubit>().fetchTags(post.id!),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    final tags = snapshot.data!;
-                    return Column(
-                      children: [
-                        TagList(tags: tags),
-                        const VerticalSpacer(),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+              if (post.tags.isNotEmpty) TagList(tags: post.tags.split(' ')),
+              if (post.tags.isNotEmpty) const VerticalSpacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

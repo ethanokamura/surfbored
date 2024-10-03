@@ -63,6 +63,20 @@ extension Read on BoardRepository {
     }
   }
 
+  Future<List<Board>> searchBoards({
+    required String query,
+    required int offset,
+    required int limit,
+  }) async =>
+      _supabase
+          .fromBoardsTable()
+          .select()
+          .textSearch(Board.titleConverter, query)
+          .or('${Board.descriptionConverter}.textSearch($query)')
+          // .or('tags.textSearch($query)')
+          .range(offset, offset + limit - 1)
+          .withConverter(Board.converter);
+
   Future<bool> hasPost({
     required int boardId,
     required int postId,

@@ -26,6 +26,20 @@ extension Create on PostRepository {
     }
   }
 
+  Future<List<Post>> searchPosts({
+    required String query,
+    required int offset,
+    required int limit,
+  }) async =>
+      _supabase
+          .fromPostsTable()
+          .select()
+          .textSearch(Post.titleConverter, query)
+          .or('${Post.descriptionConverter}.textSearch($query)')
+          // .or('tags.textSearch($query)')
+          .range(offset, offset + limit - 1)
+          .withConverter(Post.converter);
+
   Future<void> likePost({
     required PostLike like,
   }) async {

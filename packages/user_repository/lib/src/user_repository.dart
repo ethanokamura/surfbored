@@ -189,6 +189,20 @@ extension Read on UserRepository {
     return res;
   }
 
+  Future<List<UserData>> searchUsers({
+    required String query,
+    required int offset,
+    required int limit,
+  }) async =>
+      _supabase
+          .fromUsersTable()
+          .select()
+          .textSearch(UserData.usernameConverter, query)
+          .or('${UserData.displayNameConverter}.textSearch($query)')
+          // .or('tags.textSearch($query)')
+          .range(offset, offset + limit - 1)
+          .withConverter(UserData.converter);
+
   Future<UserProfile> readUserProfile({
     required String uuid,
   }) async {

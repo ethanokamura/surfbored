@@ -41,12 +41,11 @@ class EditProfile extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          EditSquareImage(
+          EditProfilePicture(
             width: 200,
             height: 200,
             photoUrl: user.photoUrl,
-            collection: 'users',
-            docID: user.id!,
+            userId: user.uuid,
             onFileChanged: (url) =>
                 context.read<ProfileCubit>().editField('photo_url', url),
           ),

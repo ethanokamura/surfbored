@@ -19,7 +19,8 @@ import 'package:image_picker/image_picker.dart';
 class EditImage extends StatefulWidget {
   const EditImage({
     required this.width,
-    required this.docID,
+    required this.docId,
+    required this.userId,
     required this.collection,
     required this.photoUrl,
     required this.onFileChanged,
@@ -27,7 +28,8 @@ class EditImage extends StatefulWidget {
   });
 
   final String? photoUrl;
-  final int docID;
+  final int docId;
+  final String userId;
   final String collection;
   final double width;
   final dynamic Function(String url) onFileChanged;
@@ -139,11 +141,14 @@ class _EditImageState extends State<EditImage> {
 
       if (pickedImage == null) return;
 
+      final path =
+          '${widget.collection}/${widget.userId}/image_${widget.docId}.jpeg';
+
       // upload image
       final uploadURL = await Supabase.instance.client.uploadFile(
-        widget.collection,
-        widget.docID,
-        pickedImage!,
+        collection: widget.collection,
+        path: path,
+        file: pickedImage!,
       );
 
       // set state
@@ -482,29 +487,27 @@ class _ImageWidgetState extends State<ImageWidget> {
   }
 }
 
-class EditSquareImage extends StatefulWidget {
-  const EditSquareImage({
+class EditProfilePicture extends StatefulWidget {
+  const EditProfilePicture({
     required this.width,
     required this.height,
-    required this.docID,
-    required this.collection,
+    required this.userId,
     required this.photoUrl,
     required this.onFileChanged,
     super.key,
   });
 
   final String? photoUrl;
-  final int docID;
-  final String collection;
+  final String userId;
   final double width;
   final double height;
   final dynamic Function(String url) onFileChanged;
 
   @override
-  State<EditSquareImage> createState() => _EditSquareImageState();
+  State<EditProfilePicture> createState() => _EditProfilePictureState();
 }
 
-class _EditSquareImageState extends State<EditSquareImage> {
+class _EditProfilePictureState extends State<EditProfilePicture> {
   final ImagePicker picker = ImagePicker();
   Uint8List? pickedImage;
   String? photoUrl;
@@ -607,21 +610,23 @@ class _EditSquareImageState extends State<EditSquareImage> {
 
       if (pickedImage == null) return;
 
+      final path = 'users/${widget.userId}/image.jpeg';
+
       // upload image
-      final uploadURL = await Supabase.instance.client.uploadFile(
-        widget.collection,
-        widget.docID,
-        pickedImage!,
+      final uploadUrl = await Supabase.instance.client.uploadFile(
+        collection: 'users',
+        path: path,
+        file: pickedImage!,
       );
 
       // set state
       setState(() {
-        photoUrl = uploadURL;
+        photoUrl = uploadUrl;
         isLoading = false;
       });
 
       // return new fileURL
-      widget.onFileChanged(uploadURL);
+      widget.onFileChanged(uploadUrl);
     } catch (e) {
       if (mounted) {
         setState(() {

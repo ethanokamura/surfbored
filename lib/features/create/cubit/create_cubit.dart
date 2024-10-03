@@ -62,7 +62,7 @@ class CreateCubit extends Cubit<CreateState> {
   }) async {
     emit(state.fromLoading());
     try {
-      final docID = await _postRepository.createPost(
+      final docId = await _postRepository.createPost(
         post: Post(
           title: title,
           creatorId: userId,
@@ -73,13 +73,18 @@ class CreateCubit extends Cubit<CreateState> {
 
       if (tags.isNotEmpty) {
         tags.map(
-          (tag) => _tagRepository.createPostTag(tagName: tag, id: docID),
+          (tag) => _tagRepository.createPostTag(tagName: tag, id: docId),
         );
       }
 
+      final path = '/posts/$userId/image_$docId.jpeg';
+
       if (imageFile != null) {
-        await Supabase.instance.client
-            .uploadFile('posts', docID, imageFile.readAsBytesSync());
+        await Supabase.instance.client.uploadFile(
+          collection: 'posts',
+          path: path,
+          file: imageFile.readAsBytesSync(),
+        );
       }
       emit(state.fromCreated());
     } on PostFailure catch (failure) {
@@ -96,7 +101,7 @@ class CreateCubit extends Cubit<CreateState> {
   }) async {
     emit(state.fromLoading());
     try {
-      final docID = await _boardRepository.createBoard(
+      final docId = await _boardRepository.createBoard(
         board: Board(
           creatorId: userId,
           title: title,
@@ -105,12 +110,16 @@ class CreateCubit extends Cubit<CreateState> {
       );
       if (tags.isNotEmpty) {
         tags.map(
-          (tag) => _tagRepository.createBoardTag(tagName: tag, id: docID),
+          (tag) => _tagRepository.createBoardTag(tagName: tag, id: docId),
         );
       }
+      final path = '/posts/$userId/image_$docId.jpeg';
       if (imageFile != null) {
-        await Supabase.instance.client
-            .uploadFile('boards', docID, imageFile.readAsBytesSync());
+        await Supabase.instance.client.uploadFile(
+          collection: 'boards',
+          path: path,
+          file: imageFile.readAsBytesSync(),
+        );
       }
       emit(state.fromCreated());
     } on BoardFailure catch (failure) {

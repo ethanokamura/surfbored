@@ -24,15 +24,12 @@ extension SupabaseExtensions on SupabaseClient {
 
   /// Upload A File
   /// [collection] the collection the file is stored in
-  /// [id] the document id
   /// [file] the file that needs to be uploaded
-  Future<String> uploadFile(
-    String collection,
-    int id,
-    Uint8List file,
-  ) async {
-    // get path
-    final path = '/$id/image';
+  Future<String> uploadFile({
+    required String collection,
+    required String path,
+    required Uint8List file,
+  }) async {
     try {
       await Supabase.instance.client.storage.from(collection).uploadBinary(
             path,
@@ -42,7 +39,7 @@ extension SupabaseExtensions on SupabaseClient {
           .from(collection)
           .getPublicUrl(path);
     } catch (e) {
-      throw Exception('Error uploading file');
+      throw Exception('Error uploading file $e');
     }
   }
 }

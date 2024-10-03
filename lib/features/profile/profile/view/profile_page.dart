@@ -122,13 +122,15 @@ class ProfileBuilder extends StatelessWidget {
                                 return const SizedBox.shrink();
                               }
                               final tags = snapshot.data;
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const VerticalSpacer(),
-                                  InterestsList(interests: tags!),
-                                ],
-                              );
+                              return tags!.isNotEmpty
+                                  ? Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const VerticalSpacer(),
+                                        InterestsList(interests: tags),
+                                      ],
+                                    )
+                                  : const SizedBox.shrink();
                             },
                           ),
                         ],

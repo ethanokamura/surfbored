@@ -53,7 +53,7 @@ Future<dynamic> postPopUp(
                       MaterialPageRoute<dynamic>(
                         builder: (context) => SelectBoardPage(
                           postId: post.id!,
-                          userId: userId!,
+                          userId: userId,
                         ),
                       ),
                     ),
@@ -142,7 +142,7 @@ Future<dynamic> postPopUp(
                               comments: snapshot.data!,
                             ),
                             const HorizontalSpacer(),
-                            LikeButton(post: post, userId: userId!),
+                            LikeButton(post: post, userId: userId),
                           ],
                         );
                       }

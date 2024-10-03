@@ -30,9 +30,9 @@ class PostView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (post.photoUrl != null && post.photoUrl! != '')
-              ImageHeader(post: post, userId: userId!, postCubit: postCubit)
+              ImageHeader(post: post, userId: userId, postCubit: postCubit)
             else
-              Header(post: post, userId: userId!, postCubit: postCubit),
+              Header(post: post, userId: userId, postCubit: postCubit),
             if (post.photoUrl != null && post.photoUrl! != '')
               const VerticalSpacer(),
             TitleText(text: post.title),

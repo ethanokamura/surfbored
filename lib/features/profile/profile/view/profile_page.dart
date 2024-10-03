@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/posts/posts.dart';
-import 'package:surfbored/features/posts/shared/post_list/view/user_likes_list.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';

@@ -28,8 +28,10 @@ class ActivityCubit extends Cubit<ActivityState> {
   final int pageSize = 10;
   bool hasMore = true;
 
-  Future<void> fetchFriendRequests(String userId,
-      {bool refresh = false}) async {
+  Future<void> fetchFriendRequests(
+    String userId, {
+    bool refresh = false,
+  }) async {
     if (refresh) {
       currentPage = 0;
       hasMore = true;

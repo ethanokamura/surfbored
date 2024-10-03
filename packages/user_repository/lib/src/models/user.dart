@@ -7,10 +7,10 @@ class UserData extends Equatable {
     required this.uuid,
     this.id,
     this.photoUrl = '',
+    this.interests = '',
     this.displayName = '',
     this.bio = '',
     this.websiteUrl = '',
-    this.phoneNumber = '',
     this.isPublic = true,
     this.isSupporter = false,
     this.lastSignIn,
@@ -30,7 +30,7 @@ class UserData extends Equatable {
       displayName: json[displayNameConverter]?.toString() ?? '',
       bio: json[bioConverter]?.toString() ?? '',
       websiteUrl: json[websiteUrlConverter]?.toString() ?? '',
-      phoneNumber: json[phoneNumberConverter]?.toString() ?? '',
+      interests: json[interestsConverter]?.toString() ?? '',
       isPublic: json[isPublicConverter] as bool? ?? true,
       isSupporter: json[isSupporterConverter] as bool? ?? false,
       lastSignIn: json[lastSignInConverter] != null
@@ -49,7 +49,7 @@ class UserData extends Equatable {
   static String get displayNameConverter => 'display_name';
   static String get bioConverter => 'bio';
   static String get websiteUrlConverter => 'website_url';
-  static String get phoneNumberConverter => 'phone_number';
+  static String get interestsConverter => 'interests';
   static String get isPublicConverter => 'is_public';
   static String get isSupporterConverter => 'is_supporter';
   static String get lastSignInConverter => 'last_sign_in';
@@ -59,12 +59,12 @@ class UserData extends Equatable {
 
   final int? id;
   final String username;
+  final String interests;
   final String uuid;
   final String? photoUrl;
   final String displayName;
   final String bio;
   final String websiteUrl;
-  final String phoneNumber;
   final bool isPublic;
   final bool isSupporter;
   final DateTime? lastSignIn;
@@ -79,7 +79,7 @@ class UserData extends Equatable {
         displayName,
         bio,
         websiteUrl,
-        phoneNumber,
+        interests,
         isPublic,
         isSupporter,
         lastSignIn,
@@ -99,7 +99,6 @@ class UserData extends Equatable {
       displayName: displayName,
       bio: bio,
       websiteUrl: websiteUrl,
-      phoneNumber: phoneNumber,
       isPublic: isPublic,
       isSupporter: isSupporter,
       lastSignIn: lastSignIn,
@@ -115,7 +114,7 @@ class UserData extends Equatable {
     String? displayName,
     String? bio,
     String? websiteUrl,
-    String? phoneNumber,
+    String? interests,
     bool? isPublic,
     bool? isSupporter,
     DateTime? lastSignIn,
@@ -129,7 +128,7 @@ class UserData extends Equatable {
       if (displayName != null) displayNameConverter: displayName,
       if (bio != null) bioConverter: bio,
       if (websiteUrl != null) websiteUrlConverter: websiteUrl,
-      if (phoneNumber != null) phoneNumberConverter: phoneNumber,
+      if (interests != null) interestsConverter: interests,
       if (isPublic != null) isPublicConverter: isPublic,
       if (isSupporter != null) isSupporterConverter: isSupporter,
       if (lastSignIn != null)
@@ -146,7 +145,7 @@ class UserData extends Equatable {
     String? displayName,
     String? bio,
     String? websiteUrl,
-    String? phoneNumber,
+    String? interests,
     bool isPublic = true,
     bool isSupporter = false,
   }) {
@@ -158,7 +157,7 @@ class UserData extends Equatable {
       displayName: displayName,
       bio: bio,
       websiteUrl: websiteUrl,
-      phoneNumber: phoneNumber,
+      interests: interests,
       isPublic: isPublic,
       isSupporter: isSupporter,
       createdAt: DateTime.now().toUtc(), // Automatically set created_at
@@ -173,7 +172,7 @@ class UserData extends Equatable {
     String? displayName,
     String? bio,
     String? websiteUrl,
-    String? phoneNumber,
+    String? interests,
     bool? isPublic,
     bool? isSupporter,
   }) {
@@ -185,7 +184,7 @@ class UserData extends Equatable {
       displayName: displayName,
       bio: bio,
       websiteUrl: websiteUrl,
-      phoneNumber: phoneNumber,
+      interests: interests,
       isPublic: isPublic,
       isSupporter: isSupporter,
       lastSignIn: DateTime.now()

@@ -46,7 +46,6 @@ class CreateCubit extends Cubit<CreateState> {
         userId: userId,
         title: title,
         description: description,
-        tags: tags,
         imageFile: imageFile,
       );
     }
@@ -96,7 +95,6 @@ class CreateCubit extends Cubit<CreateState> {
     required String userId,
     required String title,
     required String description,
-    required List<String> tags,
     required File? imageFile,
   }) async {
     emit(state.fromLoading());
@@ -108,11 +106,6 @@ class CreateCubit extends Cubit<CreateState> {
           description: description,
         ),
       );
-      if (tags.isNotEmpty) {
-        tags.map(
-          (tag) => _tagRepository.createBoardTag(tagName: tag, id: docId),
-        );
-      }
       final path = '/$userId/image_$docId.jpeg';
       if (imageFile != null) {
         await Supabase.instance.client.uploadFile(

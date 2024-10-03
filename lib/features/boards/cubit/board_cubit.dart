@@ -1,19 +1,14 @@
 import 'package:app_core/app_core.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:tag_repository/tag_repository.dart';
-
 part 'board_state.dart';
 
 class BoardCubit extends Cubit<BoardState> {
   BoardCubit({
     required BoardRepository boardRepository,
-    required TagRepository tagRepository,
   })  : _boardRepository = boardRepository,
-        _tagRepository = tagRepository,
         super(const BoardState.initial());
 
   final BoardRepository _boardRepository;
-  final TagRepository _tagRepository;
 
   int index = 0;
   int currentPage = 0;
@@ -24,8 +19,7 @@ class BoardCubit extends Cubit<BoardState> {
     emit(state.fromLoading());
     try {
       final board = await _boardRepository.fetchBoard(boardId: boardId);
-      final tags = await _tagRepository.fetchBoardTags(id: boardId);
-      emit(state.fromBoardLoaded(board, tags));
+      emit(state.fromBoardLoaded(board));
     } on BoardFailure catch (failure) {
       emit(state.fromFailure(failure));
     }
@@ -74,10 +68,6 @@ class BoardCubit extends Cubit<BoardState> {
   Stream<List<Board>> streamUserBoards(String userId) =>
       _boardRepository.streamUserBoards(userId: userId);
 
-  Future<void> updateTags(int boardId, List<String> tags) async {
-    await _tagRepository.updateBoardTags(boardId: boardId, tags: tags);
-  }
-
   Future<void> editField(int boardId, String field, dynamic data) async {
     emit(state.fromLoading());
     await _boardRepository.updateBoard(
@@ -111,10 +101,9 @@ extension _BoardStateExtensions on BoardState {
 
   BoardState fromUpdated() => copyWith(status: BoardStatus.updated);
 
-  BoardState fromBoardLoaded(Board board, List<String> tags) => copyWith(
+  BoardState fromBoardLoaded(Board board) => copyWith(
         status: BoardStatus.loaded,
         board: board,
-        tags: tags,
       );
 
   BoardState fromSelectionLoaded({required bool selected}) => copyWith(

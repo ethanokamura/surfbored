@@ -4,7 +4,6 @@ import 'package:board_repository/board_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
-import 'package:surfbored/features/tags/tags.dart';
 
 class EditBoardPage extends StatelessWidget {
   const EditBoardPage({
@@ -49,7 +48,6 @@ class EditBoardPage extends StatelessWidget {
             } else if (state.isLoaded) {
               return EditView(
                 board: state.board,
-                boardTags: state.tags,
                 boardCubit: context.read<BoardCubit>(),
                 onDelete: onDelete,
               );
@@ -71,13 +69,11 @@ class EditBoardPage extends StatelessWidget {
 class EditView extends StatelessWidget {
   const EditView({
     required this.board,
-    required this.boardTags,
     required this.boardCubit,
     required this.onDelete,
     super.key,
   });
   final Board board;
-  final List<String> boardTags;
   final BoardCubit boardCubit;
   final void Function() onDelete;
   @override
@@ -108,11 +104,6 @@ class EditView extends StatelessWidget {
             field: Board.descriptionConverter,
             value: board.description,
             boardId: board.id,
-          ),
-          const VerticalSpacer(),
-          EditTagsBox(
-            tags: boardTags,
-            updateTags: (tags) => boardCubit.updateTags(board.id, tags),
           ),
           const VerticalSpacer(),
           ActionButton(

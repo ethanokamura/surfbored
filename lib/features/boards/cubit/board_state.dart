@@ -16,7 +16,6 @@ final class BoardState extends Equatable {
     this.board = Board.empty,
     this.boards = const [],
     this.posts = const [],
-    this.tags = const [],
     this.failure = BoardFailure.empty,
     this.selected = false,
     this.index = 0,
@@ -28,7 +27,6 @@ final class BoardState extends Equatable {
   final Board board;
   final List<Board> boards;
   final List<int> posts;
-  final List<String> tags;
   final BoardFailure failure;
   final bool selected;
   final int index;
@@ -39,7 +37,6 @@ final class BoardState extends Equatable {
         board,
         boards,
         posts,
-        tags,
         failure,
         selected,
         index,
@@ -50,7 +47,6 @@ final class BoardState extends Equatable {
     Board? board,
     List<Board>? boards,
     List<int>? posts,
-    List<String>? tags,
     BoardFailure? failure,
     bool? selected,
     int? index,
@@ -60,7 +56,6 @@ final class BoardState extends Equatable {
       board: board ?? this.board,
       boards: boards ?? this.boards,
       posts: posts ?? this.posts,
-      tags: tags ?? this.tags,
       failure: failure ?? this.failure,
       selected: selected ?? this.selected,
       index: index ?? this.index,

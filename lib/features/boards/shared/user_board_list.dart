@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
-import 'package:tag_repository/tag_repository.dart';
 
 class UserBoardsList extends StatelessWidget {
   const UserBoardsList({required this.userId, super.key});
@@ -14,7 +13,6 @@ class UserBoardsList extends StatelessWidget {
     return BlocProvider(
       create: (context) => BoardCubit(
         boardRepository: context.read<BoardRepository>(),
-        tagRepository: context.read<TagRepository>(),
       )..fetchBoards(userId),
       child: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {

@@ -119,21 +119,10 @@ class EditProfile extends StatelessWidget {
             },
           ),
           const VerticalSpacer(),
-          FutureBuilder<List<String>>(
-            future: context.read<ProfileCubit>().fetchUserTags(user.uuid),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: PrimaryText(text: AppStrings.fetchFailure),
-                );
-              }
-              final tags = snapshot.data;
-              return EditTagsBox(
-                tags: tags!,
-                updateTags: (newTags) =>
-                    context.read<ProfileCubit>().updateTags(user.uuid, newTags),
-              );
-            },
+          EditTagsBox(
+            tags: user.interests.split(' '),
+            updateTags: (newTags) =>
+                context.read<ProfileCubit>().updateInterests(newTags),
           ),
         ],
       ),

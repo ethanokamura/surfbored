@@ -8,7 +8,6 @@ extension SupabaseExtensions on SupabaseClient {
   SupabaseQueryBuilder fromBlockedUsersTable() => from('blocked_users');
   SupabaseQueryBuilder fromBoardPostsTable() => from('board_posts');
   SupabaseQueryBuilder fromBoardSavesTable() => from('board_saves');
-  SupabaseQueryBuilder fromBoardTagsTable() => from('board_tags');
   SupabaseQueryBuilder fromBoardsTable() => from('boards');
   SupabaseQueryBuilder fromCommentLikesTable() => from('comment_likes');
   SupabaseQueryBuilder fromCommentsTable() => from('comments');
@@ -18,8 +17,6 @@ extension SupabaseExtensions on SupabaseClient {
   SupabaseQueryBuilder fromPostTagsTable() => from('post_tags');
   SupabaseQueryBuilder fromPostsTable() => from('posts');
   SupabaseQueryBuilder fromTagsTable() => from('tags');
-  SupabaseQueryBuilder fromUserAccountTable() => from('user_account');
-  SupabaseQueryBuilder fromUserTagsTable() => from('user_tags');
   SupabaseQueryBuilder fromUsersTable() => from('users');
 
   /// Upload A File

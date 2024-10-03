@@ -7,7 +7,6 @@ import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
-import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -36,7 +35,6 @@ class _ProfilePageState extends State<ProfilePage>
     return BlocProvider(
       create: (_) => ProfileCubit(
         userRepository: context.read<UserRepository>(),
-        tagRepository: context.read<TagRepository>(),
         userId: widget.userId,
       ),
       child: BlocBuilder<ProfileCubit, UserData>(
@@ -113,26 +111,9 @@ class ProfileBuilder extends StatelessWidget {
                             userId: userId,
                             isCurrent: isCurrent,
                           ),
-                          FutureBuilder(
-                            future: context
-                                .read<ProfileCubit>()
-                                .fetchUserTags(userId),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return const SizedBox.shrink();
-                              }
-                              final tags = snapshot.data;
-                              return tags!.isNotEmpty
-                                  ? Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const VerticalSpacer(),
-                                        InterestsList(interests: tags),
-                                      ],
-                                    )
-                                  : const SizedBox.shrink();
-                            },
-                          ),
+                          if (user.interests.isNotEmpty) const VerticalSpacer(),
+                          if (user.interests.isNotEmpty)
+                            InterestsList(interests: user.interests.split(' ')),
                         ],
                       ),
                     ),

@@ -42,10 +42,8 @@ class LoginPage extends StatelessWidget {
                 if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state.needsOtp) {
-                  print('needs otp');
                   return const Center(child: OtpPrompt());
                 }
-                print('needs phone');
                 return const Center(child: PhonePrompt());
               },
             ),

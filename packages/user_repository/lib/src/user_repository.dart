@@ -14,7 +14,10 @@ class UserRepository {
   final SupabaseClient _supabase;
   late final ValueStream<UserData> _user;
 
+  // current user as a stream
   Stream<UserData> get watchUser => _user.asBroadcastStream();
+
+  // get the current user's data synch
   UserData get user => _user.valueOrNull ?? UserData.empty;
 
   /// Gets the initial [watchUser] emission.
@@ -86,11 +89,8 @@ extension Auth on UserRepository {
         throw UserFailure.fromPhoneNumberSignIn();
       }
       await _updateUserData(supabaseUser: response.user);
-    } on AuthException catch (e) {
-      print('failure to authenticate $e');
-      throw UserFailure.fromPhoneNumberSignIn();
     } catch (e) {
-      print('unknown failure $e');
+      throw UserFailure.fromPhoneNumberSignIn();
     }
   }
 
@@ -218,7 +218,6 @@ extension Update on UserRepository {
         UserData.lastSignInConverter: DateTime.now().toUtc().toIso8601String(),
       }).eq(UserData.uuidConverter, supabaseUser.id);
     } catch (e) {
-      print('failure to update user: $e');
       throw UserFailure.fromUpdateUser();
     }
   }
@@ -234,9 +233,11 @@ extension Update on UserRepository {
             .fromUsersTable()
             .update({field: data}).eq(UserData.idConverter, user.id!);
       } else {
+        print('failed to update user because user does not exist.');
         throw UserFailure.fromUpdateUser();
       }
     } catch (e) {
+      print('failed to update user $e');
       throw UserFailure.fromUpdateUser();
     }
   }

@@ -141,8 +141,7 @@ class _EditImageState extends State<EditImage> {
 
       if (pickedImage == null) return;
 
-      final path =
-          '${widget.collection}/${widget.userId}/image_${widget.docId}.jpeg';
+      final path = '/${widget.userId}/image_${widget.docId}.jpeg';
 
       // upload image
       final uploadURL = await Supabase.instance.client.uploadFile(
@@ -610,7 +609,7 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
 
       if (pickedImage == null) return;
 
-      final path = 'users/${widget.userId}/image.jpeg';
+      final path = '/${widget.userId}/image.jpeg';
 
       // upload image
       final uploadUrl = await Supabase.instance.client.uploadFile(
@@ -628,6 +627,7 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
       // return new fileURL
       widget.onFileChanged(uploadUrl);
     } catch (e) {
+      print('failed to upload image $e');
       if (mounted) {
         setState(() {
           isLoading = false;

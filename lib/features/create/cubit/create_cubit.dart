@@ -77,7 +77,7 @@ class CreateCubit extends Cubit<CreateState> {
         );
       }
 
-      final path = '/posts/$userId/image_$docId.jpeg';
+      final path = '/$userId/image_$docId.jpeg';
 
       if (imageFile != null) {
         await Supabase.instance.client.uploadFile(
@@ -113,7 +113,7 @@ class CreateCubit extends Cubit<CreateState> {
           (tag) => _tagRepository.createBoardTag(tagName: tag, id: docId),
         );
       }
-      final path = '/posts/$userId/image_$docId.jpeg';
+      final path = '/$userId/image_$docId.jpeg';
       if (imageFile != null) {
         await Supabase.instance.client.uploadFile(
           collection: 'boards',

@@ -46,8 +46,9 @@ class EditProfile extends StatelessWidget {
             height: 200,
             photoUrl: user.photoUrl,
             userId: user.uuid,
-            onFileChanged: (url) =>
-                context.read<ProfileCubit>().editField('photo_url', url),
+            onFileChanged: (url) => context
+                .read<ProfileCubit>()
+                .editField(UserData.photoUrlConverter, url),
           ),
           const VerticalSpacer(),
           CustomTextBox(
@@ -62,7 +63,7 @@ class EditProfile extends StatelessWidget {
               if (newValue != null && context.mounted) {
                 await context
                     .read<ProfileCubit>()
-                    .editField('username', newValue);
+                    .editField(UserData.usernameConverter, newValue);
               }
             },
           ),
@@ -77,7 +78,9 @@ class EditProfile extends StatelessWidget {
                 TextEditingController(),
               );
               if (newValue != null && context.mounted) {
-                await context.read<ProfileCubit>().editField('name', newValue);
+                await context
+                    .read<ProfileCubit>()
+                    .editField(UserData.displayNameConverter, newValue);
               }
             },
           ),
@@ -92,7 +95,9 @@ class EditProfile extends StatelessWidget {
                 TextEditingController(),
               );
               if (newValue != null && context.mounted) {
-                await context.read<ProfileCubit>().editField('bio', newValue);
+                await context
+                    .read<ProfileCubit>()
+                    .editField(UserData.bioConverter, newValue);
               }
             },
           ),
@@ -109,7 +114,7 @@ class EditProfile extends StatelessWidget {
               if (newValue != null && context.mounted) {
                 await context
                     .read<ProfileCubit>()
-                    .editField('website', newValue);
+                    .editField(UserData.websiteUrlConverter, newValue);
               }
             },
           ),
@@ -126,7 +131,7 @@ class EditProfile extends StatelessWidget {
               return EditTagsBox(
                 tags: tags!,
                 updateTags: (newTags) =>
-                    context.read<ProfileCubit>().editField('tags', newTags),
+                    context.read<ProfileCubit>().updateTags(user.uuid, newTags),
               );
             },
           ),

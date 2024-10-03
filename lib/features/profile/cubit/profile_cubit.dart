@@ -41,6 +41,9 @@ class ProfileCubit extends Cubit<UserData> {
   Future<List<String>> fetchUserTags(String userId) =>
       _tagRepository.fetchUserTags(id: userId);
 
+  Future<void> updateTags(String userId, List<String> tags) async =>
+      _tagRepository.updateUserTags(userId: userId, tags: tags);
+
   Future<void> editField(String field, dynamic data) async =>
       _userRepository.updateUser(field: field, data: data);
 }

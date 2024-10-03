@@ -94,18 +94,18 @@ class EditView extends StatelessWidget {
             userId: board.creatorId,
             docId: board.id,
             onFileChanged: (url) {
-              boardCubit.editField(board.id, 'photo_url', url);
+              boardCubit.editField(board.id, Board.photoUrlConverter, url);
             },
           ),
           const VerticalSpacer(),
           EditField(
-            field: 'title',
+            field: Board.titleConverter,
             value: board.title,
             boardId: board.id,
           ),
           const VerticalSpacer(),
           EditField(
-            field: 'description',
+            field: Board.descriptionConverter,
             value: board.description,
             boardId: board.id,
           ),

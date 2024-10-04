@@ -24,7 +24,7 @@ class SearchCubit extends Cubit<SearchState> {
 
   void setQuery(String query) => emit(state.fromSetQuery(query));
 
-  Future<void> searchForUsers(String query, {bool refresh = false}) async {
+  Future<void> searchForUsers({bool refresh = false}) async {
     if (refresh) {
       currentPage = 0;
       hasMore = true;
@@ -34,7 +34,7 @@ class SearchCubit extends Cubit<SearchState> {
     emit(state.fromLoading());
     try {
       final users = await _userRepository.searchUsers(
-        query: query,
+        query: state.query,
         offset: currentPage * pageSize,
         limit: pageSize,
       );
@@ -78,7 +78,7 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
-  Future<void> searchForPosts(String query, {bool refresh = false}) async {
+  Future<void> searchForPosts({bool refresh = false}) async {
     if (refresh) {
       currentPage = 0;
       hasMore = true;
@@ -88,7 +88,7 @@ class SearchCubit extends Cubit<SearchState> {
     emit(state.fromLoading());
     try {
       final posts = await _postRepository.searchPosts(
-        query: query,
+        query: state.query,
         offset: currentPage * pageSize,
         limit: pageSize,
       );

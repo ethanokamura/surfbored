@@ -4,6 +4,7 @@ enum SearchStatus {
   initial,
   loading,
   loaded,
+  searched,
   empty,
   failure,
 }
@@ -73,6 +74,7 @@ extension SearchStateExtensions on SearchState {
   bool get isLoading => status == SearchStatus.loading;
   bool get isFailure => status == SearchStatus.failure;
   bool get isEmpty => status == SearchStatus.empty;
+  bool get isQueried => status == SearchStatus.searched;
 }
 
 extension _SearchStateExtensions on SearchState {
@@ -105,6 +107,6 @@ extension _SearchStateExtensions on SearchState {
       );
   SearchState fromSetQuery(String query) => copyWith(
         query: query,
-        status: SearchStatus.loaded,
+        status: SearchStatus.searched,
       );
 }

@@ -162,7 +162,7 @@ extension Read on PostRepository {
       final likes = await _supabase
           .fromPostLikesTable()
           .select()
-          .eq(Post.idConverter, postId)
+          .eq(PostLike.postIdConverter, postId)
           .count(CountOption.exact);
       return likes.count;
     } catch (e) {

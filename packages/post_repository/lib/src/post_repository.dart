@@ -229,13 +229,10 @@ extension Delete on PostRepository {
     required String userId,
   }) async {
     try {
-      await _supabase.rpc<void>(
-        'public.remove_like',
-        params: {
-          'post_id': postId,
-          'user_id': userId,
-        },
-      );
+      await _supabase.fromPostLikesTable().delete().match({
+        PostLike.postIdConverter: postId,
+        PostLike.userIdConverter: userId,
+      });
     } catch (e) {
       throw PostFailure.fromDeletePost();
     }

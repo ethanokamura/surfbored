@@ -13,7 +13,7 @@ class UserProfile extends Equatable {
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       username: json['username']?.toString() ?? '',
-      photoUrl: json['photoUrl']?.toString() ?? '',
+      photoUrl: json['photo_url']?.toString() ?? '',
     );
   }
 

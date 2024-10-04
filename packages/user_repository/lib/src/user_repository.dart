@@ -214,6 +214,8 @@ extension Read on UserRepository {
               ? UserProfile.empty
               : UserProfile.converterSingle(data),
         );
+    print(res);
+    print(res.photoUrl);
     return res;
   }
 }

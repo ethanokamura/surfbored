@@ -19,6 +19,7 @@ class EditTagsBox extends StatelessWidget {
               // section name
               const SecondaryText(text: AppStrings.editTags),
               ActionIconButton(
+                background: false,
                 inverted: true,
                 icon: AppIcons.settings,
                 onTap: () => Navigator.push(
@@ -34,7 +35,10 @@ class EditTagsBox extends StatelessWidget {
             ],
           ),
           // tags
-          TagList(tags: tags),
+          if (tags.isEmpty)
+            PrimaryText(text: AppStrings.emptyTags)
+          else
+            TagList(tags: tags),
         ],
       ),
     );

@@ -44,7 +44,12 @@ class BottomNavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       onTap: (index) async {
         if (NavBarItem.values[index].isCreate) {
-          await showCreateModal(context);
+          await Navigator.push(
+            context,
+            MaterialPageRoute<Page<dynamic>>(
+              builder: (context) => const CreatePage(),
+            ),
+          );
         } else {
           navBarController.item = NavBarItem.values[index];
         }
@@ -70,51 +75,5 @@ class BottomNavBar extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Future<void> showCreateModal(BuildContext currentContext) async {
-    String? choice;
-    await showBottomModal(
-      currentContext,
-      <Widget>[
-        const TitleText(
-          text: AppStrings.createSomething,
-          fontSize: 24,
-          // textAlign: TextAlign.center,
-        ),
-        const VerticalSpacer(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ActionSelectButton(
-              icon: AppIcons.posts,
-              label: AppStrings.activity,
-              onTap: () {
-                choice = 'Post';
-                Navigator.pop(currentContext);
-              },
-            ),
-            const SizedBox(width: 40),
-            ActionSelectButton(
-              icon: AppIcons.boards,
-              label: AppStrings.board,
-              onTap: () {
-                choice = 'Board';
-                Navigator.pop(currentContext);
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-    if (choice == null) return;
-    if (currentContext.mounted) {
-      await Navigator.push(
-        currentContext,
-        MaterialPageRoute<Page<dynamic>>(
-          builder: (context) => CreatePage(type: choice!),
-        ),
-      );
-    }
   }
 }

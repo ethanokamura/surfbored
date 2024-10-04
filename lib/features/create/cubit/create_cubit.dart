@@ -23,40 +23,13 @@ class CreateCubit extends Cubit<CreateState> {
   final PostRepository _postRepository;
   final TagRepository _tagRepository;
 
-  Future<void> create({
-    required String type,
-    required String userId,
-    required String title,
-    required String description,
-    required String website,
-    required List<String> tags,
-    required File? imageFile,
-  }) async {
-    if (type == 'post') {
-      await createPost(
-        userId: userId,
-        title: title,
-        description: description,
-        website: website,
-        tags: tags,
-        imageFile: imageFile,
-      );
-    } else if (type == 'board') {
-      await createBoard(
-        userId: userId,
-        title: title,
-        description: description,
-        imageFile: imageFile,
-      );
-    }
-  }
-
   Future<void> createPost({
     required String userId,
     required String title,
     required String description,
     required String website,
     required List<String> tags,
+    required bool isPublic,
     required File? imageFile,
   }) async {
     emit(state.fromLoading());
@@ -66,6 +39,7 @@ class CreateCubit extends Cubit<CreateState> {
           title: title,
           creatorId: userId,
           description: description,
+          isPublic: isPublic,
           websiteUrl: website,
         ),
       );
@@ -77,12 +51,16 @@ class CreateCubit extends Cubit<CreateState> {
       }
 
       final path = '/$userId/image_$docId.jpeg';
-
       if (imageFile != null) {
-        await Supabase.instance.client.uploadFile(
-          collection: 'posts',
+        final url = await Supabase.instance.client.uploadFile(
+          collection: 'boards',
           path: path,
           file: imageFile.readAsBytesSync(),
+        );
+        await _postRepository.updatePost(
+          field: Post.photoUrlConverter,
+          postId: docId,
+          data: url,
         );
       }
       emit(state.fromCreated());
@@ -95,6 +73,7 @@ class CreateCubit extends Cubit<CreateState> {
     required String userId,
     required String title,
     required String description,
+    required bool isPublic,
     required File? imageFile,
   }) async {
     emit(state.fromLoading());
@@ -103,15 +82,21 @@ class CreateCubit extends Cubit<CreateState> {
         board: Board(
           creatorId: userId,
           title: title,
+          isPublic: isPublic,
           description: description,
         ),
       );
       final path = '/$userId/image_$docId.jpeg';
       if (imageFile != null) {
-        await Supabase.instance.client.uploadFile(
+        final url = await Supabase.instance.client.uploadFile(
           collection: 'boards',
           path: path,
           file: imageFile.readAsBytesSync(),
+        );
+        await _boardRepository.updateBoard(
+          field: Board.photoUrlConverter,
+          boardId: docId,
+          data: url,
         );
       }
       emit(state.fromCreated());

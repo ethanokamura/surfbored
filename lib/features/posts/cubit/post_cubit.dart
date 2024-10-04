@@ -52,8 +52,7 @@ class PostCubit extends Cubit<PostState> {
         emit(state.fromEmpty());
       } else {
         currentPage++; // Increment the page number
-        state.posts.addAll(posts);
-        emit(state.fromPostsLoaded(state.posts));
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));
@@ -82,8 +81,7 @@ class PostCubit extends Cubit<PostState> {
         emit(state.fromEmpty());
       } else {
         currentPage++; // Increment the page number
-        state.posts.addAll(posts);
-        emit(state.fromPostsLoaded(state.posts));
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));
@@ -112,8 +110,7 @@ class PostCubit extends Cubit<PostState> {
         emit(state.fromEmpty());
       } else {
         currentPage++; // Increment the page number
-        state.posts.addAll(posts);
-        emit(state.fromPostsLoaded(state.posts));
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));

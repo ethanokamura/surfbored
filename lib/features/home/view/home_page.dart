@@ -1,9 +1,8 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:surfbored/features/explore/explore.dart';
+import 'package:surfbored/features/explore/view/explore_page.dart';
 import 'package:surfbored/features/home/view/bottom_nav_bar.dart';
 import 'package:surfbored/features/profile/profile.dart';
-import 'package:surfbored/features/search/search.dart';
 import 'package:user_repository/user_repository.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,15 +13,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListenableProvider(
       create: (_) => NavBarController(),
-      child: Scaffold(
-        body: const HomeBody(),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).accentColor,
-          child: inverseIconStyle(context, AppIcons.search),
-          // change to go to search page or pop up search bar?
-          onPressed: () async => showSearch(context),
-        ),
-        bottomNavigationBar: const BottomNavBar(),
+      child: const Scaffold(
+        body: HomeBody(),
+        bottomNavigationBar: BottomNavBar(),
       ),
     );
   }
@@ -41,8 +34,8 @@ class HomeBody extends StatelessWidget {
       controller: pageController,
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        const FeedPage(),
-        const SearchPage(),
+        const ExplorePage(),
+        const Center(child: TitleText(text: AppStrings.create)),
         ProfilePage(userId: userId),
       ],
     );

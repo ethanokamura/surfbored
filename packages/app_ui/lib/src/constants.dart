@@ -37,6 +37,10 @@ class AppStrings {
   static const String guestText = 'Sign in as guest';
   static const String searchText = 'Search for something new';
   static const String discoverText = 'Discover!';
+  static const String createPage = 'Create Something!';
+  static const String isPublic = 'Public';
+  static const String isPrivate = 'Private';
+  static const String emptyTags = 'No tags yet!';
 
   // auth error
   static const String phoneNumberPrompt = 'Enter phone number.';

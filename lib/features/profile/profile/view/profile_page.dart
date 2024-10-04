@@ -104,7 +104,7 @@ class ProfileBuilder extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ProfileHeader(user: user, isCurrent: isCurrent),
+                          ProfileHeader(user: user),
                           const VerticalSpacer(),
                           if (user.bio.isNotEmpty) About(bio: user.bio),
                           if (user.bio.isNotEmpty) const VerticalSpacer(),
@@ -195,9 +195,8 @@ class ProfileTopBar extends StatelessWidget {
 }
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({required this.user, required this.isCurrent, super.key});
+  const ProfileHeader({required this.user, super.key});
   final UserData user;
-  final bool isCurrent;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -212,8 +211,10 @@ class ProfileHeader extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // UserText(text: '@${user.username}', bold: true, fontSize: 24),
-            TitleText(text: user.displayName),
+            if (user.displayName.isEmpty)
+              TitleText(text: '@${user.username}')
+            else
+              TitleText(text: user.displayName),
             WebLink(url: user.websiteUrl),
             SecondaryText(
               text: '${AppStrings.joined}: ${DateFormatter.formatTimestamp(

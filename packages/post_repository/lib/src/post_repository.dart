@@ -34,9 +34,7 @@ extension Create on PostRepository {
       _supabase
           .fromPostsTable()
           .select()
-          .textSearch(Post.titleConverter, query)
-          .or('${Post.descriptionConverter}.textSearch($query)')
-          // .or('tags.textSearch($query)')
+          .textSearch(Post.postSearchQuery, query)
           .range(offset, offset + limit - 1)
           .withConverter(Post.converter);
 

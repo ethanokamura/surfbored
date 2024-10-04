@@ -37,6 +37,7 @@ class Board extends Equatable {
   static String get photoUrlConverter => 'photo_url';
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
+  static String get boardSearchQuery => 'title_description';
 
   static const empty = Board(
     creatorId: '',

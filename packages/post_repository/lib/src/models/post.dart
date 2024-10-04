@@ -42,6 +42,7 @@ class Post extends Equatable {
   static String get tagsConverter => 'tags';
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
+  static String get postSearchQuery => 'title_description_tags';
 
   static const empty = Post(creatorId: '', title: '');
 

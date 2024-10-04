@@ -54,6 +54,7 @@ class UserData extends Equatable {
   static String get isSupporterConverter => 'is_supporter';
   static String get lastSignInConverter => 'last_sign_in';
   static String get createdAtConverter => 'created_at';
+  static String get userSearchQuery => 'username_name_interests';
 
   static const empty = UserData(id: 0, uuid: '', username: '');
 

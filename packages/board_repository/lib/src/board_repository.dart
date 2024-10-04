@@ -71,9 +71,7 @@ extension Read on BoardRepository {
       _supabase
           .fromBoardsTable()
           .select()
-          .textSearch(Board.titleConverter, query)
-          .or('${Board.descriptionConverter}.textSearch($query)')
-          // .or('tags.textSearch($query)')
+          .textSearch(Board.boardSearchQuery, query)
           .range(offset, offset + limit - 1)
           .withConverter(Board.converter);
 

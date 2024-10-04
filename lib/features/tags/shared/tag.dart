@@ -1,5 +1,4 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/material.dart';
 
 class Tag extends StatelessWidget {
   const Tag({required this.tag, super.key});

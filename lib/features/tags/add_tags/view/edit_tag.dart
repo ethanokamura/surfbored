@@ -1,5 +1,4 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/material.dart';
 
 class EditTag extends StatelessWidget {
   const EditTag({required this.tag, required this.onDelete, super.key});

@@ -1,6 +1,5 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surfbored/features/authentication/login/cubit/authentication_cubit.dart';
 import 'package:surfbored/features/authentication/login/view/otp.dart';
 import 'package:surfbored/features/authentication/login/view/phone.dart';

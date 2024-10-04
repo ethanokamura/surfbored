@@ -1,5 +1,4 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/material.dart';
 
 // dynamic input length maximum
 int maxInputLength(String field) {

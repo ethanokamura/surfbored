@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:surfbored/features/authentication/login/cubit/authentication_cubit.dart';
 
 class OtpPrompt extends StatefulWidget {

@@ -1,9 +1,8 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:comment_repository/comment_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_repository/friend_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';

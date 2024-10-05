@@ -11,9 +11,7 @@ class PostRepository {
 }
 
 extension Create on PostRepository {
-  Future<int> createPost({
-    required Post post,
-  }) async {
+  Future<int> createPost({required Post post}) async {
     try {
       final res = await _supabase
           .fromPostsTable()
@@ -38,35 +36,19 @@ extension Create on PostRepository {
           .range(offset, offset + limit - 1)
           .withConverter(Post.converter);
 
-  Future<void> likePost({
-    required PostLike like,
-  }) async {
-    try {
-      await _supabase.fromPostLikesTable().insert(like.toJson());
-    } catch (e) {
-      throw PostFailure.fromCreatePost();
-    }
-  }
+  Future<void> likePost({required PostLike like}) async =>
+      _supabase.fromPostLikesTable().insert(like.toJson());
 }
 
 extension Read on PostRepository {
-  Future<Post> fetchPost({
-    required int postId,
-  }) async {
-    try {
-      final res = await _supabase
-          .fromPostsTable()
-          .select()
-          .eq(Post.idConverter, postId)
-          .maybeSingle()
-          .withConverter(
-            (data) => data == null ? Post.empty : Post.converterSingle(data),
-          );
-      return res;
-    } catch (e) {
-      throw PostFailure.fromGetPost();
-    }
-  }
+  Future<Post> fetchPost({required int postId}) async => _supabase
+      .fromPostsTable()
+      .select()
+      .eq(Post.idConverter, postId)
+      .maybeSingle()
+      .withConverter(
+        (data) => data == null ? Post.empty : Post.converterSingle(data),
+      );
 
   Future<bool> hasUserLikedPost({
     required int postId,
@@ -86,78 +68,49 @@ extension Read on PostRepository {
   Future<List<Post>> fetchAllPosts({
     required int limit,
     required int offset,
-  }) async {
-    try {
-      final res = await _supabase
+  }) async =>
+      _supabase
           .fromPostsTable()
           .select()
           .range(offset, offset + limit - 1)
           .withConverter(Post.converter);
-      return res;
-    } catch (e) {
-      throw PostFailure.fromGetPost();
-    }
-  }
 
   Future<List<Post>> fetchUserPosts({
     required String userId,
     required int limit,
     required int offset,
-  }) async {
-    try {
-      final res = await _supabase
+  }) async =>
+      _supabase
           .fromPostsTable()
           .select()
           .eq(Post.creatorIdConverter, userId)
           .range(offset, offset + limit - 1)
           .withConverter(Post.converter);
-      return res;
-    } catch (e) {
-      throw PostFailure.fromGetPost();
-    }
-  }
 
   // Future<List<Post>> fetchUserLikedPosts({
   //   required String userId,
   //   required int limit,
   //   required int offset,
-  // }) async {
-  //   try {
-  //     final res = await _supabase
+  // }) async => _supabase
   //         .fromPostLikesTable()
   //         .select()
   //         .eq(PostLike.userIdConverter, userId)
   //         .range(offset, offset + limit - 1);
-  //     final posts = res
-  //         .map((post) async => fetchPost(postId: post['post_id'] as int))
-  //         .toList();
-  //     Post.converter(posts);
-  //   } catch (e) {
-  //     throw PostFailure.fromGetPost();
-  //   }
-  // }
+  //         .withConverter(Post.converter);
 
   Future<List<Post>> fetchBoardPosts({
     required int boardId,
     required int limit,
     required int offset,
-  }) async {
-    try {
-      final res = await _supabase
+  }) async =>
+      _supabase
           .fromBoardPostsTable()
           .select()
           .eq('board_id', boardId)
           .range(offset, offset + limit - 1)
           .withConverter(Post.converter);
-      return res;
-    } catch (e) {
-      throw PostFailure.fromGetPost();
-    }
-  }
 
-  Future<int> fetchPostLikes({
-    required int postId,
-  }) async {
+  Future<int> fetchPostLikes({required int postId}) async {
     try {
       final likes = await _supabase
           .fromPostLikesTable()
@@ -175,25 +128,20 @@ extension StreamData on PostRepository {
   Stream<List<Post>> streamUserPosts({
     required String userId,
     required DateTime? lastMarkedTime,
-  }) {
-    return _supabase
-        .fromPostsTable()
-        .stream(primaryKey: [Post.idConverter])
-        .eq('creator_id', userId)
-        .order('created_at')
-        .map(Post.converter);
-  }
+  }) =>
+      _supabase
+          .fromPostsTable()
+          .stream(primaryKey: [Post.idConverter])
+          .eq('creator_id', userId)
+          .order('created_at')
+          .map(Post.converter);
 
-  Stream<List<Post>> streamBoardPosts({
-    required int boardId,
-  }) {
-    return _supabase
-        .fromBoardPostsTable()
-        .stream(primaryKey: [Post.idConverter])
-        .eq('board_id', boardId)
-        .order('created_at')
-        .map(Post.converter);
-  }
+  Stream<List<Post>> streamBoardPosts({required int boardId}) => _supabase
+      .fromBoardPostsTable()
+      .stream(primaryKey: [Post.idConverter])
+      .eq('board_id', boardId)
+      .order('created_at')
+      .map(Post.converter);
 }
 
 extension Update on PostRepository {
@@ -202,39 +150,22 @@ extension Update on PostRepository {
     required String field,
     required int postId,
     required dynamic data,
-  }) async {
-    try {
-      await _supabase
+  }) async =>
+      _supabase
           .fromPostsTable()
           .update({field: data}).eq(Post.idConverter, postId);
-    } catch (e) {
-      throw PostFailure.fromUpdatePost();
-    }
-  }
 }
 
 extension Delete on PostRepository {
-  Future<void> deletePost({
-    required int postId,
-  }) async {
-    try {
-      await _supabase.fromPostsTable().delete().eq(Post.idConverter, postId);
-    } catch (e) {
-      throw PostFailure.fromDeletePost();
-    }
-  }
+  Future<void> deletePost({required int postId}) async =>
+      _supabase.fromPostsTable().delete().eq(Post.idConverter, postId);
 
   Future<void> removeLike({
     required int postId,
     required String userId,
-  }) async {
-    try {
-      await _supabase.fromPostLikesTable().delete().match({
+  }) async =>
+      _supabase.fromPostLikesTable().delete().match({
         PostLike.postIdConverter: postId,
         PostLike.userIdConverter: userId,
       });
-    } catch (e) {
-      throw PostFailure.fromDeletePost();
-    }
-  }
 }

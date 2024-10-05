@@ -59,27 +59,8 @@ extension Update on TagRepository {
     required String userId,
     required List<String> tags,
   }) async {
-    // Step 1: Upsert the new tags into the tags table
-    final upsertTagsResponse = await _supabase
-        .fromTagsTable()
-        .upsert(
-          tags.map((tagName) => {'name': tagName}).toList(),
-          onConflict: 'name',
-        )
-        .select();
-
-    if (upsertTagsResponse.isEmpty) {
-      throw TagFailure.fromUpdateTag();
-    }
-
-    // Extract tag IDs from the response
-    final tagIds =
-        upsertTagsResponse.map((tag) => tag['id']).toList().whereType<String>();
-
-    // Step 2: Clear all existing tag associations for this user
+    final tagIds = await _getTagIds(tags: tags);
     await _supabase.fromUserTagsTable().delete().match({'user_id': userId});
-
-    // Step 3: Insert new tag associations into user_tags
     await _supabase.fromUserTagsTable().insert(
           tagIds.map((tagId) => {'user_id': userId, 'tag_id': tagId}).toList(),
         );
@@ -89,27 +70,8 @@ extension Update on TagRepository {
     required int id,
     required List<String> tags,
   }) async {
-    // Step 1: Upsert the new tags into the tags table
-    final upsertTagsResponse = await _supabase
-        .fromTagsTable()
-        .upsert(
-          tags.map((tagName) => {'name': tagName}).toList(),
-          onConflict: 'name',
-        )
-        .select();
-
-    if (upsertTagsResponse.isEmpty) {
-      throw TagFailure.fromUpdateTag();
-    }
-
-    // Extract tag IDs from the response
-    final tagIds =
-        upsertTagsResponse.map((tag) => tag['id']).toList().whereType<String>();
-
-    // Step 2: Clear all existing tag associations for this user
+    final tagIds = await _getTagIds(tags: tags);
     await _supabase.fromPostTagsTable().delete().match({'post_id': id});
-
-    // Step 3: Insert new tag associations into user_tags
     await _supabase.fromPostTagsTable().insert(
           tagIds.map((tagId) => {'post_id': id, 'tag_id': tagId}).toList(),
         );
@@ -118,13 +80,8 @@ extension Update on TagRepository {
 
 extension Delete on TagRepository {
   // Delete a tag by its ID
-  Future<void> deleteTag({required String tagId}) async {
-    try {
-      await _supabase.fromTagsTable().delete().eq('id', tagId);
-    } catch (e) {
-      throw TagFailure.fromDeleteTag();
-    }
-  }
+  Future<void> deleteTag({required String tagId}) async =>
+      _supabase.fromTagsTable().delete().eq('id', tagId);
 }
 
 extension Private on TagRepository {
@@ -175,5 +132,25 @@ extension Private on TagRepository {
     } catch (e) {
       throw TagFailure.fromGetTag();
     }
+  }
+
+  Future<List<int>> _getTagIds({required List<String> tags}) async {
+    // Step 1: Upsert the new tags into the tags table
+    final upsertTagsResponse = await _supabase
+        .fromTagsTable()
+        .upsert(
+          tags.map((tagName) => {'name': tagName}).toList(),
+          onConflict: 'name',
+        )
+        .select();
+
+    if (upsertTagsResponse.isEmpty) {
+      throw TagFailure.fromUpdateTag();
+    }
+
+    // Extract tag IDs from the response
+    final tagIds = upsertTagsResponse.map((tag) => tag['id'] as int).toList();
+
+    return tagIds;
   }
 }

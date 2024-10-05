@@ -9,15 +9,8 @@ class UserFailure extends Failure {
   factory UserFailure.fromUpdateUser() => const UpdateUserFailure();
   factory UserFailure.fromDeleteUser() => const DeleteUserFailure();
 
-  // username data retrieval
-  factory UserFailure.fromGetUsername() => const GetUsernameFailure();
-  factory UserFailure.fromCreateUsername() => const CreateUsernameFailure();
-  factory UserFailure.fromUpdateUsername() => const UpdateUsernameFailure();
-  factory UserFailure.fromDeleteUsername() => const DeleteUsernameFailure();
-
   // auth
   factory UserFailure.fromAuthUserChanges() => const AuthUserChangesFailure();
-  factory UserFailure.fromAnonymousSignIn() => const AnonymousSignInFailure();
   factory UserFailure.fromSignOut() => const SignOutFailure();
   factory UserFailure.fromInvalidPhoneNumber() =>
       const InvalidPhoneNumberFailure();
@@ -29,10 +22,6 @@ class UserFailure extends Failure {
 
 class EmptyUserFailure extends UserFailure {
   const EmptyUserFailure() : super._();
-}
-
-class AnonymousSignInFailure extends UserFailure {
-  const AnonymousSignInFailure() : super._();
 }
 
 class InvalidPhoneNumberFailure extends UserFailure {
@@ -68,20 +57,4 @@ class UpdateUserFailure extends UserFailure {
 
 class DeleteUserFailure extends UserFailure {
   const DeleteUserFailure() : super._();
-}
-
-class GetUsernameFailure extends UserFailure {
-  const GetUsernameFailure() : super._();
-}
-
-class CreateUsernameFailure extends UserFailure {
-  const CreateUsernameFailure() : super._();
-}
-
-class UpdateUsernameFailure extends UserFailure {
-  const UpdateUsernameFailure() : super._();
-}
-
-class DeleteUsernameFailure extends UserFailure {
-  const DeleteUsernameFailure() : super._();
 }

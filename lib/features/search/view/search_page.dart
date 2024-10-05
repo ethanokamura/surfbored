@@ -1,10 +1,8 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:board_repository/board_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/shared/post_list/view/post_list_view.dart';
 import 'package:surfbored/features/search/cubit/search_cubit.dart';
-import 'package:user_repository/user_repository.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -17,8 +15,13 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   // search bar controller
   final _searchTextController = TextEditingController();
-  String query = '';
   Timer? _debounce;
+  String _query = '';
+
+  int currentPage = 0;
+  final int pageSize = 10;
+  bool hasMore = true;
+  List<Post> _posts = [];
 
   @override
   void dispose() {
@@ -27,34 +30,44 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // _searchTextController.addListener(_onSearchChanged);
+  Future<void> _searchForPosts(
+    BuildContext context,
+    String query, {
+    bool refresh = false,
+  }) async {
+    if (refresh) {
+      currentPage = 0;
+      hasMore = true;
+      setState(() => _posts = []);
+    }
+    if (!hasMore) return;
+    try {
+      final posts = await context.read<PostRepository>().searchPosts(
+            query: query,
+            offset: currentPage * pageSize,
+            limit: pageSize,
+          );
+      if (posts.isEmpty) {
+        hasMore = false; // No more posts to load
+        setState(() => _posts = []);
+      } else {
+        currentPage++; // Increment the page number
+        setState(() => _posts.addAll(posts));
+      }
+    } on PostFailure catch (failure) {
+      throw Exception('query failure $failure');
+    }
   }
 
-  Future<void> _onSearchChanged(
-    BuildContext context,
-    String searchQuery,
-  ) async {
-    print('listening to changes');
-    if (searchQuery.isEmpty) return;
+  Future<void> _onSearchChanged(BuildContext context, String query) async {
+    if (query.isEmpty) return;
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
-      print('reading text');
       setState(() {
-        query = searchQuery;
-        print('query: $query');
+        _query = query;
       });
       if (query.isNotEmpty) {
-        print('searching for $query');
-        try {
-          await context
-              .read<SearchCubit>()
-              .searchForPosts(query, refresh: true);
-        } catch (e) {
-          print('failure from search page $e');
-        }
+        await _searchForPosts(context, query, refresh: true);
       }
     });
   }
@@ -80,13 +93,8 @@ class _SearchPageState extends State<SearchPage> {
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: defaultPadding,
                       ),
-                      label: const PrimaryText(
-                        text: AppStrings.searchText,
-                      ),
-                      prefixIcon: defaultIconStyle(
-                        context,
-                        AppIcons.search,
-                      ),
+                      label: const PrimaryText(text: AppStrings.searchText),
+                      prefixIcon: defaultIconStyle(context, AppIcons.search),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Theme.of(context).colorScheme.primary,
@@ -104,38 +112,15 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
             const VerticalSpacer(),
-            if (query.isNotEmpty)
-              BlocProvider(
-                create: (_) => SearchCubit(
-                  boardRepository: context.read<BoardRepository>(),
-                  userRepository: context.read<UserRepository>(),
-                  postRepository: context.read<PostRepository>(),
-                ),
-                child: BlocBuilder<SearchCubit, SearchState>(
-                  builder: (context, state) {
-                    if (state.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state.isLoaded) {
-                      final posts = state.posts;
-                      return Expanded(
-                        child: PostListView(
-                          posts: posts,
-                          onLoadMore: () async =>
-                              context.read<SearchCubit>().searchForPosts(query),
-                          onRefresh: () async => context
-                              .read<SearchCubit>()
-                              .searchForPosts(query, refresh: true),
-                        ),
-                      );
-                    } else if (state.isEmpty) {
-                      return const Center(
-                        child: PrimaryText(text: AppStrings.emptyPosts),
-                      );
-                    }
-                    return const Center(
-                      child: PrimaryText(text: AppStrings.fetchFailure),
-                    );
-                  },
+            if (_query.isNotEmpty)
+              Expanded(
+                child: PostListView(
+                  posts: _posts,
+                  onLoadMore: () async =>
+                      context.read<SearchCubit>().searchForPosts(_query),
+                  onRefresh: () async => context
+                      .read<SearchCubit>()
+                      .searchForPosts(_query, refresh: true),
                 ),
               )
             else
@@ -145,17 +130,6 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ResultsList extends StatelessWidget {
-  const ResultsList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const PrimaryText(
-      text: 'results',
     );
   }
 }

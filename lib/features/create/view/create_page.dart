@@ -108,7 +108,7 @@ class _CreatePostState extends State<CreatePost> {
 
   String titleText = 'title';
   String descriptionText = 'description';
-  String websiteText = 'website';
+  String linkText = 'link';
   List<String> tags = [];
   bool isPublic = true;
   int docID = 0;
@@ -162,11 +162,11 @@ class _CreatePostState extends State<CreatePost> {
         ),
         const VerticalSpacer(),
 
-        // edit website
+        // edit link
         CustomTextBox(
           label: 'link',
-          text: websiteText,
-          onPressed: () => editField(Post.websiteUrlConverter),
+          text: linkText,
+          onPressed: () => editField(Post.linkConverter),
         ),
         const VerticalSpacer(),
 
@@ -186,7 +186,7 @@ class _CreatePostState extends State<CreatePost> {
                   userId: context.read<UserRepository>().user.uuid,
                   title: titleText,
                   description: descriptionText,
-                  website: websiteText,
+                  link: linkText,
                   tags: tags,
                   isPublic: isPublic,
                   imageFile: imageFile,
@@ -204,8 +204,8 @@ class _CreatePostState extends State<CreatePost> {
       textController.text = titleText;
     } else if (field == Post.descriptionConverter && field != descriptionText) {
       textController.text = descriptionText;
-    } else if (field == Post.websiteUrlConverter && 'website' != websiteText) {
-      textController.text = websiteText;
+    } else if (field == Post.linkConverter && field != linkText) {
+      textController.text = linkText;
     }
 
     // edit
@@ -218,8 +218,8 @@ class _CreatePostState extends State<CreatePost> {
           titleText = textController.text;
         } else if (field == Post.descriptionConverter) {
           descriptionText = textController.text;
-        } else if (field == Post.websiteUrlConverter) {
-          websiteText = textController.text;
+        } else if (field == Post.linkConverter) {
+          linkText = textController.text;
         }
       });
       textController.clear();

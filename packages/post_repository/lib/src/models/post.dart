@@ -7,7 +7,7 @@ class Post extends Equatable {
     this.id = 0,
     this.description = '',
     this.photoUrl,
-    this.websiteUrl = '',
+    this.link = '',
     this.tags = '',
     this.isPublic = true,
     this.createdAt,
@@ -23,7 +23,7 @@ class Post extends Equatable {
       creatorId: json[creatorIdConverter]?.toString() ?? '',
       title: json[titleConverter]?.toString() ?? '',
       description: json[descriptionConverter]?.toString() ?? '',
-      websiteUrl: json[websiteUrlConverter]?.toString() ?? '',
+      link: json[linkConverter]?.toString() ?? '',
       photoUrl: json[photoUrlConverter]?.toString() ?? '',
       tags: json[tagsConverter]?.toString() ?? '',
       isPublic: json[isPublicConverter] as bool? ?? true,
@@ -38,7 +38,7 @@ class Post extends Equatable {
   static String get titleConverter => 'title';
   static String get descriptionConverter => 'description';
   static String get photoUrlConverter => 'photo_url';
-  static String get websiteUrlConverter => 'website_url';
+  static String get linkConverter => 'link';
   static String get tagsConverter => 'tags';
   static String get isPublicConverter => 'is_public';
   static String get createdAtConverter => 'created_at';
@@ -51,7 +51,7 @@ class Post extends Equatable {
   final String title;
   final String description;
   final String? photoUrl;
-  final String websiteUrl;
+  final String link;
   final String tags;
   final bool isPublic;
   final DateTime? createdAt;
@@ -63,7 +63,7 @@ class Post extends Equatable {
         title,
         description,
         photoUrl,
-        websiteUrl,
+        link,
         tags,
         isPublic,
         createdAt,
@@ -81,7 +81,7 @@ class Post extends Equatable {
       creatorId: creatorId,
       photoUrl: photoUrl,
       description: description,
-      websiteUrl: websiteUrl,
+      link: link,
       tags: tags,
       isPublic: isPublic,
       createdAt: createdAt,
@@ -94,7 +94,7 @@ class Post extends Equatable {
     String? title,
     String? description,
     String? photoUrl,
-    String? websiteUrl,
+    String? link,
     String? tags,
     bool? isPublic,
     DateTime? createdAt,
@@ -105,7 +105,7 @@ class Post extends Equatable {
       if (title != null) titleConverter: title,
       if (photoUrl != null) photoUrlConverter: photoUrl,
       if (description != null) descriptionConverter: description,
-      if (websiteUrl != null) websiteUrlConverter: websiteUrl,
+      if (link != null) linkConverter: link,
       if (tags != null) tagsConverter: tags,
       if (isPublic != null) isPublicConverter: isPublic,
       if (createdAt != null) createdAtConverter: createdAt.toUtc().toString(),
@@ -118,7 +118,7 @@ class Post extends Equatable {
     String? title,
     String? description,
     String? photoUrl,
-    String? websiteUrl,
+    String? link,
     String? tags,
     bool? isPublic,
     DateTime? createdAt,
@@ -129,7 +129,7 @@ class Post extends Equatable {
       title: title,
       photoUrl: photoUrl,
       description: description,
-      websiteUrl: websiteUrl,
+      link: link,
       tags: tags,
       isPublic: isPublic,
       createdAt: createdAt,
@@ -142,7 +142,7 @@ class Post extends Equatable {
     String? title,
     String? description,
     String? photoUrl,
-    String? websiteUrl,
+    String? link,
     String? tags,
     bool? isPublic,
     DateTime? createdAt,
@@ -153,7 +153,7 @@ class Post extends Equatable {
       title: title,
       photoUrl: photoUrl,
       description: description,
-      websiteUrl: websiteUrl,
+      link: link,
       tags: tags,
       isPublic: isPublic,
       createdAt: createdAt,

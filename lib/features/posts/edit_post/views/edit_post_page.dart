@@ -97,8 +97,8 @@ class EditView extends StatelessWidget {
           ),
           const VerticalSpacer(),
           EditField(
-            field: Post.websiteUrlConverter,
-            value: post.websiteUrl,
+            field: Post.linkConverter,
+            value: post.link,
             postId: post.id!,
           ),
           const VerticalSpacer(),

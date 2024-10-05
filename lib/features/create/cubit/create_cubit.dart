@@ -27,7 +27,7 @@ class CreateCubit extends Cubit<CreateState> {
     required String userId,
     required String title,
     required String description,
-    required String website,
+    required String link,
     required List<String> tags,
     required bool isPublic,
     required File? imageFile,
@@ -40,7 +40,7 @@ class CreateCubit extends Cubit<CreateState> {
           creatorId: userId,
           description: description,
           isPublic: isPublic,
-          websiteUrl: website,
+          link: link,
         ),
       );
 

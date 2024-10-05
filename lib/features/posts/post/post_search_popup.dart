@@ -80,8 +80,8 @@ Future<dynamic> postSearchPopUp(
                 if (post.description.isNotEmpty)
                   DescriptionText(text: post.description),
                 if (post.description.isNotEmpty) const VerticalSpacer(),
-                if (post.websiteUrl.isNotEmpty) WebLink(url: post.websiteUrl),
-                if (post.websiteUrl.isNotEmpty) const VerticalSpacer(),
+                if (post.link.isNotEmpty) WebLink(url: post.link),
+                if (post.link.isNotEmpty) const VerticalSpacer(),
                 if (post.tags.isNotEmpty) TagList(tags: post.tags.split(' ')),
                 if (post.tags.isNotEmpty) const VerticalSpacer(),
                 Row(

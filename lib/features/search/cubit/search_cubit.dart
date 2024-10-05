@@ -87,7 +87,6 @@ class SearchCubit extends Cubit<SearchState> {
     }
     if (!hasMore) return;
     emit(state.fromLoading());
-    print('searching for $query...');
     try {
       final posts = await _postRepository.searchPosts(
         query: query,
@@ -102,7 +101,6 @@ class SearchCubit extends Cubit<SearchState> {
         emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {
-      print('query failure');
       emit(state.fromPostFailure(failure));
     }
   }

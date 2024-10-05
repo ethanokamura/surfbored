@@ -32,7 +32,7 @@ class PostCubit extends Cubit<PostState> {
   }
 
   Future<void> fetchAllPosts({bool refresh = false}) async {
-    if (refresh) {
+    if (refresh == true) {
       currentPage = 0;
       hasMore = true;
       emit(state.fromEmpty());

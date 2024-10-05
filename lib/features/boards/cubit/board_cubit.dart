@@ -95,7 +95,7 @@ class BoardCubit extends Cubit<BoardState> {
 extension _BoardStateExtensions on BoardState {
   BoardState fromLoading() => copyWith(status: BoardStatus.loading);
 
-  BoardState fromEmpty() => copyWith(status: BoardStatus.empty);
+  BoardState fromEmpty() => copyWith(posts: [], status: BoardStatus.empty);
 
   BoardState fromDeleted() => copyWith(status: BoardStatus.deleted);
 

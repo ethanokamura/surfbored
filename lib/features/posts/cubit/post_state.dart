@@ -69,7 +69,7 @@ extension PostStateExtensions on PostState {
 extension _PostStateExtensions on PostState {
   PostState fromLoading() => copyWith(status: PostStatus.loading);
 
-  PostState fromEmpty() => copyWith(status: PostStatus.empty);
+  PostState fromEmpty() => copyWith(posts: [], status: PostStatus.empty);
 
   PostState fromDeleted() => copyWith(status: PostStatus.deleted);
 

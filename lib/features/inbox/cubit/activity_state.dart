@@ -61,7 +61,8 @@ extension ActivityStateExtensions on ActivityState {
 }
 
 extension _ActivityStateExtensions on ActivityState {
-  ActivityState fromEmpty() => copyWith(status: ActivityStatus.empty);
+  ActivityState fromEmpty() =>
+      copyWith(friendRequests: [], status: ActivityStatus.empty);
   ActivityState fromLoading() => copyWith(status: ActivityStatus.loading);
 
   ActivityState fromFriendRequestsLoaded(List<String> friendRequests) =>

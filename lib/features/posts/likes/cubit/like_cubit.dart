@@ -24,7 +24,6 @@ class LikeCubit extends Cubit<LikeState> {
       emit(state.fromLoading());
       liked = !liked;
       if (liked) {
-        print('liking');
         await _postRepository.likePost(
           like: PostLike(
             userId: userId,
@@ -32,7 +31,6 @@ class LikeCubit extends Cubit<LikeState> {
           ),
         );
       } else {
-        print('disliking');
         await _postRepository.removeLike(
           postId: postId,
           userId: userId,

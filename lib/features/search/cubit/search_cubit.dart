@@ -78,29 +78,31 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
-  Future<void> searchForPosts({bool refresh = false}) async {
+  Future<void> searchForPosts(String query, {bool refresh = false}) async {
     if (refresh) {
       currentPage = 0;
       hasMore = true;
+      state.fromPostsLoaded([]); // clear posts
       emit(state.fromEmpty());
     }
     if (!hasMore) return;
     emit(state.fromLoading());
+    print('searching for $query...');
     try {
       final posts = await _postRepository.searchPosts(
-        query: state.query,
+        query: query,
         offset: currentPage * pageSize,
         limit: pageSize,
       );
       if (posts.isEmpty) {
-        hasMore = false; // No more boards to load
+        hasMore = false; // No more posts to load
         emit(state.fromEmpty());
       } else {
         currentPage++; // Increment the page number
-        state.posts.addAll(posts);
-        emit(state.fromPostsLoaded(state.posts));
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {
+      print('query failure');
       emit(state.fromPostFailure(failure));
     }
   }

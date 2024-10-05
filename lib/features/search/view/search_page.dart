@@ -17,19 +17,46 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   // search bar controller
   final _searchTextController = TextEditingController();
+  String query = '';
+  Timer? _debounce;
 
   @override
   void dispose() {
     _searchTextController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _searchTextController.addListener(
-      () => context.read<SearchCubit>().setQuery(_searchTextController.text),
-    );
+    // _searchTextController.addListener(_onSearchChanged);
+  }
+
+  Future<void> _onSearchChanged(
+    BuildContext context,
+    String searchQuery,
+  ) async {
+    print('listening to changes');
+    if (searchQuery.isEmpty) return;
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      print('reading text');
+      setState(() {
+        query = searchQuery;
+        print('query: $query');
+      });
+      if (query.isNotEmpty) {
+        print('searching for $query');
+        try {
+          await context
+              .read<SearchCubit>()
+              .searchForPosts(query, refresh: true);
+        } catch (e) {
+          print('failure from search page $e');
+        }
+      }
+    });
   }
 
   @override
@@ -45,6 +72,10 @@ class _SearchPageState extends State<SearchPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _searchTextController,
+                    onChanged: (value) async => _onSearchChanged(
+                      context,
+                      value.trim(),
+                    ),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: defaultPadding,
@@ -73,44 +104,44 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
             const VerticalSpacer(),
-            BlocProvider(
-              create: (_) => SearchCubit(
-                boardRepository: context.read<BoardRepository>(),
-                userRepository: context.read<UserRepository>(),
-                postRepository: context.read<PostRepository>(),
-              ),
-              child: BlocBuilder<SearchCubit, SearchState>(
-                builder: (context, state) {
-                  if (state.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state.isLoaded) {
-                    final posts = state.posts;
-                    return Expanded(
-                      child: PostListView(
-                        posts: posts,
-                        onLoadMore: () async =>
-                            context.read<SearchCubit>().searchForPosts(),
-                        onRefresh: () async => context
-                            .read<SearchCubit>()
-                            .searchForPosts(refresh: true),
-                      ),
-                    );
-                  } else if (state.isEmpty) {
+            if (query.isNotEmpty)
+              BlocProvider(
+                create: (_) => SearchCubit(
+                  boardRepository: context.read<BoardRepository>(),
+                  userRepository: context.read<UserRepository>(),
+                  postRepository: context.read<PostRepository>(),
+                ),
+                child: BlocBuilder<SearchCubit, SearchState>(
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state.isLoaded) {
+                      final posts = state.posts;
+                      return Expanded(
+                        child: PostListView(
+                          posts: posts,
+                          onLoadMore: () async =>
+                              context.read<SearchCubit>().searchForPosts(query),
+                          onRefresh: () async => context
+                              .read<SearchCubit>()
+                              .searchForPosts(query, refresh: true),
+                        ),
+                      );
+                    } else if (state.isEmpty) {
+                      return const Center(
+                        child: PrimaryText(text: AppStrings.emptyPosts),
+                      );
+                    }
                     return const Center(
-                      child: PrimaryText(text: AppStrings.emptyPosts),
+                      child: PrimaryText(text: AppStrings.fetchFailure),
                     );
-                  } else if (state.isQueried) {
-                    context.read<SearchCubit>().searchForPosts();
-                    return const Center(
-                      child: PrimaryText(text: AppStrings.changedPosts),
-                    );
-                  }
-                  return const Center(
-                    child: PrimaryText(text: AppStrings.fetchFailure),
-                  );
-                },
+                  },
+                ),
+              )
+            else
+              const PrimaryText(
+                text: 'Enter a tag, title or description of something',
               ),
-            ),
           ],
         ),
       ),

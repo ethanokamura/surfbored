@@ -36,7 +36,7 @@ class EditTagsBox extends StatelessWidget {
           ),
           // tags
           if (tags.isEmpty)
-            PrimaryText(text: AppStrings.emptyTags)
+            const PrimaryText(text: AppStrings.emptyTags)
           else
             TagList(tags: tags),
         ],

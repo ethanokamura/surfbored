@@ -22,6 +22,11 @@ class DataStrings {
   static const String fromDeleteFailure = 'Failure to delete data';
   static const String fromUnknownFailure = 'Something went wrong.';
 
+  static const String fromAddLikeFailure = 'Failure to like';
+  static const String fromRemoveLikeFailure = 'Failure to unlike';
+  static const String fromAddSaveFailure = 'Failure to save board';
+  static const String fromRemoveSaveFailure = 'Failure to unsave board';
+
   // success
   static const String empty = 'No data found';
   static const String fromCreate = 'Successfully created';
@@ -85,7 +90,8 @@ class AuthStrings {
 
   static const String authFailure = 'Failure to authenticate.';
   static const String unknownFailure = 'Unknown failure occured';
-  static const String phoneSignInFailureMessage = 'Failed to sign in.';
+  static const String signInFailure = 'Failed to sign in.';
+  static const String signOutFailure = 'Failed to sign out.';
   static const logOut = 'Logout';
 }
 

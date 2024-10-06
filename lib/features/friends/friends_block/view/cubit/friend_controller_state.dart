@@ -13,6 +13,7 @@ enum FriendControllerStatus {
 final class FriendControllerState extends Equatable {
   const FriendControllerState._({
     this.status = FriendControllerStatus.initial,
+    this.failure = FriendFailure.empty,
     this.friends = 0,
   });
 
@@ -20,21 +21,25 @@ final class FriendControllerState extends Equatable {
   const FriendControllerState.initial() : this._();
 
   final FriendControllerStatus status;
+  final FriendFailure failure;
   final int friends;
 
   // rebuilds the app when the props change
   @override
   List<Object?> get props => [
         status,
+        failure,
         friends,
       ];
 
   FriendControllerState copyWith({
     FriendControllerStatus? status,
+    FriendFailure? failure,
     int? friends,
   }) {
     return FriendControllerState._(
       status: status ?? this.status,
+      failure: failure ?? this.failure,
       friends: friends ?? this.friends,
     );
   }
@@ -52,8 +57,8 @@ extension FriendControllerStateExtensions on FriendControllerState {
 extension _FriendControllerStateExtensions on FriendControllerState {
   FriendControllerState fromLoading() =>
       copyWith(status: FriendControllerStatus.loading);
-  FriendControllerState fromFailure() =>
-      copyWith(status: FriendControllerStatus.failure);
+  FriendControllerState fromFailure(FriendFailure failure) =>
+      copyWith(failure: failure, status: FriendControllerStatus.failure);
   FriendControllerState fromNoRequest() =>
       copyWith(status: FriendControllerStatus.initial);
   FriendControllerState fromRequestSent() =>

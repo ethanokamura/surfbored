@@ -3,6 +3,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/board_list/view/board_card.dart';
 import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/failures/board_failures.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
 
 class UserBoards extends StatelessWidget {
@@ -14,21 +15,9 @@ class UserBoards extends StatelessWidget {
       create: (context) => BoardCubit(
         boardRepository: context.read<BoardRepository>(),
       )..fetchBoards(userId),
-      child: BlocListener<BoardCubit, BoardState>(
-        listenWhen: (_, current) => current.isFailure,
-        listener: (context, state) {
-          if (state.isFailure) {
-            final message = switch (state.failure) {
-              EmptyFailure() => DataStrings.emptyFailure,
-              CreateFailure() => DataStrings.fromCreateFailure,
-              ReadFailure() => DataStrings.fromGetFailure,
-              UpdateFailure() => DataStrings.fromUpdateFailure,
-              DeleteFailure() => DataStrings.fromDeleteFailure,
-              _ => DataStrings.fromUnknownFailure,
-            };
-            return context.showSnackBar(message);
-          }
-        },
+      child: listenForBoardFailures<BoardCubit, BoardState>(
+        failureSelector: (state) => state.failure,
+        isFailureSelector: (state) => state.isFailure,
         child: BlocBuilder<BoardCubit, BoardState>(
           builder: (context, state) {
             if (state.isLoading) {

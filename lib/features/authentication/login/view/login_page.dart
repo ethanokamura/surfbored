@@ -3,6 +3,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/authentication/login/cubit/authentication_cubit.dart';
 import 'package:surfbored/features/authentication/login/view/otp.dart';
 import 'package:surfbored/features/authentication/login/view/phone.dart';
+import 'package:surfbored/features/failures/user_failures.dart';
 import 'package:user_repository/user_repository.dart';
 
 class LoginPage extends StatelessWidget {
@@ -24,18 +25,9 @@ class LoginPage extends StatelessWidget {
           create: (context) => AuthCubit(
             userRepository: context.read<UserRepository>(),
           ),
-          child: BlocListener<AuthCubit, AuthState>(
-            listenWhen: (_, current) => current.isFailure,
-            listener: (context, state) {
-              if (state.isFailure) {
-                final message = switch (state.failure) {
-                  PhoneNumberSignInFailure() =>
-                    AuthStrings.phoneSignInFailureMessage,
-                  _ => DataStrings.fromUnknownFailure,
-                };
-                return context.showSnackBar(message);
-              }
-            },
+          child: listenForUserFailures<AuthCubit, AuthState>(
+            failureSelector: (state) => state.failure,
+            isFailureSelector: (state) => state.isFailure,
             child: BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
                 if (state.isLoading) {

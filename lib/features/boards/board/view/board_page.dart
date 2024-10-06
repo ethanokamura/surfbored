@@ -3,6 +3,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/board/view/saves/saves.dart';
 import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/failures/board_failures.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
@@ -19,55 +20,59 @@ class BoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<BoardCubit>().fetchBoard(boardId);
-    return BlocBuilder<BoardCubit, BoardState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state.isLoaded) {
-          final board = state.board;
-          final boardCubit = context.read<BoardCubit>();
-          return CustomPageView(
-            top: true,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              title: AppBarText(text: board.title),
-              actions: <Widget>[
-                IconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (context) {
-                        return BlocProvider.value(
-                          value: boardCubit,
-                          child: EditBoardPage(
-                            boardId: board.id,
-                            onDelete: () async {
-                              Navigator.pop(context);
-                              await boardCubit.deleteBoard(board.id);
-                              if (context.mounted) Navigator.pop(context);
-                            },
-                          ),
-                        );
-                      },
+    return listenForBoardFailures<BoardCubit, BoardState>(
+      failureSelector: (state) => state.failure,
+      isFailureSelector: (state) => state.isFailure,
+      child: BlocBuilder<BoardCubit, BoardState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.isLoaded) {
+            final board = state.board;
+            final boardCubit = context.read<BoardCubit>();
+            return CustomPageView(
+              top: true,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                title: AppBarText(text: board.title),
+                actions: <Widget>[
+                  IconButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                        builder: (context) {
+                          return BlocProvider.value(
+                            value: boardCubit,
+                            child: EditBoardPage(
+                              boardId: board.id,
+                              onDelete: () async {
+                                Navigator.pop(context);
+                                await boardCubit.deleteBoard(board.id);
+                                if (context.mounted) Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ),
+                    icon: defaultIconStyle(context, AppIcons.more),
                   ),
-                  icon: defaultIconStyle(context, AppIcons.more),
-                ),
-              ],
-            ),
-            body: BoardPageView(
-              board: board,
-            ),
-          );
-        } else if (state.isDeleted) {
+                ],
+              ),
+              body: BoardPageView(
+                board: board,
+              ),
+            );
+          } else if (state.isDeleted) {
+            return const Center(
+              child: PrimaryText(text: BoardStrings.delete),
+            );
+          }
           return const Center(
-            child: PrimaryText(text: BoardStrings.delete),
+            child: PrimaryText(text: BoardStrings.failure),
           );
-        }
-        return const Center(
-          child: PrimaryText(text: BoardStrings.failure),
-        );
-      },
+        },
+      ),
     );
   }
 }

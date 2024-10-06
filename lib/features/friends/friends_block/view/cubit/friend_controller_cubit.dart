@@ -37,8 +37,8 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
                 ? emit(state.fromRequestRecieved())
                 : emit(state.fromRequestSent());
       }
-    } catch (e) {
-      emit(state.fromFailure());
+    } on FriendFailure catch (failure) {
+      emit(state.fromFailure(failure));
     }
   }
 

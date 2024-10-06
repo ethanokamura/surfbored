@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/failures/board_failures.dart';
 
 class EditBoardPage extends StatelessWidget {
   const EditBoardPage({
@@ -32,23 +33,9 @@ class EditBoardPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: BoardStrings.edit),
       ),
-      body: BlocListener<BoardCubit, BoardState>(
-        listenWhen: (_, current) => current.isFailure,
-        listener: (context, state) {
-          if (state.isFailure) {
-            final message = switch (state.failure) {
-              EmptyFailure() => DataStrings.emptyFailure,
-              CreateFailure() => DataStrings.fromCreateFailure,
-              ReadFailure() => DataStrings.fromGetFailure,
-              UpdateFailure() => DataStrings.fromUpdateFailure,
-              DeleteFailure() => DataStrings.fromDeleteFailure,
-              _ => DataStrings.fromUnknownFailure,
-            };
-            return context.showSnackBar(message);
-          } else if (state.isUpdated) {
-            context.showSnackBar(DataStrings.fromUpdate);
-          }
-        },
+      body: listenForBoardFailures<BoardCubit, BoardState>(
+        failureSelector: (state) => state.failure,
+        isFailureSelector: (state) => state.isFailure,
         child: BlocBuilder<BoardCubit, BoardState>(
           builder: (context, state) {
             if (state.isLoading) {

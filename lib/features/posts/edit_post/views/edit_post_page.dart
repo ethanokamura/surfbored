@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:surfbored/features/failures/post_failures.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
 
@@ -32,25 +33,29 @@ class EditPostPage extends StatelessWidget {
             context.showSnackBar(DataStrings.fromUpdate);
           }
         },
-        child: BlocBuilder<PostCubit, PostState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.isLoaded) {
-              return EditView(
-                post: state.post,
-                postTags: state.tags,
-                postCubit: context.read<PostCubit>(),
-              );
-            } else if (state.isDeleted) {
+        child: listenForPostFailures<PostCubit, PostState>(
+          failureSelector: (state) => state.failure,
+          isFailureSelector: (state) => state.isFailure,
+          child: BlocBuilder<PostCubit, PostState>(
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state.isLoaded) {
+                return EditView(
+                  post: state.post,
+                  postTags: state.tags,
+                  postCubit: context.read<PostCubit>(),
+                );
+              } else if (state.isDeleted) {
+                return const Center(
+                  child: PrimaryText(text: PostStrings.delete),
+                );
+              }
               return const Center(
-                child: PrimaryText(text: PostStrings.delete),
+                child: PrimaryText(text: DataStrings.fromUnknownFailure),
               );
-            }
-            return const Center(
-              child: PrimaryText(text: DataStrings.fromUnknownFailure),
-            );
-          },
+            },
+          ),
         ),
       ),
     );

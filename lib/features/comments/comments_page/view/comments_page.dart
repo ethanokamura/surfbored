@@ -3,6 +3,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:comment_repository/comment_repository.dart';
 import 'package:surfbored/features/comments/comments_page/comment/cubit/comments_cubit.dart';
 import 'package:surfbored/features/comments/comments_page/view/comments_list.dart';
+import 'package:surfbored/features/failures/comment_failures.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CommentsPage extends StatelessWidget {
@@ -32,14 +33,18 @@ class CommentsPage extends StatelessWidget {
           create: (context) => CommentsCubit(
             commentRepository: context.read<CommentRepository>(),
           )..readComments(postId),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(child: CommentsView(postId: postId)),
-              const VerticalSpacer(),
-              CommentContorller(postId: postId),
-              const VerticalSpacer(),
-            ],
+          child: listenForCommentFailures<CommentsCubit, CommentsState>(
+            failureSelector: (state) => state.failure,
+            isFailureSelector: (state) => state.isFailure,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(child: CommentsView(postId: postId)),
+                const VerticalSpacer(),
+                CommentContorller(postId: postId),
+                const VerticalSpacer(),
+              ],
+            ),
           ),
         ),
       ),

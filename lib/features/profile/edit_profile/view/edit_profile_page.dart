@@ -21,7 +21,7 @@ class EditProfilePage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.editProfile),
+        title: const AppBarText(text: UserStrings.editProfile),
       ),
       body: BlocBuilder<ProfileCubit, UserData>(
         builder: (context, user) {

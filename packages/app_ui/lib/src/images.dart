@@ -7,6 +7,7 @@ import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/pop_ups.dart';
+import 'package:app_ui/src/strings.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:app_ui/src/widgets.dart';
@@ -77,14 +78,14 @@ class _EditImageState extends State<EditImage> {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: '${AppStrings.selectMedia}:', fontSize: 24),
+        const TitleText(text: '${ImageStrings.selectMedia}:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ActionSelectButton(
               icon: AppIcons.camera,
-              label: AppStrings.camera,
+              label: ImageStrings.camera,
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.camera);
@@ -93,7 +94,7 @@ class _EditImageState extends State<EditImage> {
             const SizedBox(width: 40),
             ActionSelectButton(
               icon: AppIcons.posts,
-              label: AppStrings.photoLibrary,
+              label: ImageStrings.photoLibrary,
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.gallery);
@@ -234,14 +235,14 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: '${AppStrings.selectMedia}:', fontSize: 24),
+        const TitleText(text: '${ImageStrings.selectMedia}:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ActionSelectButton(
               icon: AppIcons.camera,
-              label: AppStrings.camera,
+              label: ImageStrings.camera,
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.camera);
@@ -250,7 +251,7 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
             const SizedBox(width: 40),
             ActionSelectButton(
               icon: AppIcons.posts,
-              label: AppStrings.photoLibrary,
+              label: ImageStrings.photoLibrary,
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.gallery);
@@ -545,14 +546,14 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: '${AppStrings.selectMedia}:', fontSize: 24),
+        const TitleText(text: '${ImageStrings.selectMedia}:', fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ActionSelectButton(
               icon: AppIcons.camera,
-              label: AppStrings.camera,
+              label: ImageStrings.camera,
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.camera);
@@ -561,7 +562,7 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
             const SizedBox(width: 40),
             ActionSelectButton(
               icon: AppIcons.posts,
-              label: AppStrings.photoLibrary,
+              label: ImageStrings.photoLibrary,
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.gallery);

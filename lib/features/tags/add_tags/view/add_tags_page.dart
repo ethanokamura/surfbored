@@ -45,7 +45,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
         top: false,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: const AppBarText(text: AppStrings.addTags),
+          title: const AppBarText(text: TagStrings.create),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -58,7 +58,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
                         controller: _tagController,
                         cursorColor: Theme.of(context).subtextColor,
                         decoration: const InputDecoration(
-                          labelText: AppStrings.addTag,
+                          labelText: TagStrings.createSingle,
                         ),
                       ),
                     ),
@@ -86,7 +86,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
               const VerticalSpacer(),
               ActionButton(
                 inverted: true,
-                text: AppStrings.confirm,
+                text: ButtonStrings.confirm,
                 onTap: () {
                   widget.returnTags(_tags);
                   Navigator.pop(context);

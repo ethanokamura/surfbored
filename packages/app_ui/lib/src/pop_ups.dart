@@ -27,7 +27,7 @@ Future<String?> editTextField(
         maxLength: maxInputLength(field),
         maxLines: null,
         decoration: InputDecoration(
-          hintText: '${AppStrings.enterField} $field',
+          hintText: '${PromptStrings.enter} $field',
           hintStyle: TextStyle(
             fontSize: 18,
             color: Theme.of(context).hintTextColor,
@@ -42,7 +42,7 @@ Future<String?> editTextField(
               child: ActionButton(
                 inverted: true,
                 onTap: () => Navigator.pop(context),
-                text: AppStrings.cancel,
+                text: ButtonStrings.cancel,
               ),
             ),
             const HorizontalSpacer(),
@@ -52,7 +52,7 @@ Future<String?> editTextField(
               child: ActionButton(
                 inverted: true,
                 onTap: () => Navigator.of(context).pop(textController.text),
-                text: AppStrings.save,
+                text: ButtonStrings.save,
               ),
             ),
           ],

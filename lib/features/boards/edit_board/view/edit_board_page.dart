@@ -30,13 +30,23 @@ class EditBoardPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.editBoard),
+        title: const AppBarText(text: BoardStrings.edit),
       ),
       body: BlocListener<BoardCubit, BoardState>(
+        listenWhen: (_, current) => current.isFailure,
         listener: (context, state) {
-          if (state.isUpdated) {
-            // Show a success message or navigate back
-            context.showSnackBar(AppStrings.updatedBoard);
+          if (state.isFailure) {
+            final message = switch (state.failure) {
+              EmptyFailure() => DataStrings.emptyFailure,
+              CreateFailure() => DataStrings.fromCreateFailure,
+              ReadFailure() => DataStrings.fromGetFailure,
+              UpdateFailure() => DataStrings.fromUpdateFailure,
+              DeleteFailure() => DataStrings.fromDeleteFailure,
+              _ => DataStrings.fromUnknownFailure,
+            };
+            return context.showSnackBar(message);
+          } else if (state.isUpdated) {
+            context.showSnackBar(DataStrings.fromUpdate);
           }
         },
         child: BlocBuilder<BoardCubit, BoardState>(
@@ -51,11 +61,11 @@ class EditBoardPage extends StatelessWidget {
               );
             } else if (state.isDeleted) {
               return const Center(
-                child: PrimaryText(text: AppStrings.deleteBoard),
+                child: PrimaryText(text: BoardStrings.delete),
               );
             }
             return const Center(
-              child: PrimaryText(text: AppStrings.fetchFailure),
+              child: PrimaryText(text: BoardStrings.failure),
             );
           },
         ),
@@ -106,7 +116,7 @@ class EditView extends StatelessWidget {
           const VerticalSpacer(),
           ActionButton(
             inverted: true,
-            text: AppStrings.deleteBoard,
+            text: BoardStrings.delete,
             onTap: () {
               onDelete();
               Navigator.pop(context);

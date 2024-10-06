@@ -1,6 +1,6 @@
 import 'package:app_ui/src/button_styles.dart';
-import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/icons.dart';
+import 'package:app_ui/src/strings.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/widgets.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class MoreCommentOptions extends StatelessWidget {
           context,
           Options.delete,
           AppIcons.delete,
-          AppStrings.delete,
+          ButtonStrings.delete,
         ),
       ]),
       onSelected: (value) {
@@ -68,16 +68,16 @@ class MoreOptions extends StatelessWidget {
           context,
           Options.manage,
           AppIcons.boards,
-          AppStrings.addOrRemove,
+          ButtonStrings.addOrRemove,
         ),
-        _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
+        _menuItem(context, Options.share, AppIcons.share, ButtonStrings.share),
         if (isOwner) ...[
-          _menuItem(context, Options.edit, AppIcons.edit, AppStrings.edit),
+          _menuItem(context, Options.edit, AppIcons.edit, ButtonStrings.edit),
           _menuItem(
             context,
             Options.delete,
             AppIcons.delete,
-            AppStrings.delete,
+            ButtonStrings.delete,
           ),
         ],
       ]),
@@ -115,9 +115,9 @@ class MoreSearchOptions extends StatelessWidget {
           context,
           Options.manage,
           AppIcons.boards,
-          AppStrings.addOrRemove,
+          ButtonStrings.addOrRemove,
         ),
-        _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
+        _menuItem(context, Options.share, AppIcons.share, ButtonStrings.share),
       ]),
       onSelected: (value) {
         if (value == Options.manage) {
@@ -151,20 +151,20 @@ class MoreProfileOptions extends StatelessWidget {
     return PopupMenuButton<Options>(
       style: noBackgroundStyle(),
       itemBuilder: (BuildContext context) => _buildMenuItems([
-        _menuItem(context, Options.share, AppIcons.share, AppStrings.share),
+        _menuItem(context, Options.share, AppIcons.share, ButtonStrings.share),
         if (isCurrent)
           _menuItem(
             context,
             Options.edit,
             AppIcons.settings,
-            AppStrings.edit,
+            ButtonStrings.edit,
           ),
         if (!isCurrent)
           _menuItem(
             context,
             Options.block,
             AppIcons.block,
-            AppStrings.toggleBlock,
+            ButtonStrings.toggleBlock,
           ),
       ]),
       onSelected: (value) {

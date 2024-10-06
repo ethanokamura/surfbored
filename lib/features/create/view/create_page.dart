@@ -21,7 +21,7 @@ class CreatePage extends StatelessWidget {
         top: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: const AppBarText(text: AppStrings.createPage),
+          title: const AppBarText(text: AppBarStrings.create),
         ),
         body: BlocProvider(
           create: (context) => CreateCubit(
@@ -35,15 +35,15 @@ class CreatePage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               } else if (state.isCreated) {
                 return const Center(
-                  child: PrimaryText(text: AppStrings.createSuccess),
+                  child: PrimaryText(text: DataStrings.fromCreate),
                 );
               } else if (state.isEmpty) {
                 return const Center(
-                  child: PrimaryText(text: AppStrings.emptyPost),
+                  child: PrimaryText(text: DataStrings.empty),
                 );
               } else if (state.isFailure) {
                 return const Center(
-                  child: PrimaryText(text: AppStrings.fetchFailure),
+                  child: PrimaryText(text: DataStrings.fromUnknownFailure),
                 );
               } else {
                 return const CreatePageView();

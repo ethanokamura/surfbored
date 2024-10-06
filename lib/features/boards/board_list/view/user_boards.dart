@@ -14,35 +14,52 @@ class UserBoards extends StatelessWidget {
       create: (context) => BoardCubit(
         boardRepository: context.read<BoardRepository>(),
       )..fetchBoards(userId),
-      child: BlocBuilder<BoardCubit, BoardState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.isLoaded) {
-            final boards = state.boards;
-            return BoardListView(
-              boards: boards,
-              onLoadMore: () async =>
-                  context.read<BoardCubit>().fetchBoards(userId),
-              onRefresh: () async =>
-                  context.read<BoardCubit>().fetchBoards(userId, refresh: true),
-            );
-          } else if (state.isEmpty) {
-            return const Center(
-              child: PrimaryText(text: AppStrings.emptyBoards),
-            );
-          } else if (state.isDeleted || state.isUpdated) {
-            context.read<BoardCubit>().streamUserBoards(userId);
-            return const Center(
-              child: PrimaryText(text: AppStrings.changedBoards),
-            );
-          } else if (state.isFailure) {
-            return const Center(
-              child: PrimaryText(text: AppStrings.fetchFailure),
-            );
+      child: BlocListener<BoardCubit, BoardState>(
+        listenWhen: (_, current) => current.isFailure,
+        listener: (context, state) {
+          if (state.isFailure) {
+            final message = switch (state.failure) {
+              EmptyFailure() => DataStrings.emptyFailure,
+              CreateFailure() => DataStrings.fromCreateFailure,
+              ReadFailure() => DataStrings.fromGetFailure,
+              UpdateFailure() => DataStrings.fromUpdateFailure,
+              DeleteFailure() => DataStrings.fromDeleteFailure,
+              _ => DataStrings.fromUnknownFailure,
+            };
+            return context.showSnackBar(message);
           }
-          return const Center(child: CircularProgressIndicator());
         },
+        child: BlocBuilder<BoardCubit, BoardState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state.isLoaded) {
+              final boards = state.boards;
+              return BoardListView(
+                boards: boards,
+                onLoadMore: () async =>
+                    context.read<BoardCubit>().fetchBoards(userId),
+                onRefresh: () async => context
+                    .read<BoardCubit>()
+                    .fetchBoards(userId, refresh: true),
+              );
+            } else if (state.isEmpty) {
+              return const Center(
+                child: PrimaryText(text: DataStrings.empty),
+              );
+            } else if (state.isDeleted || state.isUpdated) {
+              context.read<BoardCubit>().streamUserBoards(userId);
+              return const Center(
+                child: PrimaryText(text: DataStrings.fromUpdate),
+              );
+            } else if (state.isFailure) {
+              return const Center(
+                child: PrimaryText(text: DataStrings.fromUnknownFailure),
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

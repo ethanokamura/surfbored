@@ -33,23 +33,23 @@ class PostFeed extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final post = posts[index];
                   return post.isEmpty
-                      ? const UnknownCard(message: 'Post not found')
+                      ? const UnknownCard(message: DataStrings.emptyFailure)
                       : PostView(post: post);
                 },
               ),
             );
           } else if (state.isEmpty) {
             return const Center(
-              child: PrimaryText(text: AppStrings.emptyPosts),
+              child: PrimaryText(text: DataStrings.empty),
             );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<PostCubit>().fetchAllPosts(refresh: true);
             return const Center(
-              child: PrimaryText(text: AppStrings.changedPosts),
+              child: PrimaryText(text: DataStrings.fromUpdate),
             );
           } else if (state.isFailure) {
             return const Center(
-              child: PrimaryText(text: AppStrings.fetchFailure),
+              child: PrimaryText(text: DataStrings.fromUnknownFailure),
             );
           }
           return const Center(child: CircularProgressIndicator());

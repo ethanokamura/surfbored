@@ -34,7 +34,7 @@ class _OtpPromptState extends State<OtpPrompt> {
               labelStyle: TextStyle(
                 color: Theme.of(context).subtextColor,
               ),
-              label: const Text(AppStrings.otpPrompt),
+              label: const Text(AuthStrings.otpPrompt),
               enabledBorder: OutlineInputBorder(
                 borderRadius: defaultBorderRadius,
                 borderSide: BorderSide(
@@ -52,7 +52,7 @@ class _OtpPromptState extends State<OtpPrompt> {
                 if (otp.length == 6) {
                   await context.read<AuthCubit>().signInWithOTP(otp);
                 } else {
-                  context.showSnackBar(AppStrings.invalidOtp);
+                  context.showSnackBar(AuthStrings.invalidOtp);
                   _otpController.clear();
                 }
               } catch (e) {
@@ -63,7 +63,7 @@ class _OtpPromptState extends State<OtpPrompt> {
                 }
               }
             },
-            text: AppStrings.confirm,
+            text: ButtonStrings.confirm,
           ),
         ],
       ),

@@ -8,7 +8,7 @@ class UnkownPage extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.pageNotFoundTitle),
+        title: const AppBarText(text: UnknownStrings.pageNotFoundTitle),
       ),
       top: true,
       body: Center(
@@ -28,7 +28,7 @@ class UnkownPage extends StatelessWidget {
             ),
             const VerticalSpacer(),
             const VerticalSpacer(),
-            const TitleText(text: AppStrings.pageNotFound),
+            const TitleText(text: UnknownStrings.pageNotFound),
           ],
         ),
       ),

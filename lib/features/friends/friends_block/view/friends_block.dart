@@ -24,7 +24,7 @@ class FriendsBlock extends StatelessWidget {
           builder: (context, state) {
             if (state.isLoading) {
               return const Center(
-                child: PrimaryText(text: AppStrings.loadingFriends),
+                child: PrimaryText(text: DataStrings.loading),
               );
             }
             return Row(

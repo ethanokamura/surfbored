@@ -28,14 +28,14 @@ class FriendButton extends StatelessWidget {
             )
           : context.read<FriendControllerCubit>().friendStateSelection(userId),
       inverted: (!isCurrent && !state.isRequested) || !isCurrent,
-      text: isCurrent ? AppStrings.myFriends : buttonText,
+      text: isCurrent ? FriendStrings.myFriends : buttonText,
     );
   }
 
   String _getButtonText(FriendControllerState state) {
-    if (state.isRequested) return AppStrings.friendRequestSent;
-    if (state.isRecieved) return AppStrings.acceptFriendRequest;
-    if (state.areFriends) return AppStrings.removeFriend;
-    return AppStrings.addFriend;
+    if (state.isRequested) return FriendStrings.requestSent;
+    if (state.isRecieved) return FriendStrings.acceptRequest;
+    if (state.areFriends) return FriendStrings.removeFriend;
+    return FriendStrings.addFriend;
   }
 }

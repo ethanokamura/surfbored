@@ -30,16 +30,16 @@ class UserPostList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return const Center(
-              child: PrimaryText(text: AppStrings.emptyPosts),
+              child: PrimaryText(text: DataStrings.empty),
             );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<PostCubit>().fetchUserPosts(userId);
             return const Center(
-              child: PrimaryText(text: AppStrings.changedPosts),
+              child: PrimaryText(text: DataStrings.fromUpdate),
             );
           }
           return const Center(
-            child: PrimaryText(text: AppStrings.fetchFailure),
+            child: PrimaryText(text: DataStrings.fromUnknownFailure),
           );
         },
       ),

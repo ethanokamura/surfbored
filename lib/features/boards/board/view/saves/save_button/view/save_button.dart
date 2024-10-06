@@ -32,7 +32,7 @@ class SaveButton extends StatelessWidget {
             icon: isSaved
                 ? accentIconStyle(context, AppIcons.saved)
                 : defaultIconStyle(context, AppIcons.notSaved),
-            text: '$saves ${AppStrings.saves}',
+            text: '$saves ${BoardStrings.saves}',
           );
         },
       ),

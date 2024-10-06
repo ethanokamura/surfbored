@@ -217,7 +217,7 @@ class ProfileHeader extends StatelessWidget {
               TitleText(text: user.displayName),
             WebLink(url: user.websiteUrl),
             SecondaryText(
-              text: '${AppStrings.joined}: ${DateFormatter.formatTimestamp(
+              text: '${UserStrings.joined}: ${DateFormatter.formatTimestamp(
                 user.createdAt!,
               )}',
             ),
@@ -237,7 +237,7 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SecondaryText(text: AppStrings.aboutMe),
+          const SecondaryText(text: UserStrings.about),
           PrimaryText(text: bio),
         ],
       ),

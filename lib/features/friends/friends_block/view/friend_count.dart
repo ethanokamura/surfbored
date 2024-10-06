@@ -19,7 +19,7 @@ class FriendsCountText extends StatelessWidget {
         ),
         children: <TextSpan>[
           TextSpan(
-            text: AppStrings.friends,
+            text: FriendStrings.friends,
             style: TextStyle(
               color: Theme.of(context).subtextColor,
               fontWeight: FontWeight.normal,

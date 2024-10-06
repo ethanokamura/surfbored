@@ -51,11 +51,11 @@ class FriendsList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return const Center(
-              child: PrimaryText(text: AppStrings.emptyFriends),
+              child: PrimaryText(text: FriendStrings.empty),
             );
           }
           return const Center(
-            child: PrimaryText(text: AppStrings.fetchFailure),
+            child: PrimaryText(text: DataStrings.fromUnknownFailure),
           );
         },
       ),

@@ -7,6 +7,7 @@ export 'icons.dart';
 export 'images.dart';
 export 'more_options.dart';
 export 'pop_ups.dart';
+export 'strings.dart';
 export 'text.dart';
 export 'theme.dart';
 export 'widgets.dart';

@@ -104,10 +104,10 @@ class AppView extends StatelessWidget {
             listener: (context, state) {
               return switch (state.failure) {
                 AuthChangesFailure() =>
-                  context.showSnackBar(AppStrings.authFailure),
+                  context.showSnackBar(AuthStrings.authFailure),
                 SignOutFailure() =>
-                  context.showSnackBar(AppStrings.authFailure),
-                _ => context.showSnackBar(AppStrings.unknownFailure),
+                  context.showSnackBar(AuthStrings.authFailure),
+                _ => context.showSnackBar(AuthStrings.unknownFailure),
               };
             },
             child: FlowBuilder(

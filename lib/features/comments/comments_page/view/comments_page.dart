@@ -65,11 +65,11 @@ class CommentsView extends StatelessWidget {
           return CommentListView(comments: comments, postId: postId);
         } else if (state.isEmpty) {
           return const Center(
-            child: PrimaryText(text: AppStrings.emptyComments),
+            child: PrimaryText(text: CommentStrings.empty),
           );
         }
         return const Center(
-          child: PrimaryText(text: AppStrings.fetchFailure),
+          child: PrimaryText(text: DataStrings.fromUnknownFailure),
         );
       },
     );

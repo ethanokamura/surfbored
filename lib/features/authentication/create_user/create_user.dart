@@ -23,7 +23,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.createUsername),
+        title: const AppBarText(text: UserStrings.createUsername),
       ),
       top: true,
       body: Center(
@@ -31,12 +31,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomInputField(
-              label: AppStrings.username,
-              text: username != '' ? username : AppStrings.username,
+              label: UserStrings.username,
+              text: username != '' ? username : UserStrings.username,
               onPressed: () async {
                 final newValue = await editTextField(
                   context,
-                  AppStrings.username,
+                  UserStrings.username,
                   TextEditingController(),
                 );
                 if (newValue != null &&
@@ -63,7 +63,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     context.read<AppCubit>().confirmedUsername(newUser);
                   }
                 },
-                text: AppStrings.confirm,
+                text: ButtonStrings.confirm,
               ),
           ],
         ),

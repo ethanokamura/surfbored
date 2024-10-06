@@ -36,7 +36,7 @@ class _PhonePromptState extends State<PhonePrompt> {
               labelStyle: TextStyle(
                 color: Theme.of(context).subtextColor,
               ),
-              label: const Text(AppStrings.phoneNumberPrompt),
+              label: const Text(AuthStrings.phoneNumberPrompt),
               enabledBorder: OutlineInputBorder(
                 borderRadius: defaultBorderRadius,
                 borderSide: BorderSide(
@@ -57,7 +57,7 @@ class _PhonePromptState extends State<PhonePrompt> {
                       .read<AuthCubit>()
                       .signInWithPhone('+1$phoneNumber');
                 } else {
-                  context.showSnackBar(AppStrings.invalidPhoneNumber);
+                  context.showSnackBar(AuthStrings.invalidPhoneNumber);
                   _phoneController.clear();
                 }
               } catch (e) {
@@ -68,7 +68,7 @@ class _PhonePromptState extends State<PhonePrompt> {
                 }
               }
             },
-            text: AppStrings.confirm,
+            text: ButtonStrings.confirm,
           ),
         ],
       ),

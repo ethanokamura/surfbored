@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
         appBar: AppBar(
-          title: const AppBarText(text: AppStrings.signIn),
+          title: const AppBarText(text: AuthStrings.signIn),
         ),
         top: true,
         body: BlocProvider(
@@ -30,8 +30,8 @@ class LoginPage extends StatelessWidget {
               if (state.isFailure) {
                 final message = switch (state.failure) {
                   PhoneNumberSignInFailure() =>
-                    AppStrings.phoneSignInFailureMessage,
-                  _ => AppStrings.unknownFailure,
+                    AuthStrings.phoneSignInFailureMessage,
+                  _ => DataStrings.fromUnknownFailure,
                 };
                 return context.showSnackBar(message);
               }

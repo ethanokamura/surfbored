@@ -23,13 +23,13 @@ class EditPostPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.editPost),
+        title: const AppBarText(text: PostStrings.edit),
       ),
       body: BlocListener<PostCubit, PostState>(
         listener: (context, state) {
           if (state.isUpdated) {
             // Show a success message or navigate back
-            context.showSnackBar(AppStrings.updatedPost);
+            context.showSnackBar(DataStrings.fromUpdate);
           }
         },
         child: BlocBuilder<PostCubit, PostState>(
@@ -44,11 +44,11 @@ class EditPostPage extends StatelessWidget {
               );
             } else if (state.isDeleted) {
               return const Center(
-                child: PrimaryText(text: AppStrings.deletePost),
+                child: PrimaryText(text: PostStrings.delete),
               );
             }
             return const Center(
-              child: PrimaryText(text: AppStrings.fetchFailure),
+              child: PrimaryText(text: DataStrings.fromUnknownFailure),
             );
           },
         ),

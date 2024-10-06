@@ -49,7 +49,7 @@ class _CreateBoardState extends State<CreateBoard> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             PrimaryText(
-              text: isPublic ? AppStrings.isPublic : AppStrings.isPrivate,
+              text: isPublic ? ButtonStrings.isPublic : ButtonStrings.isPrivate,
             ),
             const HorizontalSpacer(),
             Switch(

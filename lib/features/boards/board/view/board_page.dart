@@ -61,11 +61,11 @@ class BoardPage extends StatelessWidget {
           );
         } else if (state.isDeleted) {
           return const Center(
-            child: PrimaryText(text: AppStrings.deletedBoard),
+            child: PrimaryText(text: BoardStrings.delete),
           );
         }
         return const Center(
-          child: PrimaryText(text: AppStrings.fetchFailure),
+          child: PrimaryText(text: BoardStrings.failure),
         );
       },
     );
@@ -167,7 +167,7 @@ class BoardButtons extends StatelessWidget {
             child: ActionButton(
               inverted: false,
               onTap: () {},
-              text: AppStrings.share,
+              text: ButtonStrings.share,
             ),
           ),
         if (!isOwner)
@@ -187,7 +187,7 @@ class BoardButtons extends StatelessWidget {
                 builder: (context) => ShuffledPostsPage(boardId: board.id),
               ),
             ),
-            text: AppStrings.shuffle,
+            text: ButtonStrings.shuffle,
           ),
         ),
       ],

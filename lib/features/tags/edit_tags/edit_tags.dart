@@ -17,7 +17,7 @@ class EditTagsBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // section name
-              const SecondaryText(text: AppStrings.editTags),
+              const SecondaryText(text: TagStrings.edit),
               ActionIconButton(
                 background: false,
                 inverted: true,
@@ -36,7 +36,7 @@ class EditTagsBox extends StatelessWidget {
           ),
           // tags
           if (tags.isEmpty)
-            const PrimaryText(text: AppStrings.emptyTags)
+            const PrimaryText(text: TagStrings.empty)
           else
             TagList(tags: tags),
         ],

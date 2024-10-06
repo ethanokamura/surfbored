@@ -93,22 +93,24 @@ class _CreatePostState extends State<CreatePost> {
         const VerticalSpacer(),
 
         // submit
-        ActionButton(
-          inverted: true,
-          onTap: () {
-            context.read<CreateCubit>().createPost(
-                  userId: context.read<UserRepository>().user.uuid,
-                  title: titleText,
-                  description: descriptionText,
-                  link: linkText,
-                  tags: tags,
-                  isPublic: isPublic,
-                  imageFile: imageFile,
-                );
-            Navigator.pop(context);
-          },
-          text: AppStrings.create,
-        ),
+        if (titleText != 'title')
+          ActionButton(
+            inverted: true,
+            onTap: () {
+              context.read<CreateCubit>().createPost(
+                    userId: context.read<UserRepository>().user.uuid,
+                    title: titleText,
+                    description:
+                        descriptionText != 'description' ? descriptionText : '',
+                    link: linkText != 'link' ? linkText : '',
+                    tags: tags,
+                    isPublic: isPublic,
+                    imageFile: imageFile,
+                  );
+              Navigator.pop(context);
+            },
+            text: AppStrings.create,
+          ),
       ],
     );
   }

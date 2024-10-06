@@ -35,13 +35,12 @@ class CreateCubit extends Cubit<CreateState> {
     emit(state.fromLoading());
     try {
       final docId = await _postRepository.createPost(
-        post: Post(
-          title: title,
-          creatorId: userId,
-          description: description,
-          isPublic: isPublic,
-          link: link,
-        ),
+        title: title,
+        creatorId: userId,
+        description: description,
+        tags: tags,
+        isPublic: isPublic,
+        link: link,
       );
 
       if (tags.isNotEmpty) {

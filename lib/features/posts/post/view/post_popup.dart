@@ -6,7 +6,7 @@ import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/comments/comments.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/edit_post/edit_post.dart';
-import 'package:surfbored/features/posts/likes/likes.dart';
+import 'package:surfbored/features/posts/post/like_button/likes.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';

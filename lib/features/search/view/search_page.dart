@@ -1,7 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/posts/shared/post_list/view/post_list_view.dart';
+import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/search/cubit/search_cubit.dart';
 
 class SearchPage extends StatefulWidget {

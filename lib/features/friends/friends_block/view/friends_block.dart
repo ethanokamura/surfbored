@@ -1,8 +1,8 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:friend_repository/friend_repository.dart';
-import 'package:surfbored/features/friends/friend_button/cubit/friend_controller_cubit.dart';
-import 'package:surfbored/features/friends/friend_button/view/friend_button.dart';
+import 'package:surfbored/features/friends/friends_block/view/cubit/friend_controller_cubit.dart';
+import 'package:surfbored/features/friends/friends_block/view/friend_button/view/friend_button.dart';
 import 'package:surfbored/features/friends/friends_block/view/friend_count.dart';
 
 class FriendsBlock extends StatelessWidget {

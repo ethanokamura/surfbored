@@ -8,10 +8,12 @@ class CommentButton extends StatelessWidget {
   const CommentButton({
     required this.comments,
     required this.postId,
+    required this.postCreatorId,
     super.key,
   });
   final int postId;
   final int comments;
+  final String postCreatorId;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -33,6 +35,7 @@ class CommentButton extends StatelessWidget {
               MaterialPageRoute<dynamic>(
                 builder: (context) {
                   return CommentsPage(
+                    postCreatorId: postCreatorId,
                     postId: postId,
                   );
                 },

@@ -12,9 +12,20 @@ class CommentRepository {
 }
 
 extension Create on CommentRepository {
-  Future<void> createComment({required Comment comment}) async {
+  Future<void> createComment({
+    required int postId,
+    required String postCreatorId,
+    required String senderId,
+    required String message,
+  }) async {
     try {
-      await _supabase.fromCommentsTable().insert(comment.toJson());
+      final data = Comment.insert(
+        postId: postId,
+        postCreatorId: postCreatorId,
+        senderId: senderId,
+        message: message,
+      );
+      await _supabase.fromCommentsTable().insert(data);
     } catch (e) {
       throw CommentFailure.fromCreate();
     }
@@ -124,7 +135,7 @@ extension Delete on CommentRepository {
   Future<void> deleteComment({required int commentId}) async {
     try {
       await _supabase
-          .fromPostsTable()
+          .fromCommentsTable()
           .delete()
           .eq(Comment.idConverter, commentId);
     } catch (e) {

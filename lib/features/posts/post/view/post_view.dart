@@ -157,6 +157,7 @@ class Footer extends StatelessWidget {
                 children: [
                   CommentButton(
                     postId: post.id!,
+                    postCreatorId: post.creatorId,
                     comments: snapshot.data!,
                   ),
                   const HorizontalSpacer(),

@@ -5,6 +5,7 @@ class Comment extends Equatable {
   const Comment({
     required this.postId,
     required this.senderId,
+    required this.postCreatorId,
     required this.message,
     this.id = 0,
     this.edited = false,
@@ -19,6 +20,7 @@ class Comment extends Equatable {
     return Comment(
       id: json[idConverter] as int,
       postId: json[postIdConverter] as int,
+      postCreatorId: json[postCreatorIdConverter]?.toString() ?? '',
       senderId: json[senderIdConverter]?.toString() ?? '',
       message: json[messageConverter]?.toString() ?? '',
       edited: json[editedConverter] as bool? ?? false,
@@ -30,6 +32,7 @@ class Comment extends Equatable {
 
   static String get idConverter => 'id';
   static String get postIdConverter => 'post_id';
+  static String get postCreatorIdConverter => 'post_creator_id';
   static String get senderIdConverter => 'sender_id';
   static String get messageConverter => 'message';
   static String get editedConverter => 'edited';
@@ -38,6 +41,7 @@ class Comment extends Equatable {
   // data fields
   final int id;
   final int postId;
+  final String postCreatorId;
   final String senderId;
   final String message;
   final bool edited;
@@ -46,6 +50,7 @@ class Comment extends Equatable {
   static const empty = Comment(
     postId: 0,
     senderId: '',
+    postCreatorId: '',
     message: '',
   );
 
@@ -53,6 +58,7 @@ class Comment extends Equatable {
   List<Object?> get props => [
         id,
         postId,
+        postCreatorId,
         senderId,
         message,
         edited,
@@ -77,6 +83,7 @@ class Comment extends Equatable {
   static Map<String, dynamic> _generateMap({
     int? id,
     int? postId,
+    String? postCreatorId,
     String? senderId,
     String? message,
     bool? edited,
@@ -85,7 +92,9 @@ class Comment extends Equatable {
     return {
       if (id != null) idConverter: id,
       if (postId != null) postIdConverter: postId,
+      if (postCreatorId != null) postCreatorIdConverter: postCreatorId,
       if (senderId != null) senderIdConverter: senderId,
+      if (message != null) messageConverter: message,
       if (edited != null) editedConverter: edited,
       if (createdAt != null) createdAtConverter: createdAt.toUtc().toString(),
     };
@@ -94,6 +103,7 @@ class Comment extends Equatable {
   static Map<String, dynamic> insert({
     int? id,
     int? postId,
+    String? postCreatorId,
     String? senderId,
     String? message,
     bool? edited,
@@ -102,6 +112,7 @@ class Comment extends Equatable {
     return _generateMap(
       id: id,
       postId: postId,
+      postCreatorId: postCreatorId,
       senderId: senderId,
       message: message,
       edited: edited,
@@ -112,6 +123,7 @@ class Comment extends Equatable {
   static Map<String, dynamic> update({
     int? id,
     int? postId,
+    String? postCreatorId,
     String? senderId,
     String? message,
     bool? edited,
@@ -120,6 +132,7 @@ class Comment extends Equatable {
     return _generateMap(
       id: id,
       postId: postId,
+      postCreatorId: postCreatorId,
       senderId: senderId,
       message: message,
       edited: edited,

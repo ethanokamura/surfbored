@@ -11,18 +11,18 @@ class CommentsCubit extends Cubit<CommentsState> {
 
   final CommentRepository _commentRepository;
 
-  Future<void> createComment(
-    int postId,
-    String senderID,
-    String comment,
-  ) async {
+  Future<void> createComment({
+    required int postId,
+    required String postCreatorId,
+    required String senderId,
+    required String message,
+  }) async {
     try {
       await _commentRepository.createComment(
-        comment: Comment(
-          postId: postId,
-          senderId: senderID,
-          message: comment,
-        ),
+        postId: postId,
+        postCreatorId: postCreatorId,
+        senderId: senderId,
+        message: message,
       );
     } on CommentFailure catch (failure) {
       emit(state.fromFailure(failure));

@@ -1,7 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:comment_repository/comment_repository.dart';
-import 'package:surfbored/features/comments/comment/view/comment_likes/cubit/comment_likes_cubit.dart';
+import 'package:surfbored/features/comments/comments_page/comment/comment_likes/cubit/comment_likes_cubit.dart';
 
 class CommentLikeButton extends StatelessWidget {
   const CommentLikeButton({

@@ -4,6 +4,7 @@ Directory for tags features!
 ```
 lib/features/create/
   ├── add_tags/          # Main page to add tags
-  ├── shared/            # Helper widgets to edit and display tags
-  └── tags.dart          # Exports tag feature
+  ├── edit_tags/         # Main page to edit tags
+  ├── tag_list/          # Tag list view
+  └── tags.dart          # Exports tag features
 ```

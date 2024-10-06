@@ -1,6 +1,6 @@
 name: surfbored
 description: "create and share activities"
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -8,7 +8,6 @@ environment:
   sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
-  algolia_helper_flutter: ^1.0.0  # remove!
   api_client:
     path: packages/api_client
   app_core:
@@ -19,16 +18,12 @@ dependencies:
     path: packages/board_repository
   comment_repository:
     path: packages/comment_repository
-  flow_builder: ^0.1.0  # move! also make use of this
   flutter:
     sdk: flutter
   friend_repository:
     path: packages/friend_repository
-  infinite_scroll_pagination: ^4.0.0  # remove? or keep for later
-  intl: ^0.19.0  # needed for what?
   post_repository:
     path: packages/post_repository
-  shared_preferences: ^2.0.6  # this is for theme. maybe delete?
   sqflite: ^2.0.0+3  # needed for what?
   tag_repository:
     path: packages/tag_repository

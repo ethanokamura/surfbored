@@ -1,5 +1,4 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:surfbored/features/tags/tag_list/view/view.dart';
 import 'package:surfbored/features/tags/tags.dart';
 
 class EditTagsBox extends StatelessWidget {

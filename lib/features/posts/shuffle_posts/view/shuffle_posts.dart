@@ -30,7 +30,7 @@ class ShuffledPostsPage extends StatelessWidget {
               return PostViewController(posts: posts);
             } else if (state.isEmpty) {
               return const Center(
-                child: PrimaryText(text: AppStrings.emptyBoard),
+                child: PrimaryText(text: AppStrings.emptyPost),
               );
             } else {
               return const Center(

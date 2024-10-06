@@ -4,16 +4,6 @@ library app_ui;
 export 'package:auto_size_text/auto_size_text.dart';
 export 'package:flutter/material.dart';
 export 'package:google_fonts/google_fonts.dart';
+export 'package:shared_preferences/shared_preferences.dart';
 
-export 'src/button_styles.dart';
-export 'src/buttons.dart';
-export 'src/colors.dart';
-export 'src/constants.dart';
-export 'src/extensions.dart';
-export 'src/icons.dart';
-export 'src/images.dart';
-export 'src/more_options.dart';
-export 'src/pop_ups.dart';
-export 'src/text.dart';
-export 'src/theme.dart';
-export 'src/widgets.dart';
+export 'src/app_ui.dart';

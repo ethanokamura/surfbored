@@ -1,5 +1,3 @@
-// dart packages
-// import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -27,16 +25,11 @@ class DateFormatter {
 
 class AppStrings {
   static const String appTitle = 'SurfBored';
-  static const String createSomething = 'Create Something:';
-  static const String activity = 'Activity';
-  static const String board = 'Board';
   static const String darkModeIcon = 'assets/images/dark_mode_face.png';
   static const String lightModeIcon = 'assets/images/light_mode_face.png';
 
   // auth
-  static const String guestText = 'Sign in as guest';
   static const String searchText = 'Search for something new';
-  static const String discoverText = 'Discover!';
   static const String createPage = 'Create Something!';
   static const String isPublic = 'Public';
   static const String isPrivate = 'Private';
@@ -48,19 +41,13 @@ class AppStrings {
   static const String otpPrompt = 'Enter OTP.';
   static const String invalidOtp = 'Invalid OTP.';
 
-  static const String verificationCode = 'Verification Code';
-  static const String verificationError = 'Verification error, try again.';
   static const String authFailure = 'Failure to authenticate.';
-  static const String signOutFailure = 'Failure to sign out.';
   static const String unknownFailure = 'Unknown failure occured';
   static const String phoneSignInFailureMessage =
       'Failed signing in with phone.';
-  static const String anonSignInFailureMessage =
-      'Failed signing in anonymously.';
   static const logOut = 'Logout';
 
   // pages
-  static const String activityFeed = 'Activity Feed';
   static const String inbox = 'Inbox';
   static const String userSettings = 'User Settings';
   static const String pageNotFoundTitle = 'Error 404';
@@ -84,7 +71,6 @@ class AppStrings {
   static const String enterField = 'Enter new';
   static const String darkMode = 'Dark Mode';
   static const String lightMode = 'Light Mode';
-  static const String returnHome = 'Return Home';
 
   // images
   static const String selectMedia = 'Select Media';
@@ -96,6 +82,28 @@ class AppStrings {
   static const String editTags = 'Edit Tags';
   static const String addTag = 'Add Tag';
 
+  // numbers
+  static const String saves = 'saves';
+  static const String friends = 'friends';
+
+  // general data
+  static const String createSuccess = 'Successfully created!';
+  static const String fetchFailure = 'Something went wrong.';
+
+  // misc
+  static const String theme = 'Theme';
+  static const String nullData = 'Unable to get data.';
+
+  // user
+  static const String createUsername = 'Create Username';
+  static const String username = 'Username';
+  static const String editProfile = 'Edit Profile';
+  static const String toggleBlock = 'Block/Unblock';
+  static const String interests = 'interests';
+  static const String aboutMe = 'about me';
+  static const String joined = 'joined';
+  static const String emptyFriends = 'No friends yet!';
+
   // friends
   static const String noFriendRequests = 'No friend requests';
   static const String myFriends = 'My Friends';
@@ -105,69 +113,23 @@ class AppStrings {
   static const String addFriend = 'Add Friend';
   static const String loadingFriends = 'Loading Friends';
 
-  // numbers
-  static const String saves = 'saves';
-  static const String likes = 'likes';
-  static const String friends = 'friends';
-
-  // general data
-  static const String createSuccess = 'Successfully created!';
-  static const String loading = 'Loading';
-  static const String fetchFailure = 'Something went wrong.';
-
-  // misc
-  static const String requiredFields = '* required fields';
-  static const String theme = 'Theme';
-  static const String nullData = 'Unable to get data.';
-
-  // User
-  static const String createUsername = 'Create Username';
-  static const String invalidUsername = 'Invalid Username';
-  static const String username = 'Username';
-  static const String name = 'Name';
-  static const String bio = 'Bio';
-  static const String uploadProfilePicture = 'Upload a profile picture';
-  static const String editProfile = 'Edit Profile';
-  static const String toggleBlock = 'Block/Unblock';
-  static const String interests = 'interests';
-  static const String aboutMe = 'about me';
-  static const String website = 'website';
-  static const String joined = 'joined';
-  static const String blockedUser = 'User Not Avaliable.';
-  static const String emptyFriends = 'No friends yet!';
-
   // posts
   static const String editPost = 'Edit Post';
-  static const String postError = 'Error loading post';
   static const String emptyPost = 'No post found';
   static const String emptyPosts = 'No posts found';
   static const String deletePost = 'Delete post';
-  static const String createPost = 'Create a post!';
-  static const String createdPost = 'Post was created!';
   static const String updatedPost = 'Post was updated successfully!';
-  static const String changedPost = 'Post was changed. Reloading!';
   static const String changedPosts = 'Posts were changed. Reloading!';
-  static const String deletedPost = 'Post was deleted.';
   static const String addOrRemove = 'Add or remove';
 
   // comments
-  static const String editComment = 'Edit Comment';
-  static const String commentError = 'Error loading comment';
   static const String emptyComments = 'Be the first to leave a comment!';
-  static const String deleteComment = 'Delete Comment';
-  static const String createComment = 'Create a comment!';
-  static const String createdComment = 'Comment was created!';
-  static const String changedComments = 'Comments were changed. Reloading!';
-  static const String deletedComment = 'Comment was deleted.';
 
   // boards
   static const String editBoard = 'Edit Board';
-  static const String emptyBoard = 'No board found';
   static const String emptyBoards = 'No boards found';
   static const String deleteBoard = 'Delete Board';
-  static const String createdBoard = 'Create a board!';
   static const String updatedBoard = 'Board was updated successfully!';
-  static const String changedBoard = 'Board was changed. Reloading!';
   static const String changedBoards = 'Boards were changed. Reloading!';
   static const String deletedBoard = 'Board was deleted.';
   static const String addActivity = 'Add Activity To A Board';

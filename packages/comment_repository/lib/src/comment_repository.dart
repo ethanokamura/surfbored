@@ -82,6 +82,7 @@ extension Read on CommentRepository {
           .fromCommentsTable()
           .select()
           .eq(Comment.postIdConverter, postId)
+          .order('created_at')
           .range(offset, offset + limit - 1)
           .withConverter(Comment.converter);
     } catch (e) {

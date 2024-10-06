@@ -11,13 +11,25 @@ class PostRepository {
 }
 
 extension Create on PostRepository {
-  Future<int> createPost({required Post post}) async {
+  Future<int> createPost({
+    required String creatorId,
+    required String title,
+    required String description,
+    required String link,
+    required List<String> tags,
+    required bool isPublic,
+  }) async {
     try {
-      final res = await _supabase
-          .fromPostsTable()
-          .insert(post.toJson())
-          .select('id')
-          .single();
+      final post = Post.insert(
+        title: title,
+        creatorId: creatorId,
+        description: description,
+        tags: tags.join(' '),
+        isPublic: isPublic,
+        link: link,
+      );
+      final res =
+          await _supabase.fromPostsTable().insert(post).select('id').single();
       return res['id'] as int;
     } catch (e) {
       throw PostFailure.fromCreate();
@@ -89,7 +101,9 @@ extension Read on PostRepository {
       return await _supabase
           .fromPostsTable()
           .select()
+          .order('created_at')
           .range(offset, offset + limit - 1)
+          .order('created_at')
           .withConverter(Post.converter);
     } catch (e) {
       throw PostFailure.fromGet();
@@ -106,7 +120,9 @@ extension Read on PostRepository {
           .fromPostsTable()
           .select()
           .eq(Post.creatorIdConverter, userId)
+          .order('created_at')
           .range(offset, offset + limit - 1)
+          .order('created_at')
           .withConverter(Post.converter);
     } catch (e) {
       throw PostFailure.fromGet();
@@ -134,6 +150,7 @@ extension Read on PostRepository {
           .fromBoardPostsTable()
           .select()
           .eq('board_id', boardId)
+          .order('created_at')
           .range(offset, offset + limit - 1)
           .withConverter(Post.converter);
     } catch (e) {

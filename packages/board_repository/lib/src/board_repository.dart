@@ -116,6 +116,7 @@ extension Read on BoardRepository {
           .select()
           .eq(Board.creatorIdConverter, userId)
           .range(offset, offset + limit - 1)
+          .order('created_at')
           .withConverter(Board.converter);
     } catch (e) {
       throw BoardFailure.fromGet();
@@ -133,6 +134,7 @@ extension Read on BoardRepository {
           .select()
           .eq(BoardSave.userIdConverter, userId)
           .range(offset, offset + limit - 1)
+          .order('created_at')
           .withConverter(Board.converter);
     } catch (e) {
       throw BoardFailure.fromGet();
@@ -145,6 +147,7 @@ extension Read on BoardRepository {
           .fromBoardSavesTable()
           .select()
           .eq(Board.idConverter, boardId)
+          .order('created_at')
           .count(CountOption.exact);
       return likes.count;
     } catch (e) {

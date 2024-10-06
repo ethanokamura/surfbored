@@ -111,6 +111,7 @@ extension Read on FriendRepository {
           .select()
           .eq(Friend.userAIdConverter, userId)
           .or('${Friend.userBIdConverter}.eq.$userId')
+          .order('created_at')
           .range(offset, offset + limit - 1)
           .withConverter(Friend.converter);
       final friends = friendships.map((friendship) {
@@ -134,6 +135,7 @@ extension Read on FriendRepository {
             '${FriendRequest.senderIdConverter}, ${FriendRequest.recipientIdConverter}',
           )
           .eq(FriendRequest.recipientIdConverter, userId)
+          .order('created_at')
           .range(offset, offset + limit - 1)
           .withConverter(FriendRequest.converter);
       final senders =

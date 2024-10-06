@@ -15,13 +15,18 @@ extension Create on FriendRepository {
   Future<void> sendFriendRequest({
     required String senderId,
     required String recipientId,
-  }) async =>
+  }) async {
+    try {
       await _supabase.fromFriendRequestsTable().insert(
             FriendRequest.insert(
               senderId: senderId,
               recipientId: recipientId,
             ),
           );
+    } catch (e) {
+      throw FriendFailure.fromCreate();
+    }
+  }
 
   Future<void> addFriend({
     required String currentUserId,
@@ -38,7 +43,7 @@ extension Create on FriendRepository {
         otherUserId: otherUserId,
       );
     } catch (e) {
-      throw FriendFailure.fromCreateFriend();
+      throw FriendFailure.fromCreate();
     }
   }
 }
@@ -54,7 +59,7 @@ extension Read on FriendRepository {
           .count(CountOption.exact);
       return friends.count;
     } catch (e) {
-      throw FriendFailure.fromGetFriend();
+      throw FriendFailure.fromGet();
     }
   }
 
@@ -70,7 +75,7 @@ extension Read on FriendRepository {
 
       return friendship != null;
     } catch (e) {
-      throw FriendFailure.fromGetFriend();
+      throw FriendFailure.fromGet();
     }
   }
 
@@ -91,7 +96,7 @@ extension Read on FriendRepository {
       if (request == null) return null;
       return FriendRequest.fromJson(request).senderId == currentUserId;
     } catch (e) {
-      throw FriendFailure.fromGetFriend();
+      throw FriendFailure.fromGet();
     }
   }
 
@@ -113,7 +118,7 @@ extension Read on FriendRepository {
       }).toList();
       return friends;
     } catch (e) {
-      throw FriendFailure.fromGetFriend();
+      throw FriendFailure.fromGet();
     }
   }
 
@@ -135,7 +140,7 @@ extension Read on FriendRepository {
           friendRequests.map((request) => request.senderId).toList();
       return senders;
     } catch (e) {
-      throw FriendFailure.fromGetFriend();
+      throw FriendFailure.fromGet();
     }
   }
 }
@@ -146,22 +151,32 @@ extension Delete on FriendRepository {
   Future<void> removeFriendRequest({
     required String currentUserId,
     required String otherUserId,
-  }) async =>
-      _supabase.fromFriendRequestsTable().delete().match({
+  }) async {
+    try {
+      await _supabase.fromFriendRequestsTable().delete().match({
         FriendRequest.senderIdConverter: currentUserId,
         FriendRequest.recipientIdConverter: otherUserId,
       }).or(
         '${FriendRequest.recipientIdConverter}.eq.$currentUserId.and.${FriendRequest.senderIdConverter}.eq.$otherUserId',
       );
+    } catch (e) {
+      throw FriendFailure.fromDelete();
+    }
+  }
 
   Future<void> removeFriend({
     required String currentUserId,
     required String otherUserId,
-  }) async =>
-      _supabase.fromFriendsTable().delete().match({
+  }) async {
+    try {
+      await _supabase.fromFriendsTable().delete().match({
         Friend.userAIdConverter: currentUserId,
         Friend.userBIdConverter: otherUserId,
       }).or(
         '${Friend.userBIdConverter}.eq.$currentUserId.and.${Friend.userAIdConverter}.eq.$otherUserId',
       );
+    } catch (e) {
+      throw FriendFailure.fromDelete();
+    }
+  }
 }

@@ -3,30 +3,45 @@ import 'package:app_core/app_core.dart';
 class BoardFailure extends Failure {
   const BoardFailure._();
 
-  factory BoardFailure.fromCreateBoard() => const CreateBoardFailure();
-  factory BoardFailure.fromGetBoard() => const GetBoardFailure();
-  factory BoardFailure.fromUpdateBoard() => const UpdateBoardFailure();
-  factory BoardFailure.fromDeleteBoard() => const DeleteBoardFailure();
+  factory BoardFailure.fromCreate() => const CreateFailure();
+  factory BoardFailure.fromGet() => const ReadFailure();
+  factory BoardFailure.fromUpdate() => const UpdateFailure();
+  factory BoardFailure.fromDelete() => const DeleteFailure();
+  factory BoardFailure.fromAdd() => const AddSaveFailure();
+  factory BoardFailure.fromRemove() => const RemoveSaveFailure();
+  factory BoardFailure.fromStream() => const StreamFailure();
 
-  static const empty = EmptyBoardFailure();
+  static const empty = EmptyFailure();
 }
 
-class CreateBoardFailure extends BoardFailure {
-  const CreateBoardFailure() : super._();
+class CreateFailure extends BoardFailure {
+  const CreateFailure() : super._();
 }
 
-class GetBoardFailure extends BoardFailure {
-  const GetBoardFailure() : super._();
+class ReadFailure extends BoardFailure {
+  const ReadFailure() : super._();
 }
 
-class UpdateBoardFailure extends BoardFailure {
-  const UpdateBoardFailure() : super._();
+class StreamFailure extends BoardFailure {
+  const StreamFailure() : super._();
 }
 
-class DeleteBoardFailure extends BoardFailure {
-  const DeleteBoardFailure() : super._();
+class UpdateFailure extends BoardFailure {
+  const UpdateFailure() : super._();
 }
 
-class EmptyBoardFailure extends BoardFailure {
-  const EmptyBoardFailure() : super._();
+class DeleteFailure extends BoardFailure {
+  const DeleteFailure() : super._();
+}
+
+class AddSaveFailure extends BoardFailure {
+  const AddSaveFailure() : super._();
+}
+
+class RemoveSaveFailure extends BoardFailure {
+  const RemoveSaveFailure() : super._();
+}
+
+class EmptyFailure extends BoardFailure {
+  const EmptyFailure() : super._();
 }

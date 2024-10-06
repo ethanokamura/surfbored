@@ -13,42 +13,67 @@ class BoardRepository {
 
 extension Create on BoardRepository {
   Future<int> createBoard({required Board board}) async {
-    final res = await _supabase
-        .fromBoardsTable()
-        .insert(board.toJson())
-        .select('id')
-        .single();
-    return res['id'] as int;
+    try {
+      final res = await _supabase
+          .fromBoardsTable()
+          .insert(board.toJson())
+          .select('id')
+          .single();
+      return res['id'] as int;
+    } catch (e) {
+      throw BoardFailure.fromCreate();
+    }
   }
 
-  Future<void> saveBoard({required BoardSave save}) async =>
-      _supabase.fromBoardSavesTable().insert(save.toJson());
+  Future<void> saveBoard({required BoardSave save}) async {
+    try {
+      await _supabase.fromBoardSavesTable().insert(save.toJson());
+    } catch (e) {
+      throw BoardFailure.fromCreate();
+    }
+  }
 
-  Future<void> addPost({required BoardPost post}) async =>
-      _supabase.fromBoardPostsTable().insert(post.toJson());
+  Future<void> addPost({required BoardPost post}) async {
+    try {
+      await _supabase.fromBoardPostsTable().insert(post.toJson());
+    } catch (e) {
+      throw BoardFailure.fromCreate();
+    }
+  }
 }
 
 extension Read on BoardRepository {
-  Future<Board> fetchBoard({required int boardId}) async => _supabase
-      .fromBoardsTable()
-      .select()
-      .eq(Board.idConverter, boardId)
-      .maybeSingle()
-      .withConverter(
-        (data) => data == null ? Board.empty : Board.converterSingle(data),
-      );
+  Future<Board> fetchBoard({required int boardId}) async {
+    try {
+      return await _supabase
+          .fromBoardsTable()
+          .select()
+          .eq(Board.idConverter, boardId)
+          .maybeSingle()
+          .withConverter(
+            (data) => data == null ? Board.empty : Board.converterSingle(data),
+          );
+    } catch (e) {
+      throw BoardFailure.fromGet();
+    }
+  }
 
   Future<List<Board>> searchBoards({
     required String query,
     required int offset,
     required int limit,
-  }) async =>
-      _supabase
+  }) async {
+    try {
+      return await _supabase
           .fromBoardsTable()
           .select()
           .textSearch(Board.boardSearchQuery, query)
           .range(offset, offset + limit - 1)
           .withConverter(Board.converter);
+    } catch (e) {
+      throw BoardFailure.fromGet();
+    }
+  }
 
   Future<bool> hasPost({
     required int boardId,
@@ -61,7 +86,7 @@ extension Read on BoardRepository {
       }).maybeSingle();
       return res != null;
     } catch (e) {
-      throw BoardFailure.fromGetBoard();
+      throw BoardFailure.fromGet();
     }
   }
 
@@ -76,7 +101,7 @@ extension Read on BoardRepository {
       }).maybeSingle();
       return res != null;
     } catch (e) {
-      throw BoardFailure.fromGetBoard();
+      throw BoardFailure.fromGet();
     }
   }
 
@@ -84,25 +109,35 @@ extension Read on BoardRepository {
     required String userId,
     required int limit,
     required int offset,
-  }) async =>
-      _supabase
+  }) async {
+    try {
+      return await _supabase
           .fromBoardsTable()
           .select()
           .eq(Board.creatorIdConverter, userId)
           .range(offset, offset + limit - 1)
           .withConverter(Board.converter);
+    } catch (e) {
+      throw BoardFailure.fromGet();
+    }
+  }
 
   Future<List<Board>> fetchUserSavedBoards({
     required String userId,
     required int limit,
     required int offset,
-  }) async =>
-      _supabase
+  }) async {
+    try {
+      return await _supabase
           .fromBoardsTable()
           .select()
           .eq(BoardSave.userIdConverter, userId)
           .range(offset, offset + limit - 1)
           .withConverter(Board.converter);
+    } catch (e) {
+      throw BoardFailure.fromGet();
+    }
+  }
 
   Future<int> fetchBoardSaves({required int boardId}) async {
     try {
@@ -113,18 +148,24 @@ extension Read on BoardRepository {
           .count(CountOption.exact);
       return likes.count;
     } catch (e) {
-      throw BoardFailure.fromGetBoard();
+      throw BoardFailure.fromGet();
     }
   }
 }
 
 extension StreamData on BoardRepository {
-  Stream<List<Board>> streamUserBoards({required String userId}) => _supabase
-      .fromBoardsTable()
-      .stream(primaryKey: [Board.idConverter])
-      .eq('creator_id', userId)
-      .order('created_at')
-      .map(Board.converter);
+  Stream<List<Board>> streamUserBoards({required String userId}) {
+    try {
+      return _supabase
+          .fromBoardsTable()
+          .stream(primaryKey: [Board.idConverter])
+          .eq('creator_id', userId)
+          .order('created_at')
+          .map(Board.converter);
+    } catch (e) {
+      throw BoardFailure.fromStream();
+    }
+  }
 }
 
 extension Update on BoardRepository {
@@ -133,28 +174,48 @@ extension Update on BoardRepository {
     required String field,
     required int boardId,
     required dynamic data,
-  }) async =>
-      _supabase
+  }) async {
+    try {
+      await _supabase
           .fromBoardsTable()
           .update({field: data}).eq(Board.idConverter, boardId);
+    } catch (e) {
+      throw BoardFailure.fromUpdate();
+    }
+  }
 }
 
 extension Delete on BoardRepository {
-  Future<void> deleteBoard({required int boardId}) async =>
-      _supabase.fromBoardsTable().delete().eq(Board.idConverter, boardId);
+  Future<void> deleteBoard({required int boardId}) async {
+    try {
+      await _supabase.fromBoardsTable().delete().eq(Board.idConverter, boardId);
+    } catch (e) {
+      throw BoardFailure.fromDelete();
+    }
+  }
 
-  Future<void> removePost({required int postId, required int boardId}) async =>
-      _supabase.fromBoardPostsTable().delete().match({
+  Future<void> removePost({required int postId, required int boardId}) async {
+    try {
+      await _supabase.fromBoardPostsTable().delete().match({
         BoardPost.postIdConverter: postId,
         BoardPost.boardIdConverter: boardId,
       });
+    } catch (e) {
+      throw BoardFailure.fromDelete();
+    }
+  }
 
   Future<void> removeSave({
     required int boardId,
     required String userId,
-  }) async =>
-      _supabase.fromBoardSavesTable().delete().match({
+  }) async {
+    try {
+      await _supabase.fromBoardSavesTable().delete().match({
         BoardSave.userIdConverter: userId,
         BoardSave.boardIdConverter: boardId,
       });
+    } catch (e) {
+      throw BoardFailure.fromDelete();
+    }
+  }
 }

@@ -27,16 +27,22 @@ class UserRepository {
   }
 
   /// Gets a generic [watchUser] emission.
-  Stream<UserData> watchUserByID({required String id}) => _supabase
-      .fromUsersTable()
-      .stream(primaryKey: [UserData.uuidConverter])
-      .eq(UserData.uuidConverter, id)
-      .map((event) {
-        if (event.isNotEmpty) {
-          return UserData.fromJson(event.first);
-        }
-        return UserData.empty; // Fallback for no user found
-      });
+  Stream<UserData> watchUserByID({required String id}) {
+    try {
+      return _supabase
+          .fromUsersTable()
+          .stream(primaryKey: [UserData.uuidConverter])
+          .eq(UserData.uuidConverter, id)
+          .map((event) {
+            if (event.isNotEmpty) {
+              return UserData.fromJson(event.first);
+            }
+            return UserData.empty; // Fallback for no user found
+          });
+    } catch (e) {
+      throw UserFailure.fromStream();
+    }
+  }
 
   ValueStream<UserData> authUserChanges() => _supabase.auth.onAuthStateChange
       .switchMap<UserData>((auth) async* {
@@ -51,15 +57,20 @@ class UserRepository {
           }
         }
       })
-      .handleError((Object _) => throw UserFailure.fromAuthUserChanges())
+      .handleError((Object _) => throw UserFailure.fromAuthChanges())
       .logOnEach('USER')
       .shareValue();
 }
 
 extension Auth on UserRepository {
   // send OTP
-  Future<void> sendOTP({required String phoneNumber}) async =>
-      _supabase.auth.signInWithOtp(phone: phoneNumber);
+  Future<void> sendOTP({required String phoneNumber}) async {
+    try {
+      await _supabase.auth.signInWithOtp(phone: phoneNumber);
+    } catch (e) {
+      throw UserFailure.fromInvalidPhoneNumber();
+    }
+  }
 
   // verify OTP
   Future<void> verifyOTP({
@@ -83,57 +94,85 @@ extension Auth on UserRepository {
   }
 
   // sign out
-  Future<void> signOut() async => _supabase.auth.signOut();
+  Future<void> signOut() async {
+    try {
+      await _supabase.auth.signOut();
+    } catch (e) {
+      throw UserFailure.fromSignOut();
+    }
+  }
 }
 
 extension Username on UserRepository {
   // Check if username is unique
-  Future<bool> isUsernameUnique({required String username}) async =>
-      await _supabase
+  Future<bool> isUsernameUnique({required String username}) async {
+    try {
+      final res = await _supabase
           .fromUsersTable()
           .select()
           .eq(UserData.usernameConverter, username)
-          .maybeSingle() ==
-      null;
+          .maybeSingle();
+      return res == null;
+    } catch (e) {
+      throw UserFailure.fromGet();
+    }
+  }
 }
 
 extension Create on UserRepository {
-  Future<UserData> createUser({required String username}) async =>
-      await _supabase
+  Future<UserData> createUser({required String username}) async {
+    try {
+      return await _supabase
           .fromUsersTable()
           .update({UserData.usernameConverter: username})
           .eq(UserData.uuidConverter, _supabase.auth.currentUser!.id)
           .select()
           .single()
           .withConverter(UserData.converterSingle);
+    } catch (e) {
+      throw UserFailure.fromGet();
+    }
+  }
 }
 
 extension Read on UserRepository {
   // gets the user data by ID
-  Future<UserData> readUserData({required String uuid}) async => await _supabase
-      .fromUsersTable()
-      .select()
-      .eq(UserData.uuidConverter, uuid)
-      .maybeSingle()
-      .withConverter(
-        (data) =>
-            data == null ? UserData.empty : UserData.converterSingle(data),
-      );
+  Future<UserData> readUserData({required String uuid}) async {
+    try {
+      return await _supabase
+          .fromUsersTable()
+          .select()
+          .eq(UserData.uuidConverter, uuid)
+          .maybeSingle()
+          .withConverter(
+            (data) =>
+                data == null ? UserData.empty : UserData.converterSingle(data),
+          );
+    } catch (e) {
+      throw UserFailure.fromGet();
+    }
+  }
 
   Future<List<UserProfile>> searchUsers({
     required String query,
     required int offset,
     required int limit,
-  }) async =>
-      _supabase
+  }) async {
+    try {
+      return await _supabase
           .fromUsersTable()
           .select('username, photo_url')
           .textSearch(UserData.userSearchQuery, query)
           .range(offset, offset + limit - 1)
           .withConverter(UserProfile.converter);
+    } catch (e) {
+      throw UserFailure.fromGet();
+    }
+  }
 
-  Future<UserProfile> readUserProfile({required String uuid}) async =>
-      await _supabase
+  Future<UserProfile> readUserProfile({required String uuid}) async {
+    try {
+      return await _supabase
           .fromUsersTable()
           .select('username, photo_url')
           .eq(UserData.uuidConverter, uuid)
@@ -143,6 +182,10 @@ extension Read on UserRepository {
                 ? UserProfile.empty
                 : UserProfile.converterSingle(data),
           );
+    } catch (e) {
+      throw UserFailure.fromGet();
+    }
+  }
 }
 
 extension Update on UserRepository {
@@ -155,7 +198,7 @@ extension Update on UserRepository {
         UserData.lastSignInConverter: DateTime.now().toUtc().toIso8601String(),
       }).eq(UserData.uuidConverter, supabaseUser.id);
     } catch (e) {
-      throw UserFailure.fromUpdateUser();
+      throw UserFailure.fromUpdate();
     }
   }
 
@@ -170,7 +213,7 @@ extension Update on UserRepository {
           .fromUsersTable()
           .update({field: data}).eq(UserData.idConverter, user.id!);
     } catch (e) {
-      throw UserFailure.fromUpdateUser();
+      throw UserFailure.fromUpdate();
     }
   }
 }

@@ -4,32 +4,33 @@ class UserFailure extends Failure {
   const UserFailure._();
 
   // user data retrieval
-  factory UserFailure.fromGetUser() => const GetUserFailure();
-  factory UserFailure.fromCreateUser() => const CreateUserFailure();
-  factory UserFailure.fromUpdateUser() => const UpdateUserFailure();
-  factory UserFailure.fromDeleteUser() => const DeleteUserFailure();
+  factory UserFailure.fromCreate() => const CreateFailure();
+  factory UserFailure.fromGet() => const GetFailure();
+  factory UserFailure.fromStream() => const StreamFailure();
+  factory UserFailure.fromUpdate() => const UpdateFailure();
+  factory UserFailure.fromDelete() => const DeleteFailure();
 
   // auth
-  factory UserFailure.fromAuthUserChanges() => const AuthUserChangesFailure();
+  factory UserFailure.fromAuthChanges() => const AuthChangesFailure();
   factory UserFailure.fromSignOut() => const SignOutFailure();
   factory UserFailure.fromInvalidPhoneNumber() =>
       const InvalidPhoneNumberFailure();
   factory UserFailure.fromPhoneNumberSignIn() =>
       const PhoneNumberSignInFailure();
 
-  static const empty = EmptyUserFailure();
+  static const empty = EmptyFailure();
 }
 
-class EmptyUserFailure extends UserFailure {
-  const EmptyUserFailure() : super._();
+class EmptyFailure extends UserFailure {
+  const EmptyFailure() : super._();
 }
 
 class InvalidPhoneNumberFailure extends UserFailure {
   const InvalidPhoneNumberFailure() : super._();
 }
 
-class AuthUserChangesFailure extends UserFailure {
-  const AuthUserChangesFailure() : super._();
+class AuthChangesFailure extends UserFailure {
+  const AuthChangesFailure() : super._();
 
   @override
   bool get needsReauthentication => true;
@@ -43,18 +44,22 @@ class SignOutFailure extends UserFailure {
   const SignOutFailure() : super._();
 }
 
-class GetUserFailure extends UserFailure {
-  const GetUserFailure() : super._();
+class CreateFailure extends UserFailure {
+  const CreateFailure() : super._();
 }
 
-class CreateUserFailure extends UserFailure {
-  const CreateUserFailure() : super._();
+class GetFailure extends UserFailure {
+  const GetFailure() : super._();
 }
 
-class UpdateUserFailure extends UserFailure {
-  const UpdateUserFailure() : super._();
+class StreamFailure extends UserFailure {
+  const StreamFailure() : super._();
 }
 
-class DeleteUserFailure extends UserFailure {
-  const DeleteUserFailure() : super._();
+class UpdateFailure extends UserFailure {
+  const UpdateFailure() : super._();
+}
+
+class DeleteFailure extends UserFailure {
+  const DeleteFailure() : super._();
 }

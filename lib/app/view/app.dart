@@ -104,7 +104,7 @@ class AppView extends StatelessWidget {
             listenWhen: (_, current) => current.isFailure,
             listener: (context, state) {
               return switch (state.failure) {
-                AuthUserChangesFailure() =>
+                AuthChangesFailure() =>
                   context.showSnackBar(AppStrings.authFailure),
                 SignOutFailure() =>
                   context.showSnackBar(AppStrings.authFailure),

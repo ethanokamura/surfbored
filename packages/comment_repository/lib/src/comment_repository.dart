@@ -12,24 +12,41 @@ class CommentRepository {
 }
 
 extension Create on CommentRepository {
-  Future<void> createComment({required Comment comment}) async =>
-      _supabase.fromCommentsTable().insert(comment.toJson());
+  Future<void> createComment({required Comment comment}) async {
+    try {
+      await _supabase.fromCommentsTable().insert(comment.toJson());
+    } catch (e) {
+      throw CommentFailure.fromCreate();
+    }
+  }
 
   Future<void> likeComment({
     required CommentLike like,
-  }) async =>
+  }) async {
+    try {
       await _supabase.fromCommentLikesTable().insert(like.toJson());
+    } catch (e) {
+      throw CommentFailure.fromAdd();
+    }
+  }
 }
 
 extension Read on CommentRepository {
-  Future<Comment> fetchComment({required int commentId}) async => _supabase
-      .fromCommentsTable()
-      .select()
-      .eq(Comment.idConverter, commentId)
-      .maybeSingle()
-      .withConverter(
-        (data) => data == null ? Comment.empty : Comment.converterSingle(data),
-      );
+  Future<Comment> fetchComment({required int commentId}) async {
+    try {
+      return await _supabase
+          .fromCommentsTable()
+          .select()
+          .eq(Comment.idConverter, commentId)
+          .maybeSingle()
+          .withConverter(
+            (data) =>
+                data == null ? Comment.empty : Comment.converterSingle(data),
+          );
+    } catch (e) {
+      throw CommentFailure.fromGet();
+    }
+  }
 
   Future<bool> hasUserLikedComment({required String userId}) async {
     try {
@@ -40,7 +57,7 @@ extension Read on CommentRepository {
           .maybeSingle();
       return res != null;
     } catch (e) {
-      throw CommentFailure.fromGetComment();
+      throw CommentFailure.fromGet();
     }
   }
 
@@ -48,13 +65,18 @@ extension Read on CommentRepository {
     required int postId,
     required int limit,
     required int offset,
-  }) async =>
-      _supabase
+  }) async {
+    try {
+      return await _supabase
           .fromCommentsTable()
           .select()
           .eq(Comment.postIdConverter, postId)
           .range(offset, offset + limit - 1)
           .withConverter(Comment.converter);
+    } catch (e) {
+      throw CommentFailure.fromGet();
+    }
+  }
 
   Future<int> fetchCommentLikes({required int commentId}) async {
     try {
@@ -65,7 +87,7 @@ extension Read on CommentRepository {
           .count(CountOption.exact);
       return likes.count;
     } catch (e) {
-      throw CommentFailure.fromGetComment();
+      throw CommentFailure.fromGet();
     }
   }
 
@@ -78,26 +100,46 @@ extension Read on CommentRepository {
           .count(CountOption.exact);
       return comments.count;
     } catch (e) {
-      throw CommentFailure.fromGetComment();
+      throw CommentFailure.fromGet();
     }
   }
 }
 
 extension StreamComments on CommentRepository {
-  Stream<List<Comment>> streamComments({required int postId}) => _supabase
-      .fromCommentsTable()
-      .stream(primaryKey: [Comment.idConverter])
-      .eq(Comment.postIdConverter, postId)
-      .order('created_at')
-      .map(Comment.converter);
+  Stream<List<Comment>> streamComments({required int postId}) {
+    try {
+      return _supabase
+          .fromCommentsTable()
+          .stream(primaryKey: [Comment.idConverter])
+          .eq(Comment.postIdConverter, postId)
+          .order('created_at')
+          .map(Comment.converter);
+    } catch (e) {
+      throw CommentFailure.fromStream();
+    }
+  }
 }
 
 extension Delete on CommentRepository {
-  Future<void> deleteComment({required int commentId}) async =>
-      _supabase.fromPostsTable().delete().eq(Comment.idConverter, commentId);
+  Future<void> deleteComment({required int commentId}) async {
+    try {
+      await _supabase
+          .fromPostsTable()
+          .delete()
+          .eq(Comment.idConverter, commentId);
+    } catch (e) {
+      throw CommentFailure.fromDelete();
+    }
+  }
 
-  Future<void> removeLike({required int commentId}) async => _supabase
-      .fromCommentLikesTable()
-      .delete()
-      .eq(CommentLike.commentIdConverter, commentId);
+  Future<void> removeLike({required int commentId}) async {
+    try {
+      await _supabase
+          .fromCommentLikesTable()
+          .delete()
+          .eq(CommentLike.commentIdConverter, commentId);
+    } catch (e) {
+      throw CommentFailure.fromDelete();
+    }
+  }
 }

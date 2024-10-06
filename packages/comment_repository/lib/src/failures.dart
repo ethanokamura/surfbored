@@ -3,30 +3,45 @@ import 'package:app_core/app_core.dart';
 class CommentFailure extends Failure {
   const CommentFailure._();
 
-  factory CommentFailure.fromCreateComment() => const CreateCommentFailure();
-  factory CommentFailure.fromGetComment() => const GetCommentFailure();
-  factory CommentFailure.fromUpdateComment() => const UpdateCommentFailure();
-  factory CommentFailure.fromDeleteComment() => const DeleteCommentFailure();
+  factory CommentFailure.fromCreate() => const CreateFailure();
+  factory CommentFailure.fromGet() => const ReadFailure();
+  factory CommentFailure.fromUpdate() => const UpdateFailure();
+  factory CommentFailure.fromDelete() => const DeleteFailure();
+  factory CommentFailure.fromAdd() => const AddLikeFailure();
+  factory CommentFailure.fromRemove() => const RemoveLikeFailure();
+  factory CommentFailure.fromStream() => const StreamFailure();
 
-  static const empty = EmptyCommentFailure();
+  static const empty = EmptyFailure();
 }
 
-class CreateCommentFailure extends CommentFailure {
-  const CreateCommentFailure() : super._();
+class CreateFailure extends CommentFailure {
+  const CreateFailure() : super._();
 }
 
-class GetCommentFailure extends CommentFailure {
-  const GetCommentFailure() : super._();
+class ReadFailure extends CommentFailure {
+  const ReadFailure() : super._();
 }
 
-class UpdateCommentFailure extends CommentFailure {
-  const UpdateCommentFailure() : super._();
+class StreamFailure extends CommentFailure {
+  const StreamFailure() : super._();
 }
 
-class DeleteCommentFailure extends CommentFailure {
-  const DeleteCommentFailure() : super._();
+class UpdateFailure extends CommentFailure {
+  const UpdateFailure() : super._();
 }
 
-class EmptyCommentFailure extends CommentFailure {
-  const EmptyCommentFailure() : super._();
+class DeleteFailure extends CommentFailure {
+  const DeleteFailure() : super._();
+}
+
+class AddLikeFailure extends CommentFailure {
+  const AddLikeFailure() : super._();
+}
+
+class RemoveLikeFailure extends CommentFailure {
+  const RemoveLikeFailure() : super._();
+}
+
+class EmptyFailure extends CommentFailure {
+  const EmptyFailure() : super._();
 }

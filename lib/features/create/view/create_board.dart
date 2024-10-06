@@ -76,20 +76,22 @@ class _CreateBoardState extends State<CreateBoard> {
         ),
         const VerticalSpacer(),
         // submit
-        ActionButton(
-          inverted: true,
-          onTap: () {
-            context.read<CreateCubit>().createBoard(
-                  userId: context.read<UserRepository>().user.uuid,
-                  title: titleText,
-                  description: descriptionText,
-                  isPublic: isPublic,
-                  imageFile: imageFile,
-                );
-            Navigator.pop(context);
-          },
-          text: AppStrings.create,
-        ),
+        if (titleText != 'title')
+          ActionButton(
+            inverted: true,
+            onTap: () {
+              context.read<CreateCubit>().createBoard(
+                    userId: context.read<UserRepository>().user.uuid,
+                    title: titleText,
+                    description:
+                        descriptionText != 'description' ? descriptionText : '',
+                    isPublic: isPublic,
+                    imageFile: imageFile,
+                  );
+              Navigator.pop(context);
+            },
+            text: AppStrings.create,
+          ),
       ],
     );
   }

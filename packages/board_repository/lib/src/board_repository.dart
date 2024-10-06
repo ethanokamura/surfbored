@@ -12,13 +12,21 @@ class BoardRepository {
 }
 
 extension Create on BoardRepository {
-  Future<int> createBoard({required Board board}) async {
+  Future<int> createBoard({
+    required String creatorId,
+    required String title,
+    required String description,
+    required bool isPublic,
+  }) async {
     try {
-      final res = await _supabase
-          .fromBoardsTable()
-          .insert(board.toJson())
-          .select('id')
-          .single();
+      final board = Board.insert(
+        creatorId: creatorId,
+        title: title,
+        isPublic: isPublic,
+        description: description,
+      );
+      final res =
+          await _supabase.fromBoardsTable().insert(board).select('id').single();
       return res['id'] as int;
     } catch (e) {
       throw BoardFailure.fromCreate();

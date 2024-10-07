@@ -7,6 +7,7 @@ class EditTagsBox extends StatelessWidget {
   final void Function(List<String>) updateTags;
   @override
   Widget build(BuildContext context) {
+    print('tags from box $tags');
     return CustomContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -39,7 +39,7 @@ class PostView extends StatelessWidget {
             if (post.description.isNotEmpty) const VerticalSpacer(),
             if (post.link.isNotEmpty) WebLink(url: post.link),
             if (post.link.isNotEmpty) const VerticalSpacer(),
-            if (post.tags.isNotEmpty) TagList(tags: post.tags.split(' ')),
+            if (post.tags.isNotEmpty) TagList(tags: post.tags.split('+')),
             if (post.tags.isNotEmpty) const VerticalSpacer(),
             Footer(post: post, userId: userId),
           ],

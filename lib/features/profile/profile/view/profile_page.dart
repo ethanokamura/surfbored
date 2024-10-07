@@ -114,7 +114,7 @@ class ProfileBuilder extends StatelessWidget {
                           ),
                           if (user.interests.isNotEmpty) const VerticalSpacer(),
                           if (user.interests.isNotEmpty)
-                            InterestsList(interests: user.interests.split(' ')),
+                            InterestsList(interests: user.interests.split('+')),
                         ],
                       ),
                     ),

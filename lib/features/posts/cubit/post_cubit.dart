@@ -48,7 +48,7 @@ class PostCubit extends Cubit<PostState> {
     await _postRepository.updatePost(
       field: Post.tagsConverter,
       postId: postId,
-      data: tags.join(' '),
+      data: tags.join('+'),
     );
   }
 

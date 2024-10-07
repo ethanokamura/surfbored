@@ -37,6 +37,7 @@ extension SupabaseExtensions on SupabaseClient {
           .from(collection)
           .getPublicUrl(path);
     } catch (e) {
+      print(e);
       throw Exception('Error uploading file $e');
     }
   }

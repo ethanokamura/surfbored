@@ -43,7 +43,7 @@ class ProfileCubit extends Cubit<UserData> {
 
     await _userRepository.updateUser(
       field: UserData.interestsConverter,
-      data: interests.join(' '),
+      data: interests.join('+'),
     );
   }
 

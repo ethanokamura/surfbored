@@ -37,6 +37,7 @@ class EditProfile extends StatelessWidget {
   final UserData user;
   @override
   Widget build(BuildContext context) {
+    print('interests: (${user.interests})');
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -119,7 +120,7 @@ class EditProfile extends StatelessWidget {
           ),
           const VerticalSpacer(),
           EditTagsBox(
-            tags: user.interests.split(' '),
+            tags: user.interests.split('+'),
             updateTags: (newTags) =>
                 context.read<ProfileCubit>().updateInterests(newTags),
           ),

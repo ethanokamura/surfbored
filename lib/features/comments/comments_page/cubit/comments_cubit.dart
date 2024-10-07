@@ -19,10 +19,12 @@ class CommentsCubit extends Cubit<CommentsState> {
   }) async {
     try {
       await _commentRepository.createComment(
-        postId: postId,
-        postCreatorId: postCreatorId,
-        senderId: senderId,
-        message: message,
+        comment: Comment(
+          postId: postId,
+          postCreatorId: postCreatorId,
+          senderId: senderId,
+          message: message,
+        ),
       );
     } on CommentFailure catch (failure) {
       emit(state.fromFailure(failure));

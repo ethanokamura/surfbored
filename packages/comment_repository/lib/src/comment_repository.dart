@@ -12,20 +12,9 @@ class CommentRepository {
 }
 
 extension Create on CommentRepository {
-  Future<void> createComment({
-    required int postId,
-    required String postCreatorId,
-    required String senderId,
-    required String message,
-  }) async {
+  Future<void> createComment({required Comment comment}) async {
     try {
-      final data = Comment.insert(
-        postId: postId,
-        postCreatorId: postCreatorId,
-        senderId: senderId,
-        message: message,
-      );
-      await _supabase.fromCommentsTable().insert(data);
+      await _supabase.fromCommentsTable().insert(comment.toJson());
     } catch (e) {
       throw CommentFailure.fromCreate();
     }

@@ -20,53 +20,39 @@ class _OtpPromptState extends State<OtpPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: _otpController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: defaultPadding,
-              ),
-              labelStyle: TextStyle(
-                color: Theme.of(context).subtextColor,
-              ),
-              label: const Text(AuthStrings.otpPrompt),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: defaultBorderRadius,
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 4,
-                ),
-              ),
-            ),
-          ),
-          ActionButton(
-            onSurface: true,
-            onTap: () async {
-              try {
-                final otp = _otpController.text.trim();
-                if (otp.length == 6) {
-                  await context.read<AuthCubit>().signInWithOTP(otp);
-                } else {
-                  context.showSnackBar(AuthStrings.invalidOtp);
-                  _otpController.clear();
-                }
-              } catch (e) {
-                // handle error
-                if (mounted) {
-                  // ignore: use_build_context_synchronously
-                  context.showSnackBar('error occured. please retry');
-                }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const AppBarText(text: AuthStrings.otpPrompt),
+        customTextFormField(
+          controller: _otpController,
+          keyboardType: TextInputType.number,
+          context: context,
+          label: AuthStrings.otpHint,
+          validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
+        ),
+        ActionButton(
+          onSurface: true,
+          onTap: () async {
+            try {
+              final otp = _otpController.text.trim();
+              if (otp.length == 6) {
+                await context.read<AuthCubit>().signInWithOTP(otp);
+              } else {
+                context.showSnackBar(AuthStrings.invalidOtp);
+                _otpController.clear();
               }
-            },
-            text: ButtonStrings.confirm,
-          ),
-        ],
-      ),
+            } catch (e) {
+              // handle error
+              if (mounted) {
+                // ignore: use_build_context_synchronously
+                context.showSnackBar('error occured. please retry');
+              }
+            }
+          },
+          text: ButtonStrings.continueText,
+        ),
+      ],
     );
   }
 }

@@ -20,58 +20,44 @@ class _PhonePromptState extends State<PhonePrompt> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: _phoneController,
-            keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
-              prefixText: '+1 ',
-              prefixStyle: const TextStyle(fontSize: 18),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: defaultPadding,
-              ),
-              labelStyle: TextStyle(
-                color: Theme.of(context).subtextColor,
-              ),
-              label: const Text(AuthStrings.phoneNumberPrompt),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: defaultBorderRadius,
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 4,
-                ),
-              ),
-            ),
-          ),
-          const VerticalSpacer(),
-          ActionButton(
-            onSurface: true,
-            onTap: () async {
-              try {
-                final phoneNumber = _phoneController.text.trim();
-                if (phoneNumber.length == 10) {
-                  await context
-                      .read<AuthCubit>()
-                      .signInWithPhone('+1$phoneNumber');
-                } else {
-                  context.showSnackBar(AuthStrings.invalidPhoneNumber);
-                  _phoneController.clear();
-                }
-              } catch (e) {
-                // handle error
-                if (mounted) {
-                  // ignore: use_build_context_synchronously
-                  context.showSnackBar('error occured. please retry');
-                }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const AppBarText(text: AuthStrings.signInPrompt),
+        customTextFormField(
+          controller: _phoneController,
+          keyboardType: TextInputType.phone,
+          context: context,
+          label: AuthStrings.phoneNumberPrompt,
+          prefix: '+1 ',
+          validator: (phoneNumber) =>
+              phoneNumber?.length != 10 ? 'Invalid Phone Number' : null,
+        ),
+        const VerticalSpacer(),
+        ActionButton(
+          onSurface: true,
+          onTap: () async {
+            try {
+              final phoneNumber = _phoneController.text.trim();
+              if (phoneNumber.length == 10) {
+                await context
+                    .read<AuthCubit>()
+                    .signInWithPhone('+1$phoneNumber');
+              } else {
+                context.showSnackBar(AuthStrings.invalidPhoneNumber);
+                _phoneController.clear();
               }
-            },
-            text: ButtonStrings.confirm,
-          ),
-        ],
-      ),
+            } catch (e) {
+              // handle error
+              if (mounted) {
+                // ignore: use_build_context_synchronously
+                context.showSnackBar('error occured. please retry');
+              }
+            }
+          },
+          text: ButtonStrings.continueText,
+        ),
+      ],
     );
   }
 }

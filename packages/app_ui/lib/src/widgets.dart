@@ -1,4 +1,3 @@
-import 'package:app_ui/src/buttons.dart';
 import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/text.dart';
@@ -92,29 +91,26 @@ class CustomTextBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      inverted: false,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // section name
-              SecondaryText(text: label),
-              ActionIconButton(
-                background: false,
-                onTap: onPressed,
-                icon: AppIcons.settings,
-                inverted: true,
-              ),
-            ],
-          ),
-          // text
-          PrimaryText(text: text),
-        ],
+    return GestureDetector(
+      onTap: onPressed,
+      child: CustomContainer(
+        inverted: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SecondaryText(text: label),
+                accentIconStyle(context, AppIcons.edit),
+              ],
+            ),
+            // text
+            PrimaryText(text: text),
+          ],
+        ),
       ),
     );
   }

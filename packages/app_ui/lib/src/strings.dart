@@ -63,6 +63,7 @@ class ButtonStrings {
   static const String edit = 'Edit';
   static const String delete = 'Delete';
   static const String confirm = 'Confirm';
+  static const String continueText = 'Continue';
   static const String next = 'Next';
   static const String last = 'Last';
   static const String shuffle = 'Shuffle';
@@ -83,9 +84,11 @@ class ImageStrings {
 class AuthStrings {
   // auth error
   static const String signIn = 'Sign in';
-  static const String phoneNumberPrompt = 'Enter phone number.';
+  static const String signInPrompt = 'Welcome to SurfBored 🥳';
+  static const String phoneNumberPrompt = "What's your number?";
+  static const String otpPrompt = 'Verify your number';
+  static const String otpHint = '6 digit code';
   static const String invalidPhoneNumber = 'Invalid phone number.';
-  static const String otpPrompt = 'Enter OTP.';
   static const String invalidOtp = 'Invalid OTP.';
 
   static const String authFailure = 'Failure to authenticate.';

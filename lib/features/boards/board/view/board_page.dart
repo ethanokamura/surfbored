@@ -44,10 +44,10 @@ class BoardPage extends StatelessWidget {
                           return BlocProvider.value(
                             value: boardCubit,
                             child: EditBoardPage(
-                              boardId: board.id,
+                              boardId: boardId,
                               onDelete: () async {
                                 Navigator.pop(context);
-                                await boardCubit.deleteBoard(board.id);
+                                await boardCubit.deleteBoard(boardId);
                                 if (context.mounted) Navigator.pop(context);
                               },
                             ),
@@ -86,6 +86,7 @@ class BoardPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<UserRepository>().user;
+    final boardId = board.id!;
     return NestedScrollView(
       headerSliverBuilder: (context, _) {
         return [
@@ -124,7 +125,7 @@ class BoardPageView extends StatelessWidget {
             board: board,
           ),
           const VerticalSpacer(),
-          Flexible(child: BoardPostList(boardId: board.id)),
+          Flexible(child: BoardPostList(boardId: boardId)),
         ],
       ),
     );
@@ -165,6 +166,7 @@ class BoardButtons extends StatelessWidget {
   final UserData user;
   @override
   Widget build(BuildContext context) {
+    final boardId = board.id!;
     return Row(
       children: [
         if (isOwner)
@@ -189,7 +191,7 @@ class BoardButtons extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => ShuffledPostsPage(boardId: board.id),
+                builder: (context) => ShuffledPostsPage(boardId: boardId),
               ),
             ),
             text: ButtonStrings.shuffle,

@@ -71,8 +71,10 @@ class EditView extends StatelessWidget {
   final Board board;
   final BoardCubit boardCubit;
   final void Function() onDelete;
+
   @override
   Widget build(BuildContext context) {
+    final boardId = board.id!;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,22 +85,22 @@ class EditView extends StatelessWidget {
             photoUrl: board.photoUrl,
             collection: 'boards',
             userId: board.creatorId,
-            docId: board.id,
+            docId: boardId,
             onFileChanged: (url) {
-              boardCubit.editField(board.id, Board.photoUrlConverter, url);
+              boardCubit.editField(boardId, Board.photoUrlConverter, url);
             },
           ),
           const VerticalSpacer(),
           EditField(
             field: Board.titleConverter,
             value: board.title,
-            boardId: board.id,
+            boardId: boardId,
           ),
           const VerticalSpacer(),
           EditField(
             field: Board.descriptionConverter,
             value: board.description,
-            boardId: board.id,
+            boardId: boardId,
           ),
           const VerticalSpacer(),
           ActionButton(

@@ -9,11 +9,12 @@ class SaveButton extends StatelessWidget {
   final String userId;
   @override
   Widget build(BuildContext context) {
+    final boardId = board.id!;
     return BlocProvider(
       create: (context) => SaveCubit(context.read<BoardRepository>()),
       child: BlocBuilder<SaveCubit, SaveState>(
         builder: (context, state) {
-          context.read<SaveCubit>().fetchData(board.id, userId);
+          context.read<SaveCubit>().fetchData(boardId, userId);
           var saves = 0;
           var isSaved = false;
           if (state.isLoading) {
@@ -26,7 +27,7 @@ class SaveButton extends StatelessWidget {
             onSurface: false,
             onTap: () => context.read<SaveCubit>().toggleSave(
                   userId: userId,
-                  boardId: board.id,
+                  boardId: boardId,
                   saved: isSaved,
                 ),
             icon: isSaved

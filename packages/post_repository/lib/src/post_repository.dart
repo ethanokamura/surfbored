@@ -11,25 +11,13 @@ class PostRepository {
 }
 
 extension Create on PostRepository {
-  Future<int> createPost({
-    required String creatorId,
-    required String title,
-    required String description,
-    required String link,
-    required List<String> tags,
-    required bool isPublic,
-  }) async {
+  Future<int> createPost({required Post post}) async {
     try {
-      final post = Post.insert(
-        title: title,
-        creatorId: creatorId,
-        description: description,
-        tags: tags.join(' '),
-        isPublic: isPublic,
-        link: link,
-      );
-      final res =
-          await _supabase.fromPostsTable().insert(post).select('id').single();
+      final res = await _supabase
+          .fromPostsTable()
+          .insert(post.toJson())
+          .select('id')
+          .single();
       return res['id'] as int;
     } catch (e) {
       throw PostFailure.fromCreate();

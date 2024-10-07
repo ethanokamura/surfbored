@@ -5,7 +5,7 @@ class Board extends Equatable {
   const Board({
     required this.creatorId,
     required this.title,
-    this.id = 0,
+    this.id,
     this.description = '',
     this.photoUrl,
     this.isPublic = true,
@@ -44,7 +44,7 @@ class Board extends Equatable {
     title: '',
   );
 
-  final int id;
+  final int? id;
   final String creatorId;
   final String title;
   final String description;

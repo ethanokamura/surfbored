@@ -35,12 +35,14 @@ class CreateCubit extends Cubit<CreateState> {
     emit(state.fromLoading());
     try {
       final docId = await _postRepository.createPost(
-        title: title,
-        creatorId: userId,
-        description: description,
-        tags: tags,
-        isPublic: isPublic,
-        link: link,
+        post: Post(
+          title: title,
+          creatorId: userId,
+          description: description,
+          tags: tags.join('+'),
+          isPublic: isPublic,
+          link: link,
+        ),
       );
 
       if (tags.isNotEmpty) {
@@ -78,10 +80,12 @@ class CreateCubit extends Cubit<CreateState> {
     emit(state.fromLoading());
     try {
       final docId = await _boardRepository.createBoard(
-        creatorId: userId,
-        title: title,
-        isPublic: isPublic,
-        description: description,
+        board: Board(
+          creatorId: userId,
+          title: title,
+          isPublic: isPublic,
+          description: description,
+        ),
       );
       final path = '/$userId/image_$docId.jpeg';
       if (imageFile != null) {

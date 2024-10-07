@@ -4,7 +4,7 @@ class Post extends Equatable {
   const Post({
     required this.creatorId,
     required this.title,
-    this.id = 0,
+    this.id,
     this.description = '',
     this.photoUrl,
     this.link = '',

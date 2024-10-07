@@ -7,7 +7,7 @@ class Comment extends Equatable {
     required this.senderId,
     required this.postCreatorId,
     required this.message,
-    this.id = 0,
+    this.id,
     this.edited = false,
     this.createdAt,
   });
@@ -39,7 +39,7 @@ class Comment extends Equatable {
   static String get createdAtConverter => 'created_at';
 
   // data fields
-  final int id;
+  final int? id;
   final int postId;
   final String postCreatorId;
   final String senderId;

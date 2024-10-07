@@ -27,7 +27,7 @@ class SelectBoardCard extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               context.read<SelectionCubit>().toggleSelection(
-                    boardId: board.id,
+                    boardId: board.id!,
                     postId: postId,
                     isSelected: isSelected,
                   );

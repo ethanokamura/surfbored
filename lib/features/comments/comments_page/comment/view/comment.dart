@@ -32,7 +32,7 @@ class CommentCard extends StatelessWidget {
                 MoreCommentOptions(
                   onSurface: true,
                   onDelete: () async =>
-                      context.read<CommentsCubit>().deleteComment(comment.id),
+                      context.read<CommentsCubit>().deleteComment(comment.id!),
                 ),
             ],
           ),

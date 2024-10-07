@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/failures/post_failures.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
 
@@ -87,6 +88,8 @@ class EditView extends StatelessWidget {
             docId: post.id!,
             onFileChanged: (url) =>
                 postCubit.editField(post.id!, Post.photoUrlConverter, url),
+            aspectX: 4,
+            aspectY: 3,
           ),
           const VerticalSpacer(),
           EditField(

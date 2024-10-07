@@ -1,4 +1,5 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:surfbored/features/images/view/image.dart';
 
 class UnknownCard extends StatelessWidget {
   const UnknownCard({required this.message, super.key});
@@ -8,10 +9,11 @@ class UnknownCard extends StatelessWidget {
     return CustomContainer(
       child: Row(
         children: [
-          const SquareImage(
+          const ImageWidget(
             borderRadius: defaultBorderRadius,
             photoUrl: null,
-            height: 64,
+            aspectX: 1,
+            aspectY: 1,
             width: 64,
           ),
           const HorizontalSpacer(),

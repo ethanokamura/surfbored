@@ -4,7 +4,6 @@ export 'colors.dart';
 export 'constants.dart';
 export 'extensions.dart';
 export 'icons.dart';
-export 'images.dart';
 export 'more_options.dart';
 export 'pop_ups.dart';
 export 'strings.dart';

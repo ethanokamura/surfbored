@@ -5,6 +5,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CreateBoard extends StatefulWidget {
@@ -34,14 +35,12 @@ class _CreateBoardState extends State<CreateBoard> {
     return ListView(
       children: [
         // upload image
-        UploadImageWidget(
+        UploadImage(
           width: 128,
           photoUrl: photoUrl,
-          onFileChanged: (file) {
-            setState(() {
-              imageFile = file;
-            });
-          },
+          onFileChanged: (file) => imageFile = file,
+          aspectX: 4,
+          aspectY: 3,
         ),
         const VerticalSpacer(),
 

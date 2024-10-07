@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/posts.dart';
 
 class PostCard extends StatelessWidget {
@@ -14,11 +15,12 @@ class PostCard extends StatelessWidget {
         child: Row(
           children: [
             if (post.photoUrl != null && post.photoUrl! != '')
-              SquareImage(
+              ImageWidget(
                 borderRadius: defaultBorderRadius,
                 photoUrl: post.photoUrl,
-                height: 64,
                 width: 64,
+                aspectX: 1,
+                aspectY: 1,
               ),
             if (post.photoUrl != null && post.photoUrl! != '')
               const HorizontalSpacer(),

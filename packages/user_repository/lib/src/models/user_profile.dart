@@ -3,7 +3,7 @@ import 'package:app_core/app_core.dart';
 class UserProfile extends Equatable {
   const UserProfile({
     required this.username,
-    this.photoUrl,
+    this.photoUrl = '',
   });
 
   factory UserProfile.converterSingle(Map<String, dynamic> data) {

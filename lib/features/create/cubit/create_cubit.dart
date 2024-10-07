@@ -51,10 +51,10 @@ class CreateCubit extends Cubit<CreateState> {
         );
       }
 
-      final path = '/$userId/image_$docId.jpeg';
+      final path = '$userId/image_$docId.jpeg';
       if (imageFile != null) {
         final url = await Supabase.instance.client.uploadFile(
-          collection: 'boards',
+          collection: 'posts',
           path: path,
           file: imageFile.readAsBytesSync(),
         );
@@ -87,7 +87,7 @@ class CreateCubit extends Cubit<CreateState> {
           description: description,
         ),
       );
-      final path = '/$userId/image_$docId.jpeg';
+      final path = '$userId/image_$docId.jpeg';
       if (imageFile != null) {
         final url = await Supabase.instance.client.uploadFile(
           collection: 'boards',

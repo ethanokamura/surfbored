@@ -4,6 +4,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -36,14 +37,12 @@ class _CreatePostState extends State<CreatePost> {
     return ListView(
       children: [
         // upload image
-        UploadImageWidget(
-          width: 128,
+        UploadImage(
+          width: 64,
           photoUrl: photoUrl,
-          onFileChanged: (file) {
-            setState(() {
-              imageFile = file;
-            });
-          },
+          onFileChanged: (file) => imageFile = file,
+          aspectX: 4,
+          aspectY: 3,
         ),
         const VerticalSpacer(),
         Row(

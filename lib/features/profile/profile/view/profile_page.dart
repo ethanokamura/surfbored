@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/friends/friends.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
@@ -201,10 +202,11 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SquareImage(
+        ImageWidget(
           photoUrl: user.photoUrl,
           width: 96,
-          height: 96,
+          aspectX: 1,
+          aspectY: 1,
           borderRadius: defaultBorderRadius,
         ),
         const HorizontalSpacer(),

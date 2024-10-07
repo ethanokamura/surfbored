@@ -3,6 +3,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/failures/board_failures.dart';
+import 'package:surfbored/features/images/images.dart';
 
 class EditBoardPage extends StatelessWidget {
   const EditBoardPage({
@@ -86,6 +87,8 @@ class EditView extends StatelessWidget {
             collection: 'boards',
             userId: board.creatorId,
             docId: boardId,
+            aspectX: 4,
+            aspectY: 3,
             onFileChanged: (url) {
               boardCubit.editField(boardId, Board.photoUrlConverter, url);
             },

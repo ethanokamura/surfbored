@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -28,10 +29,11 @@ class UserDetails extends StatelessWidget {
             final photoUrl = profile?.photoUrl;
             return Row(
               children: [
-                SquareImage(
+                ImageWidget(
                   photoUrl: photoUrl,
                   width: 32,
-                  height: 32,
+                  aspectX: 1,
+                  aspectY: 1,
                   borderRadius: BorderRadius.circular(100),
                 ),
                 const SizedBox(width: 10),

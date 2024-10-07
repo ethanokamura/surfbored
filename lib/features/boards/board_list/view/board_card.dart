@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
+import 'package:surfbored/features/images/images.dart';
 
 class BoardCard extends StatelessWidget {
   const BoardCard({required this.board, super.key});
@@ -27,11 +28,12 @@ class BoardCard extends StatelessWidget {
       child: CustomContainer(
         child: Row(
           children: [
-            SquareImage(
+            ImageWidget(
               borderRadius: defaultBorderRadius,
               photoUrl: board.photoUrl,
-              height: 64,
               width: 64,
+              aspectX: 1,
+              aspectY: 1,
             ),
             const HorizontalSpacer(),
             Flexible(

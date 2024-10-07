@@ -4,6 +4,7 @@ import 'package:comment_repository/comment_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/comments/comments.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/edit_post/edit_post.dart';
 import 'package:surfbored/features/posts/post/like_button/likes.dart';
@@ -69,6 +70,8 @@ class ImageHeader extends StatelessWidget {
           photoUrl: post.photoUrl,
           // height: 256,
           width: double.infinity,
+          aspectX: 4,
+          aspectY: 3,
         ),
         Padding(
           padding: const EdgeInsets.all(5),

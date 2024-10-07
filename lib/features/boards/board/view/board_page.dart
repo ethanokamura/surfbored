@@ -4,6 +4,7 @@ import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/board/view/saves/saves.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/failures/board_failures.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
@@ -104,6 +105,8 @@ class BoardPageView extends StatelessWidget {
                         borderRadius: defaultBorderRadius,
                         photoUrl: board.photoUrl,
                         width: double.infinity,
+                        aspectX: 4,
+                        aspectY: 3,
                       ),
                       const VerticalSpacer(),
                       BoardDetails(

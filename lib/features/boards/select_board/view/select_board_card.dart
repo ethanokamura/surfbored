@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/select_board/cubit/selection_cubit.dart';
+import 'package:surfbored/features/images/images.dart';
 
 class SelectBoardCard extends StatelessWidget {
   const SelectBoardCard({
@@ -36,11 +37,12 @@ class SelectBoardCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SquareImage(
+                  ImageWidget(
                     borderRadius: defaultBorderRadius,
                     photoUrl: board.photoUrl,
-                    height: 64,
                     width: 64,
+                    aspectX: 1,
+                    aspectY: 1,
                   ),
                   const HorizontalSpacer(),
                   Flexible(

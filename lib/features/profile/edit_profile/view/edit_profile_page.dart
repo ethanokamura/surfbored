@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
@@ -37,18 +38,18 @@ class EditProfile extends StatelessWidget {
   final UserData user;
   @override
   Widget build(BuildContext context) {
-    print('interests: (${user.interests})');
     return SingleChildScrollView(
       child: Column(
         children: [
-          EditProfilePicture(
+          EditProfileImage(
             width: 200,
-            height: 200,
             photoUrl: user.photoUrl,
             userId: user.uuid,
             onFileChanged: (url) => context
                 .read<ProfileCubit>()
                 .editField(UserData.photoUrlConverter, url),
+            aspectX: 1,
+            aspectY: 1,
           ),
           const VerticalSpacer(),
           CustomTextBox(

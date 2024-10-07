@@ -20,8 +20,8 @@ class _CreateBoardState extends State<CreateBoard> {
 
   bool isLoading = false;
 
-  String titleText = 'title';
-  String descriptionText = 'description';
+  String titleText = '';
+  String descriptionText = '';
   bool isPublic = true;
   int docID = 0;
   String? photoUrl;
@@ -63,7 +63,7 @@ class _CreateBoardState extends State<CreateBoard> {
         // edit title
         CustomTextBox(
           label: 'title',
-          text: titleText,
+          text: titleText.isEmpty ? CreateStrings.titlePrompt : titleText,
           onPressed: () => editField(Post.titleConverter),
         ),
         const VerticalSpacer(),
@@ -71,12 +71,14 @@ class _CreateBoardState extends State<CreateBoard> {
         // edit description
         CustomTextBox(
           label: 'description',
-          text: descriptionText,
+          text: descriptionText.isEmpty
+              ? CreateStrings.descriptionPrompt
+              : descriptionText,
           onPressed: () => editField(Post.descriptionConverter),
         ),
         const VerticalSpacer(),
         // submit
-        if (titleText != 'title')
+        if (titleText.isNotEmpty)
           ActionButton(
             inverted: true,
             onTap: () {

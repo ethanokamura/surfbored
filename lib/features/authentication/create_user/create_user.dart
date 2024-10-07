@@ -32,7 +32,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
           children: [
             CustomInputField(
               label: UserStrings.username,
-              text: username != '' ? username : UserStrings.username,
+              text:
+                  username.isNotEmpty ? username : CreateStrings.usernamePrompt,
               onPressed: () async {
                 final newValue = await editTextField(
                   context,

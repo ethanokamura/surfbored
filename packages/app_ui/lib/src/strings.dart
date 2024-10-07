@@ -146,6 +146,13 @@ class PostStrings {
   static const String failure = DataStrings.fromUnknownFailure;
 }
 
+class CreateStrings {
+  static const String titlePrompt = 'What do you call it? 🤔';
+  static const String descriptionPrompt = "What's it all about? 🧐";
+  static const String linkPrompt = 'Any links? 🤓';
+  static const String usernamePrompt = 'What should we call you? 🤠';
+}
+
 class CommentStrings {
   // CRUD
   static const String create = 'Create Comment';

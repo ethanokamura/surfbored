@@ -20,9 +20,9 @@ class _CreatePostState extends State<CreatePost> {
 
   bool isLoading = false;
 
-  String titleText = 'title';
-  String descriptionText = 'description';
-  String linkText = 'link';
+  String titleText = '';
+  String descriptionText = '';
+  String linkText = '';
   List<String> tags = [];
   bool isPublic = true;
   int docID = 0;
@@ -63,7 +63,7 @@ class _CreatePostState extends State<CreatePost> {
         // edit title
         CustomTextBox(
           label: 'title',
-          text: titleText,
+          text: titleText.isEmpty ? CreateStrings.titlePrompt : titleText,
           onPressed: () => editField(Post.titleConverter),
         ),
         const VerticalSpacer(),
@@ -71,7 +71,9 @@ class _CreatePostState extends State<CreatePost> {
         // edit description
         CustomTextBox(
           label: 'description',
-          text: descriptionText,
+          text: descriptionText.isEmpty
+              ? CreateStrings.descriptionPrompt
+              : descriptionText,
           onPressed: () => editField(Post.descriptionConverter),
         ),
         const VerticalSpacer(),
@@ -79,7 +81,7 @@ class _CreatePostState extends State<CreatePost> {
         // edit link
         CustomTextBox(
           label: 'link',
-          text: linkText,
+          text: linkText.isEmpty ? CreateStrings.linkPrompt : linkText,
           onPressed: () => editField(Post.linkConverter),
         ),
         const VerticalSpacer(),
@@ -93,16 +95,15 @@ class _CreatePostState extends State<CreatePost> {
         const VerticalSpacer(),
 
         // submit
-        if (titleText != 'title')
+        if (titleText.isNotEmpty)
           ActionButton(
             inverted: true,
             onTap: () {
               context.read<CreateCubit>().createPost(
                     userId: context.read<UserRepository>().user.uuid,
                     title: titleText,
-                    description:
-                        descriptionText != 'description' ? descriptionText : '',
-                    link: linkText != 'link' ? linkText : '',
+                    description: descriptionText,
+                    link: linkText,
                     tags: tags,
                     isPublic: isPublic,
                     imageFile: imageFile,

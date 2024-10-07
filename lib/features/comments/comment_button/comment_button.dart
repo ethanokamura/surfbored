@@ -17,11 +17,10 @@ class CommentButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          CommentButtonCubit(context.read<CommentRepository>()),
+      create: (context) => CommentButtonCubit(context.read<CommentRepository>())
+        ..fetchData(postId),
       child: BlocBuilder<CommentButtonCubit, CommentButtonState>(
         builder: (context, state) {
-          context.read<CommentButtonCubit>().fetchData(postId);
           var totalComments = comments;
           if (state.isLoading) {
             // Show a loading indicator in the button if needed

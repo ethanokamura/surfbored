@@ -11,8 +11,12 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
   final FriendRepository _friendRepository;
 
   Future<void> fetchFriendCount(String userId) async {
-    final friends = await _friendRepository.fetchFriendCount(userId: userId);
-    emit(state.copyWith(friends: friends));
+    try {
+      final friends = await _friendRepository.fetchFriendCount(userId: userId);
+      emit(state.fromFriendsLoaded(friends: friends));
+    } on FriendFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
   }
 
   Future<void> fetchData(String userId) async {
@@ -28,8 +32,8 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
         return;
       } else {
         final isRecipient = await _friendRepository.isRecipient(
-          userId: userId,
           currentUserId: currentUser,
+          userId: userId,
         );
         isRecipient == null
             ? emit(state.fromNoRequest())
@@ -44,28 +48,35 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
 
   Future<void> friendStateSelection(String userId) async {
     final currentUser = UserRepository().user.uuid;
-    if (state.isRecieved) {
-      await _friendRepository.addFriend(
-        otherUserId: userId,
-        currentUserId: currentUser,
-      );
-    } else if (state.areFriends) {
-      await _friendRepository.removeFriend(
-        otherUserId: userId,
-        currentUserId: currentUser,
-      );
-    } else if (state.isRequested) {
-      await _friendRepository.removeFriendRequest(
-        otherUserId: userId,
-        currentUserId: currentUser,
-      );
-    } else {
-      await _friendRepository.sendFriendRequest(
-        recipientId: userId,
-        senderId: currentUser,
-      );
+    try {
+      if (state.isRecieved) {
+        await _friendRepository.addFriend(
+          otherUserId: userId,
+          currentUserId: currentUser,
+        );
+        emit(state.fromFriendAccepted());
+      } else if (state.areFriends) {
+        await _friendRepository.removeFriend(
+          otherUserId: userId,
+          currentUserId: currentUser,
+        );
+        emit(state.fromNoRequest());
+      } else if (state.isRequested) {
+        await _friendRepository.removeFriendRequest(
+          otherUserId: userId,
+          currentUserId: currentUser,
+        );
+        emit(state.fromNoRequest());
+      } else {
+        await _friendRepository.sendFriendRequest(
+          recipientId: userId,
+          senderId: currentUser,
+        );
+        emit(state.fromRequestSent());
+      }
+    } on FriendFailure catch (error) {
+      emit(state.fromFailure(error));
     }
-    updateState();
   }
 
   void updateState() {

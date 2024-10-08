@@ -8,6 +8,7 @@ enum FriendControllerStatus {
   requested,
   recieved,
   friended,
+  empty,
 }
 
 final class FriendControllerState extends Equatable {
@@ -52,6 +53,7 @@ extension FriendControllerStateExtensions on FriendControllerState {
   bool get isRequested => status == FriendControllerStatus.requested;
   bool get isRecieved => status == FriendControllerStatus.recieved;
   bool get areFriends => status == FriendControllerStatus.friended;
+  bool get isEmpty => status == FriendControllerStatus.empty;
 }
 
 extension _FriendControllerStateExtensions on FriendControllerState {
@@ -67,4 +69,8 @@ extension _FriendControllerStateExtensions on FriendControllerState {
       copyWith(status: FriendControllerStatus.recieved);
   FriendControllerState fromFriendAccepted() =>
       copyWith(status: FriendControllerStatus.friended);
+  FriendControllerState fromEmpty() =>
+      copyWith(friends: 0, status: FriendControllerStatus.empty);
+  FriendControllerState fromFriendsLoaded({required int friends}) =>
+      copyWith(friends: friends, status: FriendControllerStatus.loaded);
 }

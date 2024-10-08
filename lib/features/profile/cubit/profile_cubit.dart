@@ -2,7 +2,9 @@ import 'package:app_core/app_core.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
-class ProfileCubit extends Cubit<UserData> {
+part 'profile_state.dart';
+
+class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({
     required UserRepository userRepository,
     required TagRepository tagRepository,
@@ -10,7 +12,7 @@ class ProfileCubit extends Cubit<UserData> {
   })  : _userRepository = userRepository,
         _tagRepository = tagRepository,
         _userID = userId,
-        super(UserData.empty) {
+        super(ProfileState.loading()) {
     _watchUser();
   }
 
@@ -24,15 +26,14 @@ class ProfileCubit extends Cubit<UserData> {
     return super.close();
   }
 
-  void _onUserChanged(UserData user) => emit(user);
-
   late final StreamSubscription<UserData> _userSubscription;
 
   void _watchUser() {
-    _userSubscription = _userRepository
-        .watchUserById(uuid: _userID)
-        .handleFailure()
-        .listen(_onUserChanged);
+    _userSubscription =
+        _userRepository.watchUserById(uuid: _userID).handleFailure().listen(
+              (user) => emit(ProfileState.success(user)),
+              onError: (e) => emit(ProfileState.failure()),
+            );
   }
 
   Future<void> _unwatchUser() {

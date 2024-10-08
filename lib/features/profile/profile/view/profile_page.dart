@@ -39,12 +39,22 @@ class _ProfilePageState extends State<ProfilePage>
         tagRepository: context.read<TagRepository>(),
         userId: widget.userId,
       ),
-      child: BlocBuilder<ProfileCubit, UserData>(
-        builder: (context, user) {
-          if (user.isEmpty) {
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          return ProfileBuilder(user: user);
+          if (state.hasError) {
+            return const Center(
+              child: PrimaryText(text: DataStrings.fromGetFailure),
+            );
+          }
+          if (state.user.isEmpty) {
+            return const Center(
+              child: PrimaryText(text: DataStrings.empty),
+            );
+          }
+          return ProfileBuilder(user: state.user);
         },
       ),
     );

@@ -24,9 +24,22 @@ class EditProfilePage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const AppBarText(text: UserStrings.editProfile),
       ),
-      body: BlocBuilder<ProfileCubit, UserData>(
-        builder: (context, user) {
-          return EditProfile(user: user);
+      body: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.hasError) {
+            return const Center(
+              child: PrimaryText(text: DataStrings.fromGetFailure),
+            );
+          }
+          if (state.user.isEmpty) {
+            return const Center(
+              child: PrimaryText(text: DataStrings.empty),
+            );
+          }
+          return EditProfile(user: state.user);
         },
       ),
     );

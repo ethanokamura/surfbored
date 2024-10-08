@@ -68,12 +68,16 @@ extension Read on FriendRepository {
     required String userBId,
   }) async {
     try {
-      final friendship = await _supabase.fromFriendsTable().select().match({
-        Friend.userAIdConverter: userAId,
-        Friend.userBIdConverter: userBId,
-      }).maybeSingle();
+      // add postgres
+      final friendship = await _supabase.rpc<bool>(
+        'are_friends',
+        params: {
+          Friend.userAIdConverter: userAId,
+          Friend.userBIdConverter: userBId,
+        },
+      );
 
-      return friendship != null;
+      return friendship;
     } catch (e) {
       throw FriendFailure.fromGet();
     }
@@ -84,15 +88,10 @@ extension Read on FriendRepository {
     required String currentUserId,
   }) async {
     try {
-      final request = await _supabase
-          .fromFriendRequestsTable()
-          .select()
-          .match({
-            FriendRequest.senderIdConverter: currentUserId,
-            FriendRequest.recipientIdConverter: userId,
-          })
-          .or('${FriendRequest.senderIdConverter}.eq$userId.and.${FriendRequest.recipientIdConverter}.eq.$currentUserId')
-          .maybeSingle();
+      final request = await _supabase.fromFriendRequestsTable().select().match({
+        FriendRequest.senderIdConverter: userId,
+        FriendRequest.recipientIdConverter: currentUserId,
+      }).maybeSingle();
       if (request == null) return null;
       return FriendRequest.fromJson(request).senderId == currentUserId;
     } catch (e) {
@@ -131,9 +130,7 @@ extension Read on FriendRepository {
     try {
       final friendRequests = await _supabase
           .fromFriendRequestsTable()
-          .select(
-            '${FriendRequest.senderIdConverter}, ${FriendRequest.recipientIdConverter}',
-          )
+          .select()
           .eq(FriendRequest.recipientIdConverter, userId)
           .order('created_at')
           .range(offset, offset + limit - 1)
@@ -155,12 +152,10 @@ extension Delete on FriendRepository {
     required String otherUserId,
   }) async {
     try {
-      await _supabase.fromFriendRequestsTable().delete().match({
-        FriendRequest.senderIdConverter: currentUserId,
-        FriendRequest.recipientIdConverter: otherUserId,
-      }).or(
-        '${FriendRequest.recipientIdConverter}.eq.$currentUserId.and.${FriendRequest.senderIdConverter}.eq.$otherUserId',
-      );
+      await _supabase.rpc<void>('remove_friend_request', params: {
+        'current_user_id': currentUserId,
+        'other_user_id': otherUserId,
+      });
     } catch (e) {
       throw FriendFailure.fromDelete();
     }
@@ -171,11 +166,12 @@ extension Delete on FriendRepository {
     required String otherUserId,
   }) async {
     try {
-      await _supabase.fromFriendsTable().delete().match({
-        Friend.userAIdConverter: currentUserId,
-        Friend.userBIdConverter: otherUserId,
-      }).or(
-        '${Friend.userBIdConverter}.eq.$currentUserId.and.${Friend.userAIdConverter}.eq.$otherUserId',
+      await _supabase.rpc<void>(
+        'remove_friend',
+        params: {
+          'current_user_id': currentUserId,
+          'other_user_id': otherUserId,
+        },
       );
     } catch (e) {
       throw FriendFailure.fromDelete();

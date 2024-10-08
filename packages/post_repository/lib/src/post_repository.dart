@@ -24,23 +24,6 @@ extension Create on PostRepository {
     }
   }
 
-  Future<List<Post>> searchPosts({
-    required String query,
-    required int offset,
-    required int limit,
-  }) async {
-    try {
-      return await _supabase
-          .fromPostsTable()
-          .select()
-          .textSearch(Post.postSearchQuery, query)
-          .range(offset, offset + limit - 1)
-          .withConverter(Post.converter);
-    } catch (e) {
-      throw PostFailure.fromGet();
-    }
-  }
-
   Future<void> likePost({required PostLike like}) async {
     try {
       await _supabase.fromPostLikesTable().insert(like.toJson());
@@ -61,6 +44,23 @@ extension Read on PostRepository {
           .withConverter(
             (data) => data == null ? Post.empty : Post.converterSingle(data),
           );
+    } catch (e) {
+      throw PostFailure.fromGet();
+    }
+  }
+
+  Future<List<Post>> searchPosts({
+    required String query,
+    required int offset,
+    required int limit,
+  }) async {
+    try {
+      return await _supabase
+          .fromPostsTable()
+          .select()
+          .textSearch(Post.postSearchQuery, query)
+          .range(offset, offset + limit - 1)
+          .withConverter(Post.converter);
     } catch (e) {
       throw PostFailure.fromGet();
     }
@@ -113,6 +113,7 @@ extension Read on PostRepository {
           .order('created_at')
           .withConverter(Post.converter);
     } catch (e) {
+      print(e);
       throw PostFailure.fromGet();
     }
   }

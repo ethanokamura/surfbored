@@ -79,7 +79,8 @@ extension SearchStateExtensions on SearchState {
 
 extension _SearchStateExtensions on SearchState {
   SearchState fromLoading() => copyWith(status: SearchStatus.loading);
-  SearchState fromEmpty() => copyWith(status: SearchStatus.empty);
+  SearchState fromEmpty() =>
+      copyWith(posts: [], boards: [], users: [], status: SearchStatus.empty);
 
   SearchState fromUserFailure(UserFailure failure) => copyWith(
         status: SearchStatus.failure,

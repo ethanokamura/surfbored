@@ -53,7 +53,8 @@ extension FriendsStateExtensions on FriendsState {
 extension _FriendsStateExtensions on FriendsState {
   FriendsState fromLoading() => copyWith(status: FriendsStatus.loading);
 
-  FriendsState fromEmpty() => copyWith(status: FriendsStatus.empty);
+  FriendsState fromEmpty() =>
+      copyWith(friends: [], status: FriendsStatus.empty);
 
   FriendsState fromLoaded(List<String> friends) =>
       copyWith(status: FriendsStatus.loaded, friends: friends);

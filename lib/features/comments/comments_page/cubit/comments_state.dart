@@ -58,7 +58,8 @@ extension CommentStateExtensions on CommentsState {
 extension _CommentStateExtensions on CommentsState {
   CommentsState fromLoading() => copyWith(status: CommentsStatus.loading);
 
-  CommentsState fromEmpty() => copyWith(status: CommentsStatus.empty);
+  CommentsState fromEmpty() =>
+      copyWith(comments: [], status: CommentsStatus.empty);
 
   CommentsState fromCommentsLoaded(
     List<Comment> comments,

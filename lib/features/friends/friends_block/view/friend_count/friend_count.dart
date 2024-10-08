@@ -18,7 +18,25 @@ class FriendsCountText extends StatelessWidget {
       child: BlocBuilder<FriendCountCubit, FriendCountState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const PrimaryText(text: '0');
+            return RichText(
+              text: TextSpan(
+                text: '0 ',
+                style: TextStyle(
+                  color: Theme.of(context).textColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: FriendStrings.friends,
+                    style: TextStyle(
+                      color: Theme.of(context).subtextColor,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            );
           } else if (state.isLoaded) {
             return RichText(
               text: TextSpan(

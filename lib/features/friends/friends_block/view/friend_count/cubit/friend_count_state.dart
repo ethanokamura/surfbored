@@ -55,5 +55,5 @@ extension _FriendControllerStateExtensions on FriendCountState {
   FriendCountState fromFailure(FriendFailure failure) =>
       copyWith(failure: failure, status: FriendCountStatus.failure);
   FriendCountState fromLoaded({required int friends}) =>
-      copyWith(friends: friends);
+      copyWith(friends: friends, status: FriendCountStatus.loaded);
 }

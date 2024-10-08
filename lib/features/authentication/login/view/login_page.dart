@@ -19,6 +19,7 @@ class LoginPage extends StatelessWidget {
       child: CustomPageView(
         appBar: AppBar(
           title: const AppBarText(text: AuthStrings.signIn),
+          backgroundColor: Colors.transparent,
         ),
         top: true,
         body: BlocProvider(

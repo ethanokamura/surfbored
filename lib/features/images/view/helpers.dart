@@ -63,7 +63,6 @@ Widget imageWidget({
       aspectY: aspectY,
     ),
     errorWidget: (context, url, error) {
-      print('error: $error');
       return errorWidget(
         x: width == double.infinity ? 64 : width / 4,
         context: context,

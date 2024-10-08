@@ -22,6 +22,16 @@ class AppCubit extends Cubit<AppState> {
         : AppState.needsUsername(user);
   }
 
+  void reinitState() {
+    final user = _userRepository.user;
+    if (user.isEmpty) {
+      emit(const AppState.unauthenticated());
+    }
+    user.hasUsername
+        ? emit(AppState.newlyAuthenticated(user))
+        : emit(AppState.needsUsername(user));
+  }
+
   @override
   Future<void> close() async {
     await _unwatchUser();
@@ -34,10 +44,6 @@ class AppCubit extends Cubit<AppState> {
     } on UserFailure catch (failure) {
       _onUserFailed(failure);
     }
-  }
-
-  void confirmedUsername(UserData user) {
-    emit(AppState.newlyAuthenticated(user));
   }
 
   void _onUserChanged(UserData user) {

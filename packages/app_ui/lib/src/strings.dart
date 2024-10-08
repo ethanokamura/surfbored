@@ -151,6 +151,7 @@ class CreateStrings {
   static const String descriptionPrompt = "What's it all about? 🧐";
   static const String linkPrompt = 'Any links? 🤓';
   static const String usernamePrompt = 'What should we call you? 🤠';
+  static const String invalidUsername = 'Invalid username 💀';
 }
 
 class CommentStrings {

@@ -56,10 +56,6 @@ extension _ImageStateExtensions on ImageState {
       copyWith(photoUrl: photoUrl, status: ImageStatus.loaded);
   ImageState fromLoadedFile(File imageFile) =>
       copyWith(imageFile: imageFile, status: ImageStatus.loaded);
-  ImageState fromFailure(String failure) {
-    print('failure: $failure');
-    return copyWith(
-      status: ImageStatus.failure,
-    );
-  }
+  ImageState fromFailure(String failure) =>
+      copyWith(status: ImageStatus.failure);
 }

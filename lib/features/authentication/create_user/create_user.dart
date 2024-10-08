@@ -16,7 +16,36 @@ class CreateUserPage extends StatefulWidget {
 }
 
 class _CreateUserPageState extends State<CreateUserPage> {
-  String username = '';
+  final _usernameController = TextEditingController();
+  Timer? _debounce;
+  bool _isValid = false;
+  String _username = '';
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _onUsernameChanged(BuildContext context, String username) async {
+    if (username.length > 15 || username.length < 3) {
+      setState(() => _isValid = false);
+      return;
+    }
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      setState(() {
+        _username = username;
+      });
+      final unique = await context
+          .read<UserRepository>()
+          .isUsernameUnique(username: username);
+      setState(() {
+        _isValid = unique;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,45 +59,39 @@ class _CreateUserPageState extends State<CreateUserPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomInputField(
-              label: UserStrings.username,
-              text:
-                  username.isNotEmpty ? username : CreateStrings.usernamePrompt,
-              onPressed: () async {
-                final newValue = await editTextField(
-                  context,
-                  UserStrings.username,
-                  TextEditingController(),
-                );
-                if (newValue != null &&
-                    newValue.trim() != '' &&
-                    context.mounted) {
-                  final isUnique = await context
-                      .read<UserRepository>()
-                      .isUsernameUnique(username: newValue);
-                  if (isUnique) {
-                    setState(() => username = newValue);
-                  }
-                }
-              },
+            customTextFormField(
+              controller: _usernameController,
+              context: context,
+              onChanged: (value) async => _onUsernameChanged(
+                context,
+                value.trim(),
+              ),
+              label: CreateStrings.usernamePrompt,
             ),
             const VerticalSpacer(),
-            if (username.isNotEmpty)
-              ActionButton(
-                inverted: true,
-                onTap: () async {
-                  final newUser = await context
-                      .read<UserRepository>()
-                      .createUser(username: username);
-                  if (context.mounted) {
-                    context.read<AppCubit>().confirmedUsername(newUser);
-                  }
-                },
-                text: ButtonStrings.confirm,
-              ),
+            ActionButton(
+              inverted: true,
+              onTap: _isValid
+                  ? () async {
+                      await context
+                          .read<UserRepository>()
+                          .updateUsername(username: _username);
+                      if (context.mounted) {
+                        context.read<AppCubit>().reinitState();
+                      }
+                      _usernameController.clear();
+                    }
+                  : null,
+              text: _isValid
+                  ? ButtonStrings.continueText
+                  : CreateStrings.invalidUsername,
+            ),
           ],
         ),
       ),
     );
   }
+
+  Future<bool> validator(String username) async =>
+      context.read<UserRepository>().isUsernameUnique(username: username);
 }

@@ -87,9 +87,24 @@ extension Auth on UserRepository {
       if (response.user == null) {
         throw UserFailure.fromPhoneNumberSignIn();
       }
-      await _updateUserData(supabaseUser: response.user);
+      await _ensureUserExists(response.user!);
     } catch (e) {
       throw UserFailure.fromPhoneNumberSignIn();
+    }
+  }
+
+  Future<void> _ensureUserExists(User supabaseUser) async {
+    try {
+      final res = await _supabase
+          .fromUsersTable()
+          .select()
+          .eq(UserData.uuidConverter, supabaseUser.id)
+          .maybeSingle();
+      res == null
+          ? await _createUser(uuid: supabaseUser.id)
+          : await _updateUserData(supabaseUser: supabaseUser);
+    } catch (e) {
+      throw UserFailure.fromGet();
     }
   }
 
@@ -120,18 +135,9 @@ extension Username on UserRepository {
 }
 
 extension Create on UserRepository {
-  Future<UserData> createUser({required String username}) async {
-    try {
-      return await _supabase
-          .fromUsersTable()
-          .update({UserData.usernameConverter: username})
-          .eq(UserData.uuidConverter, _supabase.auth.currentUser!.id)
-          .select()
-          .single()
-          .withConverter(UserData.converterSingle);
-    } catch (e) {
-      throw UserFailure.fromGet();
-    }
+  Future<void> _createUser({required String uuid}) async {
+    final data = UserData.insert(uuid: uuid);
+    await _supabase.fromUsersTable().insert(data);
   }
 }
 
@@ -198,6 +204,20 @@ extension Update on UserRepository {
         UserData.lastSignInConverter: DateTime.now().toUtc().toIso8601String(),
       }).eq(UserData.uuidConverter, supabaseUser.id);
     } catch (e) {
+      throw UserFailure.fromUpdate();
+    }
+  }
+
+  Future<void> updateUsername({required String username}) async {
+    try {
+      return await _supabase
+          .fromUsersTable()
+          .upsert({UserData.usernameConverter: username}).eq(
+        UserData.uuidConverter,
+        _supabase.auth.currentUser!.id,
+      );
+    } catch (e) {
+      print(e);
       throw UserFailure.fromUpdate();
     }
   }

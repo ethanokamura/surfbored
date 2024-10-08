@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/authentication/login/cubit/authentication_cubit.dart';
 
 class OtpPrompt extends StatefulWidget {
@@ -38,6 +39,9 @@ class _OtpPromptState extends State<OtpPrompt> {
               final otp = _otpController.text.trim();
               if (otp.length == 6) {
                 await context.read<AuthCubit>().signInWithOTP(otp);
+                if (context.mounted) {
+                  context.read<AppCubit>().reinitState();
+                }
               } else {
                 context.showSnackBar(AuthStrings.invalidOtp);
                 _otpController.clear();

@@ -29,10 +29,12 @@ TextFormField customTextFormField({
   required TextEditingController controller,
   String? prefix,
   TextInputType? keyboardType,
+  void Function(String)? onChanged,
   String? Function(String?)? validator,
 }) =>
     TextFormField(
       controller: controller,
+      onChanged: onChanged,
       keyboardType: keyboardType,
       validator: validator,
       decoration: defaultTextFormFieldDecoration(

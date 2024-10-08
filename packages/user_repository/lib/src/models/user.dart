@@ -56,7 +56,7 @@ class UserData extends Equatable {
   static String get createdAtConverter => 'created_at';
   static String get userSearchQuery => 'username_name_interests';
 
-  static const empty = UserData(id: 0, uuid: '', username: '');
+  static const empty = UserData(uuid: '', username: '');
 
   final int? id;
   final String username;
@@ -122,7 +122,7 @@ class UserData extends Equatable {
     DateTime? createdAt,
   }) {
     return {
-      idConverter: id,
+      if (id != null) idConverter: id,
       if (uuid != null) uuidConverter: uuid,
       if (username != null) usernameConverter: username,
       if (photoUrl != null) photoUrlConverter: photoUrl,
@@ -161,7 +161,7 @@ class UserData extends Equatable {
       interests: interests,
       isPublic: isPublic,
       isSupporter: isSupporter,
-      createdAt: DateTime.now().toUtc(), // Automatically set created_at
+      createdAt: DateTime.now().toUtc(),
     );
   }
 
@@ -188,8 +188,7 @@ class UserData extends Equatable {
       interests: interests,
       isPublic: isPublic,
       isSupporter: isSupporter,
-      lastSignIn: DateTime.now()
-          .toUtc(), // Set lastSignIn to current time during update
+      lastSignIn: DateTime.now().toUtc(),
     );
   }
 }

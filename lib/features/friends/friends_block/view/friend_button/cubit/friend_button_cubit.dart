@@ -2,22 +2,13 @@ import 'package:app_core/app_core.dart';
 import 'package:friend_repository/friend_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
-part 'friend_controller_state.dart';
+part 'friend_button_state.dart';
 
-class FriendControllerCubit extends Cubit<FriendControllerState> {
-  FriendControllerCubit(this._friendRepository)
-      : super(const FriendControllerState.initial());
+class FriendButtonCubit extends Cubit<FriendButtonState> {
+  FriendButtonCubit(this._friendRepository)
+      : super(const FriendButtonState.initial());
 
   final FriendRepository _friendRepository;
-
-  Future<void> fetchFriendCount(String userId) async {
-    try {
-      final friends = await _friendRepository.fetchFriendCount(userId: userId);
-      emit(state.fromFriendsLoaded(friends: friends));
-    } on FriendFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
 
   Future<void> fetchData(String userId) async {
     final currentUser = UserRepository().user.uuid;
@@ -42,49 +33,49 @@ class FriendControllerCubit extends Cubit<FriendControllerState> {
                 : emit(state.fromRequestSent());
       }
     } on FriendFailure catch (failure) {
+      print(failure);
       emit(state.fromFailure(failure));
     }
   }
 
   Future<void> friendStateSelection(String userId) async {
     final currentUser = UserRepository().user.uuid;
+    emit(state.fromLoading());
     try {
-      if (state.isRecieved) {
+      if (state.friendStatus == FriendStatus.recieved) {
         await _friendRepository.addFriend(
           otherUserId: userId,
           currentUserId: currentUser,
         );
-        emit(state.fromFriendAccepted());
-      } else if (state.areFriends) {
+      } else if (state.friendStatus == FriendStatus.friends) {
         await _friendRepository.removeFriend(
           otherUserId: userId,
           currentUserId: currentUser,
         );
-        emit(state.fromNoRequest());
-      } else if (state.isRequested) {
+      } else if (state.friendStatus == FriendStatus.requested) {
         await _friendRepository.removeFriendRequest(
           otherUserId: userId,
           currentUserId: currentUser,
         );
-        emit(state.fromNoRequest());
       } else {
         await _friendRepository.sendFriendRequest(
           recipientId: userId,
           senderId: currentUser,
         );
-        emit(state.fromRequestSent());
       }
-    } on FriendFailure catch (error) {
-      emit(state.fromFailure(error));
+      _updateState();
+    } on FriendFailure catch (failure) {
+      print(failure);
+      emit(state.fromFailure(failure));
     }
   }
 
-  void updateState() {
-    if (state.isRecieved) {
+  void _updateState() {
+    if (state.friendStatus == FriendStatus.recieved) {
       emit(state.fromFriendAccepted());
-    } else if (state.areFriends) {
+    } else if (state.friendStatus == FriendStatus.friends) {
       emit(state.fromNoRequest());
-    } else if (state.isRequested) {
+    } else if (state.friendStatus == FriendStatus.requested) {
       emit(state.fromNoRequest());
     } else {
       emit(state.fromRequestSent());

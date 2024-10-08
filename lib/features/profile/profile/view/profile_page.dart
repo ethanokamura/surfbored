@@ -41,8 +41,10 @@ class _ProfilePageState extends State<ProfilePage>
       ),
       child: BlocBuilder<ProfileCubit, UserData>(
         builder: (context, user) {
-          if (!user.isEmpty) return ProfileBuilder(user: user);
-          return const Center(child: CircularProgressIndicator());
+          if (user.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ProfileBuilder(user: user);
         },
       ),
     );
@@ -133,6 +135,7 @@ class ProfileBuilder extends StatelessWidget {
                   children: [
                     UserPostList(userId: userId),
                     UserBoards(userId: userId),
+                    UserBoards(userId: userId),
                     // UserLikesList(userId: userId),
                   ],
                 ),
@@ -217,7 +220,7 @@ class ProfileHeader extends StatelessWidget {
               TitleText(text: '@${user.username}')
             else
               TitleText(text: user.displayName),
-            WebLink(url: user.websiteUrl),
+            if (user.websiteUrl.isNotEmpty) WebLink(url: user.websiteUrl),
             SecondaryText(
               text: '${UserStrings.joined}: ${DateFormatter.formatTimestamp(
                 user.createdAt!,

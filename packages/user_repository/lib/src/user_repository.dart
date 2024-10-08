@@ -8,7 +8,7 @@ class UserRepository {
   UserRepository({
     SupabaseClient? supabase,
   }) : _supabase = supabase ?? Supabase.instance.client {
-    _user = authUserChanges();
+    _user = _supabase.authUserChanges(_supabase);
   }
 
   final SupabaseClient _supabase;
@@ -27,39 +27,57 @@ class UserRepository {
   }
 
   /// Gets a generic [watchUser] emission.
-  Stream<UserData> watchUserByID({required String id}) {
+  Stream<UserData> watchUserById({required String uuid}) async* {
     try {
-      return _supabase
+      final responseStream = _supabase
           .fromUsersTable()
-          .stream(primaryKey: [UserData.uuidConverter])
-          .eq(UserData.uuidConverter, id)
+          .stream(primaryKey: [UserData.idConverter])
+          .eq(UserData.uuidConverter, uuid)
           .map((event) {
             if (event.isNotEmpty) {
               return UserData.fromJson(event.first);
             }
-            return UserData.empty; // Fallback for no user found
+            return UserData.empty;
           });
+
+      await for (final userData in responseStream) {
+        if (userData == UserData.empty) {
+          print('empty!');
+          // Handle case where no data is found, but don't emit failure right away
+          yield UserData.empty; // Maybe yield some temporary loading state here
+        } else {
+          yield userData;
+        }
+      }
     } catch (e) {
+      print(e);
       throw UserFailure.fromStream();
     }
   }
+}
 
-  ValueStream<UserData> authUserChanges() => _supabase.auth.onAuthStateChange
-      .switchMap<UserData>((auth) async* {
-        if (auth.session?.user == null) {
-          yield UserData.empty;
-        } else {
-          try {
-            final userData = await readUserData(uuid: auth.session!.user.id);
-            yield userData;
-          } catch (e) {
-            yield UserData.empty; // Handle error and emit empty user
-          }
-        }
-      })
-      .handleError((Object _) => throw UserFailure.fromAuthChanges())
-      .logOnEach('USER')
-      .shareValue();
+extension _SupabaseClientExtensions on SupabaseClient {
+  ValueStream<UserData> authUserChanges(SupabaseClient supabase) =>
+      supabase.auth.onAuthStateChange
+          .switchMap<UserData>((auth) async* {
+            if (auth.session?.user == null) {
+              yield UserData.empty;
+              return;
+            }
+            yield* supabase
+                .fromUsersTable()
+                .stream(primaryKey: [UserData.idConverter])
+                .eq(UserData.uuidConverter, supabase.auth.currentUser!.id)
+                .map((event) {
+                  if (event.isNotEmpty) {
+                    return UserData.fromJson(event.first);
+                  }
+                  return UserData.empty;
+                });
+          })
+          .handleError((Object _) => throw UserFailure.fromAuthChanges())
+          .logOnEach('USER')
+          .shareValue();
 }
 
 extension Auth on UserRepository {
@@ -87,7 +105,7 @@ extension Auth on UserRepository {
       if (response.user == null) {
         throw UserFailure.fromPhoneNumberSignIn();
       }
-      await _ensureUserExists(response.user!);
+      unawaited(_ensureUserExists(response.user!));
     } catch (e) {
       throw UserFailure.fromPhoneNumberSignIn();
     }
@@ -217,7 +235,6 @@ extension Update on UserRepository {
         _supabase.auth.currentUser!.id,
       );
     } catch (e) {
-      print(e);
       throw UserFailure.fromUpdate();
     }
   }

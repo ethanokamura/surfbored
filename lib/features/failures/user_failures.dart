@@ -8,7 +8,8 @@ BlocListener<C, S> listenForUserFailures<C extends Cubit<S>, S>({
   required Widget child,
 }) {
   return BlocListener<C, S>(
-    listenWhen: (_, current) => isFailureSelector(current),
+    listenWhen: (previous, current) =>
+        !isFailureSelector(previous) && isFailureSelector(current),
     listener: (context, state) {
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);

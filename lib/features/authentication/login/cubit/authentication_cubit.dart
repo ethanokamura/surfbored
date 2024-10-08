@@ -16,8 +16,8 @@ class AuthCubit extends Cubit<AuthState> {
       emit(state.fromLoading());
       await _userRepository.sendOTP(phoneNumber: phoneNumber);
       emit(state.fromNeedsOTP(phoneNumber));
-    } on PhoneNumberSignInFailure {
-      emit(const AuthState.initial());
+    } on PhoneNumberSignInFailure catch (failure) {
+      _onLoginFailed(failure);
     } on UserFailure catch (failure) {
       _onLoginFailed(failure);
     }
@@ -29,15 +29,15 @@ class AuthCubit extends Cubit<AuthState> {
       emit(state.fromLoading());
       await _userRepository.verifyOTP(phoneNumber: state.phoneNumber, otp: otp);
       emit(state.fromSuccess());
-    } on PhoneNumberSignInFailure {
-      emit(const AuthState.initial());
+    } on PhoneNumberSignInFailure catch (failure) {
+      _onLoginFailed(failure);
     } on UserFailure catch (failure) {
       _onLoginFailed(failure);
     }
   }
 
   void _onLoginFailed(UserFailure failure) {
+    print('Login failed with: $failure');
     emit(state.fromFailure(failure));
-    emit(const AuthState.initial());
   }
 }

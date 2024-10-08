@@ -27,9 +27,10 @@ class ProfileCubit extends Cubit<UserData> {
   void _onUserChanged(UserData user) => emit(user);
 
   late final StreamSubscription<UserData> _userSubscription;
+
   void _watchUser() {
     _userSubscription = _userRepository
-        .watchUserByID(id: _userID)
+        .watchUserById(uuid: _userID)
         .handleFailure()
         .listen(_onUserChanged);
   }

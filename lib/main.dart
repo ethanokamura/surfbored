@@ -18,12 +18,15 @@ Future<void> main() async {
           await Supabase.initialize(
             url: dotenv.env['SUPABASE_URL']!,
             anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+            realtimeClientOptions: const RealtimeClientOptions(
+              logLevel: RealtimeLogLevel.error,
+            ),
           );
           await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
           );
         } catch (e) {
-          throw Exception('Firebase initialization error: $e');
+          throw Exception('Database initialization error: $e');
         }
       },
       builder: () async {
@@ -36,12 +39,12 @@ Future<void> main() async {
         final tagRepository = TagRepository();
         final friendRepository = FriendRepository();
         return App(
+          userRepository: userRepository,
           boardRepository: boardRepository,
-          commentRepository: commentRepository,
           postRepository: postRepository,
+          commentRepository: commentRepository,
           tagRepository: tagRepository,
           friendRepository: friendRepository,
-          userRepository: userRepository,
         );
       },
     );

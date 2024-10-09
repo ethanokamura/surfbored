@@ -91,7 +91,4 @@ class _CreateUserPageState extends State<CreateUserPage> {
       ),
     );
   }
-
-  Future<bool> validator(String username) async =>
-      context.read<UserRepository>().isUsernameUnique(username: username);
 }

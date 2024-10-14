@@ -2,7 +2,6 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/posts.dart';
-import 'package:surfbored/features/search/cubit/search_cubit.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -117,12 +116,10 @@ class _SearchPageState extends State<SearchPage> {
               Expanded(
                 child: PostListView(
                   posts: _posts,
-                  hasMore: context.read<SearchCubit>().hasMorePosts,
-                  onLoadMore: () async =>
-                      context.read<SearchCubit>().searchForPosts(_query),
-                  onRefresh: () async => context
-                      .read<SearchCubit>()
-                      .searchForPosts(_query, refresh: true),
+                  hasMore: hasMore,
+                  onLoadMore: () async => _searchForPosts(context, _query),
+                  onRefresh: () async =>
+                      _searchForPosts(context, _query, refresh: true),
                 ),
               )
             else

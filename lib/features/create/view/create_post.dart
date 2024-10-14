@@ -34,86 +34,87 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        // upload image
-        SizedBox(
-          width: 64, // Constrain the width here
-          child: UploadImage(
-            width: 64,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // upload image
+          UploadImage(
+            width: 256,
             photoUrl: photoUrl,
             onFileChanged: (file) => imageFile = file,
             aspectX: 4,
             aspectY: 3,
           ),
-        ),
-        const VerticalSpacer(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            PrimaryText(
-              text: isPublic ? ButtonStrings.isPublic : ButtonStrings.isPrivate,
-            ),
-            const HorizontalSpacer(),
-            Switch(
-              value: isPublic,
-              onChanged: (value) => setState(() => isPublic = value),
-            ),
-          ],
-        ),
-        const VerticalSpacer(),
-        // edit title
-        CustomTextBox(
-          label: 'title',
-          text: titleText.isEmpty ? CreateStrings.titlePrompt : titleText,
-          onPressed: () => editField(Post.titleConverter),
-        ),
-        const VerticalSpacer(),
-
-        // edit description
-        CustomTextBox(
-          label: 'description',
-          text: descriptionText.isEmpty
-              ? CreateStrings.descriptionPrompt
-              : descriptionText,
-          onPressed: () => editField(Post.descriptionConverter),
-        ),
-        const VerticalSpacer(),
-
-        // edit link
-        CustomTextBox(
-          label: 'link',
-          text: linkText.isEmpty ? CreateStrings.linkPrompt : linkText,
-          onPressed: () => editField(Post.linkConverter),
-        ),
-        const VerticalSpacer(),
-
-        EditTagsBox(
-          tags: tags,
-          updateTags: (newTags) => setState(() {
-            tags = newTags;
-          }),
-        ),
-        const VerticalSpacer(),
-
-        // submit
-        if (titleText.isNotEmpty)
-          ActionAccentButton(
-            onTap: () {
-              context.read<CreateCubit>().createPost(
-                    userId: context.read<UserRepository>().user.uuid,
-                    title: titleText,
-                    description: descriptionText,
-                    link: linkText,
-                    tags: tags,
-                    isPublic: isPublic,
-                    imageFile: imageFile,
-                  );
-              Navigator.pop(context);
-            },
-            text: AppStrings.create,
+          const VerticalSpacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              PrimaryText(
+                text:
+                    isPublic ? ButtonStrings.isPublic : ButtonStrings.isPrivate,
+              ),
+              const HorizontalSpacer(),
+              Switch(
+                value: isPublic,
+                onChanged: (value) => setState(() => isPublic = value),
+              ),
+            ],
           ),
-      ],
+          const VerticalSpacer(),
+          // edit title
+          CustomTextBox(
+            label: 'title',
+            text: titleText.isEmpty ? CreateStrings.titlePrompt : titleText,
+            onPressed: () => editField(Post.titleConverter),
+          ),
+          const VerticalSpacer(),
+
+          // edit description
+          CustomTextBox(
+            label: 'description',
+            text: descriptionText.isEmpty
+                ? CreateStrings.descriptionPrompt
+                : descriptionText,
+            onPressed: () => editField(Post.descriptionConverter),
+          ),
+          const VerticalSpacer(),
+
+          // edit link
+          CustomTextBox(
+            label: 'link',
+            text: linkText.isEmpty ? CreateStrings.linkPrompt : linkText,
+            onPressed: () => editField(Post.linkConverter),
+          ),
+          const VerticalSpacer(),
+
+          EditTagsBox(
+            tags: tags,
+            updateTags: (newTags) => setState(() {
+              tags = newTags;
+            }),
+          ),
+          const VerticalSpacer(),
+
+          // submit
+          if (titleText.isNotEmpty)
+            ActionAccentButton(
+              onTap: () {
+                context.read<CreateCubit>().createPost(
+                      userId: context.read<UserRepository>().user.uuid,
+                      title: titleText,
+                      description: descriptionText,
+                      link: linkText,
+                      tags: tags,
+                      isPublic: isPublic,
+                      imageFile: imageFile,
+                    );
+                Navigator.pop(context);
+              },
+              text: AppStrings.create,
+            ),
+        ],
+      ),
     );
   }
 

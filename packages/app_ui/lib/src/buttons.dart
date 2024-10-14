@@ -120,8 +120,8 @@ class ActionIconButton extends StatelessWidget {
             child: onSurface != null && onSurface!
                 ? surfaceIconStyle(context, icon)
                 : inverted != null && inverted!
-                    ? defaultIconStyle(context, icon)
-                    : accentIconStyle(context, icon),
+                    ? accentIconStyle(context, icon)
+                    : defaultIconStyle(context, icon),
           )
         : IconButton(
             onPressed: onTap,

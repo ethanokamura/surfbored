@@ -33,7 +33,6 @@ class FriendButtonCubit extends Cubit<FriendButtonState> {
                 : emit(state.fromRequestSent());
       }
     } on FriendFailure catch (failure) {
-      print(failure);
       emit(state.fromFailure(failure));
     }
   }
@@ -65,7 +64,6 @@ class FriendButtonCubit extends Cubit<FriendButtonState> {
       }
       _updateState();
     } on FriendFailure catch (failure) {
-      print(failure);
       emit(state.fromFailure(failure));
     }
   }

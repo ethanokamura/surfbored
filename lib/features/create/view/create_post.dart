@@ -37,12 +37,15 @@ class _CreatePostState extends State<CreatePost> {
     return ListView(
       children: [
         // upload image
-        UploadImage(
-          width: 64,
-          photoUrl: photoUrl,
-          onFileChanged: (file) => imageFile = file,
-          aspectX: 4,
-          aspectY: 3,
+        SizedBox(
+          width: 64, // Constrain the width here
+          child: UploadImage(
+            width: 64,
+            photoUrl: photoUrl,
+            onFileChanged: (file) => imageFile = file,
+            aspectX: 4,
+            aspectY: 3,
+          ),
         ),
         const VerticalSpacer(),
         Row(

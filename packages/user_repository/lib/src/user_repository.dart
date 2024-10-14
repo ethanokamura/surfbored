@@ -42,7 +42,6 @@ class UserRepository {
 
       await for (final userData in responseStream) {
         if (userData == UserData.empty) {
-          print('empty!');
           // Handle case where no data is found, but don't emit failure right away
           yield UserData.empty; // Maybe yield some temporary loading state here
         } else {
@@ -50,7 +49,6 @@ class UserRepository {
         }
       }
     } catch (e) {
-      print(e);
       throw UserFailure.fromStream();
     }
   }

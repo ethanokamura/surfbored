@@ -113,7 +113,6 @@ extension Read on PostRepository {
           .order('created_at')
           .withConverter(Post.converter);
     } catch (e) {
-      print(e);
       throw PostFailure.fromGet();
     }
   }

@@ -59,7 +59,6 @@ extension Read on FriendRepository {
           .count(CountOption.exact);
       return friends.count;
     } catch (e) {
-      print('fetch count $e');
       throw FriendFailure.fromGet();
     }
   }
@@ -79,7 +78,6 @@ extension Read on FriendRepository {
       );
       return friendship;
     } catch (e) {
-      print('are friends $e');
       throw FriendFailure.fromGet();
     }
   }
@@ -96,7 +94,6 @@ extension Read on FriendRepository {
       if (request == null) return null;
       return FriendRequest.fromJson(request).senderId == currentUserId;
     } catch (e) {
-      print('is recipient $e');
       throw FriendFailure.fromGet();
     }
   }
@@ -120,7 +117,6 @@ extension Read on FriendRepository {
       }).toList();
       return friends;
     } catch (e) {
-      print('fetch friends $e');
       throw FriendFailure.fromGet();
     }
   }
@@ -142,7 +138,6 @@ extension Read on FriendRepository {
           friendRequests.map((request) => request.senderId).toList();
       return senders;
     } catch (e) {
-      print('fetch pending requests $e');
       throw FriendFailure.fromGet();
     }
   }

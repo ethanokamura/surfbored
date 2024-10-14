@@ -16,7 +16,8 @@ class SelectBoardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SelectionCubit(context.read<BoardRepository>()),
+      create: (context) => SelectionCubit(context.read<BoardRepository>())
+        ..isSelected(board.id!, postId),
       child: BlocBuilder<SelectionCubit, SelectionState>(
         builder: (context, state) {
           var isSelected = false;

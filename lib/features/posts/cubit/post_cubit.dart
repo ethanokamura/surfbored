@@ -121,7 +121,7 @@ class PostCubit extends Cubit<PostState> {
         limit: _pageSize,
       );
 
-      if (posts.isEmpty || posts.length < _pageSize) {
+      if (posts.isEmpty) {
         _hasMore = false; // No more boards to load
         emit(state.fromEmpty());
       } else {

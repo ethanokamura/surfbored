@@ -176,8 +176,8 @@ class CheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isSelected
-        ? accentIconStyle(context, AppIcons.checked)
-        : defaultIconStyle(context, AppIcons.notChecked);
+        ? accentIconStyle(context, AppIcons.checked, size: 22)
+        : defaultIconStyle(context, AppIcons.notChecked, size: 22);
   }
 }
 

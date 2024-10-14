@@ -40,7 +40,7 @@ class SearchCubit extends Cubit<SearchState> {
         offset: _currentPage * _pageSize,
         limit: _pageSize,
       );
-      if (users.isEmpty || users.length < _pageSize) {
+      if (users.isEmpty) {
         _hasMore = false; // No more users to load
         emit(state.fromEmpty());
       } else {
@@ -71,7 +71,7 @@ class SearchCubit extends Cubit<SearchState> {
         offset: _currentPage * _pageSize,
         limit: _pageSize,
       );
-      if (boards.isEmpty || boards.length < _pageSize) {
+      if (boards.isEmpty) {
         _hasMore = false; // No more boards to load
         emit(state.fromEmpty());
       } else {
@@ -102,7 +102,7 @@ class SearchCubit extends Cubit<SearchState> {
         offset: _currentPage * _pageSize,
         limit: _pageSize,
       );
-      if (posts.isEmpty || posts.length < _pageSize) {
+      if (posts.isEmpty) {
         _hasMore = false; // No more posts to load
         emit(state.fromEmpty());
       } else {

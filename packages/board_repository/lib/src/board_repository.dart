@@ -33,9 +33,9 @@ extension Create on BoardRepository {
     }
   }
 
-  Future<void> addPost({required BoardPost post}) async {
+  Future<void> addPost({required BoardPost boardPost}) async {
     try {
-      await _supabase.fromBoardPostsTable().insert(post.toJson());
+      await _supabase.fromBoardPostsTable().insert(boardPost.toJson());
     } catch (e) {
       throw BoardFailure.fromCreate();
     }

@@ -27,17 +27,6 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  Future<void> isSelected(int boardId, int postId) async {
-    emit(state.fromLoading());
-    try {
-      final selected =
-          await _boardRepository.hasPost(boardId: boardId, postId: postId);
-      emit(state.fromSelectionLoaded(selected: selected));
-    } on BoardFailure catch (failure) {
-      emit(state.fromFailure(failure));
-    }
-  }
-
   Future<void> fetchBoards(String userId, {bool refresh = false}) async {
     if (refresh) {
       _currentPage = 0;
@@ -110,11 +99,6 @@ extension _BoardStateExtensions on BoardState {
   BoardState fromBoardLoaded(Board board) => copyWith(
         status: BoardStatus.loaded,
         board: board,
-      );
-
-  BoardState fromSelectionLoaded({required bool selected}) => copyWith(
-        status: BoardStatus.loaded,
-        selected: selected,
       );
 
   BoardState fromBoardsLoaded(List<Board> boards) => copyWith(

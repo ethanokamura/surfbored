@@ -89,7 +89,6 @@ extension Read on PostRepository {
       return await _supabase
           .fromPostsTable()
           .select()
-          .order('created_at')
           .range(offset, offset + limit - 1)
           .order('created_at')
           .withConverter(Post.converter);
@@ -108,7 +107,6 @@ extension Read on PostRepository {
           .fromPostsTable()
           .select()
           .eq(Post.creatorIdConverter, userId)
-          .order('created_at')
           .range(offset, offset + limit - 1)
           .order('created_at')
           .withConverter(Post.converter);
@@ -134,13 +132,26 @@ extension Read on PostRepository {
     required int offset,
   }) async {
     try {
-      return await _supabase
+      final res = await _supabase
           .fromBoardPostsTable()
-          .select()
+          .select('post_id')
           .eq('board_id', boardId)
-          .order('created_at')
           .range(offset, offset + limit - 1)
-          .withConverter(Post.converter);
+          .order('created_at');
+
+      final postIds =
+          res.map<int>((result) => result['post_id'] as int).toList();
+
+      if (postIds.isEmpty) return [];
+
+      final postsResponse = await _supabase
+          .fromPostsTable()
+          .select()
+          .inFilter(Post.idConverter, postIds);
+
+      final posts = Post.converter(postsResponse);
+
+      return posts;
     } catch (e) {
       throw PostFailure.fromGet();
     }

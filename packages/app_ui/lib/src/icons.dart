@@ -2,43 +2,47 @@ import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Icon defaultIconStyle(BuildContext context, IconData icon) {
+Icon defaultIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
     color: Theme.of(context).textColor,
-    size: 14,
+    size: size,
   );
 }
 
-Icon accentIconStyle(BuildContext context, IconData icon) {
+Icon accentIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
     color: Theme.of(context).accentColor,
-    size: 14,
+    size: size,
   );
 }
 
-Icon inverseIconStyle(BuildContext context, IconData icon) {
+Icon inverseIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
     color: Theme.of(context).inverseTextColor,
-    size: 14,
+    size: size,
   );
 }
 
-Icon surfaceIconStyle(BuildContext context, IconData icon) {
+Icon surfaceIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
     color: Theme.of(context).surfaceColor,
-    size: 14,
+    size: size,
   );
 }
 
-Icon selectionIconStyle(BuildContext context, IconData icon) {
+Icon selectionIconStyle(
+  BuildContext context,
+  IconData icon, {
+  double size = 40,
+}) {
   return Icon(
     icon,
     color: Theme.of(context).surfaceColor,
-    size: 40,
+    size: size,
   );
 }
 
@@ -61,7 +65,7 @@ class AppIcons {
   static const IconData liked = FontAwesomeIcons.solidHeart;
   static const IconData notLiked = FontAwesomeIcons.heart;
   static const IconData checked = FontAwesomeIcons.solidSquareCheck;
-  static const IconData notChecked = FontAwesomeIcons.squareCheck;
+  static const IconData notChecked = FontAwesomeIcons.square;
 
   // misc
   static const IconData activity = FontAwesomeIcons.mountain;

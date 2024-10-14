@@ -11,9 +11,11 @@ class BoardCubit extends Cubit<BoardState> {
   final BoardRepository _boardRepository;
 
   int index = 0;
-  int currentPage = 0;
-  final int pageSize = 10;
-  bool hasMore = true;
+  int _currentPage = 0;
+  final int _pageSize = 10;
+  bool _hasMore = true;
+
+  bool get hasMore => _hasMore;
 
   Future<void> fetchBoard(int boardId) async {
     emit(state.fromLoading());
@@ -38,26 +40,30 @@ class BoardCubit extends Cubit<BoardState> {
 
   Future<void> fetchBoards(String userId, {bool refresh = false}) async {
     if (refresh) {
-      currentPage = 0;
-      hasMore = true;
+      _currentPage = 0;
+      _hasMore = true;
       emit(state.fromEmpty());
     }
 
-    if (!hasMore) return;
+    if (!_hasMore) return;
 
     emit(state.fromLoading());
     try {
       final boards = await _boardRepository.fetchUserBoards(
         userId: userId,
-        offset: currentPage * pageSize,
-        limit: pageSize,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
       );
 
       if (boards.isEmpty) {
-        hasMore = false; // No more boards to load
+        _hasMore = false; // No more boards to load
         emit(state.fromEmpty());
       } else {
-        currentPage++; // Increment the page number
+        if (boards.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
         emit(state.fromBoardsLoaded([...state.boards, ...boards]));
       }
     } on BoardFailure catch (failure) {

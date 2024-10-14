@@ -117,6 +117,7 @@ class _SearchPageState extends State<SearchPage> {
               Expanded(
                 child: PostListView(
                   posts: _posts,
+                  hasMore: context.read<SearchCubit>().hasMorePosts,
                   onLoadMore: () async =>
                       context.read<SearchCubit>().searchForPosts(_query),
                   onRefresh: () async => context

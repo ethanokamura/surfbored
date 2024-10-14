@@ -26,6 +26,7 @@ class BoardPostList extends StatelessWidget {
               final posts = state.posts;
               return PostListView(
                 posts: posts,
+                hasMore: context.read<PostCubit>().hasMorePosts,
                 onLoadMore: () async =>
                     context.read<PostCubit>().fetchBoardPosts(boardId),
                 onRefresh: () async => context

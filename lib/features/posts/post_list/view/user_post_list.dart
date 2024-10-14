@@ -26,6 +26,7 @@ class UserPostList extends StatelessWidget {
               final posts = state.posts;
               return PostListView(
                 posts: posts,
+                hasMore: context.read<PostCubit>().hasMorePosts,
                 onLoadMore: () async =>
                     context.read<PostCubit>().fetchUserPosts(userId),
                 onRefresh: () async => context

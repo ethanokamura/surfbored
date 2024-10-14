@@ -16,6 +16,12 @@ class PostCubit extends Cubit<PostState> {
   final PostRepository _postRepository;
   final TagRepository _tagRepository;
 
+  int _currentPage = 0;
+  final int _pageSize = 10;
+  bool _hasMore = true;
+
+  bool get hasMorePosts => _hasMore;
+
   Future<void> fetchPost(int postId) async {
     emit(state.fromLoading());
     try {
@@ -66,31 +72,31 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  int currentPage = 0;
-  final int pageSize = 10;
-  bool hasMore = true;
-
   Future<void> fetchAllPosts({bool refresh = false}) async {
     if (refresh == true) {
-      currentPage = 0;
-      hasMore = true;
+      _currentPage = 0;
+      _hasMore = true;
       emit(state.fromEmpty());
     }
 
-    if (!hasMore) return;
+    if (!_hasMore) return;
 
     emit(state.fromLoading());
     try {
       final posts = await _postRepository.fetchAllPosts(
-        offset: currentPage * pageSize,
-        limit: pageSize,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
       );
 
       if (posts.isEmpty) {
-        hasMore = false; // No more boards to load
+        _hasMore = false; // No more boards to load
         emit(state.fromEmpty());
       } else {
-        currentPage++; // Increment the page number
+        if (posts.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
         emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {
@@ -100,26 +106,30 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> fetchBoardPosts(int boardId, {bool refresh = false}) async {
     if (refresh) {
-      currentPage = 0;
-      hasMore = true;
+      _currentPage = 0;
+      _hasMore = true;
       emit(state.fromEmpty());
     }
 
-    if (!hasMore) return;
+    if (!_hasMore) return;
 
     emit(state.fromLoading());
     try {
       final posts = await _postRepository.fetchBoardPosts(
         boardId: boardId,
-        offset: currentPage * pageSize,
-        limit: pageSize,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
       );
 
-      if (posts.isEmpty) {
-        hasMore = false; // No more boards to load
+      if (posts.isEmpty || posts.length < _pageSize) {
+        _hasMore = false; // No more boards to load
         emit(state.fromEmpty());
       } else {
-        currentPage++; // Increment the page number
+        if (posts.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
         emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {
@@ -129,26 +139,30 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> fetchUserPosts(String userId, {bool refresh = false}) async {
     if (refresh) {
-      currentPage = 0;
-      hasMore = true;
+      _currentPage = 0;
+      _hasMore = true;
       emit(state.fromEmpty());
     }
 
-    if (!hasMore) return;
+    if (!_hasMore) return;
 
     emit(state.fromLoading());
     try {
       final posts = await _postRepository.fetchUserPosts(
         userId: userId,
-        offset: currentPage * pageSize,
-        limit: pageSize,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
       );
 
       if (posts.isEmpty) {
-        hasMore = false; // No more boards to load
+        _hasMore = false; // No more boards to load
         emit(state.fromEmpty());
       } else {
-        currentPage++; // Increment the page number
+        if (posts.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
         emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {

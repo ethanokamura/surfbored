@@ -8,11 +8,13 @@ class PostListView extends StatelessWidget {
     required this.posts,
     required this.onLoadMore,
     required this.onRefresh,
+    required this.hasMore,
     super.key,
   });
   final List<Post> posts;
   final Future<void> Function() onLoadMore;
   final Future<void> Function() onRefresh;
+  final bool hasMore;
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -20,7 +22,8 @@ class PostListView extends StatelessWidget {
       child: NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           if (scrollNotification.metrics.pixels - 25 >=
-              scrollNotification.metrics.maxScrollExtent) {
+                  scrollNotification.metrics.maxScrollExtent &&
+              hasMore) {
             onLoadMore();
           }
           return false;

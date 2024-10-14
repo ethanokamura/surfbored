@@ -18,31 +18,37 @@ class SearchCubit extends Cubit<SearchState> {
   final UserRepository _userRepository;
   final PostRepository _postRepository;
 
-  int currentPage = 0;
-  final int pageSize = 10;
-  bool hasMore = true;
+  int _currentPage = 0;
+  final int _pageSize = 10;
+  bool _hasMore = true;
+
+  bool get hasMorePosts => _hasMore;
 
   void setQuery(String query) => emit(state.fromSetQuery(query));
 
   Future<void> searchForUsers({bool refresh = false}) async {
     if (refresh) {
-      currentPage = 0;
-      hasMore = true;
+      _currentPage = 0;
+      _hasMore = true;
       emit(state.fromEmpty());
     }
-    if (!hasMore) return;
+    if (!_hasMore) return;
     emit(state.fromLoading());
     try {
       final users = await _userRepository.searchUsers(
         query: state.query,
-        offset: currentPage * pageSize,
-        limit: pageSize,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
       );
-      if (users.isEmpty) {
-        hasMore = false; // No more boards to load
+      if (users.isEmpty || users.length < _pageSize) {
+        _hasMore = false; // No more users to load
         emit(state.fromEmpty());
       } else {
-        currentPage++; // Increment the page number
+        if (users.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
         state.users.addAll(users);
         emit(state.fromUsersLoaded(state.users));
       }
@@ -53,23 +59,27 @@ class SearchCubit extends Cubit<SearchState> {
 
   Future<void> searchForBoards(String query, {bool refresh = false}) async {
     if (refresh) {
-      currentPage = 0;
-      hasMore = true;
+      _currentPage = 0;
+      _hasMore = true;
       emit(state.fromEmpty());
     }
-    if (!hasMore) return;
+    if (!_hasMore) return;
     emit(state.fromLoading());
     try {
       final boards = await _boardRepository.searchBoards(
         query: query,
-        offset: currentPage * pageSize,
-        limit: pageSize,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
       );
-      if (boards.isEmpty) {
-        hasMore = false; // No more boards to load
+      if (boards.isEmpty || boards.length < _pageSize) {
+        _hasMore = false; // No more boards to load
         emit(state.fromEmpty());
       } else {
-        currentPage++; // Increment the page number
+        if (boards.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
         state.boards.addAll(boards);
         emit(state.fromBoardsLoaded(state.boards));
       }
@@ -80,24 +90,27 @@ class SearchCubit extends Cubit<SearchState> {
 
   Future<void> searchForPosts(String query, {bool refresh = false}) async {
     if (refresh) {
-      currentPage = 0;
-      hasMore = true;
-      state.fromPostsLoaded([]); // clear posts
+      _currentPage = 0;
+      _hasMore = true;
       emit(state.fromEmpty());
     }
-    if (!hasMore) return;
+    if (!_hasMore) return;
     emit(state.fromLoading());
     try {
       final posts = await _postRepository.searchPosts(
         query: query,
-        offset: currentPage * pageSize,
-        limit: pageSize,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
       );
-      if (posts.isEmpty) {
-        hasMore = false; // No more posts to load
+      if (posts.isEmpty || posts.length < _pageSize) {
+        _hasMore = false; // No more posts to load
         emit(state.fromEmpty());
       } else {
-        currentPage++; // Increment the page number
+        if (posts.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
         emit(state.fromPostsLoaded([...state.posts, ...posts]));
       }
     } on PostFailure catch (failure) {

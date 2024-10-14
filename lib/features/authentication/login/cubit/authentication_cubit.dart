@@ -37,7 +37,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void _onLoginFailed(UserFailure failure) {
-    print('Login failed with: $failure');
     emit(state.fromFailure(failure));
   }
 }

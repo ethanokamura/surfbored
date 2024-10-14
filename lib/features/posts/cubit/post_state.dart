@@ -75,10 +75,9 @@ extension _PostStateExtensions on PostState {
 
   PostState fromUpdate() => copyWith(status: PostStatus.updated);
 
-  PostState fromPostLoaded(Post post, List<String> tags) => copyWith(
+  PostState fromPostLoaded(Post post) => copyWith(
         status: PostStatus.loaded,
         post: post,
-        tags: tags,
       );
 
   PostState fromPostsLoaded(List<Post> posts) => copyWith(

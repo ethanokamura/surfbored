@@ -26,8 +26,7 @@ class PostCubit extends Cubit<PostState> {
     emit(state.fromLoading());
     try {
       final post = await _postRepository.fetchPost(postId: postId);
-      final tags = await _tagRepository.fetchPostTags(id: postId);
-      emit(state.fromPostLoaded(post, tags));
+      emit(state.fromPostLoaded(post));
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));
     }

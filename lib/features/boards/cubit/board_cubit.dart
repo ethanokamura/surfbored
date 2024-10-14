@@ -10,7 +10,6 @@ class BoardCubit extends Cubit<BoardState> {
 
   final BoardRepository _boardRepository;
 
-  int index = 0;
   int _currentPage = 0;
   final int _pageSize = 10;
   bool _hasMore = true;
@@ -90,7 +89,7 @@ class BoardCubit extends Cubit<BoardState> {
 extension _BoardStateExtensions on BoardState {
   BoardState fromLoading() => copyWith(status: BoardStatus.loading);
 
-  BoardState fromEmpty() => copyWith(posts: [], status: BoardStatus.empty);
+  BoardState fromEmpty() => copyWith(boards: [], status: BoardStatus.empty);
 
   BoardState fromDeleted() => copyWith(status: BoardStatus.deleted);
 

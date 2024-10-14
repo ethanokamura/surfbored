@@ -15,7 +15,6 @@ final class BoardState extends Equatable {
     this.status = BoardStatus.initial,
     this.board = Board.empty,
     this.boards = const [],
-    this.posts = const [],
     this.failure = BoardFailure.empty,
     this.selected = false,
     this.index = 0,
@@ -26,7 +25,6 @@ final class BoardState extends Equatable {
   final BoardStatus status;
   final Board board;
   final List<Board> boards;
-  final List<int> posts;
   final BoardFailure failure;
   final bool selected;
   final int index;
@@ -36,7 +34,6 @@ final class BoardState extends Equatable {
         status,
         board,
         boards,
-        posts,
         failure,
         selected,
         index,
@@ -46,7 +43,6 @@ final class BoardState extends Equatable {
     BoardStatus? status,
     Board? board,
     List<Board>? boards,
-    List<int>? posts,
     BoardFailure? failure,
     bool? selected,
     int? index,
@@ -55,7 +51,6 @@ final class BoardState extends Equatable {
       status: status ?? this.status,
       board: board ?? this.board,
       boards: boards ?? this.boards,
-      posts: posts ?? this.posts,
       failure: failure ?? this.failure,
       selected: selected ?? this.selected,
       index: index ?? this.index,
@@ -70,6 +65,4 @@ extension BoardStateExtensions on BoardState {
   bool get isFailure => status == BoardStatus.failure;
   bool get isDeleted => status == BoardStatus.deleted;
   bool get isUpdated => status == BoardStatus.updated;
-  bool get canIncrement => index < posts.length - 1;
-  bool get canDecrement => index > 0;
 }

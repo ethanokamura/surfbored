@@ -1,12 +1,11 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:surfbored/features/boards/board/view/saves/saves.dart';
+import 'package:surfbored/features/boards/board/view/board_details.dart';
+import 'package:surfbored/features/boards/board/view/board_posts.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/failures/board_failures.dart';
 import 'package:surfbored/features/images/images.dart';
-import 'package:surfbored/features/posts/posts.dart';
-import 'package:surfbored/features/profile/profile.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPage extends StatelessWidget {
@@ -60,8 +59,9 @@ class BoardPage extends StatelessWidget {
                   ),
                 ],
               ),
-              body: BoardPageView(
-                board: board,
+              body: buildBoardPage(
+                context,
+                board,
               ),
             );
           } else if (state.isDeleted) {
@@ -78,127 +78,40 @@ class BoardPage extends StatelessWidget {
   }
 }
 
-class BoardPageView extends StatelessWidget {
-  const BoardPageView({
-    required this.board,
-    super.key,
-  });
-  final Board board;
-  @override
-  Widget build(BuildContext context) {
-    final user = context.read<UserRepository>().user;
-    final boardId = board.id!;
-    return NestedScrollView(
-      headerSliverBuilder: (context, _) {
-        return [
-          SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: defaultPadding),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ImageWidget(
-                        borderRadius: defaultBorderRadius,
-                        photoUrl: board.photoUrl,
-                        width: double.infinity,
-                        aspectX: 4,
-                        aspectY: 3,
-                      ),
-                      const VerticalSpacer(),
-                      BoardDetails(
-                        board: board,
-                      ),
-                    ],
-                  ),
+Widget buildBoardPage(BuildContext context, Board board) {
+  final user = context.read<UserRepository>().user;
+  return NestedScrollView(
+    headerSliverBuilder: (context, _) {
+      return [
+        SliverList(
+          delegate: SliverChildListDelegate(
+            <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: defaultPadding),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ImageWidget(
+                      borderRadius: defaultBorderRadius,
+                      photoUrl: board.photoUrl,
+                      width: double.infinity,
+                      aspectX: 4,
+                      aspectY: 3,
+                    ),
+                    const VerticalSpacer(),
+                    BoardDetails(
+                      board: board,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ];
-      },
-      body: Column(
-        children: [
-          BoardButtons(
-            isOwner: board.userOwnsBoard(user.uuid),
-            user: user,
-            board: board,
-          ),
-          const VerticalSpacer(),
-          Flexible(child: BoardPostList(boardId: boardId)),
-        ],
-      ),
-    );
-  }
-}
-
-class BoardDetails extends StatelessWidget {
-  const BoardDetails({required this.board, super.key});
-  final Board board;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TitleText(
-          text: board.title,
-          fontSize: 24,
-          maxLines: 2,
-        ),
-        DescriptionText(text: board.description),
-        const VerticalSpacer(),
-        UserDetails(id: board.creatorId),
-      ],
-    );
-  }
-}
-
-class BoardButtons extends StatelessWidget {
-  const BoardButtons({
-    required this.isOwner,
-    required this.user,
-    required this.board,
-    super.key,
-  });
-  final bool isOwner;
-  final Board board;
-  final UserData user;
-  @override
-  Widget build(BuildContext context) {
-    final boardId = board.id!;
-    return Row(
-      children: [
-        if (isOwner)
-          Expanded(
-            child: ActionButton(
-              onTap: () {},
-              text: ButtonStrings.share,
-            ),
-          ),
-        if (!isOwner)
-          Expanded(
-            child: SaveButton(
-              board: board,
-              userId: user.uuid,
-            ),
-          ),
-        const HorizontalSpacer(),
-        Expanded(
-          child: ActionButton(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (context) => ShuffledPostsPage(boardId: boardId),
               ),
-            ),
-            text: ButtonStrings.shuffle,
+            ],
           ),
         ),
-      ],
-    );
-  }
+      ];
+    },
+    body: BoardPosts(board: board, user: user),
+  );
 }

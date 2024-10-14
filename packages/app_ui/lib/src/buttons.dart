@@ -9,9 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ActionButton extends StatelessWidget {
   const ActionButton({
     required this.onTap,
-    this.inverted,
     this.onSurface,
-    this.background,
     this.icon,
     this.text,
     this.vertical,
@@ -19,10 +17,8 @@ class ActionButton extends StatelessWidget {
     super.key,
   });
 
-  final bool? inverted;
   final IconData? icon;
   final bool? onSurface;
-  final bool? background;
   final String? text;
   final double? vertical;
   final double? horizontal;
@@ -32,11 +28,7 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onTap,
-      style: background != null && background! == false
-          ? noBackgroundStyle()
-          : inverted != null && inverted!
-              ? inverseStyle(context)
-              : defaultStyle(context, onSurface: onSurface),
+      style: defaultStyle(context, onSurface: onSurface),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: horizontal ?? 0,
@@ -48,14 +40,55 @@ class ActionButton extends StatelessWidget {
             if (icon != null)
               onSurface != null && onSurface!
                   ? surfaceIconStyle(context, icon!)
-                  : inverted != null && inverted!
-                      ? accentIconStyle(context, icon!)
-                      : defaultIconStyle(context, icon!),
+                  : defaultIconStyle(context, icon!),
             if (text != null && icon != null) const SizedBox(width: 10),
             if (text != null)
               ButtonText(
                 text: text!,
-                inverted: inverted ?? false,
+                inverted: false,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ActionAccentButton extends StatelessWidget {
+  const ActionAccentButton({
+    required this.onTap,
+    this.icon,
+    this.text,
+    this.vertical,
+    this.horizontal,
+    super.key,
+  });
+
+  final IconData? icon;
+  final String? text;
+  final double? vertical;
+  final double? horizontal;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: accentStyle(context),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontal ?? 0,
+          vertical: vertical ?? 0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) accentIconStyle(context, icon!),
+            if (text != null && icon != null) const SizedBox(width: 10),
+            if (text != null)
+              ButtonText(
+                text: text!,
+                inverted: true,
               ),
           ],
         ),
@@ -95,7 +128,7 @@ class ActionIconButton extends StatelessWidget {
             style: background != null && background! == false
                 ? noBackgroundStyle()
                 : inverted != null && inverted!
-                    ? inverseStyle(context)
+                    ? accentStyle(context)
                     : defaultStyle(context, onSurface: onSurface),
             icon: onSurface != null && onSurface!
                 ? surfaceIconStyle(context, icon)
@@ -123,7 +156,7 @@ class ActionSelectButton extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onTap,
-          style: inversePaddedStyle(context),
+          style: accentStyleWithPadding(context),
           icon: selectionIconStyle(context, icon),
         ),
         const VerticalSpacer(),

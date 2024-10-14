@@ -175,7 +175,6 @@ class BoardButtons extends StatelessWidget {
         if (isOwner)
           Expanded(
             child: ActionButton(
-              inverted: false,
               onTap: () {},
               text: ButtonStrings.share,
             ),
@@ -190,7 +189,6 @@ class BoardButtons extends StatelessWidget {
         const HorizontalSpacer(),
         Expanded(
           child: ActionButton(
-            inverted: false,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute<dynamic>(

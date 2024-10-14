@@ -71,7 +71,6 @@ class PostViewController extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ActionButton(
-                        inverted: false,
                         text: ButtonStrings.last,
                         onTap: () {
                           if (state > 0) {
@@ -82,8 +81,7 @@ class PostViewController extends StatelessWidget {
                     ),
                     const HorizontalSpacer(),
                     Expanded(
-                      child: ActionButton(
-                        inverted: true,
+                      child: ActionAccentButton(
                         text: ButtonStrings.next,
                         onTap: () {
                           if (state < posts.length - 1) {

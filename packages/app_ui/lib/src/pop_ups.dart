@@ -39,8 +39,7 @@ Future<String?> editTextField(
           children: [
             // Cancel
             Expanded(
-              child: ActionButton(
-                inverted: true,
+              child: ActionAccentButton(
                 onTap: () => Navigator.pop(context),
                 text: ButtonStrings.cancel,
               ),
@@ -49,8 +48,7 @@ Future<String?> editTextField(
 
             // Save
             Expanded(
-              child: ActionButton(
-                inverted: true,
+              child: ActionAccentButton(
                 onTap: () => Navigator.of(context).pop(textController.text),
                 text: ButtonStrings.save,
               ),

@@ -38,11 +38,9 @@ class ProfileSettingsPage extends StatelessWidget {
               text:
                   // ignore: lines_longer_than_80_chars
                   '${AppStrings.theme}: ${isDarkMode ? ButtonStrings.darkMode : ButtonStrings.lightMode}',
-              inverted: false,
               onTap: () => context.read<ThemeCubit>().toggleTheme(),
             ),
             ActionButton(
-              inverted: false,
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute<dynamic>(
@@ -57,7 +55,6 @@ class ProfileSettingsPage extends StatelessWidget {
               text: UserStrings.editProfile,
             ),
             ActionButton(
-              inverted: false,
               onTap: context.read<AppCubit>().logOut,
               text: AuthStrings.logOut,
             ),

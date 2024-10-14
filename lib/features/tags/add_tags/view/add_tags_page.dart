@@ -82,8 +82,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
                 onDelete: _deleteTag,
               ),
               const VerticalSpacer(),
-              ActionButton(
-                inverted: true,
+              ActionAccentButton(
                 text: ButtonStrings.confirm,
                 onTap: () {
                   widget.returnTags(_tags);

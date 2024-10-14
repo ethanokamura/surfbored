@@ -4,7 +4,8 @@ import 'package:surfbored/features/search/search.dart';
 
 class ExplorePage extends StatelessWidget {
   const ExplorePage({super.key});
-  static Page<dynamic> page() => const MaterialPage<void>(child: ExplorePage());
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: ExplorePage());
 
   @override
   Widget build(BuildContext context) {

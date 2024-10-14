@@ -7,7 +7,8 @@ import 'package:user_repository/user_repository.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-  static Page<dynamic> page() => const MaterialPage<void>(child: HomePage());
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: HomePage());
 
   @override
   Widget build(BuildContext context) {

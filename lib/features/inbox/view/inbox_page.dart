@@ -7,7 +7,8 @@ import 'package:user_repository/user_repository.dart';
 
 class InboxPage extends StatelessWidget {
   const InboxPage({super.key});
-  static Page<dynamic> page() => const MaterialPage<void>(child: InboxPage());
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: InboxPage());
 
   @override
   Widget build(BuildContext context) {

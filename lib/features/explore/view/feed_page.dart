@@ -3,7 +3,8 @@ import 'package:surfbored/features/posts/posts.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({super.key});
-  static Page<dynamic> page() => const MaterialPage<void>(child: FeedPage());
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: FeedPage());
 
   @override
   Widget build(BuildContext context) {

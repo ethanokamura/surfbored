@@ -6,7 +6,7 @@ import 'package:user_repository/user_repository.dart';
 class CreateUserPage extends StatefulWidget {
   const CreateUserPage._();
 
-  static Page<dynamic> page() => const MaterialPage<void>(
+  static MaterialPage<dynamic> page() => const MaterialPage<void>(
         key: ValueKey('create_user_page'),
         child: CreateUserPage._(),
       );

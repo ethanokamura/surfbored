@@ -46,7 +46,7 @@ class BottomNavBar extends StatelessWidget {
         if (NavBarItem.values[index].isCreate) {
           await Navigator.push(
             context,
-            MaterialPageRoute<Page<dynamic>>(
+            MaterialPageRoute<MaterialPage<dynamic>>(
               builder: (context) => const CreatePage(),
             ),
           );

@@ -2,7 +2,8 @@ import 'package:app_ui/app_ui.dart';
 
 class UnkownPage extends StatelessWidget {
   const UnkownPage({super.key});
-  static Page<dynamic> page() => const MaterialPage<void>(child: UnkownPage());
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: UnkownPage());
   @override
   Widget build(BuildContext context) {
     return CustomPageView(

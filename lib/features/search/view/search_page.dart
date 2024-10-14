@@ -6,7 +6,8 @@ import 'package:surfbored/features/search/cubit/search_cubit.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
-  static Page<dynamic> page() => const MaterialPage<void>(child: SearchPage());
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: SearchPage());
 
   @override
   State<SearchPage> createState() => _SearchPageState();

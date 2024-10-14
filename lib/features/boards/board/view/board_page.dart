@@ -151,7 +151,7 @@ class BoardDetails extends StatelessWidget {
         ),
         DescriptionText(text: board.description),
         const VerticalSpacer(),
-        ProfileLink(id: board.creatorId),
+        UserDetails(id: board.creatorId),
       ],
     );
   }

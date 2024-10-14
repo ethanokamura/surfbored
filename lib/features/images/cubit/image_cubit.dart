@@ -93,6 +93,7 @@ class ImageCubit extends Cubit<ImageState> {
 
   // Loading image
   void loadImage(String? url) {
+    emit(state.fromLoading());
     emit(state.fromLoadedUrl((url == null || url.isEmpty) ? null : url));
   }
 

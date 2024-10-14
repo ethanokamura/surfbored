@@ -24,22 +24,25 @@ class UserDetails extends StatelessWidget {
         child: FutureBuilder<UserProfile>(
           future: _fetchUserDetails(context),
           builder: (context, snapshot) {
-            final profile = snapshot.data;
-            final username = profile?.username ?? 'Unknown User';
-            final photoUrl = profile?.photoUrl;
-            return Row(
-              children: [
-                ImageWidget(
-                  photoUrl: photoUrl,
-                  width: 32,
-                  aspectX: 1,
-                  aspectY: 1,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                const SizedBox(width: 10),
-                UserText(text: '@$username', bold: false),
-              ],
-            );
+            if (snapshot.hasData) {
+              final profile = snapshot.data!;
+              final username = profile.username;
+              final photoUrl = profile.photoUrl;
+              return Row(
+                children: [
+                  ImageWidget(
+                    photoUrl: photoUrl,
+                    width: 32,
+                    aspectX: 1,
+                    aspectY: 1,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  const SizedBox(width: 10),
+                  UserText(text: '@$username', bold: false),
+                ],
+              );
+            }
+            return const UserText(text: 'Unknown User', bold: false);
           },
         ),
       ),

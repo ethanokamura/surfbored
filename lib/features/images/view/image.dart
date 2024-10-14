@@ -21,6 +21,7 @@ class ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('loading: $photoUrl');
     return BlocProvider(
       create: (_) => ImageCubit()..loadImage(photoUrl),
       child: BlocBuilder<ImageCubit, ImageState>(
@@ -46,6 +47,7 @@ class ImageWidget extends StatelessWidget {
               ),
             );
           } else if (state.isLoaded) {
+            print('showing: ${state.photoUrl}');
             return state.photoUrl == null || state.photoUrl!.isEmpty
                 ? SizedBox(
                     width: width,

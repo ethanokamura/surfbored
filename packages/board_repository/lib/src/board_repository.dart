@@ -4,7 +4,10 @@ import 'package:board_repository/src/models/board.dart';
 import 'package:board_repository/src/models/board_post.dart';
 import 'package:board_repository/src/models/board_save.dart';
 
+/// Repository for managing board-related operations.
 class BoardRepository {
+  /// Constructor for BoardRepository.
+  /// If [supabase] is not provided, it uses the default Supabase instance.
   BoardRepository({SupabaseClient? supabase})
       : _supabase = supabase ?? Supabase.instance.client;
 
@@ -12,6 +15,7 @@ class BoardRepository {
 }
 
 extension Create on BoardRepository {
+  /// Creates a new board and returns its ID.
   Future<int> createBoard({required Board board}) async {
     try {
       final res = await _supabase
@@ -25,6 +29,7 @@ extension Create on BoardRepository {
     }
   }
 
+  /// Saves a board for a user.
   Future<void> saveBoard({required BoardSave save}) async {
     try {
       await _supabase.fromBoardSavesTable().insert(save.toJson());
@@ -33,6 +38,7 @@ extension Create on BoardRepository {
     }
   }
 
+  /// Adds a post to a board.
   Future<void> addPost({required BoardPost boardPost}) async {
     try {
       await _supabase.fromBoardPostsTable().insert(boardPost.toJson());
@@ -43,6 +49,8 @@ extension Create on BoardRepository {
 }
 
 extension Read on BoardRepository {
+  /// Fetches a board by its ID.
+  /// Returns [Board.empty] if not found.
   Future<Board> fetchBoard({required int boardId}) async {
     try {
       return await _supabase
@@ -58,6 +66,7 @@ extension Read on BoardRepository {
     }
   }
 
+  /// Searches boards based on a query with pagination.
   Future<List<Board>> searchBoards({
     required String query,
     required int offset,
@@ -75,6 +84,7 @@ extension Read on BoardRepository {
     }
   }
 
+  /// Checks if a post exists in a board.
   Future<bool> hasPost({
     required int boardId,
     required int postId,
@@ -90,6 +100,7 @@ extension Read on BoardRepository {
     }
   }
 
+  /// Checks if a user has saved a board.
   Future<bool> hasUserSavedBoard({
     required int boardId,
     required String userId,
@@ -105,6 +116,7 @@ extension Read on BoardRepository {
     }
   }
 
+  /// Fetches boards created by a user with pagination.
   Future<List<Board>> fetchUserBoards({
     required String userId,
     required int limit,
@@ -123,6 +135,7 @@ extension Read on BoardRepository {
     }
   }
 
+  /// Fetches boards saved by a user with pagination.
   Future<List<Board>> fetchUserSavedBoards({
     required String userId,
     required int limit,
@@ -141,6 +154,7 @@ extension Read on BoardRepository {
     }
   }
 
+  /// Fetches the number of saves for a board.
   Future<int> fetchBoardSaves({required int boardId}) async {
     try {
       final likes = await _supabase
@@ -157,6 +171,7 @@ extension Read on BoardRepository {
 }
 
 extension StreamData on BoardRepository {
+  /// Streams boards created by a user.
   Stream<List<Board>> streamUserBoards({required String userId}) {
     try {
       return _supabase
@@ -172,7 +187,7 @@ extension StreamData on BoardRepository {
 }
 
 extension Update on BoardRepository {
-  // update specific user profile field
+  /// Updates a specific field of a board.
   Future<void> updateBoard({
     required String field,
     required int boardId,
@@ -189,6 +204,7 @@ extension Update on BoardRepository {
 }
 
 extension Delete on BoardRepository {
+  /// Deletes a board by its ID.
   Future<void> deleteBoard({required int boardId}) async {
     try {
       await _supabase.fromBoardsTable().delete().eq(Board.idConverter, boardId);
@@ -197,6 +213,7 @@ extension Delete on BoardRepository {
     }
   }
 
+  /// Removes a post from a board.
   Future<void> removePost({required int postId, required int boardId}) async {
     try {
       await _supabase.fromBoardPostsTable().delete().match({
@@ -208,6 +225,7 @@ extension Delete on BoardRepository {
     }
   }
 
+  /// Removes a user's save of a board.
   Future<void> removeSave({
     required int boardId,
     required String userId,

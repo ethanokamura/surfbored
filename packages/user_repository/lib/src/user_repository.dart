@@ -4,57 +4,48 @@ import 'package:user_repository/src/failures.dart';
 import 'package:user_repository/src/models/user.dart';
 import 'package:user_repository/src/models/user_profile.dart';
 
+/// Repository class for managing user-related operations
 class UserRepository {
-  UserRepository({
-    SupabaseClient? supabase,
-  }) : _supabase = supabase ?? Supabase.instance.client {
+  /// Constructor for UserRepository.
+  /// If [supabase] is not provided, it uses the default Supabase instance.
+  UserRepository({SupabaseClient? supabase}) {
+    _supabase = supabase ?? Supabase.instance.client;
     _user = _supabase.authUserChanges(_supabase);
   }
 
-  final SupabaseClient _supabase;
+  late final SupabaseClient _supabase;
   late final ValueStream<UserData> _user;
 
-  // current user as a stream
+  /// Stream of user data changes
   Stream<UserData> get watchUser => _user.asBroadcastStream();
 
-  // get the current user's data synch
+  /// Current user data
   UserData get user => _user.valueOrNull ?? UserData.empty;
 
-  /// Gets the initial [watchUser] emission.
-  /// Returns [UserData.empty] when an error occurs.
-  Future<UserData> getOpeningUser() {
-    return watchUser.first.catchError((Object _) => UserData.empty);
-  }
+  /// Gets the initial user data emission
+  Future<UserData> getOpeningUser() => Future.value(user);
 
-  /// Gets a generic [watchUser] emission.
+  /// Watches user data by UUID
   Stream<UserData> watchUserById({required String uuid}) async* {
     try {
-      final responseStream = _supabase
+      yield* _supabase
           .fromUsersTable()
           .stream(primaryKey: [UserData.idConverter])
           .eq(UserData.uuidConverter, uuid)
-          .map((event) {
-            if (event.isNotEmpty) {
-              return UserData.fromJson(event.first);
-            }
-            return UserData.empty;
-          });
-
-      await for (final userData in responseStream) {
-        if (userData == UserData.empty) {
-          // Handle case where no data is found, but don't emit failure right away
-          yield UserData.empty; // Maybe yield some temporary loading state here
-        } else {
-          yield userData;
-        }
-      }
+          .map(
+            (event) => event.isNotEmpty
+                ? UserData.fromJson(event.first)
+                : UserData.empty,
+          );
     } catch (e) {
       throw UserFailure.fromStream();
     }
   }
 }
 
+/// Extension for Supabase client to handle auth changes
 extension _SupabaseClientExtensions on SupabaseClient {
+  /// Listens to auth state changes and returns a stream of UserData
   ValueStream<UserData> authUserChanges(SupabaseClient supabase) =>
       supabase.auth.onAuthStateChange
           .switchMap<UserData>((auth) async* {
@@ -78,8 +69,9 @@ extension _SupabaseClientExtensions on SupabaseClient {
           .shareValue();
 }
 
+/// Extension for authentication-related operations
 extension Auth on UserRepository {
-  // send OTP
+  /// Sends OTP to the provided phone number
   Future<void> sendOTP({required String phoneNumber}) async {
     try {
       await _supabase.auth.signInWithOtp(phone: phoneNumber);
@@ -88,7 +80,7 @@ extension Auth on UserRepository {
     }
   }
 
-  // verify OTP
+  /// Verifies OTP for the given phone number
   Future<void> verifyOTP({
     required String phoneNumber,
     required String otp,
@@ -103,20 +95,23 @@ extension Auth on UserRepository {
       if (response.user == null) {
         throw UserFailure.fromPhoneNumberSignIn();
       }
+
+      /// Ensure the user exists in the database
       unawaited(_ensureUserExists(response.user!));
     } catch (e) {
       throw UserFailure.fromPhoneNumberSignIn();
     }
   }
 
+  /// Ensures that the user exists in the database
   Future<void> _ensureUserExists(User supabaseUser) async {
     try {
-      final res = await _supabase
+      final exists = await _supabase
           .fromUsersTable()
           .select()
           .eq(UserData.uuidConverter, supabaseUser.id)
           .maybeSingle();
-      res == null
+      exists == null
           ? await _createUser(uuid: supabaseUser.id)
           : await _updateUserData(supabaseUser: supabaseUser);
     } catch (e) {
@@ -124,7 +119,7 @@ extension Auth on UserRepository {
     }
   }
 
-  // sign out
+  /// Signs out the current user
   Future<void> signOut() async {
     try {
       await _supabase.auth.signOut();
@@ -134,8 +129,9 @@ extension Auth on UserRepository {
   }
 }
 
+/// Extension for username-related operations
 extension Username on UserRepository {
-  // Check if username is unique
+  /// Checks if the given username is unique
   Future<bool> isUsernameUnique({required String username}) async {
     try {
       final res = await _supabase
@@ -150,15 +146,18 @@ extension Username on UserRepository {
   }
 }
 
+/// Extension for user creation operations
 extension Create on UserRepository {
+  /// Creates a new user with the given UUID
   Future<void> _createUser({required String uuid}) async {
     final data = UserData.insert(uuid: uuid);
     await _supabase.fromUsersTable().insert(data);
   }
 }
 
+/// Extension for read operations
 extension Read on UserRepository {
-  // gets the user data by ID
+  /// Reads user data by UUID
   Future<UserData> readUserData({required String uuid}) async {
     try {
       return await _supabase
@@ -175,6 +174,7 @@ extension Read on UserRepository {
     }
   }
 
+  /// Searches for users based on a query
   Future<List<UserProfile>> searchUsers({
     required String query,
     required int offset,
@@ -192,6 +192,7 @@ extension Read on UserRepository {
     }
   }
 
+  /// Reads user profile by UUID
   Future<UserProfile> readUserProfile({required String uuid}) async {
     try {
       return await _supabase
@@ -210,8 +211,9 @@ extension Read on UserRepository {
   }
 }
 
+/// Extension for update operations
 extension Update on UserRepository {
-  // update user data
+  /// Updates user data
   Future<void> _updateUserData({required User? supabaseUser}) async {
     try {
       if (supabaseUser == null) return;
@@ -224,6 +226,7 @@ extension Update on UserRepository {
     }
   }
 
+  /// Updates the username for the current user
   Future<void> updateUsername({required String username}) async {
     try {
       return await _supabase
@@ -237,7 +240,7 @@ extension Update on UserRepository {
     }
   }
 
-  // update specific user profile field
+  /// Updates a specific field of the user profile
   Future<void> updateUser({
     required String field,
     required dynamic data,
@@ -253,4 +256,5 @@ extension Update on UserRepository {
   }
 }
 
+/// Extension for delete operations (currently empty)
 extension Delete on UserRepository {}

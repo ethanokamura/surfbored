@@ -3,7 +3,10 @@ import 'package:post_repository/src/failures.dart';
 import 'package:post_repository/src/models/post.dart';
 import 'package:post_repository/src/models/post_like.dart';
 
+/// Repository class for handling post-related operations
 class PostRepository {
+  /// Constructor for PostRepository
+  /// If [supabase] is not provided, it uses the default Supabase instance.
   PostRepository({SupabaseClient? supabase})
       : _supabase = supabase ?? Supabase.instance.client;
 
@@ -11,6 +14,8 @@ class PostRepository {
 }
 
 extension Create on PostRepository {
+  /// Creates a new post in the database
+  /// Returns the ID of the newly created post
   Future<int> createPost({required Post post}) async {
     try {
       final res = await _supabase
@@ -24,6 +29,7 @@ extension Create on PostRepository {
     }
   }
 
+  /// Adds a like to a post
   Future<void> likePost({required PostLike like}) async {
     try {
       await _supabase.fromPostLikesTable().insert(like.toJson());
@@ -34,6 +40,7 @@ extension Create on PostRepository {
 }
 
 extension Read on PostRepository {
+  /// Fetches a single post by its ID
   Future<Post> fetchPost({required int postId}) async {
     try {
       return await _supabase
@@ -49,6 +56,7 @@ extension Read on PostRepository {
     }
   }
 
+  /// Searches for posts based on a query string
   Future<List<Post>> searchPosts({
     required String query,
     required int offset,
@@ -66,6 +74,7 @@ extension Read on PostRepository {
     }
   }
 
+  /// Checks if a user has liked a specific post
   Future<bool> hasUserLikedPost({
     required int postId,
     required String userId,
@@ -81,6 +90,7 @@ extension Read on PostRepository {
     }
   }
 
+  /// Fetches all posts with pagination
   Future<List<Post>> fetchAllPosts({
     required int limit,
     required int offset,
@@ -97,6 +107,7 @@ extension Read on PostRepository {
     }
   }
 
+  /// Fetches posts by a specific user
   Future<List<Post>> fetchUserPosts({
     required String userId,
     required int limit,
@@ -115,17 +126,7 @@ extension Read on PostRepository {
     }
   }
 
-  // Future<List<Post>> fetchUserLikedPosts({
-  //   required String userId,
-  //   required int limit,
-  //   required int offset,
-  // }) async => _supabase
-  //         .fromPostLikesTable()
-  //         .select()
-  //         .eq(PostLike.userIdConverter, userId)
-  //         .range(offset, offset + limit - 1);
-  //         .withConverter(Post.converter);
-
+  /// Fetches posts for a specific board
   Future<List<Post>> fetchBoardPosts({
     required int boardId,
     required int limit,
@@ -157,6 +158,7 @@ extension Read on PostRepository {
     }
   }
 
+  /// Fetches the number of likes for a specific post
   Future<int> fetchPostLikes({required int postId}) async {
     try {
       final likes = await _supabase
@@ -172,6 +174,7 @@ extension Read on PostRepository {
 }
 
 extension StreamData on PostRepository {
+  /// Streams posts by a specific user
   Stream<List<Post>> streamUserPosts({
     required String userId,
     required DateTime? lastMarkedTime,
@@ -188,6 +191,7 @@ extension StreamData on PostRepository {
     }
   }
 
+  /// Streams posts for a specific board
   Stream<List<Post>> streamBoardPosts({required int boardId}) {
     try {
       return _supabase
@@ -203,7 +207,7 @@ extension StreamData on PostRepository {
 }
 
 extension Update on PostRepository {
-  // update specific user profile field
+  /// Updates a specific field of a post
   Future<void> updatePost({
     required String field,
     required int postId,
@@ -220,6 +224,7 @@ extension Update on PostRepository {
 }
 
 extension Delete on PostRepository {
+  /// Deletes a post by its ID
   Future<void> deletePost({required int postId}) async {
     try {
       await _supabase.fromPostsTable().delete().eq(Post.idConverter, postId);
@@ -228,6 +233,7 @@ extension Delete on PostRepository {
     }
   }
 
+  /// Removes a like from a post
   Future<void> removeLike({
     required int postId,
     required String userId,

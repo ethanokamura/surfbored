@@ -3,8 +3,8 @@
 
     <issue
         id="MissingClass"
-        message="Class referenced in the manifest, `io.perfecline.rando.MainActivity`, was not found in the project or the libraries"
-        errorLine1="            android:name=&quot;io.perfecline.rando.MainActivity&quot;"
+        message="Class referenced in the manifest, `app.surfbored.surfbored.MainActivity`, was not found in the project or the libraries"
+        errorLine1="            android:name=&quot;app.surfbored.surfbored.MainActivity&quot;"
         errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/AndroidManifest.xml"

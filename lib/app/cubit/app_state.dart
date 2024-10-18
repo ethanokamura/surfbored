@@ -8,6 +8,7 @@ enum AppStatus {
   failure,
 }
 
+/// Auth Status Extenstions for public access to the current AppStatus
 extension AppStatusExtensions on AppStatus {
   bool get isUnauthenticated => this == AppStatus.unauthenticated;
   bool get isNewlyAuthenticated => this == AppStatus.newlyAuthenticated;
@@ -16,6 +17,7 @@ extension AppStatusExtensions on AppStatus {
   bool get isFailure => this == AppStatus.failure;
 }
 
+/// Main app state definitions / construction
 final class AppState extends Equatable {
   const AppState._({
     required this.status,
@@ -60,6 +62,7 @@ final class AppState extends Equatable {
   List<Object?> get props => [status, user, failure];
 }
 
+/// App State Extenstions for public access to the current AppState
 extension AppStateExtensions on AppState {
   bool get isUnauthenticated => status.isUnauthenticated;
   bool get isNewlyAuthenticated => status.isNewlyAuthenticated;

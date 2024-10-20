@@ -30,6 +30,7 @@ final class AuthState extends Equatable {
         failure,
       ];
 
+  /// Allows for easy state manipulation
   AuthState copyWith({
     String? phoneNumber,
     AuthStatus? status,

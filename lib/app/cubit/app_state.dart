@@ -1,5 +1,6 @@
 part of 'app_cubit.dart';
 
+/// Defines possible status of app.
 enum AppStatus {
   unauthenticated,
   newlyAuthenticated,
@@ -17,14 +18,16 @@ extension AppStatusExtensions on AppStatus {
   bool get isFailure => this == AppStatus.failure;
 }
 
-/// Main app state definitions / construction
+/// Keeps track of the apps current state.
 final class AppState extends Equatable {
+  /// AppState Constructor
   const AppState._({
     required this.status,
     this.user = UserData.empty,
     this.failure = UserFailure.empty,
   });
 
+  /// Private setters for AppStatus
   const AppState.unauthenticated() : this._(status: AppStatus.unauthenticated);
 
   const AppState.newlyAuthenticated(UserData user)
@@ -54,6 +57,7 @@ final class AppState extends Equatable {
           failure: failure,
         );
 
+  /// State properties
   final AppStatus status;
   final UserData user;
   final UserFailure failure;
@@ -62,7 +66,7 @@ final class AppState extends Equatable {
   List<Object?> get props => [status, user, failure];
 }
 
-/// App State Extenstions for public access to the current AppState
+/// Public getters for AppState
 extension AppStateExtensions on AppState {
   bool get isUnauthenticated => status.isUnauthenticated;
   bool get isNewlyAuthenticated => status.isNewlyAuthenticated;

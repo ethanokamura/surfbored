@@ -229,6 +229,7 @@ extension Update on UserRepository {
   /// Updates the username for the current user
   Future<void> updateUsername({required String username}) async {
     try {
+      // TODO(Ethan): check here for validity of the username
       return await _supabase
           .fromUsersTable()
           .upsert({UserData.usernameConverter: username}).eq(

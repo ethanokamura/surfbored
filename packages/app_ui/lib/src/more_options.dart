@@ -5,6 +5,7 @@ import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/widgets.dart';
 import 'package:flutter/material.dart';
 
+/// Keeps track of all possible options for the more options widgets
 enum Options {
   manage,
   share,
@@ -13,6 +14,10 @@ enum Options {
   block,
 }
 
+/// Action button for the UI
+/// Accent colored background
+/// Requires [onDelete] function to handle the deletion event
+/// Optionally changes background color with [onSurface]
 class MoreCommentOptions extends StatelessWidget {
   const MoreCommentOptions({
     required this.onDelete,
@@ -30,9 +35,11 @@ class MoreCommentOptions extends StatelessWidget {
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
-          Options.delete,
-          AppIcons.delete,
-          ButtonStrings.delete,
+          MenuItem(
+            Options.delete,
+            AppIcons.delete,
+            ButtonStrings.delete,
+          ),
         ),
       ]),
       onSelected: (value) {
@@ -44,8 +51,14 @@ class MoreCommentOptions extends StatelessWidget {
   }
 }
 
-class MoreOptions extends StatelessWidget {
-  const MoreOptions({
+/// Action button for the UI
+/// Accent colored background
+/// Requires [onDelete] function to handle the deletion event
+/// Requires [onManage] function to handle the event of adding to a board
+/// Requires [onEdit] function to handle the edit event
+/// Optionally changes background color with [onSurface]
+class MorePostOptions extends StatelessWidget {
+  const MorePostOptions({
     required this.isOwner,
     required this.onDelete,
     required this.onManage,
@@ -66,18 +79,36 @@ class MoreOptions extends StatelessWidget {
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
-          Options.manage,
-          AppIcons.boards,
-          ButtonStrings.addOrRemove,
+          MenuItem(
+            Options.manage,
+            AppIcons.boards,
+            ButtonStrings.addOrRemove,
+          ),
         ),
-        _menuItem(context, Options.share, AppIcons.share, ButtonStrings.share),
+        _menuItem(
+          context,
+          MenuItem(
+            Options.share,
+            AppIcons.share,
+            ButtonStrings.share,
+          ),
+        ),
         if (isOwner) ...[
-          _menuItem(context, Options.edit, AppIcons.edit, ButtonStrings.edit),
           _menuItem(
             context,
-            Options.delete,
-            AppIcons.delete,
-            ButtonStrings.delete,
+            MenuItem(
+              Options.edit,
+              AppIcons.edit,
+              ButtonStrings.edit,
+            ),
+          ),
+          _menuItem(
+            context,
+            MenuItem(
+              Options.delete,
+              AppIcons.delete,
+              ButtonStrings.delete,
+            ),
           ),
         ],
       ]),
@@ -96,6 +127,10 @@ class MoreOptions extends StatelessWidget {
   }
 }
 
+/// Action button for the UI
+/// Accent colored background
+/// Requires [onManage] function to handle adding posts to boards
+/// Optionally changes background color with [onSurface]
 class MoreSearchOptions extends StatelessWidget {
   const MoreSearchOptions({
     required this.onManage,
@@ -113,11 +148,20 @@ class MoreSearchOptions extends StatelessWidget {
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
-          Options.manage,
-          AppIcons.boards,
-          ButtonStrings.addOrRemove,
+          MenuItem(
+            Options.manage,
+            AppIcons.boards,
+            ButtonStrings.addOrRemove,
+          ),
         ),
-        _menuItem(context, Options.share, AppIcons.share, ButtonStrings.share),
+        _menuItem(
+          context,
+          MenuItem(
+            Options.share,
+            AppIcons.share,
+            ButtonStrings.share,
+          ),
+        ),
       ]),
       onSelected: (value) {
         if (value == Options.manage) {
@@ -130,6 +174,13 @@ class MoreSearchOptions extends StatelessWidget {
   }
 }
 
+/// Action button for the UI
+/// Accent colored background
+/// Requires [isCurrent] bool to check ownership of the profile
+/// Requires [onEdit] function to handle the edit event
+/// Requires [onBlock] function to handle the event of blocking a user
+/// Requires [onShare] function to handle sharing
+/// Optionally changes background color with [onSurface]
 class MoreProfileOptions extends StatelessWidget {
   const MoreProfileOptions({
     required this.isCurrent,
@@ -151,20 +202,31 @@ class MoreProfileOptions extends StatelessWidget {
     return PopupMenuButton<Options>(
       style: noBackgroundStyle(),
       itemBuilder: (BuildContext context) => _buildMenuItems([
-        _menuItem(context, Options.share, AppIcons.share, ButtonStrings.share),
+        _menuItem(
+          context,
+          MenuItem(
+            Options.share,
+            AppIcons.share,
+            ButtonStrings.share,
+          ),
+        ),
         if (isCurrent)
           _menuItem(
             context,
-            Options.edit,
-            AppIcons.settings,
-            ButtonStrings.edit,
+            MenuItem(
+              Options.edit,
+              AppIcons.settings,
+              ButtonStrings.edit,
+            ),
           ),
         if (!isCurrent)
           _menuItem(
             context,
-            Options.block,
-            AppIcons.block,
-            ButtonStrings.toggleBlock,
+            MenuItem(
+              Options.block,
+              AppIcons.block,
+              ButtonStrings.toggleBlock,
+            ),
           ),
       ]),
       onSelected: (value) {
@@ -180,32 +242,36 @@ class MoreProfileOptions extends StatelessWidget {
   }
 }
 
+/// Generic menu item
+/// Requires [context] for build context
+/// Requires a [MenuItem] to hold data
 PopupMenuItem<Options> _menuItem(
   BuildContext context,
-  Options value,
-  IconData icon,
-  String text,
+  MenuItem item,
 ) {
   return PopupMenuItem<Options>(
-    value: value,
+    value: item.value,
     child: Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        defaultIconStyle(context, icon),
+        defaultIconStyle(context, item.icon),
         const HorizontalSpacer(),
-        PrimaryText(text: text),
+        PrimaryText(text: item.text),
       ],
     ),
   );
 }
 
+/// A generic list of the possible items
+/// Requires a list of menu [items]
 List<PopupMenuEntry<Options>> _buildMenuItems(
   List<PopupMenuEntry<Options>> items,
 ) {
   return items;
 }
 
+// The menu item itself
 class MenuItem {
   MenuItem(this.value, this.icon, this.text);
   final Options value;

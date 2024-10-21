@@ -1,3 +1,4 @@
+import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 Icon defaultIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).textColor,
+    color: context.theme.textColor,
     size: size,
   );
 }
@@ -13,7 +14,7 @@ Icon defaultIconStyle(BuildContext context, IconData icon, {double size = 14}) {
 Icon accentIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).accentColor,
+    color: context.theme.accentColor,
     size: size,
   );
 }
@@ -21,7 +22,7 @@ Icon accentIconStyle(BuildContext context, IconData icon, {double size = 14}) {
 Icon inverseIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).inverseTextColor,
+    color: context.theme.inverseTextColor,
     size: size,
   );
 }
@@ -29,7 +30,7 @@ Icon inverseIconStyle(BuildContext context, IconData icon, {double size = 14}) {
 Icon surfaceIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).surfaceColor,
+    color: context.theme.surfaceColor,
     size: size,
   );
 }
@@ -41,7 +42,7 @@ Icon selectionIconStyle(
 }) {
   return Icon(
     icon,
-    color: Theme.of(context).surfaceColor,
+    color: context.theme.surfaceColor,
     size: size,
   );
 }

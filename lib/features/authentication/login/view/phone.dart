@@ -49,10 +49,8 @@ class _PhonePromptState extends State<PhonePrompt> {
               }
             } catch (e) {
               // handle error
-              if (mounted) {
-                // ignore: use_build_context_synchronously
-                context.showSnackBar('error occured. please retry');
-              }
+              if (!context.mounted) return;
+              context.showSnackBar('error occured. please retry');
             }
           },
           text: ButtonStrings.continueText,

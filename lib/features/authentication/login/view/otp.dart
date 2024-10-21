@@ -39,19 +39,16 @@ class _OtpPromptState extends State<OtpPrompt> {
               final otp = _otpController.text.trim();
               if (otp.length == 6) {
                 await context.read<AuthCubit>().signInWithOTP(otp);
-                if (context.mounted) {
-                  context.read<AppCubit>().verifyUsernameExistence();
-                }
+                if (!context.mounted) return;
+                context.read<AppCubit>().verifyUsernameExistence();
               } else {
                 context.showSnackBar(AuthStrings.invalidOtp);
                 _otpController.clear();
               }
             } catch (e) {
               // handle error
-              if (mounted) {
-                // ignore: use_build_context_synchronously
-                context.showSnackBar('error occured. please retry');
-              }
+              if (!context.mounted) return;
+              context.showSnackBar('error occured. please retry');
             }
           },
           text: ButtonStrings.continueText,

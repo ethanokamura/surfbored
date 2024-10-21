@@ -12,9 +12,7 @@ extension CustomThemeData on ThemeData {
 
   /// [accentColor]
   /// Gives the signature look to the app
-  Color get accentColor => brightness == Brightness.dark
-      ? CustomColors.darkAccent
-      : CustomColors.lightAccent;
+  Color get accentColor => CustomColors.accent;
 
   /// [backgroundColor]
   /// Used for scaffolds
@@ -79,7 +77,7 @@ ThemeData darkMode = ThemeData(
   // custom color scheme
   colorScheme: const ColorScheme.dark(
     surface: CustomColors.darkSurface,
-    // onSurface: CustomColors.darkTextColor,
+    onSurface: CustomColors.darkTextColor,
     primary: CustomColors.darkPrimary,
     onPrimary: CustomColors.darkTextColor,
   ),

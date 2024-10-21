@@ -40,7 +40,7 @@ class _OtpPromptState extends State<OtpPrompt> {
               if (otp.length == 6) {
                 await context.read<AuthCubit>().signInWithOTP(otp);
                 if (context.mounted) {
-                  context.read<AppCubit>().reinitState();
+                  context.read<AppCubit>().verifyUsernameExistence();
                 }
               } else {
                 context.showSnackBar(AuthStrings.invalidOtp);

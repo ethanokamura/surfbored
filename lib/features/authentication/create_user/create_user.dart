@@ -29,22 +29,16 @@ class _CreateUserPageState extends State<CreateUserPage> {
   }
 
   Future<void> _onUsernameChanged(BuildContext context, String username) async {
+    // use regex
     if (username.length > 15 || username.length < 3) {
       setState(() => _isValid = false);
       return;
-    }
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () async {
+    } else {
       setState(() {
+        _isValid = true;
         _username = username;
       });
-      final unique = await context
-          .read<UserRepository>()
-          .isUsernameUnique(username: username);
-      setState(() {
-        _isValid = unique;
-      });
-    });
+    }
   }
 
   @override
@@ -72,13 +66,23 @@ class _CreateUserPageState extends State<CreateUserPage> {
             ActionAccentButton(
               onTap: _isValid
                   ? () async {
-                      await context
+                      final unique = await context
                           .read<UserRepository>()
-                          .updateUsername(username: _username);
-                      if (context.mounted) {
-                        context.read<AppCubit>().reinitState();
+                          .isUsernameUnique(username: _username);
+                      if (!context.mounted) return;
+                      if (unique) {
+                        // change username
+                        await context
+                            .read<UserRepository>()
+                            .updateUsername(username: _username);
+
+                        // change this
+                        if (!context.mounted) return;
+                        context.read<AppCubit>().usernameSubmitted();
+                      } else {
+                        // add some sort of animation
+                        context.showSnackBar(CreateStrings.invalidUsername);
                       }
-                      _usernameController.clear();
                     }
                   : null,
               text: _isValid

@@ -19,10 +19,10 @@ Future<String?> editTextField(
   return showDialog<String>(
     context: context,
     builder: (context) => AlertDialog(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: context.theme.colorScheme.surface,
       title: TitleText(text: '${AppStrings.edit} $field:'),
       content: TextFormField(
-        cursorColor: Theme.of(context).subtextColor,
+        cursorColor: context.theme.subtextColor,
         controller: textController,
         autofocus: true,
         maxLength: maxInputLength(field),
@@ -31,7 +31,7 @@ Future<String?> editTextField(
           hintText: '${PromptStrings.enter} $field',
           hintStyle: TextStyle(
             fontSize: 18,
-            color: Theme.of(context).hintTextColor,
+            color: context.theme.hintTextColor,
           ),
         ),
       ),
@@ -40,7 +40,7 @@ Future<String?> editTextField(
           children: [
             // Cancel
             Expanded(
-              child: ActionAccentButton(
+              child: ActionButton(
                 onTap: () => Navigator.pop(context),
                 text: ButtonStrings.cancel,
               ),
@@ -49,7 +49,7 @@ Future<String?> editTextField(
 
             // Save
             Expanded(
-              child: ActionAccentButton(
+              child: ActionButton(
                 onTap: () => Navigator.of(context).pop(textController.text),
                 text: ButtonStrings.save,
               ),
@@ -65,9 +65,7 @@ Future<dynamic> showBottomModal(
   BuildContext context,
   List<Widget> children,
 ) async {
-  await showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: Theme.of(context).colorScheme.surface,
+  await context.showScrollControlledBottomSheet<void>(
     builder: (context) => Padding(
       padding: const EdgeInsets.only(
         top: 20,

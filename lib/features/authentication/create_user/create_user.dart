@@ -44,15 +44,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const AppBarText(text: UserStrings.createUsername),
-      ),
-      top: true,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const AppBarText(text: UserStrings.createUsername),
+            const VerticalSpacer(multiple: 3),
             customTextFormField(
               controller: _usernameController,
               context: context,
@@ -62,7 +59,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
               ),
               label: CreateStrings.usernamePrompt,
             ),
-            const VerticalSpacer(),
+            const VerticalSpacer(multiple: 3),
             ActionAccentButton(
               onTap: _isValid
                   ? () async {

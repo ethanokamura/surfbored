@@ -26,15 +26,14 @@ class FriendButton extends StatelessWidget {
             if (state.isLoaded) {
               final buttonText = _getButtonText(state.friendStatus);
               return state.friendStatus != FriendStatus.requested
-                  ? ActionAccentButton(
+                  ? ActionButton(
                       horizontal: defaultPadding,
                       onTap: () => context
                           .read<FriendButtonCubit>()
                           .friendStateSelection(userId),
                       text: buttonText,
                     )
-                  : ActionButton(
-                      onSurface: true,
+                  : DefaultButton(
                       horizontal: defaultPadding,
                       onTap: () => context
                           .read<FriendButtonCubit>()

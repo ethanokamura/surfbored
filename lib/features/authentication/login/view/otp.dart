@@ -33,7 +33,6 @@ class _OtpPromptState extends State<OtpPrompt> {
           validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
         ),
         ActionButton(
-          onSurface: true,
           onTap: () async {
             try {
               final otp = _otpController.text.trim();

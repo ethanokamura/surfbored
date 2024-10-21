@@ -50,7 +50,7 @@ class PostViewController extends StatelessWidget {
                     ),
                     const HorizontalSpacer(),
                     Expanded(
-                      child: ActionAccentButton(
+                      child: DefaultButton(
                         text: ButtonStrings.next,
                         onTap: () {
                           if (state < posts.length - 1) {

@@ -81,7 +81,7 @@ class _CreateBoardState extends State<CreateBoard> {
           const VerticalSpacer(),
           // submit
           if (titleText.isNotEmpty)
-            ActionAccentButton(
+            ActionButton(
               onTap: () {
                 context.read<CreateCubit>().createBoard(
                       userId: context.read<UserRepository>().user.uuid,

@@ -35,7 +35,6 @@ class _PhonePromptState extends State<PhonePrompt> {
         ),
         const VerticalSpacer(),
         ActionButton(
-          onSurface: true,
           onTap: () async {
             try {
               final phoneNumber = _phoneController.text.trim();

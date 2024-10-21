@@ -98,7 +98,7 @@ class _CreatePostState extends State<CreatePost> {
 
           // submit
           if (titleText.isNotEmpty)
-            ActionAccentButton(
+            ActionButton(
               onTap: () {
                 context.read<CreateCubit>().createPost(
                       userId: context.read<UserRepository>().user.uuid,

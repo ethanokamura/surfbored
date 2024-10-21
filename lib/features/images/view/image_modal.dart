@@ -12,7 +12,7 @@ Future<void> showImagePicker({
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ActionSelectButton(
+          BottomModalButton(
             icon: AppIcons.camera,
             label: ImageStrings.camera,
             onTap: () async {
@@ -21,7 +21,7 @@ Future<void> showImagePicker({
             },
           ),
           const SizedBox(width: 40),
-          ActionSelectButton(
+          BottomModalButton(
             icon: AppIcons.posts,
             label: ImageStrings.photoLibrary,
             onTap: () async {

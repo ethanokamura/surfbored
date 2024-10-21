@@ -69,7 +69,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
               label: CreateStrings.usernamePrompt,
             ),
             const VerticalSpacer(),
-            ActionAccentButton(
+            ActionButton(
               onTap: _isValid
                   ? () async {
                       await context

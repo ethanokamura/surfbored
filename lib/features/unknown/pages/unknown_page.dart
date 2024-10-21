@@ -22,7 +22,7 @@ class UnkownPage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: defaultBorderRadius,
                 image: DecorationImage(
-                  image: AssetImage(Theme.of(context).defaultImagePath),
+                  image: AssetImage(context.theme.defaultImagePath),
                   fit: BoxFit.contain,
                 ),
               ),

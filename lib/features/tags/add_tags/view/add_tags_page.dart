@@ -56,7 +56,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
                     Flexible(
                       child: TextField(
                         controller: _tagController,
-                        cursorColor: Theme.of(context).subtextColor,
+                        cursorColor: context.theme.subtextColor,
                         decoration: const InputDecoration(
                           labelText: TagStrings.createSingle,
                         ),
@@ -82,7 +82,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
                 onDelete: _deleteTag,
               ),
               const VerticalSpacer(),
-              ActionAccentButton(
+              ActionButton(
                 text: ButtonStrings.confirm,
                 onTap: () {
                   widget.returnTags(_tags);

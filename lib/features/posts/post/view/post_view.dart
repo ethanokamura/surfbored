@@ -78,7 +78,7 @@ class ImageHeader extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              MoreOptions(
+              MorePostOptions(
                 isOwner: isOwner,
                 onManage: () => _manage(context, post.id!, userId),
                 onEdit: () => _onEdit(context, post.id!, postCubit),
@@ -108,7 +108,7 @@ class Header extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        MoreOptions(
+        MorePostOptions(
           isOwner: isOwner,
           onManage: () => _manage(context, post.id!, userId),
           onEdit: () => _onEdit(context, post.id!, postCubit),

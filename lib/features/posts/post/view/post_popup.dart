@@ -20,10 +20,7 @@ Future<dynamic> postPopUp(
   final userId = context.read<UserRepository>().user.uuid;
   final isOwner = userId == post.creatorId;
 
-  await showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    isScrollControlled: true,
+  await context.showScrollControlledBottomSheet<void>(
     builder: (context) => Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -46,7 +43,7 @@ Future<dynamic> postPopUp(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  MoreOptions(
+                  MorePostOptions(
                     onSurface: !(post.photoUrl != null && post.photoUrl! != ''),
                     isOwner: isOwner,
                     onManage: () => Navigator.push(

@@ -97,7 +97,7 @@ class _SearchPageState extends State<SearchPage> {
                       prefixIcon: defaultIconStyle(context, AppIcons.search),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: context.theme.colorScheme.primary,
                           width: 2,
                         ),
                       ),

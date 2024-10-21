@@ -34,13 +34,13 @@ class ProfileSettingsPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ActionButton(
+            DefaultButton(
               text:
                   // ignore: lines_longer_than_80_chars
                   '${AppStrings.theme}: ${isDarkMode ? ButtonStrings.darkMode : ButtonStrings.lightMode}',
               onTap: () => context.read<ThemeCubit>().toggleTheme(),
             ),
-            ActionButton(
+            DefaultButton(
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute<dynamic>(

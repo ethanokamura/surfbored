@@ -22,7 +22,7 @@ class FriendsCountText extends StatelessWidget {
               text: TextSpan(
                 text: '0 ',
                 style: TextStyle(
-                  color: Theme.of(context).textColor,
+                  color: context.theme.textColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -30,7 +30,7 @@ class FriendsCountText extends StatelessWidget {
                   TextSpan(
                     text: FriendStrings.friends,
                     style: TextStyle(
-                      color: Theme.of(context).subtextColor,
+                      color: context.theme.subtextColor,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -42,7 +42,7 @@ class FriendsCountText extends StatelessWidget {
               text: TextSpan(
                 text: '${state.friends} ',
                 style: TextStyle(
-                  color: Theme.of(context).textColor,
+                  color: context.theme.textColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -50,7 +50,7 @@ class FriendsCountText extends StatelessWidget {
                   TextSpan(
                     text: FriendStrings.friends,
                     style: TextStyle(
-                      color: Theme.of(context).subtextColor,
+                      color: context.theme.subtextColor,
                       fontWeight: FontWeight.normal,
                     ),
                   ),

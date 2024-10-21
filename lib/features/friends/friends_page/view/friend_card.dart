@@ -16,7 +16,7 @@ class FriendCard extends StatelessWidget {
         children: [
           // pfp && username
           UserDetails(id: userId),
-          ActionButton(
+          DefaultButton(
             text: context.read<FriendsCubit>().remove
                 ? 'Remove Friend'
                 : 'Add Friend',

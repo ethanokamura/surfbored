@@ -106,7 +106,7 @@ class EditView extends StatelessWidget {
             boardId: boardId,
           ),
           const VerticalSpacer(),
-          ActionAccentButton(
+          ActionButton(
             text: BoardStrings.delete,
             onTap: () {
               onDelete();

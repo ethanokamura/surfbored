@@ -34,7 +34,6 @@ class FriendsListButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionButton(
-      onSurface: true,
       horizontal: defaultPadding,
       onTap: () => Navigator.push(
         context,

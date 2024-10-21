@@ -10,8 +10,8 @@ class EditTag extends StatelessWidget {
     return GestureDetector(
       onTap: () => onDelete(tag),
       child: Material(
-        color: Theme.of(context).colorScheme.primary,
-        shadowColor: Theme.of(context).shadowColor,
+        color: context.theme.colorScheme.primary,
+        shadowColor: context.theme.shadowColor,
         borderRadius: const BorderRadius.all(Radius.circular(5)),
         child: Padding(
           padding: const EdgeInsets.symmetric(

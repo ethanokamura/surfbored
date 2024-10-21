@@ -56,8 +56,8 @@ class BottomNavBar extends StatelessWidget {
       },
       currentIndex: context
           .select((NavBarController controller) => controller.item.index),
-      selectedItemColor: Theme.of(context).accentColor,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      selectedItemColor: context.theme.accentColor,
+      backgroundColor: context.theme.colorScheme.surface,
       showSelectedLabels: true,
       showUnselectedLabels: false,
       items: const <BottomNavigationBarItem>[

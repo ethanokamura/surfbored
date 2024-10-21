@@ -1,3 +1,4 @@
+/// TODO(Ethan): I18n
 class AppStrings {
   static const String appTitle = 'SurfBored';
   static const String darkModeIcon = 'assets/images/dark_mode_face.png';

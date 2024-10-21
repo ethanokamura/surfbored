@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 // defines custom colors for the app
 abstract class CustomColors {
+  // universal accent
+  static const Color accent = Color(0xffb6a9f1);
+
   // dark mode
-  static const Color darkAccent = Color(0xff61afef);
   static const Color darkBackground = Color(0xff10141a);
   static const Color darkSurface = Color(0xff151b24);
   static const Color darkPrimary = Color(0xff1d2530);
@@ -14,7 +16,6 @@ abstract class CustomColors {
   static const Color inverseDarkTextColor = Color(0xff151b24);
 
   // light mode
-  static const Color lightAccent = Color(0xff8875e0);
   static const Color lightBackground = Color(0xffffffff);
   static const Color lightSurface = Color(0xfff3f5f6);
   static const Color lightPrimary = Color(0xffe5e8ea);

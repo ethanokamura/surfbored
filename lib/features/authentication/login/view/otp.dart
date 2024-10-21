@@ -12,6 +12,7 @@ class OtpPrompt extends StatefulWidget {
 
 class _OtpPromptState extends State<OtpPrompt> {
   final _otpController = TextEditingController();
+  String _otp = '';
 
   @override
   void dispose() {
@@ -30,27 +31,23 @@ class _OtpPromptState extends State<OtpPrompt> {
           keyboardType: TextInputType.number,
           context: context,
           label: AuthStrings.otpHint,
+          onChanged: (otp) => setState(() => _otp = otp.trim()),
           validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
         ),
         ActionButton(
-          onSurface: true,
-          onTap: () async {
-            try {
-              final otp = _otpController.text.trim();
-              if (otp.length == 6) {
-                await context.read<AuthCubit>().signInWithOTP(otp);
-                if (!context.mounted) return;
-                context.read<AppCubit>().verifyUsernameExistence();
-              } else {
-                context.showSnackBar(AuthStrings.invalidOtp);
-                _otpController.clear();
-              }
-            } catch (e) {
-              // handle error
-              if (!context.mounted) return;
-              context.showSnackBar('error occured. please retry');
-            }
-          },
+          onTap: _otp.length == 6
+              ? () async {
+                  try {
+                    await context.read<AuthCubit>().signInWithOTP(_otp);
+                    if (!context.mounted) return;
+                    context.read<AppCubit>().verifyUsernameExistence();
+                  } catch (e) {
+                    // handle error
+                    if (!context.mounted) return;
+                    context.showSnackBar('error occured. please retry');
+                  }
+                }
+              : null,
           text: ButtonStrings.continueText,
         ),
       ],

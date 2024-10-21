@@ -17,28 +17,32 @@ class LoginPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        appBar: AppBar(
-          title: const AppBarText(text: AuthStrings.signIn),
-          backgroundColor: Colors.transparent,
-        ),
-        top: true,
-        body: BlocProvider(
-          create: (context) => AuthCubit(
-            userRepository: context.read<UserRepository>(),
-          ),
-          child: listenForUserFailures<AuthCubit, AuthState>(
-            failureSelector: (state) => state.failure,
-            isFailureSelector: (state) => state.isFailure,
-            child: BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state.needsOtp) {
-                  return const Center(child: OtpPrompt());
-                }
-                return const Center(child: PhonePrompt());
-              },
-            ),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AppBarText(text: AuthStrings.signInPrompt),
+              const VerticalSpacer(multiple: 3),
+              BlocProvider(
+                create: (context) => AuthCubit(
+                  userRepository: context.read<UserRepository>(),
+                ),
+                child: listenForUserFailures<AuthCubit, AuthState>(
+                  failureSelector: (state) => state.failure,
+                  isFailureSelector: (state) => state.isFailure,
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      if (state.isLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state.needsOtp) {
+                        return const Center(child: OtpPrompt());
+                      }
+                      return const Center(child: PhonePrompt());
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

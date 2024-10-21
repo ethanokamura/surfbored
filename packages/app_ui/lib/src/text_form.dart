@@ -12,12 +12,12 @@ InputDecoration defaultTextFormFieldDecoration({
         horizontal: defaultPadding,
       ),
       labelStyle: TextStyle(
-        color: Theme.of(context).subtextColor,
+        color: context.theme.subtextColor,
       ),
       label: Text(label),
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.primary,
+          color: context.theme.colorScheme.primary,
           width: 2,
         ),
       ),

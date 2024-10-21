@@ -1,5 +1,6 @@
 part of 'like_cubit.dart';
 
+/// Represents the different states a post like can be in.
 enum LikeStatus {
   initial,
   loading,
@@ -9,21 +10,23 @@ enum LikeStatus {
   failure,
 }
 
+/// Represents the state of post like-related operations.
 final class LikeState extends Equatable {
+  /// Private constructor for creating [LikeState] instances.
   const LikeState._({
     this.status = LikeStatus.initial,
     this.liked = false,
     this.likes = 0,
   });
 
-  // initial state
+  /// Creates an initial [LikeState].
   const LikeState.initial() : this._();
 
   final LikeStatus status;
   final bool liked;
   final int likes;
 
-  // rebuilds the app when the props change
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -31,6 +34,8 @@ final class LikeState extends Equatable {
         likes,
       ];
 
+  /// Creates a new [LikeState] with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   LikeState copyWith({
     LikeStatus? status,
     bool? liked,
@@ -44,6 +49,7 @@ final class LikeState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension LikeStateExtensions on LikeState {
   bool get isLoaded => status == LikeStatus.loaded;
   bool get isLoading => status == LikeStatus.loading;
@@ -52,6 +58,7 @@ extension LikeStateExtensions on LikeState {
   bool get isSuccess => status == LikeStatus.success;
 }
 
+/// Extension methods for creating new [LikeState] instances.
 extension _LikeStateExtensions on LikeState {
   LikeState fromLoading() => copyWith(status: LikeStatus.loading);
 

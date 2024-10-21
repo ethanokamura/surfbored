@@ -1,5 +1,6 @@
 part of 'post_cubit.dart';
 
+/// Represents the different states a post can be in.
 enum PostStatus {
   initial,
   loading,
@@ -11,7 +12,9 @@ enum PostStatus {
   failure,
 }
 
+/// Represents the state of post-related operations.
 final class PostState extends Equatable {
+  /// Private constructor for creating [PostState] instances.
   const PostState._({
     this.status = PostStatus.initial,
     this.post = Post.empty,
@@ -20,7 +23,7 @@ final class PostState extends Equatable {
     this.failure = PostFailure.empty,
   });
 
-  // initial state
+  /// Creates an initial [PostState].
   const PostState.initial() : this._();
 
   final PostStatus status;
@@ -29,7 +32,7 @@ final class PostState extends Equatable {
   final List<String> tags;
   final PostFailure failure;
 
-  // rebuilds the app when the props change
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -39,6 +42,8 @@ final class PostState extends Equatable {
         failure,
       ];
 
+  /// Creates a new [PostState] with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   PostState copyWith({
     PostStatus? status,
     Post? post,
@@ -56,6 +61,7 @@ final class PostState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension PostStateExtensions on PostState {
   bool get isEmpty => status == PostStatus.empty;
   bool get isLoaded => status == PostStatus.loaded;
@@ -66,6 +72,7 @@ extension PostStateExtensions on PostState {
   bool get isUpdated => status == PostStatus.updated;
 }
 
+/// Extension methods for creating new [PostState] instances.
 extension _PostStateExtensions on PostState {
   PostState fromLoading() => copyWith(status: PostStatus.loading);
 

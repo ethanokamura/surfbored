@@ -4,7 +4,10 @@ import 'package:user_repository/user_repository.dart';
 
 part 'profile_state.dart';
 
+/// Manages the state and logic for user-related operations.
 class ProfileCubit extends Cubit<ProfileState> {
+  /// Creates a new instance of [ProfileCubit].
+  /// Requires a [UserRepository] and [TagRepository] to handle data operations.
   ProfileCubit({
     required UserRepository userRepository,
     required TagRepository tagRepository,
@@ -20,6 +23,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final TagRepository _tagRepository;
   final String _userID;
 
+  /// Stops listening to the current user
   @override
   Future<void> close() async {
     await _unwatchUser();
@@ -28,6 +32,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   late final StreamSubscription<UserData> _userSubscription;
 
+  /// Listens to the current user by their ID
   void _watchUser() {
     _userSubscription =
         _userRepository.watchUserById(uuid: _userID).handleFailure().listen(
@@ -36,10 +41,12 @@ class ProfileCubit extends Cubit<ProfileState> {
             );
   }
 
+  /// Private helper funciton to cancel the user subscription
   Future<void> _unwatchUser() {
     return _userSubscription.cancel();
   }
 
+  /// Updates user [interests] for the given user
   Future<void> updateInterests(List<String> interests) async {
     await _tagRepository.updateUserTags(userId: _userID, tags: interests);
 
@@ -49,6 +56,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
+  /// Updates the given [field] with [data] for the current user
   Future<void> editField(String field, dynamic data) async =>
       _userRepository.updateUser(field: field, data: data);
 }

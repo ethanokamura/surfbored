@@ -3,13 +3,17 @@ import 'package:comment_repository/comment_repository.dart';
 
 part 'comment_likes_state.dart';
 
+/// Manages the state and logic for comment likes operations.
 class CommentLikesCubit extends Cubit<CommentLikesState> {
+  /// Creates a new instance of [CommentLikesCubit].
+  /// Requires a [CommentRepository] to handle data operations.
   CommentLikesCubit(this._commentRepository)
       : super(const CommentLikesState.initial());
 
   final CommentRepository _commentRepository;
 
-  Future<void> fetchCommentData(
+  /// Fetches the number of likes and if the current like status via [commentId]
+  Future<void> fetchData(
     String userId,
     int commentId,
   ) async {
@@ -20,6 +24,7 @@ class CommentLikesCubit extends Cubit<CommentLikesState> {
     emit(state.fromLoaded(liked: liked, likes: likes));
   }
 
+  /// Toggles the comment to be liked or unliked
   Future<void> toggleLike({
     required int commentId,
     required String userId,

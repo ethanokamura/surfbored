@@ -1,5 +1,6 @@
 part of 'create_cubit.dart';
 
+/// Represents the different states a create operation can be in.
 enum CreateStatus {
   initial,
   loading,
@@ -13,21 +14,23 @@ enum CreateStatus {
   failure,
 }
 
+/// Represents the state of creating-related operations.
 final class CreateState extends Equatable {
+  /// Private constructor for creating [CreateState] instances.
   const CreateState._({
     this.status = CreateStatus.initial,
     this.boardFailure = BoardFailure.empty,
     this.postFailure = PostFailure.empty,
   });
 
-  // initial state
+  /// Creates an initial [CreateState].
   const CreateState.initial() : this._();
 
   final CreateStatus status;
   final BoardFailure boardFailure;
   final PostFailure postFailure;
 
-  // rebuilds the app when the props change
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -35,6 +38,8 @@ final class CreateState extends Equatable {
         postFailure,
       ];
 
+  /// Creates a new [CreateState] with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   CreateState copyWith({
     CreateStatus? status,
     BoardFailure? boardFailure,
@@ -48,6 +53,7 @@ final class CreateState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension CreateStateExtensions on CreateState {
   bool get isEmpty => status == CreateStatus.empty;
   bool get isLoaded => status == CreateStatus.loaded;
@@ -57,6 +63,7 @@ extension CreateStateExtensions on CreateState {
   bool get isCreating => status == CreateStatus.creating;
 }
 
+/// Extension methods for creating new [CreateState] instances.
 extension _CreateStateExtensions on CreateState {
   CreateState fromLoading() => copyWith(status: CreateStatus.loading);
 

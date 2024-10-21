@@ -3,11 +3,15 @@ import 'package:post_repository/post_repository.dart';
 
 part 'like_state.dart';
 
+/// Manages the state and logic for post like operations.
 class LikeCubit extends Cubit<LikeState> {
+  /// Creates a new instance of [LikeCubit].
+  /// Requires a [PostRepository] to handle data operations.
   LikeCubit(this._postRepository) : super(const LikeState.initial());
 
   final PostRepository _postRepository;
 
+  /// Fetches the number of likes and if the current like status via [postId].
   Future<void> fetchData(int postId, String userId) async {
     final userLikesPost =
         await _postRepository.hasUserLikedPost(postId: postId, userId: userId);
@@ -15,6 +19,9 @@ class LikeCubit extends Cubit<LikeState> {
     emit(state.fromLikeSuccess(isLiked: userLikesPost, likes: likes));
   }
 
+  /// Toggles the post to be liked or unliked
+  /// Requires [postId] to toggle the specifc post
+  /// Requires the [userId] of the current user
   Future<void> toggleLike(
     String userId,
     int postId, {

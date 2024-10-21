@@ -1,5 +1,6 @@
 part of 'friends_cubit.dart';
 
+/// Represents the different states a friends can be in.
 enum FriendsStatus {
   initial,
   loading,
@@ -8,21 +9,23 @@ enum FriendsStatus {
   empty,
 }
 
+/// Represents the state of friend-related operations.
 final class FriendsState extends Equatable {
+  /// Private constructor for creating [FriendsState] instances.
   const FriendsState._({
     this.status = FriendsStatus.initial,
     this.friends = const [],
     this.failure = FriendFailure.empty,
   });
 
-  // initial state
+  /// Creates an initial [FriendsState].
   const FriendsState.initial() : this._();
 
   final FriendsStatus status;
   final FriendFailure failure;
   final List<String> friends;
 
-  // rebuilds the app when the props change
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -30,6 +33,8 @@ final class FriendsState extends Equatable {
         friends,
       ];
 
+  /// Creates a new [FriendsState] with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   FriendsState copyWith({
     FriendsStatus? status,
     FriendFailure? failure,
@@ -43,6 +48,7 @@ final class FriendsState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension FriendsStateExtensions on FriendsState {
   bool get isLoaded => status == FriendsStatus.loaded;
   bool get isLoading => status == FriendsStatus.loading;
@@ -50,6 +56,7 @@ extension FriendsStateExtensions on FriendsState {
   bool get isEmpty => status == FriendsStatus.empty;
 }
 
+/// Extension methods for creating new [FriendsState] instances.
 extension _FriendsStateExtensions on FriendsState {
   FriendsState fromLoading() => copyWith(status: FriendsStatus.loading);
 

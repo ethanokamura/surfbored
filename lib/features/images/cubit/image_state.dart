@@ -1,5 +1,6 @@
 part of 'image_cubit.dart';
 
+/// Represents the different states a images can be in.
 enum ImageStatus {
   initial,
   loading,
@@ -8,7 +9,9 @@ enum ImageStatus {
   empty,
 }
 
+/// Represents the state of image-related operations.
 class ImageState extends Equatable {
+  /// Private constructor for creating [ImageState] instances.
   const ImageState._({
     this.status = ImageStatus.initial,
     this.photoUrl = '',
@@ -22,6 +25,7 @@ class ImageState extends Equatable {
   final File? imageFile;
   // ImageFailure?
 
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -29,6 +33,8 @@ class ImageState extends Equatable {
         imageFile,
       ];
 
+  /// Creates a new [ImageState] with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   ImageState copyWith({
     ImageStatus? status,
     String? photoUrl,
@@ -42,6 +48,7 @@ class ImageState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension ImageStateExtensions on ImageState {
   bool get isEmpty => status == ImageStatus.empty;
   bool get isLoading => status == ImageStatus.loading;
@@ -49,6 +56,7 @@ extension ImageStateExtensions on ImageState {
   bool get isFailure => status == ImageStatus.failure;
 }
 
+/// Extension methods for creating new [ImageState] instances.
 extension _ImageStateExtensions on ImageState {
   ImageState fromEmpty() => copyWith(status: ImageStatus.empty);
   ImageState fromLoading() => copyWith(status: ImageStatus.loading);

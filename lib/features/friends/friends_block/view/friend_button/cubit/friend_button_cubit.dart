@@ -4,12 +4,16 @@ import 'package:user_repository/user_repository.dart';
 
 part 'friend_button_state.dart';
 
+/// Manages the state and logic for friend-request-related operations.
 class FriendButtonCubit extends Cubit<FriendButtonState> {
+  /// Creates a new instance of [FriendButtonCubit].
+  /// Requires a [FriendRepository] to handle data operations
   FriendButtonCubit(this._friendRepository)
       : super(const FriendButtonState.initial());
 
   final FriendRepository _friendRepository;
 
+  /// Fetches data regarding the current state of the friend request
   Future<void> fetchData(String userId) async {
     final currentUser = UserRepository().user.uuid;
     emit(state.fromLoading());
@@ -37,6 +41,8 @@ class FriendButtonCubit extends Cubit<FriendButtonState> {
     }
   }
 
+  /// Edits the friend request status for the current user
+  /// Requires [userId] of the targeted user
   Future<void> friendStateSelection(String userId) async {
     final currentUser = UserRepository().user.uuid;
     emit(state.fromLoading());
@@ -68,6 +74,7 @@ class FriendButtonCubit extends Cubit<FriendButtonState> {
     }
   }
 
+  /// Private helper function to update cubit state
   void _updateState() {
     if (state.friendStatus == FriendStatus.recieved) {
       emit(state.fromFriendAccepted());

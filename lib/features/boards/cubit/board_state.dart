@@ -33,6 +33,7 @@ final class BoardState extends Equatable {
   final bool selected;
   final int index;
 
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,

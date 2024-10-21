@@ -1,5 +1,6 @@
 part of 'comments_cubit.dart';
 
+/// Represents the different states a comment operation can be in.
 enum CommentsStatus {
   initial,
   loading,
@@ -8,7 +9,9 @@ enum CommentsStatus {
   failure,
 }
 
+/// Represents the state of comment-related operations.
 final class CommentsState extends Equatable {
+  /// Private constructor for creating [CommentsState] instances.
   const CommentsState._({
     this.status = CommentsStatus.initial,
     this.comment = Comment.empty,
@@ -16,7 +19,7 @@ final class CommentsState extends Equatable {
     this.failure = CommentFailure.empty,
   });
 
-  // initial state
+  /// Creates an initial [CommentsState].
   const CommentsState.initial() : this._();
 
   final CommentsStatus status;
@@ -24,7 +27,7 @@ final class CommentsState extends Equatable {
   final List<Comment> comments;
   final CommentFailure failure;
 
-  // rebuilds the app when the props change
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -33,6 +36,8 @@ final class CommentsState extends Equatable {
         failure,
       ];
 
+  /// Creates a new [CommentsState] with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   CommentsState copyWith({
     CommentsStatus? status,
     Comment? comment,
@@ -48,6 +53,7 @@ final class CommentsState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension CommentStateExtensions on CommentsState {
   bool get isEmpty => status == CommentsStatus.empty;
   bool get isLoaded => status == CommentsStatus.loaded;
@@ -55,6 +61,7 @@ extension CommentStateExtensions on CommentsState {
   bool get isFailure => status == CommentsStatus.failure;
 }
 
+/// Extension methods for creating new [CommentsState] instances.
 extension _CommentStateExtensions on CommentsState {
   CommentsState fromLoading() => copyWith(status: CommentsStatus.loading);
 

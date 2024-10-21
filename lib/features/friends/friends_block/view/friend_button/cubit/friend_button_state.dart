@@ -1,5 +1,6 @@
 part of 'friend_button_cubit.dart';
 
+/// Represents the different states the friend button can be in.
 enum FriendButtonStatus {
   initial,
   loading,
@@ -8,6 +9,7 @@ enum FriendButtonStatus {
   empty,
 }
 
+/// Represents the different states a friend operation can be in.
 enum FriendStatus {
   empty,
   requested,
@@ -15,6 +17,7 @@ enum FriendStatus {
   friends,
 }
 
+/// Represents the state of friend button-related operations.
 final class FriendButtonState extends Equatable {
   const FriendButtonState._({
     this.status = FriendButtonStatus.initial,
@@ -22,14 +25,14 @@ final class FriendButtonState extends Equatable {
     this.failure = FriendFailure.empty,
   });
 
-  // initial state
+  /// Creates an initial [FriendButtonState].
   const FriendButtonState.initial() : this._();
 
   final FriendButtonStatus status;
   final FriendStatus friendStatus;
   final FriendFailure failure;
 
-  // rebuilds the app when the props change
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -37,6 +40,8 @@ final class FriendButtonState extends Equatable {
         failure,
       ];
 
+  /// Creates a new [FriendButtonState] with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   FriendButtonState copyWith({
     FriendButtonStatus? status,
     FriendStatus? friendStatus,
@@ -50,6 +55,7 @@ final class FriendButtonState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension FriendButtonStateExtensions on FriendButtonState {
   bool get isLoaded => status == FriendButtonStatus.loaded;
   bool get isLoading => status == FriendButtonStatus.loading;
@@ -57,6 +63,7 @@ extension FriendButtonStateExtensions on FriendButtonState {
   bool get isEmpty => status == FriendButtonStatus.empty;
 }
 
+/// Extension methods for creating new [FriendButtonState] instances.
 extension _FriendButtonStateExtensions on FriendButtonState {
   FriendButtonState fromLoading() =>
       copyWith(status: FriendButtonStatus.loading);

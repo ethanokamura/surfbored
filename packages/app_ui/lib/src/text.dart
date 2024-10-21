@@ -17,7 +17,7 @@ class AppBarText extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
       style: TextStyle(
-        color: Theme.of(context).textColor,
+        color: context.theme.textColor,
         fontSize: fontSize ?? 25,
         fontWeight: FontWeight.bold,
       ),
@@ -42,7 +42,7 @@ class TitleText extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
       style: TextStyle(
-        color: Theme.of(context).textColor,
+        color: context.theme.textColor,
         fontSize: fontSize ?? 20,
         fontWeight: FontWeight.bold,
       ),
@@ -67,7 +67,7 @@ class PrimaryText extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
       style: TextStyle(
-        color: Theme.of(context).textColor,
+        color: context.theme.textColor,
         fontSize: fontSize ?? 16,
       ),
     );
@@ -91,7 +91,7 @@ class SecondaryText extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
       style: TextStyle(
-        color: Theme.of(context).subtextColor,
+        color: context.theme.subtextColor,
         fontSize: fontSize ?? 14,
       ),
     );
@@ -115,7 +115,7 @@ class DescriptionText extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 4,
       style: TextStyle(
-        color: Theme.of(context).subtextColor,
+        color: context.theme.subtextColor,
         fontSize: fontSize ?? 16,
       ),
     );
@@ -141,7 +141,7 @@ class UserText extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
       style: TextStyle(
-        color: Theme.of(context).accentColor,
+        color: context.theme.accentColor,
         fontSize: fontSize ?? 18,
         fontWeight: bold ? FontWeight.bold : FontWeight.normal,
       ),
@@ -166,9 +166,8 @@ class ButtonText extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-        color: inverted
-            ? Theme.of(context).inverseTextColor
-            : Theme.of(context).textColor,
+        color:
+            inverted ? context.theme.inverseTextColor : context.theme.textColor,
         letterSpacing: 1.5,
         fontWeight: FontWeight.bold,
         fontSize: fontSize ?? 16,

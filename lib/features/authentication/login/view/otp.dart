@@ -30,6 +30,7 @@ class _OtpPromptState extends State<OtpPrompt> {
           keyboardType: TextInputType.number,
           context: context,
           label: AuthStrings.otpPrompt,
+          maxLength: 6,
           onChanged: (otp) => setState(() => _otp = otp.trim()),
           validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
         ),

@@ -29,6 +29,7 @@ class _PhonePromptState extends State<PhonePrompt> {
           context: context,
           label: AuthStrings.phoneNumberPrompt,
           prefix: '+1 ',
+          maxLength: 10,
           onChanged: (number) => setState(() => _phoneNumber = number.trim()),
           validator: (number) =>
               number?.length != 10 ? 'Invalid Phone Number' : null,

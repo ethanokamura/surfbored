@@ -56,6 +56,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 controller: _usernameController,
                 context: context,
                 label: CreateStrings.usernamePrompt,
+                maxLength: 15,
                 onChanged: (value) => _onUsernameChanged(
                   value.trim(),
                 ),

@@ -38,6 +38,7 @@ TextFormField customTextFormField({
       onChanged: onChanged,
       keyboardType: keyboardType,
       validator: validator,
+      style: const TextStyle(fontSize: 22),
       decoration: defaultTextFormFieldDecoration(
         context: context,
         label: label,

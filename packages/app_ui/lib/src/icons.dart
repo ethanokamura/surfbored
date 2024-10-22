@@ -11,7 +11,7 @@ Icon defaultIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   );
 }
 
-Icon appBarIconStyle(BuildContext context, IconData icon, {double size = 22}) {
+Icon appBarIconStyle(BuildContext context, IconData icon, {double size = 24}) {
   return Icon(
     icon,
     color: context.theme.textColor,

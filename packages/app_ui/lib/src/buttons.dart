@@ -93,7 +93,7 @@ class ActionButton extends StatelessWidget {
             if (text != null)
               ButtonText(
                 text: text!,
-                inverted: true,
+                inverted: onTap != null,
               ),
           ],
         ),
@@ -168,8 +168,8 @@ class BottomModalButton extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onTap,
-          style: accentStyle(context),
-          icon: selectionIconStyle(context, icon),
+          style: bottomModalStyle(context),
+          icon: inverseIconStyle(context, icon, size: 40),
         ),
         const VerticalSpacer(),
         PrimaryText(text: label),

@@ -7,17 +7,12 @@ import 'package:surfbored/theme/theme_cubit.dart';
 class ProfileSettingsPage extends StatelessWidget {
   const ProfileSettingsPage({
     required this.profileCubit,
-    required this.userId,
     super.key,
   });
-  final String userId;
   final ProfileCubit profileCubit;
-  static MaterialPage<void> page({
-    required String userId,
-    required ProfileCubit profileCubit,
-  }) {
+  static MaterialPage<void> page({required ProfileCubit profileCubit}) {
     return MaterialPage<void>(
-      child: ProfileSettingsPage(userId: userId, profileCubit: profileCubit),
+      child: ProfileSettingsPage(profileCubit: profileCubit),
     );
   }
 
@@ -27,19 +22,32 @@ class ProfileSettingsPage extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: UserStrings.settings),
+        title: const AppBarText(text: PageStrings.settingsPage),
       ),
       top: false,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            DefaultButton(
-              text:
-                  // ignore: lines_longer_than_80_chars
-                  '${AppStrings.theme}: ${isDarkMode ? ButtonStrings.darkMode : ButtonStrings.lightMode}',
-              onTap: () => context.read<ThemeCubit>().toggleTheme(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TitleText(
+                  text: isDarkMode
+                      ? ButtonStrings.darkMode
+                      : ButtonStrings.lightMode,
+                ),
+                ToggleButton(
+                  onSurface: false,
+                  icon: defaultIconStyle(
+                    context,
+                    isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,
+                  ),
+                  onTap: () => context.read<ThemeCubit>().toggleTheme(),
+                ),
+              ],
             ),
+            const VerticalSpacer(),
             DefaultButton(
               onTap: () => Navigator.push(
                 context,
@@ -47,13 +55,14 @@ class ProfileSettingsPage extends StatelessWidget {
                   builder: (context) {
                     return BlocProvider.value(
                       value: profileCubit,
-                      child: EditProfilePage(userId: userId),
+                      child: const EditProfilePage(),
                     );
                   },
                 ),
               ),
               text: UserStrings.editProfile,
             ),
+            const VerticalSpacer(),
             ActionButton(
               onTap: context.read<AppCubit>().logOut,
               text: AuthStrings.logOut,

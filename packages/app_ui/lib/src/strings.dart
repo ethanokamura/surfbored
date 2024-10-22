@@ -6,6 +6,12 @@ class AppStrings {
   static const String theme = 'Theme';
 
   static const String myFriends = 'my friends';
+  static const String boards = 'boards';
+  static const String posts = 'posts';
+  static const String saveChanges = 'save changes';
+  static const String invalidChanges = 'invalid changes';
+  static const String success = 'success';
+
   // crud
   static const String create = 'Create';
   static const String update = 'Update';
@@ -15,6 +21,8 @@ class AppStrings {
 
 class PageStrings {
   static const String explorePage = 'explore';
+  static const String settingsPage = 'settings';
+  static const String editProfilePage = 'edit profile';
 }
 
 class DataStrings {
@@ -110,10 +118,13 @@ class UserStrings {
   static const String settings = 'User Settings';
   static const String editProfile = 'Edit Profile';
   static const String delete = 'Delete Profile';
-  static const String username = 'Username';
+  static const String username = 'username';
   static const String interests = 'interests';
   static const String joined = 'joined';
   static const String about = 'about me';
+  static const String bio = 'bio';
+  static const String displayName = 'name';
+  static const String interestsPrompt = 'interests?';
   static const String failure = DataStrings.fromUnknownFailure;
 }
 

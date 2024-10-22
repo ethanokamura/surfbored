@@ -246,7 +246,7 @@ extension Update on UserRepository {
   }
 
   /// Updates a specific field of the user profile
-  Future<void> updateUser({
+  Future<void> updateUserField({
     required String field,
     required dynamic data,
   }) async {
@@ -255,6 +255,22 @@ extension Update on UserRepository {
       await _supabase
           .fromUsersTable()
           .update({field: data}).eq(UserData.idConverter, user.id!);
+    } catch (e) {
+      throw UserFailure.fromUpdate();
+    }
+  }
+
+  /// Updates a specific field of the user profile
+  Future<void> updateUser({
+    required Map<String, dynamic> data,
+    required String uuid,
+  }) async {
+    try {
+      if (user.id == null) return;
+      await _supabase.fromUsersTable().update(data).eq(
+            UserData.uuidConverter,
+            uuid,
+          );
     } catch (e) {
       throw UserFailure.fromUpdate();
     }

@@ -75,6 +75,8 @@ class AppIcons {
   static const IconData notLiked = FontAwesomeIcons.heart;
   static const IconData checked = FontAwesomeIcons.solidSquareCheck;
   static const IconData notChecked = FontAwesomeIcons.square;
+  static const IconData lightMode = FontAwesomeIcons.sun;
+  static const IconData darkMode = FontAwesomeIcons.moon;
 
   // misc
   static const IconData activity = FontAwesomeIcons.mountain;

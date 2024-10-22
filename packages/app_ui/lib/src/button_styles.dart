@@ -21,6 +21,15 @@ ButtonStyle accentStyle(BuildContext context) {
   );
 }
 
+ButtonStyle bottomModalStyle(BuildContext context) {
+  return ElevatedButton.styleFrom(
+    padding: const EdgeInsets.all(defaultPadding),
+    elevation: 0,
+    backgroundColor: context.theme.accentColor,
+    shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+  );
+}
+
 ButtonStyle noBackgroundStyle() {
   return ElevatedButton.styleFrom(
     padding: EdgeInsets.zero,

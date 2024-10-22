@@ -28,9 +28,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
     super.dispose();
   }
 
-  Future<void> _onUsernameChanged(BuildContext context, String username) async {
+  void _onUsernameChanged(String username) {
     // use regex
-    if (username.length > 15 || username.length < 3) {
+    if (username.length < 15 && username.length > 3) {
       setState(() => _isValid = false);
       return;
     } else {
@@ -56,12 +56,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 controller: _usernameController,
                 context: context,
                 label: CreateStrings.usernamePrompt,
-                onChanged: (value) async => _onUsernameChanged(
-                  context,
+                onChanged: (value) => _onUsernameChanged(
                   value.trim(),
                 ),
                 validator: (name) =>
-                    name != null && name.length < 3 && name.length > 20
+                    name != null && (name.length < 3 || name.length > 20)
                         ? 'Invalid Username'
                         : null,
               ),

@@ -29,6 +29,17 @@ extension Create on BoardRepository {
     }
   }
 
+  /// Creates a new board and returns its ID.
+  Future<int> uploadBoard({required Map<String, dynamic> data}) async {
+    try {
+      final res =
+          await _supabase.fromBoardsTable().insert(data).select('id').single();
+      return res['id'] as int;
+    } catch (e) {
+      throw BoardFailure.fromCreate();
+    }
+  }
+
   /// Saves a board for a user.
   Future<void> saveBoard({required BoardSave save}) async {
     try {

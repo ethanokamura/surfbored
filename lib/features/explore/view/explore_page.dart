@@ -12,8 +12,9 @@ class ExplorePage extends StatelessWidget {
     return CustomPageView(
       top: false,
       appBar: AppBar(
+        centerTitle: false,
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: '🌊 ${AppStrings.appTitle} 🌊'),
+        title: const AppBarText(text: PageStrings.explorePage, fontSize: 28),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(
@@ -24,11 +25,38 @@ class ExplorePage extends StatelessWidget {
                 },
               ),
             ),
-            icon: defaultIconStyle(context, AppIcons.search),
+            icon: appBarIconStyle(context, AppIcons.search, size: 24),
           ),
         ],
       ),
-      body: const PostFeed(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: ActionButton(
+                    onTap: () {},
+                    text: 'top rated',
+                  ),
+                ),
+                const HorizontalSpacer(),
+                Expanded(
+                  child: ActionButton(
+                    onTap: () {},
+                    text: 'near me',
+                  ),
+                ),
+              ],
+            ),
+            const VerticalSpacer(),
+            const TitleText(text: AppStrings.myFriends),
+            const VerticalSpacer(),
+            const PostFeed(),
+          ],
+        ),
+      ),
     );
   }
 }

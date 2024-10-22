@@ -5,11 +5,16 @@ class AppStrings {
   static const String lightModeIcon = 'assets/images/light_mode_face.png';
   static const String theme = 'Theme';
 
+  static const String myFriends = 'my friends';
   // crud
   static const String create = 'Create';
   static const String update = 'Update';
   static const String edit = 'Edit';
   static const String delete = 'Delete';
+}
+
+class PageStrings {
+  static const String explorePage = 'explore';
 }
 
 class DataStrings {

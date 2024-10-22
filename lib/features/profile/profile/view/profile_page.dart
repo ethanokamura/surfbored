@@ -78,10 +78,12 @@ class ProfileBuilder extends StatelessWidget {
       length: 2,
       child: CustomPageView(
         top: true,
+
+        /// Change?
         appBar: Navigator.canPop(context)
             ? AppBar(
                 backgroundColor: Colors.transparent,
-                title: AppBarText(text: '@${user.username}'),
+                title: AppBarText(text: user.username),
                 actions: [
                   /// TODO(Ethan): block/unblock/settings/share
                   MoreProfileOptions(
@@ -177,13 +179,12 @@ class ProfileHeader extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (user.displayName.isEmpty)
-              TitleText(
-                text: '@${user.username}',
-                fontSize: 28,
-              )
-            else
-              TitleText(text: user.displayName),
+            UserText(
+              text: '@${user.username}',
+              bold: true,
+              fontSize: 24,
+            ),
+            if (user.displayName.isNotEmpty) TitleText(text: user.displayName),
             if (user.websiteUrl.isNotEmpty) WebLink(url: user.websiteUrl),
             SecondaryText(
               text: '${UserStrings.joined}: ${DateFormatter.formatTimestamp(

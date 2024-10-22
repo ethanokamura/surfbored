@@ -110,8 +110,9 @@ class EditView extends StatelessWidget {
             postId: post.id!,
           ),
           const VerticalSpacer(),
-          EditTagsBox(
+          EditTagsPrompt(
             tags: postTags,
+            label: CreateStrings.tagsPrompt,
             updateTags: (tags) => postCubit.updateTags(post.id!, tags),
           ),
         ],

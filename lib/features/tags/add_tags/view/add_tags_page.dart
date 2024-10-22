@@ -4,10 +4,12 @@ import 'package:surfbored/features/tags/add_tags/view/edit_tag_list.dart';
 class AddTagsPage extends StatefulWidget {
   const AddTagsPage({
     required this.returnTags,
+    required this.label,
     required this.tags,
     super.key,
   });
 
+  final String label;
   final List<String> tags;
   final void Function(List<String> tags) returnTags;
 
@@ -50,33 +52,37 @@ class _AddTagsPageState extends State<AddTagsPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              CustomContainer(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: TextField(
-                        controller: _tagController,
-                        cursorColor: context.theme.subtextColor,
-                        decoration: const InputDecoration(
-                          labelText: TagStrings.createSingle,
-                        ),
-                      ),
+              Row(
+                children: [
+                  Flexible(
+                    child: customTextFormField(
+                      controller: _tagController,
+                      context: context,
+                      maxLength: 10,
+                      label: widget.label,
                     ),
-                    ActionIconButton(
-                      inverted: true,
-                      icon: AppIcons.create,
-                      onTap: () {
-                        final tag = _tagController.text.trim();
+                  ),
+                  const HorizontalSpacer(),
+                  ActionIconButton(
+                    inverted: true,
+                    icon: AppIcons.create,
+                    onTap: () {
+                      final tag = _tagController.text.trim();
+                      print('adding $tag');
+                      try {
                         if (tag.isNotEmpty) {
                           setState(() => _tags.add(tag));
                         }
-                        _tagController.clear();
-                      },
-                    ),
-                  ],
-                ),
+                      } catch (e) {
+                        print(e);
+                      }
+                      _tagController.clear();
+                      print('added $tag');
+                    },
+                  ),
+                ],
               ),
-              const VerticalSpacer(),
+              const VerticalSpacer(multiple: 2),
               EditTagList(
                 tags: _tags,
                 onDelete: _deleteTag,

@@ -7,17 +7,18 @@ InputDecoration defaultTextFormFieldDecoration({
 }) =>
     InputDecoration(
       prefixText: prefix,
-      prefixStyle: const TextStyle(fontSize: 18),
+      prefixStyle: const TextStyle(fontSize: 22),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: defaultPadding,
       ),
       labelStyle: TextStyle(
-        color: Theme.of(context).subtextColor,
+        color: context.theme.subtextColor,
+        fontSize: 22,
       ),
       label: Text(label),
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.primary,
+          color: context.theme.subtextColor,
           width: 2,
         ),
       ),
@@ -37,6 +38,7 @@ TextFormField customTextFormField({
       onChanged: onChanged,
       keyboardType: keyboardType,
       validator: validator,
+      style: const TextStyle(fontSize: 22),
       decoration: defaultTextFormFieldDecoration(
         context: context,
         label: label,

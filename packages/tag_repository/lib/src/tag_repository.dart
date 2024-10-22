@@ -1,20 +1,26 @@
 import 'package:api_client/api_client.dart';
 import 'package:tag_repository/tag_repository.dart';
 
+/// Repository class for managing tags in the application.
 class TagRepository {
+  /// Constructor for TagRepository.
+  /// If [supabase] is not provided, it uses the default Supabase instance.
   TagRepository({SupabaseClient? supabase})
       : _supabase = supabase ?? Supabase.instance.client;
 
   final SupabaseClient _supabase;
 }
 
+/// Extension for creating tags.
 extension Create on TagRepository {
+  /// Creates a user tag with the given name and ID.
   Future<void> createUserTag({
     required String tagName,
     required int id,
   }) async =>
       _createTag(tagName: tagName, id: id, type: 'user');
 
+  /// Creates a post tag with the given name and ID.
   Future<void> createPostTag({
     required String tagName,
     required int id,
@@ -22,7 +28,9 @@ extension Create on TagRepository {
       _createTag(tagName: tagName, id: id, type: 'post');
 }
 
+/// Extension for reading tags.
 extension Read on TagRepository {
+  /// Fetches all tags associated with a user.
   Future<List<String>> fetchUserTags({required String id}) async {
     try {
       final response = await _supabase
@@ -38,6 +46,7 @@ extension Read on TagRepository {
     }
   }
 
+  /// Fetches all tags associated with a post.
   Future<List<String>> fetchPostTags({required int id}) async {
     try {
       final response = await _supabase
@@ -54,7 +63,9 @@ extension Read on TagRepository {
   }
 }
 
+/// Extension for updating tags.
 extension Update on TagRepository {
+  /// Updates the tags associated with a user.
   Future<void> updateUserTags({
     required String userId,
     required List<String> tags,
@@ -72,6 +83,7 @@ extension Update on TagRepository {
     }
   }
 
+  /// Updates the tags associated with a post.
   Future<void> updatePostTags({
     required int id,
     required List<String> tags,
@@ -88,8 +100,9 @@ extension Update on TagRepository {
   }
 }
 
+/// Extension for deleting tags.
 extension Delete on TagRepository {
-  // Delete a tag by its ID
+  /// Deletes a tag by its ID.
   Future<void> deleteTag({required String tagId}) async {
     try {
       await _supabase.fromTagsTable().delete().eq('id', tagId);
@@ -99,7 +112,9 @@ extension Delete on TagRepository {
   }
 }
 
+/// Extension for private helper methods.
 extension Private on TagRepository {
+  /// Creates a tag with the given name, ID, and type.
   Future<void> _createTag({
     required String tagName,
     required int id,
@@ -116,6 +131,7 @@ extension Private on TagRepository {
     }
   }
 
+  /// Gets or creates a tag ID for the given tag name.
   Future<int> _getOrCreateTagId({required String tagName}) async {
     try {
       final existingTag = await _supabase
@@ -133,6 +149,7 @@ extension Private on TagRepository {
     }
   }
 
+  /// Creates a new tag with the given name.
   Future<int> _createNewTag({required String tagName}) async {
     try {
       final newTag = await _supabase
@@ -149,6 +166,7 @@ extension Private on TagRepository {
     }
   }
 
+  /// Gets or creates tag IDs for the given list of tag names.
   Future<List<int>> _getTagIds({required List<String> tags}) async {
     // Step 1: Upsert the new tags into the tags table
     final upsertTagsResponse = await _supabase

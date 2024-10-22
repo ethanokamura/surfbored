@@ -23,7 +23,7 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>rando</string>
+    <string>surfbored</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -55,7 +55,7 @@
         <string>Bundle ID</string>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>perfectline.io.rando</string>
+          <string>surfbored.app.surfbored</string>
         </array>
       </dict>
     </array>

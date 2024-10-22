@@ -11,7 +11,7 @@ class PhonePrompt extends StatefulWidget {
 
 class _PhonePromptState extends State<PhonePrompt> {
   final _phoneController = TextEditingController();
-
+  String _phoneNumber = '';
   @override
   void dispose() {
     _phoneController.dispose();
@@ -23,38 +23,32 @@ class _PhonePromptState extends State<PhonePrompt> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const AppBarText(text: AuthStrings.signInPrompt),
         customTextFormField(
           controller: _phoneController,
           keyboardType: TextInputType.phone,
           context: context,
           label: AuthStrings.phoneNumberPrompt,
           prefix: '+1 ',
-          validator: (phoneNumber) =>
-              phoneNumber?.length != 10 ? 'Invalid Phone Number' : null,
+          onChanged: (number) => setState(() => _phoneNumber = number.trim()),
+          validator: (number) =>
+              number?.length != 10 ? 'Invalid Phone Number' : null,
         ),
-        const VerticalSpacer(),
+        const VerticalSpacer(multiple: 3),
         ActionButton(
-          onSurface: true,
-          onTap: () async {
-            try {
-              final phoneNumber = _phoneController.text.trim();
-              if (phoneNumber.length == 10) {
-                await context
-                    .read<AuthCubit>()
-                    .signInWithPhone('+1$phoneNumber');
-              } else {
-                context.showSnackBar(AuthStrings.invalidPhoneNumber);
-                _phoneController.clear();
-              }
-            } catch (e) {
-              // handle error
-              if (mounted) {
-                // ignore: use_build_context_synchronously
-                context.showSnackBar('error occured. please retry');
-              }
-            }
-          },
+          vertical: 10,
+          onTap: _phoneNumber.length == 10
+              ? () async {
+                  try {
+                    await context
+                        .read<AuthCubit>()
+                        .signInWithPhone('+1$_phoneNumber');
+                  } catch (e) {
+                    // handle error
+                    if (!context.mounted) return;
+                    context.showSnackBar('error occured. please retry');
+                  }
+                }
+              : null,
           text: ButtonStrings.continueText,
         ),
       ],

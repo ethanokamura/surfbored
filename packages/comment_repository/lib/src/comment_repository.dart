@@ -4,7 +4,10 @@ import 'package:comment_repository/src/failures.dart';
 import 'package:comment_repository/src/models/comment.dart';
 import 'package:comment_repository/src/models/comment_like.dart';
 
+/// Repository for managing comment-related operations.
 class CommentRepository {
+  /// Constructor for CommentRepository.
+  /// If [supabase] is not provided, it uses the default Supabase instance.
   CommentRepository({SupabaseClient? supabase})
       : _supabase = supabase ?? Supabase.instance.client;
 
@@ -12,6 +15,7 @@ class CommentRepository {
 }
 
 extension Create on CommentRepository {
+  /// Creates a new comment in the database.
   Future<void> createComment({required Comment comment}) async {
     try {
       await _supabase.fromCommentsTable().insert(comment.toJson());
@@ -20,6 +24,7 @@ extension Create on CommentRepository {
     }
   }
 
+  /// Adds a like to a comment.
   Future<void> likeComment({
     required CommentLike like,
   }) async {
@@ -32,6 +37,8 @@ extension Create on CommentRepository {
 }
 
 extension Read on CommentRepository {
+  /// Fetches a single comment by its ID.
+  /// Returns [Comment.empty] if the comment is not found.
   Future<Comment> fetchComment({required int commentId}) async {
     try {
       return await _supabase
@@ -48,6 +55,8 @@ extension Read on CommentRepository {
     }
   }
 
+  /// Checks if a user has liked a specific comment.
+  /// Returns `true` if the user has liked the comment, `false` otherwise.
   Future<bool> hasUserLikedComment({required String userId}) async {
     try {
       final res = await _supabase
@@ -61,6 +70,7 @@ extension Read on CommentRepository {
     }
   }
 
+  /// Fetches a list of comments for a specific post with pagination.
   Future<List<Comment>> fetchComments({
     required int postId,
     required int limit,
@@ -79,6 +89,7 @@ extension Read on CommentRepository {
     }
   }
 
+  /// Fetches the number of likes for a specific comment.
   Future<int> fetchCommentLikes({required int commentId}) async {
     try {
       final likes = await _supabase
@@ -92,6 +103,7 @@ extension Read on CommentRepository {
     }
   }
 
+  /// Fetches the total number of comments for a specific post.
   Future<int> fetchTotalComments({required int postId}) async {
     try {
       final comments = await _supabase
@@ -107,6 +119,8 @@ extension Read on CommentRepository {
 }
 
 extension StreamComments on CommentRepository {
+  /// Creates a stream of comments for a specific post.
+  /// The stream emits updated lists of comments whenever changes occur.
   Stream<List<Comment>> streamComments({required int postId}) {
     try {
       return _supabase
@@ -122,6 +136,7 @@ extension StreamComments on CommentRepository {
 }
 
 extension Delete on CommentRepository {
+  /// Deletes a comment by its ID.
   Future<void> deleteComment({required int commentId}) async {
     try {
       await _supabase
@@ -133,6 +148,7 @@ extension Delete on CommentRepository {
     }
   }
 
+  /// Removes a like from a comment.
   Future<void> removeLike({required int commentId}) async {
     try {
       await _supabase

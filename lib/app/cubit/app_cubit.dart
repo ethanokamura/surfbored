@@ -19,18 +19,18 @@ class AppCubit extends Cubit<AppState> {
     }
     return user.hasUsername
         ? AppState.newlyAuthenticated(user)
-        : AppState.needsUsername(user);
+        : const AppState.needsUsername();
   }
 
-  void reinitState() {
+  void verifyUsernameExistence() {
     final user = _userRepository.user;
-    if (user.isEmpty) {
-      emit(const AppState.unauthenticated());
-    }
     user.hasUsername
         ? emit(AppState.newlyAuthenticated(user))
-        : emit(AppState.needsUsername(user));
+        : emit(const AppState.needsUsername());
   }
+
+  void usernameSubmitted() =>
+      emit(AppState.newlyAuthenticated(_userRepository.user));
 
   @override
   Future<void> close() async {
@@ -54,7 +54,7 @@ class AppCubit extends Cubit<AppState> {
         emit(
           user.hasUsername
               ? AppState.newlyAuthenticated(user)
-              : AppState.needsUsername(user),
+              : const AppState.needsUsername(),
         );
       } else {
         emit(AppState.authenticated(user));

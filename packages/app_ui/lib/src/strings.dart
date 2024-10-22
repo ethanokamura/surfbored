@@ -8,9 +8,14 @@ class AppStrings {
   static const String myFriends = 'my friends';
   static const String boards = 'boards';
   static const String posts = 'posts';
+  static const String board = 'board';
+  static const String post = 'post';
   static const String saveChanges = 'save changes';
   static const String invalidChanges = 'invalid changes';
   static const String success = 'success';
+  static const String next = 'continue';
+  static const String skip = '(or skip)';
+  static const String previous = 'back';
 
   // crud
   static const String create = 'Create';
@@ -19,10 +24,15 @@ class AppStrings {
   static const String delete = 'Delete';
 }
 
+/// new
 class PageStrings {
   static const String explorePage = 'explore';
+  static const String createPostPage = 'create a post';
+  static const String createBoardPage = 'create a board';
   static const String settingsPage = 'settings';
   static const String editProfilePage = 'edit profile';
+  static const String errorPage = 'uh oh...';
+  static const String confirmCreatePage = "How's this look?";
 }
 
 class DataStrings {
@@ -169,6 +179,19 @@ class CreateStrings {
   static const String linkPrompt = 'Any links? 🤓';
   static const String usernamePrompt = 'What should we call you? 🤠';
   static const String invalidUsername = 'Invalid username 💀';
+
+  /// new
+  static const String create = 'create something!';
+  static const String createPost = 'create post';
+  static const String createBoard = 'create board';
+  static const String title = 'name?';
+  static const String description = 'description?';
+  static const String tagsPrompt = 'tags?';
+  static const String interestsPrompt = 'interests?';
+  static const String postFailure = 'failed to create post';
+  static const String boardFailure = 'failed to create board';
+  static const String unknownFailure = 'failure during creation';
+  static const String imageUploadPrompt = "Show us what it's about";
 }
 
 class CommentStrings {

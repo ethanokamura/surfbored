@@ -20,8 +20,6 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> showSearch(BuildContext context) async {}
 }
 
 class HomeBody extends StatelessWidget {

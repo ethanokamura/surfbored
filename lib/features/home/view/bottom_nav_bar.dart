@@ -44,12 +44,7 @@ class BottomNavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       onTap: (index) async {
         if (NavBarItem.values[index].isCreate) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute<MaterialPage<dynamic>>(
-              builder: (context) => const CreatePage(),
-            ),
-          );
+          await showCreateModal(context);
         } else {
           navBarController.item = NavBarItem.values[index];
         }
@@ -74,6 +69,49 @@ class BottomNavBar extends StatelessWidget {
           label: 'Profile',
         ),
       ],
+    );
+  }
+
+  /// TODO(Ethan): error handling if the widget tree changes
+  ///   without making a choice
+  Future<void> showCreateModal(BuildContext context) async {
+    late String choice;
+    await showBottomModal(
+      context,
+      <Widget>[
+        const TitleText(text: CreateStrings.create, fontSize: 24),
+        const VerticalSpacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BottomModalButton(
+              icon: AppIcons.posts,
+              label: AppStrings.post,
+              onTap: () async {
+                choice = 'post';
+                Navigator.pop(context);
+              },
+            ),
+            const SizedBox(width: 40),
+            BottomModalButton(
+              icon: AppIcons.boards,
+              label: AppStrings.board,
+              onTap: () async {
+                choice = 'board';
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+    if (!context.mounted) return;
+    await Navigator.push(
+      context,
+      MaterialPageRoute<Page<dynamic>>(
+        builder: (context) =>
+            choice == 'post' ? const CreatePostFlow() : const CreateBoardFlow(),
+      ),
     );
   }
 }

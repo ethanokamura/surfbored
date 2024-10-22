@@ -1,51 +1,26 @@
 {
   "project_info": {
-    "project_number": "940006126022",
-    "project_id": "quiz-app-20ae7",
-    "storage_bucket": "quiz-app-20ae7.appspot.com"
+    "project_number": "172634804255",
+    "project_id": "surfbored-app",
+    "storage_bucket": "surfbored-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:940006126022:android:523315922914067981c2c7",
+        "mobilesdk_app_id": "1:172634804255:android:1d867d5a80182ce15f452a",
         "android_client_info": {
           "package_name": "app.surfbored.surfbored"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "940006126022-h7jf8rjb37v33747b8so73gks4jpcoas.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "app.surfbored.surfbored",
-            "certificate_hash": "9e5b9d424cde0e87db6b34800e07dddd294ec797"
-          }
-        },
-        {
-          "client_id": "940006126022-afa66k753rpiernv81muojnadl3f810i.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB57TvKZUIjNY_vanJqUNibXmfahHD1HOo"
+          "current_key": "AIzaSyAV42Do0hNba6QWMoLBTRlwW4lqhkaUA7c"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "940006126022-afa66k753rpiernv81muojnadl3f810i.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "940006126022-2b469kqku7naude7o4oqjdvr93665fjo.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "surfbored"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

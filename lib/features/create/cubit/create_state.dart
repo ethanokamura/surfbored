@@ -2,16 +2,17 @@ part of 'create_cubit.dart';
 
 /// Represents the different states a create operation can be in.
 enum CreateStatus {
+  /// defaults
   initial,
-  loading,
-  loadingMore,
   empty,
   loaded,
-  created,
-  creating,
-  deleted,
-  updated,
+  loading,
   failure,
+
+  /// nav
+  needsImage,
+  needsDetails,
+  needsApproval,
 }
 
 /// Represents the state of creating-related operations.
@@ -21,6 +22,10 @@ final class CreateState extends Equatable {
     this.status = CreateStatus.initial,
     this.boardFailure = BoardFailure.empty,
     this.postFailure = PostFailure.empty,
+    this.post = Post.empty,
+    this.board = Board.empty,
+    this.image,
+    this.docId,
   });
 
   /// Creates an initial [CreateState].
@@ -29,6 +34,10 @@ final class CreateState extends Equatable {
   final CreateStatus status;
   final BoardFailure boardFailure;
   final PostFailure postFailure;
+  final Post post;
+  final Board board;
+  final File? image;
+  final int? docId;
 
   // Rebuilds the widget when the props change
   @override
@@ -36,6 +45,10 @@ final class CreateState extends Equatable {
         status,
         boardFailure,
         postFailure,
+        post,
+        board,
+        image,
+        docId,
       ];
 
   /// Creates a new [CreateState] with updated fields.
@@ -44,13 +57,29 @@ final class CreateState extends Equatable {
     CreateStatus? status,
     BoardFailure? boardFailure,
     PostFailure? postFailure,
+    Post? post,
+    Board? board,
+    File? image,
+    int? docId,
   }) {
     return CreateState._(
       status: status ?? this.status,
       boardFailure: boardFailure ?? this.boardFailure,
       postFailure: postFailure ?? this.postFailure,
+      post: post ?? this.post,
+      board: board ?? this.board,
+      image: image ?? this.image,
+      docId: docId ?? this.docId,
     );
   }
+}
+
+/// Extension methods for convenient state checks.
+extension CreateStatusExtensions on CreateStatus {
+  bool get isInitial => this == CreateStatus.initial;
+  bool get needsApproval => this == CreateStatus.needsApproval;
+  bool get needsDetails => this == CreateStatus.needsDetails;
+  bool get needsImage => this == CreateStatus.needsImage;
 }
 
 /// Extension methods for convenient state checks.
@@ -59,15 +88,32 @@ extension CreateStateExtensions on CreateState {
   bool get isLoaded => status == CreateStatus.loaded;
   bool get isLoading => status == CreateStatus.loading;
   bool get isFailure => status == CreateStatus.failure;
-  bool get isCreated => status == CreateStatus.created;
-  bool get isCreating => status == CreateStatus.creating;
 }
 
 /// Extension methods for creating new [CreateState] instances.
 extension _CreateStateExtensions on CreateState {
   CreateState fromLoading() => copyWith(status: CreateStatus.loading);
 
-  CreateState fromCreated() => copyWith(status: CreateStatus.created);
+  CreateState fromCreatedPostDetails(Post post) =>
+      copyWith(status: CreateStatus.needsApproval, post: post);
+
+  CreateState fromCreatedBoardDetails(Board board) =>
+      copyWith(status: CreateStatus.needsApproval, board: board);
+
+  CreateState fromSkipPostImage() =>
+      copyWith(status: CreateStatus.needsDetails);
+
+  CreateState fromSkipBoardImage() =>
+      copyWith(status: CreateStatus.needsDetails);
+
+  CreateState fromUploadedPostImage(File? image) =>
+      copyWith(status: CreateStatus.needsDetails, image: image);
+
+  CreateState fromUploadedBoardImage(File? image) =>
+      copyWith(status: CreateStatus.needsDetails, image: image);
+
+  CreateState fromCreated(int docId) =>
+      copyWith(status: CreateStatus.loaded, docId: docId);
 
   CreateState fromPostFailure(PostFailure failure) => copyWith(
         status: CreateStatus.failure,

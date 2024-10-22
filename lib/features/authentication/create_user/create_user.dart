@@ -43,50 +43,57 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const AppBarText(text: UserStrings.createUsername),
-            const VerticalSpacer(multiple: 3),
-            customTextFormField(
-              controller: _usernameController,
-              context: context,
-              onChanged: (value) async => _onUsernameChanged(
-                context,
-                value.trim(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: CustomPageView(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AppBarText(text: UserStrings.createUsername),
+              const VerticalSpacer(multiple: 3),
+              customTextFormField(
+                controller: _usernameController,
+                context: context,
+                label: CreateStrings.usernamePrompt,
+                onChanged: (value) async => _onUsernameChanged(
+                  context,
+                  value.trim(),
+                ),
+                validator: (name) =>
+                    name != null && name.length < 3 && name.length > 20
+                        ? 'Invalid Username'
+                        : null,
               ),
-              label: CreateStrings.usernamePrompt,
-            ),
-            const VerticalSpacer(multiple: 3),
-            ActionButton(
-              onTap: _isValid
-                  ? () async {
-                      final unique = await context
-                          .read<UserRepository>()
-                          .isUsernameUnique(username: _username);
-                      if (!context.mounted) return;
-                      if (unique) {
-                        // change username
-                        await context
+              const VerticalSpacer(multiple: 3),
+              ActionButton(
+                onTap: _isValid
+                    ? () async {
+                        final unique = await context
                             .read<UserRepository>()
-                            .updateUsername(username: _username);
-
-                        // change this
+                            .isUsernameUnique(username: _username);
                         if (!context.mounted) return;
-                        context.read<AppCubit>().usernameSubmitted();
-                      } else {
-                        // add some sort of animation
-                        context.showSnackBar(CreateStrings.invalidUsername);
+                        if (unique) {
+                          // change username
+                          await context
+                              .read<UserRepository>()
+                              .updateUsername(username: _username);
+
+                          // change this
+                          if (!context.mounted) return;
+                          context.read<AppCubit>().usernameSubmitted();
+                        } else {
+                          // add some sort of animation
+                          context.showSnackBar(CreateStrings.invalidUsername);
+                        }
                       }
-                    }
-                  : null,
-              text: _isValid
-                  ? ButtonStrings.continueText
-                  : CreateStrings.invalidUsername,
-            ),
-          ],
+                    : null,
+                text: _isValid
+                    ? ButtonStrings.continueText
+                    : CreateStrings.invalidUsername,
+              ),
+            ],
+          ),
         ),
       ),
     );

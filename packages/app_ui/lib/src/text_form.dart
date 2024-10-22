@@ -28,6 +28,7 @@ TextFormField customTextFormField({
   required BuildContext context,
   required String label,
   required TextEditingController controller,
+  required int maxLength,
   String? prefix,
   TextInputType? keyboardType,
   void Function(String)? onChanged,
@@ -38,6 +39,9 @@ TextFormField customTextFormField({
       onChanged: onChanged,
       keyboardType: keyboardType,
       validator: validator,
+      minLines: 1,
+      maxLines: 5,
+      maxLength: maxLength,
       style: const TextStyle(fontSize: 22),
       decoration: defaultTextFormFieldDecoration(
         context: context,

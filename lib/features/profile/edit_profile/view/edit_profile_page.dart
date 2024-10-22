@@ -95,8 +95,8 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   Future<void> _onDisplayNameChanged(String displayName) async {
     // use regex
-    if (displayName.length < 16 &&
-        displayName.length > 2 &&
+    if (displayName.length < 20 &&
+        displayName.isNotEmpty &&
         displayName != widget.user.displayName) {
       setState(() {
         _displayNameIsValid = true;
@@ -145,6 +145,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             controller: _usernameController,
             context: context,
             label: UserStrings.username,
+            maxLength: 15,
             onChanged: (value) async => _onUsernameChanged(value.trim()),
             validator: (name) =>
                 name != null && name.length < 3 && name.length > 20
@@ -156,6 +157,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             controller: _displayNameController,
             context: context,
             label: UserStrings.displayName,
+            maxLength: 20,
             onChanged: (value) async => _onDisplayNameChanged(value.trim()),
           ),
           const VerticalSpacer(),
@@ -163,6 +165,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             controller: _bioController,
             context: context,
             label: UserStrings.bio,
+            maxLength: 150,
             onChanged: (value) async => _onBioChanged(value.trim()),
           ),
           const VerticalSpacer(),
@@ -180,6 +183,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   MaterialPageRoute<dynamic>(
                     builder: (context) => AddTagsPage(
                       tags: widget.user.interests.split('+'),
+                      label: CreateStrings.interestsPrompt,
                       returnTags: (interests) {
                         setState(() {
                           _interests = interests.join('+');

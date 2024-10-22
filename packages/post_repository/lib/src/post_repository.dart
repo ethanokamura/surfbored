@@ -29,6 +29,17 @@ extension Create on PostRepository {
     }
   }
 
+  /// Creates a new post and returns its ID.
+  Future<int> uploadPost({required Map<String, dynamic> data}) async {
+    try {
+      final res =
+          await _supabase.fromPostsTable().insert(data).select('id').single();
+      return res['id'] as int;
+    } catch (e) {
+      throw PostFailure.fromCreate();
+    }
+  }
+
   /// Adds a like to a post
   Future<void> likePost({required PostLike like}) async {
     try {

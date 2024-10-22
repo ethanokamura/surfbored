@@ -150,8 +150,12 @@ extension Username on UserRepository {
 extension Create on UserRepository {
   /// Creates a new user with the given UUID
   Future<void> _createUser({required String uuid}) async {
-    final data = UserData.insert(uuid: uuid);
-    await _supabase.fromUsersTable().insert(data);
+    try {
+      final data = UserData.insert(uuid: uuid);
+      await _supabase.fromUsersTable().insert(data);
+    } catch (e) {
+      throw UserFailure.fromCreate();
+    }
   }
 }
 
@@ -229,9 +233,10 @@ extension Update on UserRepository {
   /// Updates the username for the current user
   Future<void> updateUsername({required String username}) async {
     try {
+      // TODO(Ethan): check here for validity of the username
       return await _supabase
           .fromUsersTable()
-          .upsert({UserData.usernameConverter: username}).eq(
+          .update({UserData.usernameConverter: username}).eq(
         UserData.uuidConverter,
         _supabase.auth.currentUser!.id,
       );

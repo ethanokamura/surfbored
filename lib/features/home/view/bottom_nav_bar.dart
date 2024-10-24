@@ -72,10 +72,8 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 
-  /// TODO(Ethan): error handling if the widget tree changes
-  ///   without making a choice
   Future<void> showCreateModal(BuildContext context) async {
-    late String choice;
+    String? choice;
     await showBottomModal(
       context,
       <Widget>[
@@ -105,7 +103,11 @@ class BottomNavBar extends StatelessWidget {
         ),
       ],
     );
-    if (!context.mounted) return;
+    if (!context.mounted ||
+        choice == null ||
+        (choice != 'post' && choice != 'board')) {
+      return;
+    }
     await Navigator.push(
       context,
       MaterialPageRoute<Page<dynamic>>(

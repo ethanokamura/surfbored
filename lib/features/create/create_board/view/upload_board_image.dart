@@ -32,7 +32,6 @@ class _UploadBoardImageViewState extends State<UploadBoardImageView> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: UploadImage(

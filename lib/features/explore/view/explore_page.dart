@@ -29,32 +29,43 @@ class ExplorePage extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: ActionButton(
-                    onTap: () {},
-                    text: 'top rated',
-                  ),
-                ),
-                const HorizontalSpacer(),
-                Expanded(
-                  child: ActionButton(
-                    onTap: () {},
-                    text: 'near me',
-                  ),
-                ),
-              ],
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                <Widget>[],
+              ),
             ),
-            const VerticalSpacer(),
-            const TitleText(text: AppStrings.myFriends),
-            const VerticalSpacer(),
-            const PostFeed(),
-          ],
+          ];
+        },
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: defaultPadding),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: ActionButton(
+                      onTap: () {},
+                      text: 'top rated',
+                    ),
+                  ),
+                  const HorizontalSpacer(),
+                  Expanded(
+                    child: ActionButton(
+                      onTap: () {},
+                      text: 'near me',
+                    ),
+                  ),
+                ],
+              ),
+              const VerticalSpacer(),
+              const Flexible(
+                child: PostFeed(),
+              ),
+            ],
+          ),
         ),
       ),
     );

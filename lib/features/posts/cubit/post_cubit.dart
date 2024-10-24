@@ -80,6 +80,7 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  /// TODO(Ethan): remove
   Future<void> fetchAllPosts({bool refresh = false}) async {
     if (refresh == true) {
       _currentPage = 0;
@@ -97,7 +98,7 @@ class PostCubit extends Cubit<PostState> {
       );
 
       if (posts.isEmpty) {
-        _hasMore = false; // No more boards to load
+        _hasMore = false; // No more posts to load
         emit(state.fromEmpty());
       } else {
         if (posts.length <= _pageSize) {

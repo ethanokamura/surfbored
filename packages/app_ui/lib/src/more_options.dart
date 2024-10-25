@@ -38,7 +38,7 @@ class MoreCommentOptions extends StatelessWidget {
           MenuItem(
             Options.delete,
             AppIcons.delete,
-            context.l10n.of(context)!.delete,
+            context.l10n.delete,
           ),
         ),
       ]),
@@ -82,7 +82,7 @@ class MorePostOptions extends StatelessWidget {
           MenuItem(
             Options.manage,
             AppIcons.boards,
-            context.l10n.of(context)!.addOrRemove,
+            context.l10n.addOrRemove,
           ),
         ),
         _menuItem(
@@ -90,7 +90,7 @@ class MorePostOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            context.l10n.of(context)!.share,
+            context.l10n.share,
           ),
         ),
         if (isOwner) ...[
@@ -99,7 +99,7 @@ class MorePostOptions extends StatelessWidget {
             MenuItem(
               Options.edit,
               AppIcons.edit,
-              context.l10n.of(context)!.edit,
+              context.l10n.edit,
             ),
           ),
           _menuItem(
@@ -107,7 +107,7 @@ class MorePostOptions extends StatelessWidget {
             MenuItem(
               Options.delete,
               AppIcons.delete,
-              context.l10n.of(context)!.delete,
+              context.l10n.delete,
             ),
           ),
         ],
@@ -151,7 +151,7 @@ class MoreSearchOptions extends StatelessWidget {
           MenuItem(
             Options.manage,
             AppIcons.boards,
-            context.l10n.of(context)!.addOrRemove,
+            context.l10n.addOrRemove,
           ),
         ),
         _menuItem(
@@ -159,7 +159,7 @@ class MoreSearchOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            context.l10n.of(context)!.share,
+            context.l10n.share,
           ),
         ),
       ]),
@@ -207,7 +207,7 @@ class MoreProfileOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            context.l10n.of(context)!.share,
+            context.l10n.share,
           ),
         ),
         if (isCurrent)
@@ -216,7 +216,7 @@ class MoreProfileOptions extends StatelessWidget {
             MenuItem(
               Options.edit,
               AppIcons.settings,
-              context.l10n.of(context)!.edit,
+              context.l10n.edit,
             ),
           ),
         if (!isCurrent)
@@ -225,7 +225,7 @@ class MoreProfileOptions extends StatelessWidget {
             MenuItem(
               Options.block,
               AppIcons.block,
-              context.l10n.of(context)!.blockUser,
+              context.l10n.blockUser,
             ),
           ),
       ]),

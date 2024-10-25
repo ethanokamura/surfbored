@@ -75,13 +75,21 @@ class BoardCubit extends Cubit<BoardState> {
   /// After updating, re-fetches the board to ensure state consistency.
   Future<void> editField(int boardId, String field, dynamic data) async {
     emit(state.fromLoading());
-    await _boardRepository.updateBoard(
+    await _boardRepository.updateBoardField(
       boardId: boardId,
       field: field,
       data: data,
     );
     emit(state.fromUpdated());
     await fetchBoard(boardId);
+  }
+
+  /// Updates the given of a board.
+  Future<void> updateBoard(int boardId, Map<String, dynamic> data) async {
+    emit(state.fromLoading());
+    final board =
+        await _boardRepository.updateBoard(boardId: boardId, data: data);
+    emit(state.fromBoardLoaded(board));
   }
 
   /// Deletes a board by its ID.

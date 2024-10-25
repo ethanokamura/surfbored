@@ -42,7 +42,7 @@ class EditBoardPage extends StatelessWidget {
             if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state.isLoaded) {
-              return EditView(
+              return EditBoardView(
                 board: state.board,
                 boardCubit: context.read<BoardCubit>(),
                 onDelete: onDelete,
@@ -62,8 +62,8 @@ class EditBoardPage extends StatelessWidget {
   }
 }
 
-class EditView extends StatelessWidget {
-  const EditView({
+class EditBoardView extends StatefulWidget {
+  const EditBoardView({
     required this.board,
     required this.boardCubit,
     required this.onDelete,
@@ -74,8 +74,59 @@ class EditView extends StatelessWidget {
   final void Function() onDelete;
 
   @override
+  State<EditBoardView> createState() => _EditBoardViewState();
+}
+
+class _EditBoardViewState extends State<EditBoardView> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  bool _titleIsValid = false;
+  bool _descriptionIsValid = false;
+  String _title = '';
+  String _description = '';
+
+  @override
+  void initState() {
+    _titleController.text = widget.board.title;
+    _descriptionController.text = widget.board.description;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _onTitleChanged(String title) async {
+    // use regex
+    if (title.length < 40 && title.length > 2) {
+      setState(() {
+        _titleIsValid = true;
+        _title = title;
+      });
+    } else {
+      setState(() => _titleIsValid = false);
+    }
+  }
+
+  Future<void> _onDescriptionChanged(String description) async {
+    // use regex
+    if (description.length < 150 && description.length > 2) {
+      setState(() {
+        _descriptionIsValid = true;
+        _description = description;
+      });
+    } else {
+      setState(() => _descriptionIsValid = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final boardId = board.id!;
+    final boardId = widget.board.id!;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,79 +134,67 @@ class EditView extends StatelessWidget {
           EditImage(
             width: 200,
             // height: 200,
-            photoUrl: board.photoUrl,
+            photoUrl: widget.board.photoUrl,
             collection: 'boards',
-            userId: board.creatorId,
+            userId: widget.board.creatorId,
             docId: boardId,
             aspectX: 4,
             aspectY: 3,
             onFileChanged: (url) {
-              boardCubit.editField(boardId, Board.photoUrlConverter, url);
+              widget.boardCubit
+                  .editField(boardId, Board.photoUrlConverter, url);
             },
           ),
           const VerticalSpacer(),
-          EditField(
-            field: Board.titleConverter,
-            value: board.title,
-            boardId: boardId,
+          customTextFormField(
+            controller: _titleController,
+            context: context,
+            label: AppStrings.title,
+            maxLength: 40,
+            onChanged: (value) async => _onTitleChanged(value.trim()),
+            validator: (title) =>
+                title != null && title.length < 3 && title.length > 20
+                    ? 'Invalid Title'
+                    : null,
           ),
           const VerticalSpacer(),
-          EditField(
-            field: Board.descriptionConverter,
-            value: board.description,
-            boardId: boardId,
+          customTextFormField(
+            controller: _descriptionController,
+            context: context,
+            label: AppStrings.description,
+            maxLength: 150,
+            onChanged: (value) async => _onDescriptionChanged(value.trim()),
+          ),
+          const VerticalSpacer(),
+          ActionButton(
+            text: _titleIsValid || _descriptionIsValid
+                ? AppStrings.save
+                : AppStrings.invalid,
+            onTap: _titleIsValid || _descriptionIsValid
+                ? () {
+                    try {
+                      final data = Board.update(
+                        title: _title,
+                        description: _description,
+                      );
+                      context.read<BoardCubit>().updateBoard(boardId, data);
+                    } catch (e) {
+                      if (!context.mounted) return;
+                      context.showSnackBar('Unable to save data: $e');
+                    }
+                  }
+                : null,
           ),
           const VerticalSpacer(),
           ActionButton(
             text: AppStrings.delete,
             onTap: () {
-              onDelete();
+              widget.onDelete();
               Navigator.pop(context);
             },
           ),
         ],
       ),
-    );
-  }
-}
-
-// dynamic input length maximum
-int maxInputLength(String field) {
-  switch (field) {
-    case 'title':
-      return 40;
-    case 'description':
-      return 150;
-    default:
-      return 50;
-  }
-}
-
-class EditField extends StatelessWidget {
-  const EditField({
-    required this.field,
-    required this.value,
-    required this.boardId,
-    super.key,
-  });
-  final String field;
-  final String value;
-  final int boardId;
-  @override
-  Widget build(BuildContext context) {
-    return CustomTextBox(
-      text: value,
-      label: field,
-      onPressed: () async {
-        final newValue = await editTextField(
-          context,
-          field,
-          TextEditingController(),
-        );
-        if (newValue != null && context.mounted) {
-          await context.read<BoardCubit>().editField(boardId, field, newValue);
-        }
-      },
     );
   }
 }

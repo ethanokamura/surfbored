@@ -97,11 +97,10 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
         return MaterialApp(
-          onGenerateTitle: (context) => l10n.appTitle,
+          onGenerateTitle: (context) => context.l10n.appTitle,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -118,9 +117,11 @@ class AppView extends StatelessWidget {
             listenWhen: (_, current) => current.isFailure,
             listener: (context, state) {
               return switch (state.failure) {
-                AuthChangesFailure() => context.showSnackBar(l10n.authFailure),
-                SignOutFailure() => context.showSnackBar(l10n.authFailure),
-                _ => context.showSnackBar(l10n.unknownFailure),
+                AuthChangesFailure() =>
+                  context.showSnackBar(context.l10n.authFailure),
+                SignOutFailure() =>
+                  context.showSnackBar(context.l10n.authFailure),
+                _ => context.showSnackBar(context.l10n.unknownFailure),
               };
             },
             child: FlowBuilder(

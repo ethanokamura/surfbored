@@ -2,24 +2,27 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
-import 'package:surfbored/features/failures/board_failures.dart';
 import 'package:surfbored/features/images/images.dart';
 
 class EditBoardPage extends StatelessWidget {
   const EditBoardPage({
     required this.boardId,
+    required this.board,
     required this.onDelete,
     super.key,
   });
   final int boardId;
+  final Board board;
   final void Function() onDelete;
   static MaterialPage<void> page({
     required int boardId,
+    required Board board,
     required void Function() onDelete,
   }) {
     return MaterialPage<void>(
       child: EditBoardPage(
         boardId: boardId,
+        board: board,
         onDelete: onDelete,
       ),
     );
@@ -27,36 +30,16 @@ class EditBoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<BoardCubit>().fetchBoard(boardId);
     return CustomPageView(
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: AppBarText(text: context.l10n.editBoard),
       ),
-      body: listenForBoardFailures<BoardCubit, BoardState>(
-        failureSelector: (state) => state.failure,
-        isFailureSelector: (state) => state.isFailure,
-        child: BlocBuilder<BoardCubit, BoardState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.isLoaded) {
-              return EditBoardView(
-                board: state.board,
-                boardCubit: context.read<BoardCubit>(),
-                onDelete: onDelete,
-              );
-            } else if (state.isDeleted) {
-              return Center(
-                child: PrimaryText(text: context.l10n.fromDelete),
-              );
-            }
-            return Center(
-              child: PrimaryText(text: context.l10n.fetchFailure),
-            );
-          },
-        ),
+      body: EditBoardView(
+        board: board,
+        boardCubit: context.read<BoardCubit>(),
+        onDelete: onDelete,
       ),
     );
   }
@@ -140,6 +123,8 @@ class _EditBoardViewState extends State<EditBoardView> {
             docId: boardId,
             aspectX: 4,
             aspectY: 3,
+
+            /// TOOD(Ethan): change this to image upload
             onFileChanged: (url) {
               widget.boardCubit
                   .editField(boardId, Board.photoUrlConverter, url);

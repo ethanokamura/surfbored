@@ -45,6 +45,7 @@ class BoardPage extends StatelessWidget {
                             value: boardCubit,
                             child: EditBoardPage(
                               boardId: boardId,
+                              board: board,
                               onDelete: () async {
                                 Navigator.pop(context);
                                 await boardCubit.deleteBoard(boardId);

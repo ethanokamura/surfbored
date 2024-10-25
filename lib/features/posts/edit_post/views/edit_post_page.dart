@@ -136,6 +136,7 @@ class _EditViewState extends State<EditView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          /// TOOD(Ethan): change this to image upload
           EditImage(
             width: 200,
             // height: 200,

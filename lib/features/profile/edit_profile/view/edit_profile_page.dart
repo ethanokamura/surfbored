@@ -205,7 +205,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     _displayNameIsValid ||
                     _interestsAreValid
                 ? AppStrings.save
-                : AppStrings.invalidChanges,
+                : AppStrings.invalid,
             onTap: _bioIsValid ||
                     _usernameIsValid ||
                     _displayNameIsValid ||
@@ -217,7 +217,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                           .isUsernameUnique(username: _username!);
                       if (!context.mounted) return;
                       if (!unique) {
-                        context.showSnackBar(CreateStrings.invalidUsername);
+                        context.showSnackBar(AppStrings.invalidUsername);
                         return;
                       }
                     }

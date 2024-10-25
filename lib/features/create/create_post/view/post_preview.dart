@@ -18,7 +18,7 @@ class PostPreview extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: PageStrings.confirmCreatePage),
+        title: const AppBarText(text: AppStrings.confirmCreatePage),
       ),
       top: true,
       body: SingleChildScrollView(

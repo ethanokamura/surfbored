@@ -21,7 +21,7 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const AppBarText(text: AuthStrings.signInPrompt),
+              const AppBarText(text: AppStrings.signInPrompt),
               const VerticalSpacer(multiple: 3),
               BlocProvider(
                 create: (context) => AuthCubit(

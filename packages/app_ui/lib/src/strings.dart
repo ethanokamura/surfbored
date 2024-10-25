@@ -1,4 +1,3 @@
-/// TODO(Ethan): I18n
 class AppStrings {
   /// App
   static const String appTitle = 'SurfBored';
@@ -13,6 +12,20 @@ class AppStrings {
   static const String post = 'post';
   static const String posts = 'posts';
   static const String errorPage = 'uh oh...';
+
+  /// Snackbar
+  static const String success = 'success!';
+  static const String fromCreate = 'successfully created';
+  static const String fromUpdate = 'successfully updated';
+  static const String fromDelete = 'successfully deleted';
+  static const String createFailure = 'failure to create';
+  static const String updateFailure = 'failure to get update';
+  static const String fetchFailure = 'failure to get data';
+  static const String deleteFailure = 'failure to delete';
+  static const String addSaveFailure = 'failure to save';
+  static const String removeSaveFailure = 'failure to remove save';
+  static const String addLikeFailure = 'failure to like';
+  static const String removeLikeFailure = 'failure to remove like';
 
   /// CRUD buttons
   static const String save = 'save';
@@ -34,7 +47,8 @@ class AppStrings {
   /// Unknown
   static const String pageNotFoundTitle = 'error 404';
   static const String pageNotFound = 'page not found.';
-  static const String empty = 'data not found.';
+  static const String dataNotFound = 'data not found.';
+  static const String empty = 'no data yet!';
 
   // Profile
   static const String settingsPage = 'settings';
@@ -67,10 +81,12 @@ class AppStrings {
 
   // Posts
   static const String addToBoard = 'add to board';
+  static const String editPost = 'edit post';
 
   // Boards
   static const String shuffledPosts = 'shuffled posts';
   static const String shuffle = 'shuffle';
+  static const String editBoard = 'edit board';
 
   // Comments
   static const String createComment = 'create comment';
@@ -97,16 +113,19 @@ class AppStrings {
 
   // Auth
   static const String signIn = 'Sign in';
-  static const String signInPrompt = 'Welcome to SurfBored 🥳';
-  static const String phoneNumberPrompt = "What's your number?";
-  static const String otpPrompt = 'Verify your number';
+  static const String signInPrompt = 'welcome to SurfBored 🥳';
+  static const String phoneNumberPrompt = "what's your number?";
+  static const String otpPrompt = 'verify your number';
   static const String otpHint = '6 digit code';
-  static const String invalidPhoneNumber = 'Invalid phone number.';
-  static const String invalidOtp = 'Invalid OTP.';
+  static const String invalidPhoneNumber = 'invalid phone number.';
+  static const String invalidOtp = 'invalid OTP.';
+  static const String usernameTitle = 'what should we call you?';
+  static const String usernamePrompt = 'username?';
+  static const String invalidUsername = 'invalid username';
 
-  static const String authFailure = 'Failure to authenticate.';
-  static const String unknownFailure = 'Unknown failure occured';
-  static const String signInFailure = 'Failed to sign in.';
-  static const String signOutFailure = 'Failed to sign out.';
-  static const logOut = 'Logout';
+  static const String authFailure = 'failure to authenticate.';
+  static const String unknownFailure = 'unknown failure occured';
+  static const String signInFailure = 'failed to sign in.';
+  static const String signOutFailure = 'failed to sign out.';
+  static const logOut = 'logout';
 }

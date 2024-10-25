@@ -75,7 +75,7 @@ class _EditBoardViewState extends State<EditBoardView> {
             customTextFormField(
               controller: _titleController,
               context: context,
-              label: CreateStrings.title,
+              label: AppStrings.title,
               maxLength: 40,
               onChanged: (value) async => _onTitleChanged(value.trim()),
               validator: (title) =>
@@ -87,7 +87,7 @@ class _EditBoardViewState extends State<EditBoardView> {
             customTextFormField(
               controller: _descriptionController,
               context: context,
-              label: CreateStrings.description,
+              label: AppStrings.description,
               maxLength: 150,
               onChanged: (value) async => _onDescriptionChanged(value.trim()),
             ),
@@ -95,8 +95,8 @@ class _EditBoardViewState extends State<EditBoardView> {
         ),
         ActionButton(
           text: _titleIsValid || _descriptionIsValid
-              ? AppStrings.saveChanges
-              : AppStrings.invalidChanges,
+              ? AppStrings.save
+              : AppStrings.invalid,
           onTap: _titleIsValid || _descriptionIsValid
               ? () {
                   try {

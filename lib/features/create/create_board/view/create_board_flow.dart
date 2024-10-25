@@ -36,7 +36,7 @@ class CreateBoardFlow extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: PageStrings.createBoardPage),
+        title: const AppBarText(text: AppStrings.createBoardPage),
       ),
       top: false,
       body: BlocProvider(
@@ -66,11 +66,11 @@ Widget _buildErrorScreen() {
   return CustomPageView(
     appBar: AppBar(
       backgroundColor: Colors.transparent,
-      title: const AppBarText(text: PageStrings.errorPage),
+      title: const AppBarText(text: AppStrings.errorPage),
     ),
     top: false,
     body: const Center(
-      child: PrimaryText(text: CreateStrings.unknownFailure),
+      child: PrimaryText(text: AppStrings.unknownFailure),
     ),
   );
 }

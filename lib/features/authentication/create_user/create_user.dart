@@ -50,12 +50,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const AppBarText(text: UserStrings.createUsername),
+              const AppBarText(text: AppStrings.usernameTitle),
               const VerticalSpacer(multiple: 3),
               customTextFormField(
                 controller: _usernameController,
                 context: context,
-                label: CreateStrings.usernamePrompt,
+                label: AppStrings.usernamePrompt,
                 maxLength: 15,
                 onChanged: (value) => _onUsernameChanged(
                   value.trim(),
@@ -84,13 +84,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           context.read<AppCubit>().usernameSubmitted();
                         } else {
                           // add some sort of animation
-                          context.showSnackBar(CreateStrings.invalidUsername);
+                          context.showSnackBar(AppStrings.invalidUsername);
                         }
                       }
                     : null,
-                text: _isValid
-                    ? ButtonStrings.continueText
-                    : CreateStrings.invalidUsername,
+                text: _isValid ? AppStrings.next : AppStrings.invalidUsername,
               ),
             ],
           ),

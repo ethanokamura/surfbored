@@ -43,16 +43,16 @@ class BoardPosts extends StatelessWidget {
               );
             } else if (state.isEmpty) {
               return const Center(
-                child: PrimaryText(text: DataStrings.empty),
+                child: PrimaryText(text: AppStrings.empty),
               );
             } else if (state.isDeleted || state.isUpdated) {
               context.read<PostCubit>().fetchBoardPosts(board.id!);
               return const Center(
-                child: PrimaryText(text: DataStrings.fromUpdate),
+                child: PrimaryText(text: AppStrings.fromUpdate),
               );
             }
             return const Center(
-              child: PrimaryText(text: DataStrings.fromUnknownFailure),
+              child: PrimaryText(text: AppStrings.unknownFailure),
             );
           },
         ),

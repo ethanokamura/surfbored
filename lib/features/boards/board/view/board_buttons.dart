@@ -28,7 +28,7 @@ class BoardButtons extends StatelessWidget {
           Expanded(
             child: ActionButton(
               onTap: () {},
-              text: ButtonStrings.share,
+              text: AppStrings.share,
             ),
           ),
         if (!isOwner)
@@ -55,7 +55,7 @@ class BoardButtons extends StatelessWidget {
                 ),
               );
             },
-            text: ButtonStrings.shuffle,
+            text: AppStrings.shuffle,
           ),
         ),
       ],

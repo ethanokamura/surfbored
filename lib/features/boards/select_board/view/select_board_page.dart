@@ -28,7 +28,7 @@ class SelectBoardPage extends StatelessWidget {
       top: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppBarStrings.addToBoard),
+        title: const AppBarText(text: AppStrings.addToBoard),
       ),
       body: SelectBoardsList(userId: userId, postId: postId),
     );
@@ -63,16 +63,16 @@ class SelectBoardsList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return const Center(
-              child: PrimaryText(text: PostStrings.empty),
+              child: PrimaryText(text: AppStrings.empty),
             );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<BoardCubit>().streamUserBoards(userId);
             return const Center(
-              child: PrimaryText(text: DataStrings.fromUpdate),
+              child: PrimaryText(text: AppStrings.fromUpdate),
             );
           } else if (state.isFailure) {
             return const Center(
-              child: PrimaryText(text: PostStrings.failure),
+              child: PrimaryText(text: AppStrings.fetchFailure),
             );
           }
           return const Center(child: CircularProgressIndicator());

@@ -33,7 +33,7 @@ class _UploadPostImageViewState extends State<UploadPostImageView> {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: CreateStrings.imageUploadPrompt),
+        title: const AppBarText(text: AppStrings.uploadImage),
       ),
       top: true,
       body: SingleChildScrollView(

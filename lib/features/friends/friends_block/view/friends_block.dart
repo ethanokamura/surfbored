@@ -41,7 +41,7 @@ class FriendsListButton extends StatelessWidget {
           builder: (context) => FriendsPage(userId: userId),
         ),
       ),
-      text: FriendStrings.myFriends,
+      text: AppStrings.myFriends,
     );
   }
 }

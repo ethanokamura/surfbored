@@ -25,13 +25,13 @@ class EditPostPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: PostStrings.edit),
+        title: const AppBarText(text: AppStrings.edit),
       ),
       body: BlocListener<PostCubit, PostState>(
         listener: (context, state) {
           if (state.isUpdated) {
             // Show a success message or navigate back
-            context.showSnackBar(DataStrings.fromUpdate);
+            context.showSnackBar(AppStrings.fromUpdate);
           }
         },
         child: listenForPostFailures<PostCubit, PostState>(
@@ -49,11 +49,11 @@ class EditPostPage extends StatelessWidget {
                 );
               } else if (state.isDeleted) {
                 return const Center(
-                  child: PrimaryText(text: PostStrings.delete),
+                  child: PrimaryText(text: AppStrings.delete),
                 );
               }
               return const Center(
-                child: PrimaryText(text: DataStrings.fromUnknownFailure),
+                child: PrimaryText(text: AppStrings.unknownFailure),
               );
             },
           ),
@@ -112,7 +112,7 @@ class EditView extends StatelessWidget {
           const VerticalSpacer(),
           EditTagsPrompt(
             tags: postTags,
-            label: CreateStrings.tagsPrompt,
+            label: AppStrings.tagsPrompt,
             updateTags: (tags) => postCubit.updateTags(post.id!, tags),
           ),
         ],

@@ -14,7 +14,7 @@ class ExplorePage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: PageStrings.explorePage),
+        title: const AppBarText(text: AppStrings.explorePage),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(

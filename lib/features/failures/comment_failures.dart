@@ -13,14 +13,14 @@ BlocListener<C, S> listenForCommentFailures<C extends Cubit<S>, S>({
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);
         final message = switch (failure) {
-          EmptyFailure() => DataStrings.emptyFailure,
-          CreateFailure() => DataStrings.fromCreateFailure,
-          ReadFailure() => DataStrings.fromGetFailure,
-          UpdateFailure() => DataStrings.fromUpdateFailure,
-          DeleteFailure() => DataStrings.fromDeleteFailure,
-          AddLikeFailure() => DataStrings.fromAddLikeFailure,
-          RemoveLikeFailure() => DataStrings.fromRemoveLikeFailure,
-          _ => DataStrings.fromUnknownFailure,
+          EmptyFailure() => AppStrings.empty,
+          CreateFailure() => AppStrings.createFailure,
+          ReadFailure() => AppStrings.fetchFailure,
+          UpdateFailure() => AppStrings.updateFailure,
+          DeleteFailure() => AppStrings.deleteFailure,
+          AddLikeFailure() => AppStrings.addLikeFailure,
+          RemoveLikeFailure() => AppStrings.removeLikeFailure,
+          _ => AppStrings.unknownFailure,
         };
         context.showSnackBar(message);
       }

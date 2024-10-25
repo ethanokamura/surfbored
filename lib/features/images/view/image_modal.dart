@@ -7,14 +7,14 @@ Future<void> showImagePicker({
   await showBottomModal(
     context,
     <Widget>[
-      const TitleText(text: '${ImageStrings.selectMedia}:', fontSize: 24),
+      const TitleText(text: '${AppStrings.selectMedia}:', fontSize: 24),
       const VerticalSpacer(),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           BottomModalButton(
             icon: AppIcons.camera,
-            label: ImageStrings.camera,
+            label: AppStrings.camera,
             onTap: () async {
               Navigator.pop(context);
               await onSelected(ImageSource.camera);
@@ -23,7 +23,7 @@ Future<void> showImagePicker({
           const SizedBox(width: 40),
           BottomModalButton(
             icon: AppIcons.posts,
-            label: ImageStrings.photoLibrary,
+            label: AppStrings.library,
             onTap: () async {
               Navigator.pop(context);
               await onSelected(ImageSource.gallery);

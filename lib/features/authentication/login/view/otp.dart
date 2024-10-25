@@ -29,7 +29,7 @@ class _OtpPromptState extends State<OtpPrompt> {
           controller: _otpController,
           keyboardType: TextInputType.number,
           context: context,
-          label: AuthStrings.otpPrompt,
+          label: AppStrings.otpPrompt,
           maxLength: 6,
           onChanged: (otp) => setState(() => _otp = otp.trim()),
           validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
@@ -49,7 +49,7 @@ class _OtpPromptState extends State<OtpPrompt> {
                   }
                 }
               : null,
-          text: ButtonStrings.continueText,
+          text: AppStrings.next,
         ),
       ],
     );

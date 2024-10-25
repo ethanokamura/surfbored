@@ -77,7 +77,7 @@ class BottomNavBar extends StatelessWidget {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: CreateStrings.create, fontSize: 24),
+        const TitleText(text: AppStrings.create, fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -42,7 +42,7 @@ class FriendButton extends StatelessWidget {
                     );
             }
             return const Center(
-              child: PrimaryText(text: DataStrings.emptyFailure),
+              child: PrimaryText(text: AppStrings.empty),
             );
           },
         ),
@@ -51,9 +51,9 @@ class FriendButton extends StatelessWidget {
   }
 
   String _getButtonText(FriendStatus status) {
-    if (status == FriendStatus.requested) return FriendStrings.requestSent;
-    if (status == FriendStatus.recieved) return FriendStrings.acceptRequest;
-    if (status == FriendStatus.friends) return FriendStrings.removeFriend;
-    return FriendStrings.addFriend;
+    if (status == FriendStatus.requested) return AppStrings.requestSent;
+    if (status == FriendStatus.recieved) return AppStrings.acceptRequest;
+    if (status == FriendStatus.friends) return AppStrings.removeFriend;
+    return AppStrings.addFriend;
   }
 }

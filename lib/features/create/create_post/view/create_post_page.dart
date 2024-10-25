@@ -83,7 +83,7 @@ class _EditPostViewState extends State<EditPostView> {
         appBar: AppBar(
           centerTitle: false,
           backgroundColor: Colors.transparent,
-          title: const AppBarText(text: PageStrings.createPostPage),
+          title: const AppBarText(text: AppStrings.createPostPage),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -91,7 +91,7 @@ class _EditPostViewState extends State<EditPostView> {
               customTextFormField(
                 controller: _titleController,
                 context: context,
-                label: CreateStrings.title,
+                label: AppStrings.title,
                 maxLength: 40,
                 onChanged: (value) async => _onTitleChanged(value.trim()),
                 validator: (title) =>
@@ -104,7 +104,7 @@ class _EditPostViewState extends State<EditPostView> {
                 controller: _descriptionController,
                 maxLength: 150,
                 context: context,
-                label: CreateStrings.description,
+                label: AppStrings.description,
                 onChanged: (value) async => _onDescriptionChanged(value.trim()),
               ),
               const VerticalSpacer(),
@@ -115,13 +115,13 @@ class _EditPostViewState extends State<EditPostView> {
                   _tags = tags.join('+');
                   _tagsAreValid = true;
                 }),
-                label: CreateStrings.tagsPrompt,
+                label: AppStrings.tagsPrompt,
               ),
               const VerticalSpacer(multiple: 3),
               ActionButton(
                 text: _titleIsValid || _descriptionIsValid || _tagsAreValid
-                    ? AppStrings.saveChanges
-                    : AppStrings.invalidChanges,
+                    ? AppStrings.save
+                    : AppStrings.invalid,
                 onTap: _titleIsValid || _descriptionIsValid || _tagsAreValid
                     ? () {
                         try {

@@ -66,11 +66,11 @@ class BoardPage extends StatelessWidget {
             );
           } else if (state.isDeleted) {
             return const Center(
-              child: PrimaryText(text: BoardStrings.delete),
+              child: PrimaryText(text: AppStrings.fromDelete),
             );
           }
           return const Center(
-            child: PrimaryText(text: BoardStrings.failure),
+            child: PrimaryText(text: AppStrings.unknownFailure),
           );
         },
       ),

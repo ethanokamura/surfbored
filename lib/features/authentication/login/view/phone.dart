@@ -27,7 +27,7 @@ class _PhonePromptState extends State<PhonePrompt> {
           controller: _phoneController,
           keyboardType: TextInputType.phone,
           context: context,
-          label: AuthStrings.phoneNumberPrompt,
+          label: AppStrings.phoneNumberPrompt,
           prefix: '+1 ',
           maxLength: 10,
           onChanged: (number) => setState(() => _phoneNumber = number.trim()),
@@ -50,7 +50,7 @@ class _PhonePromptState extends State<PhonePrompt> {
                   }
                 }
               : null,
-          text: ButtonStrings.continueText,
+          text: AppStrings.next,
         ),
       ],
     );

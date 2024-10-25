@@ -32,7 +32,7 @@ class EditBoardPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: BoardStrings.edit),
+        title: const AppBarText(text: AppStrings.editBoard),
       ),
       body: listenForBoardFailures<BoardCubit, BoardState>(
         failureSelector: (state) => state.failure,
@@ -49,11 +49,11 @@ class EditBoardPage extends StatelessWidget {
               );
             } else if (state.isDeleted) {
               return const Center(
-                child: PrimaryText(text: BoardStrings.delete),
+                child: PrimaryText(text: AppStrings.fromDelete),
               );
             }
             return const Center(
-              child: PrimaryText(text: BoardStrings.failure),
+              child: PrimaryText(text: AppStrings.fetchFailure),
             );
           },
         ),
@@ -107,7 +107,7 @@ class EditView extends StatelessWidget {
           ),
           const VerticalSpacer(),
           ActionButton(
-            text: BoardStrings.delete,
+            text: AppStrings.delete,
             onTap: () {
               onDelete();
               Navigator.pop(context);

@@ -48,18 +48,33 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  /// Insertes a specific [field] with [data] for a given post
+  /// Inserts a specific [field] with [data] for a given post
   /// Requires [postId] for the target post
   Future<void> editField(int postId, String field, dynamic data) async {
     emit(state.fromLoading());
-    await _postRepository.updatePost(postId: postId, field: field, data: data);
+    await _postRepository.updatePostField(
+      postId: postId,
+      field: field,
+      data: data,
+    );
     emit(state.fromUpdate());
+  }
+
+  /// Inserts post's new [data]
+  /// Requires [postId] for the target post
+  Future<void> updatePost(int postId, Map<String, dynamic> data) async {
+    emit(state.fromLoading());
+    final post = await _postRepository.updatePost(
+      postId: postId,
+      data: data,
+    );
+    emit(state.fromPostLoaded(post));
   }
 
   /// Updates the [tags] for a given post using its [postId]
   Future<void> updateTags(int postId, List<String> tags) async {
     await _tagRepository.updatePostTags(id: postId, tags: tags);
-    await _postRepository.updatePost(
+    await _postRepository.updatePostField(
       field: Post.tagsConverter,
       postId: postId,
       data: tags.join('+'),

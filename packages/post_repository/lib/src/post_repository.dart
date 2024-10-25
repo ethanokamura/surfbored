@@ -219,7 +219,7 @@ extension StreamData on PostRepository {
 
 extension Update on PostRepository {
   /// Updates a specific field of a post
-  Future<void> updatePost({
+  Future<void> updatePostField({
     required String field,
     required int postId,
     required dynamic data,
@@ -230,6 +230,24 @@ extension Update on PostRepository {
           .update({field: data}).eq(Post.idConverter, postId);
     } catch (e) {
       PostFailure.fromUpdate();
+    }
+  }
+
+  /// Updates the entire board.
+  Future<Post> updatePost({
+    required int postId,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final post = await _supabase
+          .fromPostsTable()
+          .update(data)
+          .eq(Post.idConverter, postId)
+          .single()
+          .withConverter(Post.converterSingle);
+      return post;
+    } catch (e) {
+      throw PostFailure.fromUpdate();
     }
   }
 }

@@ -1,7 +1,6 @@
 {
+  "@@locale": "en",
   "appTitle": "SurfBored",
-  "darkModeIcon": "assets/images/dark_mode_face.png",
-  "lightModeIcon": "assets/images/light_mode_face.png",
   "lightMode": "light mode",
   "darkMode": "dark mode",
   "board": "board",

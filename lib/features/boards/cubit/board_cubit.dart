@@ -25,7 +25,7 @@ class BoardCubit extends Cubit<BoardState> {
     emit(state.fromLoading());
     try {
       final board = await _boardRepository.fetchBoard(boardId: boardId);
-      emit(state.fromSetImage(board.photoUrl!));
+      emit(state.copyWith(photoUrl: board.photoUrl));
       emit(state.fromBoardLoaded(board));
     } on BoardFailure catch (failure) {
       emit(state.fromFailure(failure));

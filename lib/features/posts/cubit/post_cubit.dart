@@ -30,6 +30,7 @@ class PostCubit extends Cubit<PostState> {
     emit(state.fromLoading());
     try {
       final post = await _postRepository.fetchPost(postId: postId);
+      emit(state.copyWith(photoUrl: post.photoUrl));
       emit(state.fromPostLoaded(post));
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));

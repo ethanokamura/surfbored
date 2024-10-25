@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/boards/board/view/saves/saves.dart';
 import 'package:surfbored/features/posts/posts.dart';
@@ -28,7 +29,7 @@ class BoardButtons extends StatelessWidget {
           Expanded(
             child: ActionButton(
               onTap: () {},
-              text: AppStrings.share,
+              text: AppLocalizations.of(context)!.share,
             ),
           ),
         if (!isOwner)
@@ -55,7 +56,7 @@ class BoardButtons extends StatelessWidget {
                 ),
               );
             },
-            text: AppStrings.shuffle,
+            text: AppLocalizations.of(context)!.shuffle,
           ),
         ),
       ],

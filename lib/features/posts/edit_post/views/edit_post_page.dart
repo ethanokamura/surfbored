@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/failures/post_failures.dart';
 import 'package:surfbored/features/images/images.dart';
@@ -27,13 +28,13 @@ class EditPostPage extends StatelessWidget {
         top: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: const AppBarText(text: AppStrings.edit),
+          title: AppBarText(text: AppLocalizations.of(context)!.edit),
         ),
         body: BlocListener<PostCubit, PostState>(
           listener: (context, state) {
             if (state.isUpdated) {
               // Show a success message or navigate back
-              context.showSnackBar(AppStrings.fromUpdate);
+              context.showSnackBar(AppLocalizations.of(context)!.fromUpdate);
             }
           },
           child: listenForPostFailures<PostCubit, PostState>(
@@ -50,12 +51,14 @@ class EditPostPage extends StatelessWidget {
                     postCubit: context.read<PostCubit>(),
                   );
                 } else if (state.isDeleted) {
-                  return const Center(
-                    child: PrimaryText(text: AppStrings.delete),
+                  return Center(
+                    child:
+                        PrimaryText(text: AppLocalizations.of(context)!.delete),
                   );
                 }
-                return const Center(
-                  child: PrimaryText(text: AppStrings.unknownFailure),
+                return Center(
+                  child: PrimaryText(
+                      text: AppLocalizations.of(context)!.unknownFailure),
                 );
               },
             ),
@@ -152,7 +155,7 @@ class _EditViewState extends State<EditView> {
           customTextFormField(
             controller: _titleController,
             context: context,
-            label: AppStrings.title,
+            label: AppLocalizations.of(context)!.title,
             maxLength: 40,
             onChanged: (value) async => _onTitleChanged(value.trim()),
             validator: (title) =>
@@ -165,7 +168,7 @@ class _EditViewState extends State<EditView> {
             controller: _descriptionController,
             maxLength: 150,
             context: context,
-            label: AppStrings.description,
+            label: AppLocalizations.of(context)!.description,
             onChanged: (value) async => _onDescriptionChanged(value.trim()),
           ),
           const VerticalSpacer(),
@@ -176,13 +179,13 @@ class _EditViewState extends State<EditView> {
               _tags = tags.join('+');
               _tagsAreValid = true;
             }),
-            label: AppStrings.tagsPrompt,
+            label: AppLocalizations.of(context)!.tagsPrompt,
           ),
           const VerticalSpacer(),
           ActionButton(
             text: _titleIsValid || _descriptionIsValid || _tagsAreValid
-                ? AppStrings.save
-                : AppStrings.invalid,
+                ? AppLocalizations.of(context)!.save
+                : AppLocalizations.of(context)!.invalid,
             onTap: _titleIsValid || _descriptionIsValid || _tagsAreValid
                 ? () {
                     try {

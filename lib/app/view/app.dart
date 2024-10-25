@@ -2,6 +2,8 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:comment_repository/comment_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:friend_repository/friend_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';
@@ -100,7 +102,14 @@ class AppView extends StatelessWidget {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
         return MaterialApp(
-          onGenerateTitle: (context) => AppStrings.appTitle,
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            // GlobalCupertinoLocalizations.delegate
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
           theme: context.read<ThemeCubit>().themeData,
           onUnknownRoute: (settings) {
             return MaterialPageRoute(builder: (_) => const UnkownPage());
@@ -110,11 +119,12 @@ class AppView extends StatelessWidget {
             listenWhen: (_, current) => current.isFailure,
             listener: (context, state) {
               return switch (state.failure) {
-                AuthChangesFailure() =>
-                  context.showSnackBar(AppStrings.authFailure),
-                SignOutFailure() =>
-                  context.showSnackBar(AppStrings.authFailure),
-                _ => context.showSnackBar(AppStrings.unknownFailure),
+                AuthChangesFailure() => context
+                    .showSnackBar(AppLocalizations.of(context)!.authFailure),
+                SignOutFailure() => context
+                    .showSnackBar(AppLocalizations.of(context)!.authFailure),
+                _ => context
+                    .showSnackBar(AppLocalizations.of(context)!.unknownFailure),
               };
             },
             child: FlowBuilder(

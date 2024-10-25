@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -50,12 +51,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const AppBarText(text: AppStrings.usernameTitle),
+              AppBarText(text: AppLocalizations.of(context)!.usernameTitle),
               const VerticalSpacer(multiple: 3),
               customTextFormField(
                 controller: _usernameController,
                 context: context,
-                label: AppStrings.usernamePrompt,
+                label: AppLocalizations.of(context)!.usernamePrompt,
                 maxLength: 15,
                 onChanged: (value) => _onUsernameChanged(
                   value.trim(),
@@ -84,11 +85,14 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           context.read<AppCubit>().usernameSubmitted();
                         } else {
                           // add some sort of animation
-                          context.showSnackBar(AppStrings.invalidUsername);
+                          context.showSnackBar(
+                              AppLocalizations.of(context)!.invalidUsername);
                         }
                       }
                     : null,
-                text: _isValid ? AppStrings.next : AppStrings.invalidUsername,
+                text: _isValid
+                    ? AppLocalizations.of(context)!.next
+                    : AppLocalizations.of(context)!.invalidUsername,
               ),
             ],
           ),

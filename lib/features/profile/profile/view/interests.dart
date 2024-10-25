@@ -1,4 +1,5 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/tags/tags.dart';
 
 class InterestsList extends StatelessWidget {
@@ -10,7 +11,7 @@ class InterestsList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SecondaryText(text: AppStrings.interests),
+          SecondaryText(text: AppLocalizations.of(context)!.interests),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: TagList(tags: interests),

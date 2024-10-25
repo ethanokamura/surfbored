@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 BlocListener<C, S> listenForPostFailures<C extends Cubit<S>, S>({
   required PostFailure Function(S state) failureSelector,
@@ -13,14 +14,15 @@ BlocListener<C, S> listenForPostFailures<C extends Cubit<S>, S>({
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);
         final message = switch (failure) {
-          EmptyFailure() => AppStrings.empty,
-          CreateFailure() => AppStrings.createFailure,
-          ReadFailure() => AppStrings.fetchFailure,
-          UpdateFailure() => AppStrings.updateFailure,
-          DeleteFailure() => AppStrings.deleteFailure,
-          AddLikeFailure() => AppStrings.addLikeFailure,
-          RemoveLikeFailure() => AppStrings.removeLikeFailure,
-          _ => AppStrings.unknownFailure,
+          EmptyFailure() => AppLocalizations.of(context)!.empty,
+          CreateFailure() => AppLocalizations.of(context)!.createFailure,
+          ReadFailure() => AppLocalizations.of(context)!.fetchFailure,
+          UpdateFailure() => AppLocalizations.of(context)!.updateFailure,
+          DeleteFailure() => AppLocalizations.of(context)!.deleteFailure,
+          AddLikeFailure() => AppLocalizations.of(context)!.addLikeFailure,
+          RemoveLikeFailure() =>
+            AppLocalizations.of(context)!.removeLikeFailure,
+          _ => AppLocalizations.of(context)!.unknownFailure,
         };
         context.showSnackBar(message);
       }

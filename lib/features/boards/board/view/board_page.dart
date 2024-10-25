@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/boards/board/view/board_details.dart';
 import 'package:surfbored/features/boards/board/view/board_posts.dart';
 import 'package:surfbored/features/boards/boards.dart';
@@ -65,12 +66,14 @@ class BoardPage extends StatelessWidget {
               ),
             );
           } else if (state.isDeleted) {
-            return const Center(
-              child: PrimaryText(text: AppStrings.fromDelete),
+            return Center(
+              child:
+                  PrimaryText(text: AppLocalizations.of(context)!.fromDelete),
             );
           }
-          return const Center(
-            child: PrimaryText(text: AppStrings.unknownFailure),
+          return Center(
+            child:
+                PrimaryText(text: AppLocalizations.of(context)!.unknownFailure),
           );
         },
       ),

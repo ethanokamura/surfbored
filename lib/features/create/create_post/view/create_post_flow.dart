@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/create_post/view/create_post_page.dart';
 import 'package:surfbored/features/create/create_post/view/post_preview.dart';
@@ -41,7 +42,7 @@ class CreatePostFlow extends StatelessWidget {
       ),
       child: BlocBuilder<CreateCubit, CreateState>(
         builder: (context, state) {
-          if (state.isFailure) return _buildErrorScreen();
+          if (state.isFailure) return _buildErrorScreen(context);
           if (state.isLoading) return _buildLoadingScreen();
           return FlowBuilder(
             onGeneratePages: onGenerateCreatePostPages,
@@ -55,15 +56,15 @@ class CreatePostFlow extends StatelessWidget {
   }
 }
 
-Widget _buildErrorScreen() {
+Widget _buildErrorScreen(BuildContext context) {
   return CustomPageView(
     appBar: AppBar(
       backgroundColor: Colors.transparent,
-      title: const AppBarText(text: AppStrings.errorPage),
+      title: AppBarText(text: AppLocalizations.of(context)!.errorPage),
     ),
     top: false,
-    body: const Center(
-      child: PrimaryText(text: AppStrings.unknownFailure),
+    body: Center(
+      child: PrimaryText(text: AppLocalizations.of(context)!.unknownFailure),
     ),
   );
 }

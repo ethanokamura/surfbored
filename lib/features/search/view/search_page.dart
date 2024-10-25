@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/posts/posts.dart';
 
@@ -93,7 +94,8 @@ class _SearchPageState extends State<SearchPage> {
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: defaultPadding,
                       ),
-                      label: const PrimaryText(text: AppStrings.search),
+                      label: PrimaryText(
+                          text: AppLocalizations.of(context)!.search),
                       prefixIcon: defaultIconStyle(context, AppIcons.search),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(

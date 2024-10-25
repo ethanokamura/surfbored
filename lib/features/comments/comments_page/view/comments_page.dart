@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:comment_repository/comment_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/comments/comments_page/cubit/comments_cubit.dart';
 import 'package:surfbored/features/comments/comments_page/view/comments_list.dart';
 import 'package:surfbored/features/failures/comment_failures.dart';
@@ -72,12 +73,13 @@ class CommentsView extends StatelessWidget {
           final comments = state.comments;
           return CommentListView(comments: comments, postId: postId);
         } else if (state.isEmpty) {
-          return const Center(
-            child: PrimaryText(text: AppStrings.empty),
+          return Center(
+            child: PrimaryText(text: AppLocalizations.of(context)!.empty),
           );
         }
-        return const Center(
-          child: PrimaryText(text: AppStrings.unknownFailure),
+        return Center(
+          child:
+              PrimaryText(text: AppLocalizations.of(context)!.unknownFailure),
         );
       },
     );

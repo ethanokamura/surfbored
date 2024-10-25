@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/images/images.dart';
 
@@ -42,10 +43,10 @@ class _UploadBoardImageViewState extends State<UploadBoardImageView> {
             ),
           ),
           const VerticalSpacer(),
-          const SecondaryText(text: AppStrings.skip),
+          SecondaryText(text: AppLocalizations.of(context)!.skip),
           const VerticalSpacer(),
           ActionButton(
-            text: AppStrings.next,
+            text: AppLocalizations.of(context)!.next,
             onTap: () =>
                 context.read<CreateCubit>().uploadBoardImage(imageFile),
           ),

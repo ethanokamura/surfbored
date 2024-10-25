@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:friend_repository/friend_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 BlocListener<C, S> listenForFriendFailures<C extends Cubit<S>, S>({
   required FriendFailure Function(S state) failureSelector,
@@ -13,12 +14,12 @@ BlocListener<C, S> listenForFriendFailures<C extends Cubit<S>, S>({
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);
         final message = switch (failure) {
-          EmptyFailure() => AppStrings.empty,
-          CreateFailure() => AppStrings.createFailure,
-          ReadFailure() => AppStrings.fetchFailure,
-          UpdateFailure() => AppStrings.updateFailure,
-          DeleteFailure() => AppStrings.deleteFailure,
-          _ => AppStrings.unknownFailure,
+          EmptyFailure() => AppLocalizations.of(context)!.empty,
+          CreateFailure() => AppLocalizations.of(context)!.createFailure,
+          ReadFailure() => AppLocalizations.of(context)!.fetchFailure,
+          UpdateFailure() => AppLocalizations.of(context)!.updateFailure,
+          DeleteFailure() => AppLocalizations.of(context)!.deleteFailure,
+          _ => AppLocalizations.of(context)!.unknownFailure,
         };
         context.showSnackBar(message);
       }

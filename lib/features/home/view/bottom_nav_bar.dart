@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/create/create.dart';
 
 enum NavBarItem { home, create, profile }
@@ -77,14 +78,14 @@ class BottomNavBar extends StatelessWidget {
     await showBottomModal(
       context,
       <Widget>[
-        const TitleText(text: AppStrings.create, fontSize: 24),
+        TitleText(text: AppLocalizations.of(context)!.create, fontSize: 24),
         const VerticalSpacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BottomModalButton(
               icon: AppIcons.posts,
-              label: AppStrings.post,
+              label: AppLocalizations.of(context)!.post,
               onTap: () async {
                 choice = 'post';
                 Navigator.pop(context);
@@ -93,7 +94,7 @@ class BottomNavBar extends StatelessWidget {
             const SizedBox(width: 40),
             BottomModalButton(
               icon: AppIcons.boards,
-              label: AppStrings.board,
+              label: AppLocalizations.of(context)!.board,
               onTap: () async {
                 choice = 'board';
                 Navigator.pop(context);

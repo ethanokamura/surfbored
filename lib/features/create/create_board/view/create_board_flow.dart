@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/create_board/view/board_preview.dart';
 import 'package:surfbored/features/create/create_board/view/create_board_page.dart';
@@ -36,7 +37,7 @@ class CreateBoardFlow extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.createBoardPage),
+        title: AppBarText(text: AppLocalizations.of(context)!.createBoardPage),
       ),
       top: false,
       body: BlocProvider(
@@ -47,7 +48,7 @@ class CreateBoardFlow extends StatelessWidget {
         ),
         child: BlocBuilder<CreateCubit, CreateState>(
           builder: (context, state) {
-            if (state.isFailure) return _buildErrorScreen();
+            if (state.isFailure) return _buildErrorScreen(context);
             if (state.isLoading) return _buildLoadingScreen();
             return FlowBuilder(
               onGeneratePages: onGenerateCreateBoardPages,
@@ -62,15 +63,15 @@ class CreateBoardFlow extends StatelessWidget {
   }
 }
 
-Widget _buildErrorScreen() {
+Widget _buildErrorScreen(BuildContext context) {
   return CustomPageView(
     appBar: AppBar(
       backgroundColor: Colors.transparent,
-      title: const AppBarText(text: AppStrings.errorPage),
+      title: AppBarText(text: AppLocalizations.of(context)!.errorPage),
     ),
     top: false,
-    body: const Center(
-      child: PrimaryText(text: AppStrings.unknownFailure),
+    body: Center(
+      child: PrimaryText(text: AppLocalizations.of(context)!.unknownFailure),
     ),
   );
 }

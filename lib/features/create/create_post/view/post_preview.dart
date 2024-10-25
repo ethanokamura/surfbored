@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/images/view/image_preview.dart';
 import 'package:surfbored/features/tags/tags.dart';
@@ -18,7 +19,8 @@ class PostPreview extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.confirmCreatePage),
+        title:
+            AppBarText(text: AppLocalizations.of(context)!.confirmCreatePage),
       ),
       top: true,
       body: SingleChildScrollView(
@@ -43,12 +45,12 @@ class PostPreview extends StatelessWidget {
             TagList(tags: post.tags.split('+')),
             const VerticalSpacer(multiple: 3),
             ActionButton(
-              text: AppStrings.next,
+              text: AppLocalizations.of(context)!.next,
               onTap: () {
                 context.read<CreateCubit>().sumbitPost(
                       userId: context.read<UserRepository>().user.uuid,
                     );
-                context.showSnackBar(AppStrings.success);
+                context.showSnackBar(AppLocalizations.of(context)!.success);
                 Navigator.pop(context);
               },
             ),

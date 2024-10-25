@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/authentication/login/cubit/authentication_cubit.dart';
 
 class PhonePrompt extends StatefulWidget {
@@ -27,7 +28,7 @@ class _PhonePromptState extends State<PhonePrompt> {
           controller: _phoneController,
           keyboardType: TextInputType.phone,
           context: context,
-          label: AppStrings.phoneNumberPrompt,
+          label: AppLocalizations.of(context)!.phoneNumberPrompt,
           prefix: '+1 ',
           maxLength: 10,
           onChanged: (number) => setState(() => _phoneNumber = number.trim()),
@@ -50,7 +51,7 @@ class _PhonePromptState extends State<PhonePrompt> {
                   }
                 }
               : null,
-          text: AppStrings.next,
+          text: AppLocalizations.of(context)!.next,
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/failures/post_failures.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
@@ -37,23 +38,26 @@ class PostFeed extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final post = posts[index];
                     return post.isEmpty
-                        ? const UnknownCard(message: AppStrings.dataNotFound)
+                        ? UnknownCard(
+                            message: AppLocalizations.of(context)!.dataNotFound)
                         : PostView(post: post);
                   },
                 ),
               );
             } else if (state.isEmpty) {
-              return const Center(
-                child: PrimaryText(text: AppStrings.empty),
+              return Center(
+                child: PrimaryText(text: AppLocalizations.of(context)!.empty),
               );
             } else if (state.isDeleted || state.isUpdated) {
               context.read<PostCubit>().fetchAllPosts(refresh: true);
-              return const Center(
-                child: PrimaryText(text: AppStrings.fromUpdate),
+              return Center(
+                child:
+                    PrimaryText(text: AppLocalizations.of(context)!.fromUpdate),
               );
             } else if (state.isFailure) {
-              return const Center(
-                child: PrimaryText(text: AppStrings.unknownFailure),
+              return Center(
+                child: PrimaryText(
+                    text: AppLocalizations.of(context)!.unknownFailure),
               );
             }
             return const Center(child: CircularProgressIndicator());

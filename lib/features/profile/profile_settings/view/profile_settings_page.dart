@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/theme/theme_cubit.dart';
@@ -22,7 +23,7 @@ class ProfileSettingsPage extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.settingsPage),
+        title: AppBarText(text: AppLocalizations.of(context)!.settingsPage),
       ),
       top: false,
       body: Center(
@@ -33,7 +34,9 @@ class ProfileSettingsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TitleText(
-                  text: isDarkMode ? AppStrings.darkMode : AppStrings.lightMode,
+                  text: isDarkMode
+                      ? AppLocalizations.of(context)!.darkMode
+                      : AppLocalizations.of(context)!.lightMode,
                 ),
                 ToggleButton(
                   onSurface: false,
@@ -58,12 +61,12 @@ class ProfileSettingsPage extends StatelessWidget {
                   },
                 ),
               ),
-              text: AppStrings.editProfilePage,
+              text: AppLocalizations.of(context)!.editProfilePage,
             ),
             const VerticalSpacer(),
             ActionButton(
               onTap: context.read<AppCubit>().logOut,
-              text: AppStrings.logOut,
+              text: AppLocalizations.of(context)!.logOut,
             ),
           ],
         ),

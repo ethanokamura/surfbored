@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/failures/post_failures.dart';
 import 'package:surfbored/features/posts/posts.dart';
@@ -34,17 +35,19 @@ class UserPostList extends StatelessWidget {
                     .fetchUserPosts(userId, refresh: true),
               );
             } else if (state.isEmpty) {
-              return const Center(
-                child: PrimaryText(text: AppStrings.empty),
+              return Center(
+                child: PrimaryText(text: AppLocalizations.of(context)!.empty),
               );
             } else if (state.isDeleted || state.isUpdated) {
               context.read<PostCubit>().fetchUserPosts(userId);
-              return const Center(
-                child: PrimaryText(text: AppStrings.fromUpdate),
+              return Center(
+                child:
+                    PrimaryText(text: AppLocalizations.of(context)!.fromUpdate),
               );
             }
-            return const Center(
-              child: PrimaryText(text: AppStrings.unknownFailure),
+            return Center(
+              child: PrimaryText(
+                  text: AppLocalizations.of(context)!.unknownFailure),
             );
           },
         ),

@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/explore/view/explore_page.dart';
 import 'package:surfbored/features/home/view/bottom_nav_bar.dart';
 import 'package:surfbored/features/profile/profile.dart';
@@ -34,7 +35,7 @@ class HomeBody extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         const ExplorePage(),
-        const Center(child: TitleText(text: AppStrings.create)),
+        Center(child: TitleText(text: AppLocalizations.of(context)!.create)),
         ProfilePage(userId: userId),
       ],
     );

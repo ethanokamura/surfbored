@@ -1,4 +1,5 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/search/search.dart';
 
@@ -14,7 +15,7 @@ class ExplorePage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppStrings.explorePage),
+        title: AppBarText(text: AppLocalizations.of(context)!.explorePage),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(

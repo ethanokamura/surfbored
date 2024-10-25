@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -75,7 +76,7 @@ class _EditBoardViewState extends State<EditBoardView> {
             customTextFormField(
               controller: _titleController,
               context: context,
-              label: AppStrings.title,
+              label: AppLocalizations.of(context)!.title,
               maxLength: 40,
               onChanged: (value) async => _onTitleChanged(value.trim()),
               validator: (title) =>
@@ -87,7 +88,7 @@ class _EditBoardViewState extends State<EditBoardView> {
             customTextFormField(
               controller: _descriptionController,
               context: context,
-              label: AppStrings.description,
+              label: AppLocalizations.of(context)!.description,
               maxLength: 150,
               onChanged: (value) async => _onDescriptionChanged(value.trim()),
             ),
@@ -95,8 +96,8 @@ class _EditBoardViewState extends State<EditBoardView> {
         ),
         ActionButton(
           text: _titleIsValid || _descriptionIsValid
-              ? AppStrings.save
-              : AppStrings.invalid,
+              ? AppLocalizations.of(context)!.save
+              : AppLocalizations.of(context)!.invalid,
           onTap: _titleIsValid || _descriptionIsValid
               ? () {
                   try {

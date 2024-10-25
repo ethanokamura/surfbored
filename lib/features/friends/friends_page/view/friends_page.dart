@@ -54,12 +54,12 @@ class FriendsList extends StatelessWidget {
                     context.read<FriendsCubit>().fetchFriends(userId),
               );
             } else if (state.isEmpty) {
-              return const Center(
-                child: PrimaryText(text: AppStrings.empty),
+              return Center(
+                child: PrimaryText(text: context.l10n.empty),
               );
             }
-            return const Center(
-              child: PrimaryText(text: AppStrings.fromUnknownFailure),
+            return Center(
+              child: PrimaryText(text: context.l10n.unknownFailure),
             );
           },
         ),

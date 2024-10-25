@@ -28,7 +28,7 @@ class FriendsCountText extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: FriendStrings.friends,
+                    text: context.l10n.friends,
                     style: TextStyle(
                       color: context.theme.subtextColor,
                       fontWeight: FontWeight.normal,
@@ -48,7 +48,7 @@ class FriendsCountText extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: FriendStrings.friends,
+                    text: context.l10n.friends,
                     style: TextStyle(
                       color: context.theme.subtextColor,
                       fontWeight: FontWeight.normal,
@@ -58,7 +58,7 @@ class FriendsCountText extends StatelessWidget {
               ),
             );
           }
-          return const PrimaryText(text: DataStrings.empty);
+          return PrimaryText(text: context.l10n.empty);
         },
       ),
     );

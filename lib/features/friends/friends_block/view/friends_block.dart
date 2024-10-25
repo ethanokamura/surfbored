@@ -1,3 +1,4 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/friends/friends_block/view/friend_button/friend_button.dart';
@@ -41,7 +42,7 @@ class FriendsListButton extends StatelessWidget {
           builder: (context) => FriendsPage(userId: userId),
         ),
       ),
-      text: AppStrings.myFriends,
+      text: context.l10n.myFriends,
     );
   }
 }

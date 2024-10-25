@@ -93,5 +93,11 @@
   "unknownFailure": "unknown failure occured",
   "signInFailure": "failed to sign in.",
   "signOutFailure": "failed to sign out.",
-  "logOut": "logout"
+  "logOut": "logout",
+  "myFriends": "my friends",
+  "friends": "friends",
+  "requestSent": "added",
+  "acceptRequest": "accept",
+  "removeFriend": "remove",
+  "addFriend": "add"
 }

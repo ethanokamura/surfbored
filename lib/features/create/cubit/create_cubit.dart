@@ -84,7 +84,7 @@ class CreateCubit extends Cubit<CreateState> {
           path: path,
           file: image.readAsBytesSync(),
         );
-        await _postRepository.updatePost(
+        await _postRepository.updatePostField(
           field: Post.photoUrlConverter,
           postId: docId,
           data: url,
@@ -133,7 +133,7 @@ class CreateCubit extends Cubit<CreateState> {
           path: path,
           file: image.readAsBytesSync(),
         );
-        await _boardRepository.updateBoard(
+        await _boardRepository.updateBoardField(
           field: Post.photoUrlConverter,
           boardId: docId,
           data: url,

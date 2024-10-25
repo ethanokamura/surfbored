@@ -202,16 +202,11 @@ class CheckBox extends StatelessWidget {
 /// Option UI parameters with [background] and [onSurface]
 class ToggleButton extends StatelessWidget {
   const ToggleButton({
-    required this.onSurface,
     required this.onTap,
     super.key,
     this.icon,
     this.text,
-    this.background,
   });
-
-  final bool onSurface;
-  final bool? background;
   final Icon? icon;
   final String? text;
   final void Function()? onTap;
@@ -220,9 +215,7 @@ class ToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onTap,
-      style: background != null && background! == false
-          ? noBackgroundStyle()
-          : defaultStyle(context, onSurface: onSurface),
+      style: noBackgroundStyle(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

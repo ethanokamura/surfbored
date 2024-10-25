@@ -54,6 +54,7 @@
   "createBoardPage": "create a board",
   "confirmCreatePage": "How's this look?",
   "skip": "(or skip)",
+  "createPrompt": "tell the world what it's all about",
   "createPost": "create post",
   "createBoard": "create board",
   "title": "name?",
@@ -106,5 +107,6 @@
   "requestSent": "added",
   "acceptRequest": "accept",
   "removeFriend": "remove",
-  "addFriend": "add"
+  "addFriend": "add",
+  "invalidPost": "invalid post. needs a title and description"
 }

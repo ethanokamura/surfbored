@@ -31,24 +31,26 @@ class CreateCubit extends Cubit<CreateState> {
   void uploadPostImage(File? image) => emit(state.fromUploadedPostImage(image));
   void uploadBoardImage(File? image) =>
       emit(state.fromUploadedBoardImage(image));
-  void skipPostImage() => emit(state.fromSkipPostImage());
-  void skipBoardImage() => emit(state.fromSkipBoardImage());
 
-  /// Uploads the post to the cubit's state
-  void createPost({required Post post}) =>
-      emit(state.fromCreatedPostDetails(post));
-
-  /// Uploads the board to the cubit's state
-  void createBoard({required Board board}) =>
-      emit(state.fromCreatedBoardDetails(board));
+  /// Public setters for post details
+  void setTitle(String title) => emit(state.fromChangedTitle(title));
+  void setDescription(String description) =>
+      emit(state.fromChangedDescription(description));
+  void setTags(String tags) => emit(state.fromChangedTags(tags));
 
   /// Submits the new post to the database
   /// Requires the current user's [userId]
   Future<void> sumbitPost({required String userId}) async {
     emit(state.fromLoading());
     try {
-      final docId = await _postRepository.uploadPost(data: state.post.toJson());
-      final tags = state.post.tags.split('+');
+      final post = Post.insert(
+        creatorId: userId,
+        title: state.title,
+        description: state.description,
+        tags: state.tags,
+      );
+      final docId = await _postRepository.uploadPost(data: post);
+      final tags = state.tags.split('+');
       if (tags.isNotEmpty) {
         tags.map(
           (tag) => _tagRepository.createPostTag(tagName: tag, id: docId),
@@ -100,9 +102,12 @@ class CreateCubit extends Cubit<CreateState> {
   Future<void> sumbitBoard({required String userId}) async {
     emit(state.fromLoading());
     try {
-      final docId = await _boardRepository.uploadBoard(
-        data: state.board.toJson(),
+      final board = Board.insert(
+        creatorId: userId,
+        title: state.title,
+        description: state.description,
       );
+      final docId = await _boardRepository.uploadBoard(data: board);
       if (state.image != null) {
         await submitBoardImage(
           docId: docId,

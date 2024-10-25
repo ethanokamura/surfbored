@@ -8,11 +8,6 @@ enum CreateStatus {
   loaded,
   loading,
   failure,
-
-  /// nav
-  needsImage,
-  needsDetails,
-  needsApproval,
 }
 
 /// Represents the state of creating-related operations.
@@ -22,8 +17,9 @@ final class CreateState extends Equatable {
     this.status = CreateStatus.initial,
     this.boardFailure = BoardFailure.empty,
     this.postFailure = PostFailure.empty,
-    this.post = Post.empty,
-    this.board = Board.empty,
+    this.title = '',
+    this.description = '',
+    this.tags = '',
     this.image,
     this.docId,
   });
@@ -34,8 +30,10 @@ final class CreateState extends Equatable {
   final CreateStatus status;
   final BoardFailure boardFailure;
   final PostFailure postFailure;
-  final Post post;
-  final Board board;
+
+  final String title;
+  final String description;
+  final String tags;
   final File? image;
   final int? docId;
 
@@ -45,8 +43,9 @@ final class CreateState extends Equatable {
         status,
         boardFailure,
         postFailure,
-        post,
-        board,
+        title,
+        description,
+        tags,
         image,
         docId,
       ];
@@ -57,8 +56,9 @@ final class CreateState extends Equatable {
     CreateStatus? status,
     BoardFailure? boardFailure,
     PostFailure? postFailure,
-    Post? post,
-    Board? board,
+    String? title,
+    String? description,
+    String? tags,
     File? image,
     int? docId,
   }) {
@@ -66,20 +66,13 @@ final class CreateState extends Equatable {
       status: status ?? this.status,
       boardFailure: boardFailure ?? this.boardFailure,
       postFailure: postFailure ?? this.postFailure,
-      post: post ?? this.post,
-      board: board ?? this.board,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      tags: tags ?? this.tags,
       image: image ?? this.image,
       docId: docId ?? this.docId,
     );
   }
-}
-
-/// Extension methods for convenient state checks.
-extension CreateStatusExtensions on CreateStatus {
-  bool get isInitial => this == CreateStatus.initial;
-  bool get needsApproval => this == CreateStatus.needsApproval;
-  bool get needsDetails => this == CreateStatus.needsDetails;
-  bool get needsImage => this == CreateStatus.needsImage;
 }
 
 /// Extension methods for convenient state checks.
@@ -94,23 +87,20 @@ extension CreateStateExtensions on CreateState {
 extension _CreateStateExtensions on CreateState {
   CreateState fromLoading() => copyWith(status: CreateStatus.loading);
 
-  CreateState fromCreatedPostDetails(Post post) =>
-      copyWith(status: CreateStatus.needsApproval, post: post);
-
-  CreateState fromCreatedBoardDetails(Board board) =>
-      copyWith(status: CreateStatus.needsApproval, board: board);
-
-  CreateState fromSkipPostImage() =>
-      copyWith(status: CreateStatus.needsDetails);
-
-  CreateState fromSkipBoardImage() =>
-      copyWith(status: CreateStatus.needsDetails);
-
   CreateState fromUploadedPostImage(File? image) =>
-      copyWith(status: CreateStatus.needsDetails, image: image);
+      copyWith(status: CreateStatus.loaded, image: image);
 
   CreateState fromUploadedBoardImage(File? image) =>
-      copyWith(status: CreateStatus.needsDetails, image: image);
+      copyWith(status: CreateStatus.loaded, image: image);
+
+  CreateState fromChangedTitle(String title) =>
+      copyWith(status: CreateStatus.loaded, title: title);
+
+  CreateState fromChangedDescription(String description) =>
+      copyWith(status: CreateStatus.loaded, description: description);
+
+  CreateState fromChangedTags(String tags) =>
+      copyWith(status: CreateStatus.loaded, tags: tags);
 
   CreateState fromCreated(int docId) =>
       copyWith(status: CreateStatus.loaded, docId: docId);

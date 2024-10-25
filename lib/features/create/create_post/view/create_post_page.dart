@@ -2,18 +2,14 @@ import 'dart:io';
 
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
-import 'package:user_repository/user_repository.dart';
 
 class CreatePostPage extends StatelessWidget {
-  const CreatePostPage._();
+  const CreatePostPage({super.key});
 
-  static MaterialPage<dynamic> page() => const MaterialPage<void>(
-        key: ValueKey('create_post'),
-        child: CreatePostPage._(),
-      );
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: CreatePostPage());
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +26,6 @@ class EditPostView extends StatefulWidget {
 class _EditPostViewState extends State<EditPostView> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-
-  bool _titleIsValid = false;
-  bool _descriptionIsValid = false;
-  bool _tagsAreValid = false;
-  String _title = '';
-  String _description = '';
-  String _tags = '';
   List<String> rawTags = [];
 
   String? photoUrl;
@@ -50,98 +39,63 @@ class _EditPostViewState extends State<EditPostView> {
     super.dispose();
   }
 
-  Future<void> _onTitleChanged(String title) async {
+  Future<void> _onTitleChanged(BuildContext context, String title) async {
     // use regex
     if (title.length < 40 && title.length > 2) {
-      setState(() {
-        _titleIsValid = true;
-        _title = title;
-      });
-    } else {
-      setState(() => _titleIsValid = false);
+      context.read<CreateCubit>().setTitle(title);
     }
   }
 
-  Future<void> _onDescriptionChanged(String description) async {
+  Future<void> _onDescriptionChanged(
+    BuildContext context,
+    String description,
+  ) async {
     // use regex
     if (description.length < 150 && description.length > 2) {
-      setState(() {
-        _descriptionIsValid = true;
-        _description = description;
-      });
-    } else {
-      setState(() => _descriptionIsValid = false);
+      context.read<CreateCubit>().setDescription(description);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: CustomPageView(
-        top: true,
-        appBar: AppBar(
-          centerTitle: false,
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: context.l10n.createPostPage),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              customTextFormField(
-                controller: _titleController,
-                context: context,
-                label: context.l10n.title,
-                maxLength: 40,
-                onChanged: (value) async => _onTitleChanged(value.trim()),
-                validator: (title) =>
-                    title != null && title.length < 3 && title.length > 20
-                        ? 'Invalid Title'
-                        : null,
-              ),
-              const VerticalSpacer(),
-              customTextFormField(
-                controller: _descriptionController,
-                maxLength: 150,
-                context: context,
-                label: context.l10n.description,
-                onChanged: (value) async => _onDescriptionChanged(value.trim()),
-              ),
-              const VerticalSpacer(),
-              EditTagsPrompt(
-                tags: rawTags,
-                updateTags: (tags) => setState(() {
-                  rawTags = tags;
-                  _tags = tags.join('+');
-                  _tagsAreValid = true;
-                }),
-                label: context.l10n.tagsPrompt,
-              ),
-              const VerticalSpacer(multiple: 3),
-              ActionButton(
-                text: _titleIsValid || _descriptionIsValid || _tagsAreValid
-                    ? context.l10n.save
-                    : context.l10n.invalid,
-                onTap: _titleIsValid || _descriptionIsValid || _tagsAreValid
-                    ? () {
-                        try {
-                          final uuid = context.read<UserRepository>().user.uuid;
-                          final data = Post(
-                            creatorId: uuid,
-                            title: _title,
-                            description: _description,
-                            tags: _tags,
-                          );
-                          context.read<CreateCubit>().createPost(post: data);
-                        } catch (e) {
-                          context.showSnackBar('Unable to save data: $e');
-                        }
-                      }
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleText(text: context.l10n.createPrompt),
+          const VerticalSpacer(),
+          customTextFormField(
+            controller: _titleController,
+            context: context,
+            label: context.l10n.title,
+            maxLength: 40,
+            onChanged: (value) async => _onTitleChanged(context, value.trim()),
+            validator: (title) =>
+                title != null && title.length < 3 && title.length > 20
+                    ? 'Invalid Title'
                     : null,
-              ),
-            ],
           ),
-        ),
+          const VerticalSpacer(),
+          customTextFormField(
+            controller: _descriptionController,
+            maxLength: 150,
+            context: context,
+            label: context.l10n.description,
+            onChanged: (value) async =>
+                _onDescriptionChanged(context, value.trim()),
+          ),
+          const VerticalSpacer(),
+          EditTagsPrompt(
+            tags: rawTags,
+            updateTags: (tags) {
+              setState(() {
+                rawTags = tags;
+              });
+              context.read<CreateCubit>().setTags(tags.join('+'));
+            },
+            label: context.l10n.tagsPrompt,
+          ),
+        ],
       ),
     );
   }

@@ -1,17 +1,13 @@
-import 'dart:io';
-
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/images/images.dart';
 
 class UploadBoardImage extends StatelessWidget {
-  const UploadBoardImage._();
+  const UploadBoardImage({super.key});
 
-  static MaterialPage<dynamic> page() => const MaterialPage<void>(
-        key: ValueKey('upload_board_image'),
-        child: UploadBoardImage._(),
-      );
+  static MaterialPage<dynamic> page() =>
+      const MaterialPage<void>(child: UploadBoardImage());
 
   @override
   Widget build(BuildContext context) {
@@ -26,29 +22,24 @@ class UploadBoardImageView extends StatefulWidget {
 }
 
 class _UploadBoardImageViewState extends State<UploadBoardImageView> {
-  File? imageFile;
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
+          TitleText(text: context.l10n.uploadImage),
+          const VerticalSpacer(),
           Center(
             child: UploadImage(
               width: 256,
-              onFileChanged: (file) => setState(() => imageFile = file),
+              onFileChanged: (file) =>
+                  context.read<CreateCubit>().uploadPostImage(file),
               aspectX: 4,
               aspectY: 3,
             ),
           ),
           const VerticalSpacer(),
           SecondaryText(text: context.l10n.skip),
-          const VerticalSpacer(),
-          ActionButton(
-            text: context.l10n.next,
-            onTap: () =>
-                context.read<CreateCubit>().uploadBoardImage(imageFile),
-          ),
         ],
       ),
     );

@@ -6,24 +6,8 @@ import 'package:surfbored/features/create/create_post/view/create_post_page.dart
 import 'package:surfbored/features/create/create_post/view/post_preview.dart';
 import 'package:surfbored/features/create/create_post/view/upload_post_image.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
+import 'package:surfbored/features/create/helpers/create_flow_controller.dart';
 import 'package:tag_repository/tag_repository.dart';
-
-/// Generate pages based on AppStatus
-List<Page<dynamic>> onGenerateCreatePostPages(
-  CreateStatus status,
-  List<Page<dynamic>> pages,
-) {
-  if (status.isInitial) {
-    return [UploadPostImage.page()];
-  }
-  if (status.needsDetails) {
-    return [CreatePostPage.page()];
-  }
-  if (status.needsApproval) {
-    return [PostPreview.page()];
-  }
-  return pages;
-}
 
 class CreatePostFlow extends StatelessWidget {
   const CreatePostFlow({super.key});
@@ -43,13 +27,49 @@ class CreatePostFlow extends StatelessWidget {
         builder: (context, state) {
           if (state.isFailure) return _buildErrorScreen(context);
           if (state.isLoading) return _buildLoadingScreen();
-          return FlowBuilder(
-            onGeneratePages: onGenerateCreatePostPages,
-            state: context.select<CreateCubit, CreateStatus>(
-              (cubit) => cubit.state.status,
-            ),
+          return ListenableProvider(
+            create: (_) => CreateFlowController(),
+            child: const CreatePostPages(),
           );
         },
+      ),
+    );
+  }
+}
+
+class CreatePostPages extends StatelessWidget {
+  const CreatePostPages({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final createFlowController = context.watch<CreateFlowController>();
+    return GestureDetector(
+      onTap: FocusScope.of(context).unfocus,
+      child: CustomPageView(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: AppBarText(text: context.l10n.create),
+        ),
+        top: true,
+        body: Stack(
+          children: [
+            PageView(
+              controller: createFlowController,
+              children: const [
+                UploadPostImage(),
+                CreatePostPage(),
+                PostPreview(),
+              ],
+            ),
+            Container(
+              alignment: const Alignment(0, 0.90),
+              child: SmoothPageIndicator(
+                controller: createFlowController,
+                count: 3,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

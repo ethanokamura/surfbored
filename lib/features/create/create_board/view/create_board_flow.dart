@@ -6,24 +6,8 @@ import 'package:surfbored/features/create/create_board/view/board_preview.dart';
 import 'package:surfbored/features/create/create_board/view/create_board_page.dart';
 import 'package:surfbored/features/create/create_board/view/upload_board_image.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
+import 'package:surfbored/features/create/helpers/create_flow_controller.dart';
 import 'package:tag_repository/tag_repository.dart';
-
-/// Generate pages based on AppStatus
-List<Page<dynamic>> onGenerateCreateBoardPages(
-  CreateStatus status,
-  List<Page<dynamic>> pages,
-) {
-  if (status.isInitial) {
-    return [UploadBoardImage.page()];
-  }
-  if (status.needsDetails) {
-    return [CreateBoardPage.page()];
-  }
-  if (status.needsApproval) {
-    return [BoardPreview.page()];
-  }
-  return pages;
-}
 
 class CreateBoardFlow extends StatelessWidget {
   const CreateBoardFlow({super.key});
@@ -33,29 +17,58 @@ class CreateBoardFlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.createBoardPage),
+    return BlocProvider(
+      create: (context) => CreateCubit(
+        postRepository: context.read<PostRepository>(),
+        boardRepository: context.read<BoardRepository>(),
+        tagRepository: context.read<TagRepository>(),
       ),
-      top: false,
-      body: BlocProvider(
-        create: (context) => CreateCubit(
-          postRepository: context.read<PostRepository>(),
-          boardRepository: context.read<BoardRepository>(),
-          tagRepository: context.read<TagRepository>(),
+      child: BlocBuilder<CreateCubit, CreateState>(
+        builder: (context, state) {
+          if (state.isFailure) return _buildErrorScreen(context);
+          if (state.isLoading) return _buildLoadingScreen();
+          return ListenableProvider(
+            create: (_) => CreateFlowController(),
+            child: const CreateBoardPages(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class CreateBoardPages extends StatelessWidget {
+  const CreateBoardPages({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final createFlowController = context.watch<CreateFlowController>();
+    return GestureDetector(
+      onTap: FocusScope.of(context).unfocus,
+      child: CustomPageView(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: AppBarText(text: context.l10n.create),
         ),
-        child: BlocBuilder<CreateCubit, CreateState>(
-          builder: (context, state) {
-            if (state.isFailure) return _buildErrorScreen(context);
-            if (state.isLoading) return _buildLoadingScreen();
-            return FlowBuilder(
-              onGeneratePages: onGenerateCreateBoardPages,
-              state: context.select<CreateCubit, CreateStatus>(
-                (cubit) => cubit.state.status,
+        top: true,
+        body: Stack(
+          children: [
+            PageView(
+              controller: createFlowController,
+              children: const [
+                UploadBoardImage(),
+                CreateBoardPage(),
+                BoardPreview(),
+              ],
+            ),
+            Container(
+              alignment: const Alignment(0, 0.90),
+              child: SmoothPageIndicator(
+                controller: createFlowController,
+                count: 3,
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

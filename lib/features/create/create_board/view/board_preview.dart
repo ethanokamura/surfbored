@@ -5,47 +5,48 @@ import 'package:surfbored/features/images/view/image_preview.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BoardPreview extends StatelessWidget {
-  const BoardPreview._();
+  const BoardPreview({super.key});
   static MaterialPage<dynamic> page() => const MaterialPage<void>(
-        key: ValueKey('board_preview'),
-        child: BoardPreview._(),
+        child: BoardPreview(),
       );
 
   @override
   Widget build(BuildContext context) {
-    final board = context.read<CreateCubit>().state.board;
-    final image = context.read<CreateCubit>().state.image;
-    return CustomPageView(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (image != null)
-              Center(
-                child: ImagePreview(
-                  image: image.readAsBytesSync(),
-                  width: 256,
-                  borderRadius: defaultBorderRadius,
-                  aspectX: 4,
-                  aspectY: 3,
+    final state = context.read<CreateCubit>().state;
+    return state.title.isEmpty
+        ? TitleText(text: context.l10n.invalidPost, maxLines: 3)
+        : SingleChildScrollView(
+            child: Column(
+              children: [
+                TitleText(text: context.l10n.confirmCreatePage),
+                const VerticalSpacer(),
+                if (state.image != null)
+                  Center(
+                    child: ImagePreview(
+                      image: state.image!.readAsBytesSync(),
+                      width: 256,
+                      borderRadius: defaultBorderRadius,
+                      aspectX: 4,
+                      aspectY: 3,
+                    ),
+                  ),
+                const VerticalSpacer(),
+                TitleText(text: state.title),
+                const VerticalSpacer(),
+                PrimaryText(text: state.description),
+                const VerticalSpacer(multiple: 3),
+                ActionButton(
+                  text: context.l10n.next,
+                  onTap: () {
+                    context.read<CreateCubit>().sumbitBoard(
+                          userId: context.read<UserRepository>().user.uuid,
+                        );
+                    context.showSnackBar(context.l10n.success);
+                    Navigator.pop(context);
+                  },
                 ),
-              ),
-            const VerticalSpacer(),
-            TitleText(text: board.title),
-            const VerticalSpacer(),
-            PrimaryText(text: board.description),
-            const VerticalSpacer(),
-            ActionButton(
-              onTap: () {
-                context.read<CreateCubit>().sumbitBoard(
-                      userId: context.read<UserRepository>().user.uuid,
-                    );
-                context.showSnackBar(context.l10n.success);
-                Navigator.pop(context);
-              },
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }

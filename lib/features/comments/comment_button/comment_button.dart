@@ -28,7 +28,6 @@ class CommentButton extends StatelessWidget {
             totalComments = state.comments;
           }
           return ToggleButton(
-            onSurface: true,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute<dynamic>(

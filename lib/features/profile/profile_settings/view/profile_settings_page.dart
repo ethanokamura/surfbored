@@ -38,7 +38,6 @@ class ProfileSettingsPage extends StatelessWidget {
                       : context.l10n.lightMode,
                 ),
                 ToggleButton(
-                  onSurface: false,
                   icon: defaultIconStyle(
                     context,
                     isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,

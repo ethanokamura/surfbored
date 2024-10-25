@@ -47,7 +47,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
         top: false,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: const AppBarText(text: TagStrings.create),
+          title: const AppBarText(text: AppStrings.createTags),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -68,16 +68,10 @@ class _AddTagsPageState extends State<AddTagsPage> {
                     icon: AppIcons.create,
                     onTap: () {
                       final tag = _tagController.text.trim();
-                      print('adding $tag');
-                      try {
-                        if (tag.isNotEmpty) {
-                          setState(() => _tags.add(tag));
-                        }
-                      } catch (e) {
-                        print(e);
+                      if (tag.isNotEmpty) {
+                        setState(() => _tags.add(tag));
                       }
                       _tagController.clear();
-                      print('added $tag');
                     },
                   ),
                 ],
@@ -89,7 +83,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
               ),
               const VerticalSpacer(),
               ActionButton(
-                text: ButtonStrings.confirm,
+                text: AppStrings.save,
                 onTap: () {
                   widget.returnTags(_tags);
                   Navigator.pop(context);

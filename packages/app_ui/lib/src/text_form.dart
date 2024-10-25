@@ -1,5 +1,16 @@
 import 'package:app_ui/app_ui.dart';
 
+// // dynamic input length maximum
+// int maxInputLength(String field) {
+//   if (field == 'title') return 40;
+//   if (field == 'username') return 15;
+//   if (field == 'name') return 30;
+//   if (field == 'bio') return 150;
+//   if (field == 'link') return 150;
+//   if (field == 'description') return 150;
+//   return 50;
+// }
+
 InputDecoration defaultTextFormFieldDecoration({
   required BuildContext context,
   required String label,

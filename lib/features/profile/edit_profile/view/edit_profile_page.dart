@@ -17,7 +17,7 @@ class EditProfilePage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const AppBarText(text: PageStrings.editProfilePage),
+        title: const AppBarText(text: AppStrings.editProfilePage),
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
@@ -26,12 +26,12 @@ class EditProfilePage extends StatelessWidget {
           }
           if (state.hasError) {
             return const Center(
-              child: PrimaryText(text: DataStrings.fromGetFailure),
+              child: PrimaryText(text: AppStrings.fromGetUser),
             );
           }
           if (state.user.isEmpty) {
             return const Center(
-              child: PrimaryText(text: DataStrings.empty),
+              child: PrimaryText(text: AppStrings.empty),
             );
           }
           return EditProfileView(user: state.user);
@@ -144,7 +144,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           customTextFormField(
             controller: _usernameController,
             context: context,
-            label: UserStrings.username,
+            label: AppStrings.username,
             maxLength: 15,
             onChanged: (value) async => _onUsernameChanged(value.trim()),
             validator: (name) =>
@@ -156,7 +156,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           customTextFormField(
             controller: _displayNameController,
             context: context,
-            label: UserStrings.displayName,
+            label: AppStrings.displayName,
             maxLength: 20,
             onChanged: (value) async => _onDisplayNameChanged(value.trim()),
           ),
@@ -164,7 +164,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           customTextFormField(
             controller: _bioController,
             context: context,
-            label: UserStrings.bio,
+            label: AppStrings.bio,
             maxLength: 150,
             onChanged: (value) async => _onBioChanged(value.trim()),
           ),
@@ -173,7 +173,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const PrimaryText(
-                text: UserStrings.interestsPrompt,
+                text: AppStrings.interestsPrompt,
                 fontSize: 22,
               ),
               DefaultButton(
@@ -183,7 +183,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   MaterialPageRoute<dynamic>(
                     builder: (context) => AddTagsPage(
                       tags: widget.user.interests.split('+'),
-                      label: CreateStrings.interestsPrompt,
+                      label: AppStrings.interestsPrompt,
                       returnTags: (interests) {
                         setState(() {
                           _interests = interests.join('+');
@@ -204,7 +204,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     _usernameIsValid ||
                     _displayNameIsValid ||
                     _interestsAreValid
-                ? AppStrings.saveChanges
+                ? AppStrings.save
                 : AppStrings.invalidChanges,
             onTap: _bioIsValid ||
                     _usernameIsValid ||

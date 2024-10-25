@@ -47,12 +47,12 @@ class _ProfilePageState extends State<ProfilePage>
           }
           if (state.hasError) {
             return const Center(
-              child: PrimaryText(text: DataStrings.fromGetFailure),
+              child: PrimaryText(text: AppStrings.fromGetUser),
             );
           }
           if (state.user.isEmpty) {
             return const Center(
-              child: PrimaryText(text: DataStrings.empty),
+              child: PrimaryText(text: AppStrings.empty),
             );
           }
           return ProfileBuilder(user: state.user);
@@ -187,7 +187,7 @@ class ProfileHeader extends StatelessWidget {
             if (user.displayName.isNotEmpty) TitleText(text: user.displayName),
             if (user.websiteUrl.isNotEmpty) WebLink(url: user.websiteUrl),
             SecondaryText(
-              text: '${UserStrings.joined}: ${DateFormatter.formatTimestamp(
+              text: '${AppStrings.joined}: ${DateFormatter.formatTimestamp(
                 user.createdAt!,
               )}',
             ),
@@ -207,7 +207,7 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SecondaryText(text: UserStrings.about),
+          const SecondaryText(text: AppStrings.about),
           PrimaryText(text: bio),
         ],
       ),

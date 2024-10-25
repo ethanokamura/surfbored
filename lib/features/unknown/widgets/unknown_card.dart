@@ -23,7 +23,7 @@ class UnknownCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const TitleText(text: UnknownStrings.empty),
+                const TitleText(text: AppStrings.empty),
                 SecondaryText(text: message),
               ],
             ),

@@ -93,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: defaultPadding,
                       ),
-                      label: const PrimaryText(text: PromptStrings.search),
+                      label: const PrimaryText(text: AppStrings.search),
                       prefixIcon: defaultIconStyle(context, AppIcons.search),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(

@@ -38,7 +38,7 @@ class MoreCommentOptions extends StatelessWidget {
           MenuItem(
             Options.delete,
             AppIcons.delete,
-            ButtonStrings.delete,
+            AppStrings.delete,
           ),
         ),
       ]),
@@ -82,7 +82,7 @@ class MorePostOptions extends StatelessWidget {
           MenuItem(
             Options.manage,
             AppIcons.boards,
-            ButtonStrings.addOrRemove,
+            AppStrings.addOrRemove,
           ),
         ),
         _menuItem(
@@ -90,7 +90,7 @@ class MorePostOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            ButtonStrings.share,
+            AppStrings.share,
           ),
         ),
         if (isOwner) ...[
@@ -99,7 +99,7 @@ class MorePostOptions extends StatelessWidget {
             MenuItem(
               Options.edit,
               AppIcons.edit,
-              ButtonStrings.edit,
+              AppStrings.edit,
             ),
           ),
           _menuItem(
@@ -107,7 +107,7 @@ class MorePostOptions extends StatelessWidget {
             MenuItem(
               Options.delete,
               AppIcons.delete,
-              ButtonStrings.delete,
+              AppStrings.delete,
             ),
           ),
         ],
@@ -151,7 +151,7 @@ class MoreSearchOptions extends StatelessWidget {
           MenuItem(
             Options.manage,
             AppIcons.boards,
-            ButtonStrings.addOrRemove,
+            AppStrings.addOrRemove,
           ),
         ),
         _menuItem(
@@ -159,7 +159,7 @@ class MoreSearchOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            ButtonStrings.share,
+            AppStrings.share,
           ),
         ),
       ]),
@@ -207,7 +207,7 @@ class MoreProfileOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            ButtonStrings.share,
+            AppStrings.share,
           ),
         ),
         if (isCurrent)
@@ -216,7 +216,7 @@ class MoreProfileOptions extends StatelessWidget {
             MenuItem(
               Options.edit,
               AppIcons.settings,
-              ButtonStrings.edit,
+              AppStrings.edit,
             ),
           ),
         if (!isCurrent)
@@ -225,7 +225,7 @@ class MoreProfileOptions extends StatelessWidget {
             MenuItem(
               Options.block,
               AppIcons.block,
-              ButtonStrings.toggleBlock,
+              AppStrings.blockUser,
             ),
           ),
       ]),

@@ -20,8 +20,6 @@ dependencies:
     path: packages/comment_repository
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   friend_repository:
     path: packages/friend_repository
   intl: any

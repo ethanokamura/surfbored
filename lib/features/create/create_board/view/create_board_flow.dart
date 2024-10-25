@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/create_board/view/board_preview.dart';
 import 'package:surfbored/features/create/create_board/view/create_board_page.dart';
@@ -37,7 +36,7 @@ class CreateBoardFlow extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: AppBarText(text: AppLocalizations.of(context)!.createBoardPage),
+        title: AppBarText(text: context.l10n.createBoardPage),
       ),
       top: false,
       body: BlocProvider(
@@ -67,11 +66,11 @@ Widget _buildErrorScreen(BuildContext context) {
   return CustomPageView(
     appBar: AppBar(
       backgroundColor: Colors.transparent,
-      title: AppBarText(text: AppLocalizations.of(context)!.errorPage),
+      title: AppBarText(text: context.l10n.errorPage),
     ),
     top: false,
     body: Center(
-      child: PrimaryText(text: AppLocalizations.of(context)!.unknownFailure),
+      child: PrimaryText(text: context.l10n.unknownFailure),
     ),
   );
 }

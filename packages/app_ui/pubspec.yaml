@@ -9,6 +9,8 @@ environment:
 dependencies:
   api_client:
     path: ../api_client
+  app_core:
+    path: ../app_core
   auto_size_text: ^3.0.0
   cached_network_image: ^3.0.0-nullsafety
   flutter:

@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/boards/boards.dart';
 // import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/images/images.dart';
@@ -48,13 +47,12 @@ class _ProfilePageState extends State<ProfilePage>
           }
           if (state.hasError) {
             return Center(
-              child:
-                  PrimaryText(text: AppLocalizations.of(context)!.fromGetUser),
+              child: PrimaryText(text: context.l10n.fromGetUser),
             );
           }
           if (state.user.isEmpty) {
             return Center(
-              child: PrimaryText(text: AppLocalizations.of(context)!.empty),
+              child: PrimaryText(text: context.l10n.empty),
             );
           }
           return ProfileBuilder(user: state.user);
@@ -189,8 +187,7 @@ class ProfileHeader extends StatelessWidget {
             if (user.displayName.isNotEmpty) TitleText(text: user.displayName),
             if (user.websiteUrl.isNotEmpty) WebLink(url: user.websiteUrl),
             SecondaryText(
-              text:
-                  '${AppLocalizations.of(context)!.joined}: ${DateFormatter.formatTimestamp(
+              text: '${context.l10n.joined}: ${DateFormatter.formatTimestamp(
                 user.createdAt!,
               )}',
             ),
@@ -210,7 +207,7 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SecondaryText(text: AppLocalizations.of(context)!.about),
+          SecondaryText(text: context.l10n.about),
           PrimaryText(text: bio),
         ],
       ),
@@ -279,7 +276,7 @@ class ProfileTabBar extends StatelessWidget {
             children: [
               defaultIconStyle(context, AppIcons.posts),
               const HorizontalSpacer(),
-              PrimaryText(text: AppLocalizations.of(context)!.posts),
+              PrimaryText(text: context.l10n.posts),
             ],
           ),
         ),
@@ -289,7 +286,7 @@ class ProfileTabBar extends StatelessWidget {
             children: [
               defaultIconStyle(context, AppIcons.boards),
               const HorizontalSpacer(),
-              PrimaryText(text: AppLocalizations.of(context)!.boards),
+              PrimaryText(text: context.l10n.boards),
             ],
           ),
         ),

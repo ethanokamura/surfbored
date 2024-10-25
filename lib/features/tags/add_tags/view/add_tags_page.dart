@@ -1,5 +1,5 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/tags/add_tags/view/edit_tag_list.dart';
 
 class AddTagsPage extends StatefulWidget {
@@ -48,7 +48,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
         top: false,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: AppBarText(text: AppLocalizations.of(context)!.createTags),
+          title: AppBarText(text: context.l10n.createTags),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -84,7 +84,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
               ),
               const VerticalSpacer(),
               ActionButton(
-                text: AppLocalizations.of(context)!.save,
+                text: context.l10n.save,
                 onTap: () {
                   widget.returnTags(_tags);
                   Navigator.pop(context);

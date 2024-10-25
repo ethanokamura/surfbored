@@ -1,9 +1,9 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/src/button_styles.dart';
 import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Keeps track of all possible options for the more options widgets
 enum Options {
@@ -38,7 +38,7 @@ class MoreCommentOptions extends StatelessWidget {
           MenuItem(
             Options.delete,
             AppIcons.delete,
-            AppLocalizations.of(context)!.delete,
+            context.l10n.of(context)!.delete,
           ),
         ),
       ]),
@@ -82,7 +82,7 @@ class MorePostOptions extends StatelessWidget {
           MenuItem(
             Options.manage,
             AppIcons.boards,
-            AppLocalizations.of(context)!.addOrRemove,
+            context.l10n.of(context)!.addOrRemove,
           ),
         ),
         _menuItem(
@@ -90,7 +90,7 @@ class MorePostOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            AppLocalizations.of(context)!.share,
+            context.l10n.of(context)!.share,
           ),
         ),
         if (isOwner) ...[
@@ -99,7 +99,7 @@ class MorePostOptions extends StatelessWidget {
             MenuItem(
               Options.edit,
               AppIcons.edit,
-              AppLocalizations.of(context)!.edit,
+              context.l10n.of(context)!.edit,
             ),
           ),
           _menuItem(
@@ -107,7 +107,7 @@ class MorePostOptions extends StatelessWidget {
             MenuItem(
               Options.delete,
               AppIcons.delete,
-              AppLocalizations.of(context)!.delete,
+              context.l10n.of(context)!.delete,
             ),
           ),
         ],
@@ -151,7 +151,7 @@ class MoreSearchOptions extends StatelessWidget {
           MenuItem(
             Options.manage,
             AppIcons.boards,
-            AppLocalizations.of(context)!.addOrRemove,
+            context.l10n.of(context)!.addOrRemove,
           ),
         ),
         _menuItem(
@@ -159,7 +159,7 @@ class MoreSearchOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            AppLocalizations.of(context)!.share,
+            context.l10n.of(context)!.share,
           ),
         ),
       ]),
@@ -207,7 +207,7 @@ class MoreProfileOptions extends StatelessWidget {
           MenuItem(
             Options.share,
             AppIcons.share,
-            AppLocalizations.of(context)!.share,
+            context.l10n.of(context)!.share,
           ),
         ),
         if (isCurrent)
@@ -216,7 +216,7 @@ class MoreProfileOptions extends StatelessWidget {
             MenuItem(
               Options.edit,
               AppIcons.settings,
-              AppLocalizations.of(context)!.edit,
+              context.l10n.of(context)!.edit,
             ),
           ),
         if (!isCurrent)
@@ -225,7 +225,7 @@ class MoreProfileOptions extends StatelessWidget {
             MenuItem(
               Options.block,
               AppIcons.block,
-              AppLocalizations.of(context)!.blockUser,
+              context.l10n.of(context)!.blockUser,
             ),
           ),
       ]),

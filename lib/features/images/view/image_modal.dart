@@ -1,5 +1,5 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> showImagePicker({
   required BuildContext context,
@@ -8,14 +8,14 @@ Future<void> showImagePicker({
   await showBottomModal(
     context,
     <Widget>[
-      TitleText(text: AppLocalizations.of(context)!.selectMedia, fontSize: 24),
+      TitleText(text: context.l10n.selectMedia, fontSize: 24),
       const VerticalSpacer(),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           BottomModalButton(
             icon: AppIcons.camera,
-            label: AppLocalizations.of(context)!.camera,
+            label: context.l10n.camera,
             onTap: () async {
               Navigator.pop(context);
               await onSelected(ImageSource.camera);
@@ -24,7 +24,7 @@ Future<void> showImagePicker({
           const SizedBox(width: 40),
           BottomModalButton(
             icon: AppIcons.posts,
-            label: AppLocalizations.of(context)!.library,
+            label: context.l10n.library,
             onTap: () async {
               Navigator.pop(context);
               await onSelected(ImageSource.gallery);

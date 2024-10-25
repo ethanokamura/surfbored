@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/failures/board_failures.dart';
 import 'package:surfbored/features/images/images.dart';
@@ -33,7 +32,7 @@ class EditBoardPage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: AppBarText(text: AppLocalizations.of(context)!.editBoard),
+        title: AppBarText(text: context.l10n.editBoard),
       ),
       body: listenForBoardFailures<BoardCubit, BoardState>(
         failureSelector: (state) => state.failure,
@@ -50,13 +49,11 @@ class EditBoardPage extends StatelessWidget {
               );
             } else if (state.isDeleted) {
               return Center(
-                child:
-                    PrimaryText(text: AppLocalizations.of(context)!.fromDelete),
+                child: PrimaryText(text: context.l10n.fromDelete),
               );
             }
             return Center(
-              child:
-                  PrimaryText(text: AppLocalizations.of(context)!.fetchFailure),
+              child: PrimaryText(text: context.l10n.fetchFailure),
             );
           },
         ),
@@ -152,7 +149,7 @@ class _EditBoardViewState extends State<EditBoardView> {
           customTextFormField(
             controller: _titleController,
             context: context,
-            label: AppLocalizations.of(context)!.title,
+            label: context.l10n.title,
             maxLength: 40,
             onChanged: (value) async => _onTitleChanged(value.trim()),
             validator: (title) =>
@@ -164,15 +161,15 @@ class _EditBoardViewState extends State<EditBoardView> {
           customTextFormField(
             controller: _descriptionController,
             context: context,
-            label: AppLocalizations.of(context)!.description,
+            label: context.l10n.description,
             maxLength: 150,
             onChanged: (value) async => _onDescriptionChanged(value.trim()),
           ),
           const VerticalSpacer(),
           ActionButton(
             text: _titleIsValid || _descriptionIsValid
-                ? AppLocalizations.of(context)!.save
-                : AppLocalizations.of(context)!.invalid,
+                ? context.l10n.save
+                : context.l10n.invalid,
             onTap: _titleIsValid || _descriptionIsValid
                 ? () {
                     try {
@@ -190,7 +187,7 @@ class _EditBoardViewState extends State<EditBoardView> {
           ),
           const VerticalSpacer(),
           ActionButton(
-            text: AppLocalizations.of(context)!.delete,
+            text: context.l10n.delete,
             onTap: () {
               widget.onDelete();
               Navigator.pop(context);

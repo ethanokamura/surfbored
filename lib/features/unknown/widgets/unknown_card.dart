@@ -1,5 +1,5 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/images/view/image.dart';
 
 class UnknownCard extends StatelessWidget {
@@ -24,7 +24,7 @@ class UnknownCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                TitleText(text: AppLocalizations.of(context)!.empty),
+                TitleText(text: context.l10n.empty),
                 SecondaryText(text: message),
               ],
             ),

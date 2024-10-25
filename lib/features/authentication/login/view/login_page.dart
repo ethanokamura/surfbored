@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/authentication/login/cubit/authentication_cubit.dart';
 import 'package:surfbored/features/authentication/login/view/otp.dart';
 import 'package:surfbored/features/authentication/login/view/phone.dart';
@@ -22,7 +21,7 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppBarText(text: AppLocalizations.of(context)!.signInPrompt),
+              AppBarText(text: context.l10n.signInPrompt),
               const VerticalSpacer(multiple: 3),
               BlocProvider(
                 create: (context) => AuthCubit(

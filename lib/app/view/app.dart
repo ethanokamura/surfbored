@@ -2,8 +2,6 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:comment_repository/comment_repository.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:friend_repository/friend_repository.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';
@@ -99,10 +97,11 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
         return MaterialApp(
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          onGenerateTitle: (context) => l10n.appTitle,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -119,12 +118,9 @@ class AppView extends StatelessWidget {
             listenWhen: (_, current) => current.isFailure,
             listener: (context, state) {
               return switch (state.failure) {
-                AuthChangesFailure() => context
-                    .showSnackBar(AppLocalizations.of(context)!.authFailure),
-                SignOutFailure() => context
-                    .showSnackBar(AppLocalizations.of(context)!.authFailure),
-                _ => context
-                    .showSnackBar(AppLocalizations.of(context)!.unknownFailure),
+                AuthChangesFailure() => context.showSnackBar(l10n.authFailure),
+                SignOutFailure() => context.showSnackBar(l10n.authFailure),
+                _ => context.showSnackBar(l10n.unknownFailure),
               };
             },
             child: FlowBuilder(

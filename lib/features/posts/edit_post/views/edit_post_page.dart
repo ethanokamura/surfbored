@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/failures/post_failures.dart';
 import 'package:surfbored/features/images/images.dart';
@@ -28,13 +27,13 @@ class EditPostPage extends StatelessWidget {
         top: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: AppBarText(text: AppLocalizations.of(context)!.edit),
+          title: AppBarText(text: context.l10n.edit),
         ),
         body: BlocListener<PostCubit, PostState>(
           listener: (context, state) {
             if (state.isUpdated) {
               // Show a success message or navigate back
-              context.showSnackBar(AppLocalizations.of(context)!.fromUpdate);
+              context.showSnackBar(context.l10n.fromUpdate);
             }
           },
           child: listenForPostFailures<PostCubit, PostState>(
@@ -52,13 +51,11 @@ class EditPostPage extends StatelessWidget {
                   );
                 } else if (state.isDeleted) {
                   return Center(
-                    child:
-                        PrimaryText(text: AppLocalizations.of(context)!.delete),
+                    child: PrimaryText(text: context.l10n.delete),
                   );
                 }
                 return Center(
-                  child: PrimaryText(
-                      text: AppLocalizations.of(context)!.unknownFailure),
+                  child: PrimaryText(text: context.l10n.unknownFailure),
                 );
               },
             ),
@@ -155,7 +152,7 @@ class _EditViewState extends State<EditView> {
           customTextFormField(
             controller: _titleController,
             context: context,
-            label: AppLocalizations.of(context)!.title,
+            label: context.l10n.title,
             maxLength: 40,
             onChanged: (value) async => _onTitleChanged(value.trim()),
             validator: (title) =>
@@ -168,7 +165,7 @@ class _EditViewState extends State<EditView> {
             controller: _descriptionController,
             maxLength: 150,
             context: context,
-            label: AppLocalizations.of(context)!.description,
+            label: context.l10n.description,
             onChanged: (value) async => _onDescriptionChanged(value.trim()),
           ),
           const VerticalSpacer(),
@@ -179,13 +176,13 @@ class _EditViewState extends State<EditView> {
               _tags = tags.join('+');
               _tagsAreValid = true;
             }),
-            label: AppLocalizations.of(context)!.tagsPrompt,
+            label: context.l10n.tagsPrompt,
           ),
           const VerticalSpacer(),
           ActionButton(
             text: _titleIsValid || _descriptionIsValid || _tagsAreValid
-                ? AppLocalizations.of(context)!.save
-                : AppLocalizations.of(context)!.invalid,
+                ? context.l10n.save
+                : context.l10n.invalid,
             onTap: _titleIsValid || _descriptionIsValid || _tagsAreValid
                 ? () {
                     try {

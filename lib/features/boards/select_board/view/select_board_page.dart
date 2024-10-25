@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/boards/select_board/view/select_board_card.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
@@ -29,7 +28,7 @@ class SelectBoardPage extends StatelessWidget {
       top: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: AppBarText(text: AppLocalizations.of(context)!.addToBoard),
+        title: AppBarText(text: context.l10n.addToBoard),
       ),
       body: SelectBoardsList(userId: userId, postId: postId),
     );
@@ -64,18 +63,16 @@ class SelectBoardsList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return Center(
-              child: PrimaryText(text: AppLocalizations.of(context)!.empty),
+              child: PrimaryText(text: context.l10n.empty),
             );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<BoardCubit>().streamUserBoards(userId);
             return Center(
-              child:
-                  PrimaryText(text: AppLocalizations.of(context)!.fromUpdate),
+              child: PrimaryText(text: context.l10n.fromUpdate),
             );
           } else if (state.isFailure) {
             return Center(
-              child:
-                  PrimaryText(text: AppLocalizations.of(context)!.fetchFailure),
+              child: PrimaryText(text: context.l10n.fetchFailure),
             );
           }
           return const Center(child: CircularProgressIndicator());

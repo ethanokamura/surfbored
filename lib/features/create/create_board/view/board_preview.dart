@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/images/view/image_preview.dart';
 import 'package:user_repository/user_repository.dart';
@@ -40,7 +39,7 @@ class BoardPreview extends StatelessWidget {
                 context.read<CreateCubit>().sumbitBoard(
                       userId: context.read<UserRepository>().user.uuid,
                     );
-                context.showSnackBar(AppLocalizations.of(context)!.success);
+                context.showSnackBar(context.l10n.success);
                 Navigator.pop(context);
               },
             ),

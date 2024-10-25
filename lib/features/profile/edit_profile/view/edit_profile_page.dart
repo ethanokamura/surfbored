@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
@@ -18,7 +17,7 @@ class EditProfilePage extends StatelessWidget {
       top: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: AppBarText(text: AppLocalizations.of(context)!.editProfilePage),
+        title: AppBarText(text: context.l10n.editProfilePage),
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
@@ -27,13 +26,12 @@ class EditProfilePage extends StatelessWidget {
           }
           if (state.hasError) {
             return Center(
-              child:
-                  PrimaryText(text: AppLocalizations.of(context)!.fromGetUser),
+              child: PrimaryText(text: context.l10n.fromGetUser),
             );
           }
           if (state.user.isEmpty) {
             return Center(
-              child: PrimaryText(text: AppLocalizations.of(context)!.empty),
+              child: PrimaryText(text: context.l10n.empty),
             );
           }
           return EditProfileView(user: state.user);
@@ -146,7 +144,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           customTextFormField(
             controller: _usernameController,
             context: context,
-            label: AppLocalizations.of(context)!.username,
+            label: context.l10n.username,
             maxLength: 15,
             onChanged: (value) async => _onUsernameChanged(value.trim()),
             validator: (name) =>
@@ -158,7 +156,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           customTextFormField(
             controller: _displayNameController,
             context: context,
-            label: AppLocalizations.of(context)!.displayName,
+            label: context.l10n.displayName,
             maxLength: 20,
             onChanged: (value) async => _onDisplayNameChanged(value.trim()),
           ),
@@ -166,7 +164,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           customTextFormField(
             controller: _bioController,
             context: context,
-            label: AppLocalizations.of(context)!.bio,
+            label: context.l10n.bio,
             maxLength: 150,
             onChanged: (value) async => _onBioChanged(value.trim()),
           ),
@@ -175,7 +173,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               PrimaryText(
-                text: AppLocalizations.of(context)!.interestsPrompt,
+                text: context.l10n.interestsPrompt,
                 fontSize: 22,
               ),
               DefaultButton(
@@ -185,7 +183,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   MaterialPageRoute<dynamic>(
                     builder: (context) => AddTagsPage(
                       tags: widget.user.interests.split('+'),
-                      label: AppLocalizations.of(context)!.interestsPrompt,
+                      label: context.l10n.interestsPrompt,
                       returnTags: (interests) {
                         setState(() {
                           _interests = interests.join('+');
@@ -206,8 +204,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                     _usernameIsValid ||
                     _displayNameIsValid ||
                     _interestsAreValid
-                ? AppLocalizations.of(context)!.save
-                : AppLocalizations.of(context)!.invalid,
+                ? context.l10n.save
+                : context.l10n.invalid,
             onTap: _bioIsValid ||
                     _usernameIsValid ||
                     _displayNameIsValid ||
@@ -219,8 +217,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                           .isUsernameUnique(username: _username!);
                       if (!context.mounted) return;
                       if (!unique) {
-                        context.showSnackBar(
-                            AppLocalizations.of(context)!.invalidUsername);
+                        context.showSnackBar(context.l10n.invalidUsername);
                         return;
                       }
                     }
@@ -233,8 +230,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                       );
                       await context.read<ProfileCubit>().saveChanges(data);
                       if (!context.mounted) return;
-                      context
-                          .showSnackBar(AppLocalizations.of(context)!.success);
+                      context.showSnackBar(context.l10n.success);
                       if (!context.mounted) return;
                       Navigator.pop(context);
                     } catch (e) {

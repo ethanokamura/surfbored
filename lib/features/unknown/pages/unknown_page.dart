@@ -1,5 +1,5 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UnkownPage extends StatelessWidget {
   const UnkownPage({super.key});
@@ -10,8 +10,7 @@ class UnkownPage extends StatelessWidget {
     return CustomPageView(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title:
-            AppBarText(text: AppLocalizations.of(context)!.pageNotFoundTitle),
+        title: AppBarText(text: context.l10n.pageNotFoundTitle),
       ),
       top: true,
       body: Center(
@@ -31,7 +30,7 @@ class UnkownPage extends StatelessWidget {
             ),
             const VerticalSpacer(),
             const VerticalSpacer(),
-            TitleText(text: AppLocalizations.of(context)!.pageNotFound),
+            TitleText(text: context.l10n.pageNotFound),
           ],
         ),
       ),

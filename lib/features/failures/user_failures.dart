@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:user_repository/user_repository.dart';
 
 BlocListener<C, S> listenForUserFailures<C extends Cubit<S>, S>({
@@ -15,18 +14,16 @@ BlocListener<C, S> listenForUserFailures<C extends Cubit<S>, S>({
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);
         final message = switch (failure) {
-          EmptyFailure() => AppLocalizations.of(context)!.empty,
-          CreateFailure() => AppLocalizations.of(context)!.createFailure,
-          GetFailure() => AppLocalizations.of(context)!.fetchFailure,
-          UpdateFailure() => AppLocalizations.of(context)!.updateFailure,
-          DeleteFailure() => AppLocalizations.of(context)!.deleteFailure,
-          AuthChangesFailure() => AppLocalizations.of(context)!.authFailure,
-          SignOutFailure() => AppLocalizations.of(context)!.signOutFailure,
-          InvalidPhoneNumberFailure() =>
-            AppLocalizations.of(context)!.invalidPhoneNumber,
-          PhoneNumberSignInFailure() =>
-            AppLocalizations.of(context)!.signInFailure,
-          _ => AppLocalizations.of(context)!.unknownFailure,
+          EmptyFailure() => context.l10n.empty,
+          CreateFailure() => context.l10n.createFailure,
+          GetFailure() => context.l10n.fetchFailure,
+          UpdateFailure() => context.l10n.updateFailure,
+          DeleteFailure() => context.l10n.deleteFailure,
+          AuthChangesFailure() => context.l10n.authFailure,
+          SignOutFailure() => context.l10n.signOutFailure,
+          InvalidPhoneNumberFailure() => context.l10n.invalidPhoneNumber,
+          PhoneNumberSignInFailure() => context.l10n.signInFailure,
+          _ => context.l10n.unknownFailure,
         };
         context.showSnackBar(message);
       }

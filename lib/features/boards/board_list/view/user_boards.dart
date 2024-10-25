@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/features/boards/board_list/view/board_card.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/failures/board_failures.dart';
@@ -35,18 +34,16 @@ class UserBoards extends StatelessWidget {
               );
             } else if (state.isEmpty) {
               return Center(
-                child: PrimaryText(text: AppLocalizations.of(context)!.empty),
+                child: PrimaryText(text: context.l10n.empty),
               );
             } else if (state.isDeleted || state.isUpdated) {
               context.read<BoardCubit>().streamUserBoards(userId);
               return Center(
-                child:
-                    PrimaryText(text: AppLocalizations.of(context)!.fromUpdate),
+                child: PrimaryText(text: context.l10n.fromUpdate),
               );
             } else if (state.isFailure) {
               return Center(
-                child: PrimaryText(
-                    text: AppLocalizations.of(context)!.unknownFailure),
+                child: PrimaryText(text: context.l10n.unknownFailure),
               );
             }
             return const Center(child: CircularProgressIndicator());

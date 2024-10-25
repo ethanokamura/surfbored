@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
@@ -84,7 +83,7 @@ class _EditPostViewState extends State<EditPostView> {
         appBar: AppBar(
           centerTitle: false,
           backgroundColor: Colors.transparent,
-          title: AppBarText(text: AppLocalizations.of(context)!.createPostPage),
+          title: AppBarText(text: context.l10n.createPostPage),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -92,7 +91,7 @@ class _EditPostViewState extends State<EditPostView> {
               customTextFormField(
                 controller: _titleController,
                 context: context,
-                label: AppLocalizations.of(context)!.title,
+                label: context.l10n.title,
                 maxLength: 40,
                 onChanged: (value) async => _onTitleChanged(value.trim()),
                 validator: (title) =>
@@ -105,7 +104,7 @@ class _EditPostViewState extends State<EditPostView> {
                 controller: _descriptionController,
                 maxLength: 150,
                 context: context,
-                label: AppLocalizations.of(context)!.description,
+                label: context.l10n.description,
                 onChanged: (value) async => _onDescriptionChanged(value.trim()),
               ),
               const VerticalSpacer(),
@@ -116,13 +115,13 @@ class _EditPostViewState extends State<EditPostView> {
                   _tags = tags.join('+');
                   _tagsAreValid = true;
                 }),
-                label: AppLocalizations.of(context)!.tagsPrompt,
+                label: context.l10n.tagsPrompt,
               ),
               const VerticalSpacer(multiple: 3),
               ActionButton(
                 text: _titleIsValid || _descriptionIsValid || _tagsAreValid
-                    ? AppLocalizations.of(context)!.save
-                    : AppLocalizations.of(context)!.invalid,
+                    ? context.l10n.save
+                    : context.l10n.invalid,
                 onTap: _titleIsValid || _descriptionIsValid || _tagsAreValid
                     ? () {
                         try {

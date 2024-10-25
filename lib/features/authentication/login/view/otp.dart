@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/authentication/login/cubit/authentication_cubit.dart';
 
@@ -30,7 +29,7 @@ class _OtpPromptState extends State<OtpPrompt> {
           controller: _otpController,
           keyboardType: TextInputType.number,
           context: context,
-          label: AppLocalizations.of(context)!.otpPrompt,
+          label: context.l10n.otpPrompt,
           maxLength: 6,
           onChanged: (otp) => setState(() => _otp = otp.trim()),
           validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
@@ -50,7 +49,7 @@ class _OtpPromptState extends State<OtpPrompt> {
                   }
                 }
               : null,
-          text: AppLocalizations.of(context)!.next,
+          text: context.l10n.next,
         ),
       ],
     );

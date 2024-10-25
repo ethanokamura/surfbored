@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 BlocListener<C, S> listenForBoardFailures<C extends Cubit<S>, S>({
   required BoardFailure Function(S state) failureSelector,
@@ -14,15 +13,14 @@ BlocListener<C, S> listenForBoardFailures<C extends Cubit<S>, S>({
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);
         final message = switch (failure) {
-          EmptyFailure() => AppLocalizations.of(context)!.empty,
-          CreateFailure() => AppLocalizations.of(context)!.createFailure,
-          ReadFailure() => AppLocalizations.of(context)!.fetchFailure,
-          UpdateFailure() => AppLocalizations.of(context)!.updateFailure,
-          DeleteFailure() => AppLocalizations.of(context)!.deleteFailure,
-          AddSaveFailure() => AppLocalizations.of(context)!.addSaveFailure,
-          RemoveSaveFailure() =>
-            AppLocalizations.of(context)!.removeSaveFailure,
-          _ => AppLocalizations.of(context)!.unknownFailure,
+          EmptyFailure() => context.l10n.empty,
+          CreateFailure() => context.l10n.createFailure,
+          ReadFailure() => context.l10n.fetchFailure,
+          UpdateFailure() => context.l10n.updateFailure,
+          DeleteFailure() => context.l10n.deleteFailure,
+          AddSaveFailure() => context.l10n.addSaveFailure,
+          RemoveSaveFailure() => context.l10n.removeSaveFailure,
+          _ => context.l10n.unknownFailure,
         };
         context.showSnackBar(message);
       }

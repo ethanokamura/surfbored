@@ -60,6 +60,19 @@ class PostCubit extends Cubit<PostState> {
     emit(state.fromUpdate());
   }
 
+  /// Uploads the new post image.
+  /// Requires the [postId] to update
+  /// Requires the new [url] for the image
+  Future<void> uploadImage(int postId, String url) async {
+    emit(state.fromLoading());
+    await _postRepository.updatePostField(
+      postId: postId,
+      field: Post.photoUrlConverter,
+      data: url,
+    );
+    emit(state.fromSetImage(url));
+  }
+
   /// Inserts post's new [data]
   /// Requires [postId] for the target post
   Future<void> updatePost(int postId, Map<String, dynamic> data) async {

@@ -140,12 +140,12 @@ class _EditViewState extends State<EditView> {
           EditImage(
             width: 200,
             // height: 200,
-            photoUrl: widget.post.photoUrl,
+            photoUrl: widget.postCubit.state.photoUrl,
             collection: 'posts',
             userId: widget.post.creatorId,
             docId: widget.post.id!,
-            onFileChanged: (url) => widget.postCubit
-                .editField(widget.post.id!, Post.photoUrlConverter, url),
+            onFileChanged: (url) =>
+                widget.postCubit.uploadImage(widget.post.id!, url),
             aspectX: 4,
             aspectY: 3,
           ),

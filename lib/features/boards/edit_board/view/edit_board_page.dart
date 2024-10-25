@@ -117,17 +117,14 @@ class _EditBoardViewState extends State<EditBoardView> {
           EditImage(
             width: 200,
             // height: 200,
-            photoUrl: widget.board.photoUrl,
+            photoUrl: widget.boardCubit.state.photoUrl,
             collection: 'boards',
             userId: widget.board.creatorId,
             docId: boardId,
             aspectX: 4,
             aspectY: 3,
-
-            /// TOOD(Ethan): change this to image upload
             onFileChanged: (url) {
-              widget.boardCubit
-                  .editField(boardId, Board.photoUrlConverter, url);
+              widget.boardCubit.uploadImage(boardId, url);
             },
           ),
           const VerticalSpacer(),

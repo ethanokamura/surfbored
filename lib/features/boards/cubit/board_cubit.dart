@@ -25,6 +25,7 @@ class BoardCubit extends Cubit<BoardState> {
     emit(state.fromLoading());
     try {
       final board = await _boardRepository.fetchBoard(boardId: boardId);
+      emit(state.fromSetImage(board.photoUrl!));
       emit(state.fromBoardLoaded(board));
     } on BoardFailure catch (failure) {
       emit(state.fromFailure(failure));
@@ -82,6 +83,19 @@ class BoardCubit extends Cubit<BoardState> {
     );
     emit(state.fromUpdated());
     await fetchBoard(boardId);
+  }
+
+  /// Uploads the new board image.
+  /// Requires the [boardId] to update
+  /// Requires the new [url] for the image
+  Future<void> uploadImage(int boardId, String url) async {
+    emit(state.fromLoading());
+    await _boardRepository.updateBoardField(
+      boardId: boardId,
+      field: Board.photoUrlConverter,
+      data: url,
+    );
+    emit(state.fromSetImage(url));
   }
 
   /// Updates the given of a board.

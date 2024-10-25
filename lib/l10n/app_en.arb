@@ -95,7 +95,14 @@
   "signOutFailure": "failed to sign out.",
   "logOut": "logout",
   "myFriends": "my friends",
-  "friends": "friends",
+  "friends": "{count, plural, =1{friend} other{friends}}",
+  "@friend": {
+    "description": "Pluralization of friends. This is implemented to be a different color than the count.",
+    "placeholders": {
+      "count": "int",
+      "format": "compact"
+    }
+  },
   "requestSent": "added",
   "acceptRequest": "accept",
   "removeFriend": "remove",

@@ -63,7 +63,7 @@ Future<dynamic> postPopUp(
                           builder: (context) {
                             return BlocProvider.value(
                               value: postCubit,
-                              child: EditPostPage(postId: post.id!),
+                              child: EditPostPage(post: post),
                             );
                           },
                         ),

@@ -6,22 +6,18 @@ import 'package:surfbored/features/images/images.dart';
 
 class EditBoardPage extends StatelessWidget {
   const EditBoardPage({
-    required this.boardId,
     required this.board,
     required this.onDelete,
     super.key,
   });
-  final int boardId;
   final Board board;
   final void Function() onDelete;
   static MaterialPage<void> page({
-    required int boardId,
     required Board board,
     required void Function() onDelete,
   }) {
     return MaterialPage<void>(
       child: EditBoardPage(
-        boardId: boardId,
         board: board,
         onDelete: onDelete,
       ),
@@ -30,16 +26,19 @@ class EditBoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      top: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.editBoard),
-      ),
-      body: EditBoardView(
-        board: board,
-        boardCubit: context.read<BoardCubit>(),
-        onDelete: onDelete,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: CustomPageView(
+        top: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: AppBarText(text: context.l10n.editBoard),
+        ),
+        body: EditBoardView(
+          board: board,
+          boardCubit: context.read<BoardCubit>(),
+          onDelete: onDelete,
+        ),
       ),
     );
   }
@@ -123,9 +122,7 @@ class _EditBoardViewState extends State<EditBoardView> {
             docId: boardId,
             aspectX: 4,
             aspectY: 3,
-            onFileChanged: (url) {
-              widget.boardCubit.uploadImage(boardId, url);
-            },
+            onFileChanged: (url) => widget.boardCubit.uploadImage(boardId, url),
           ),
           const VerticalSpacer(),
           customTextFormField(
@@ -134,10 +131,6 @@ class _EditBoardViewState extends State<EditBoardView> {
             label: context.l10n.title,
             maxLength: 40,
             onChanged: (value) async => _onTitleChanged(value.trim()),
-            validator: (title) =>
-                title != null && title.length < 3 && title.length > 20
-                    ? 'Invalid Title'
-                    : null,
           ),
           const VerticalSpacer(),
           customTextFormField(
@@ -156,12 +149,14 @@ class _EditBoardViewState extends State<EditBoardView> {
                 ? () {
                     try {
                       final data = Board.update(
-                        title: _title,
-                        description: _description,
+                        title: _title != '' ? _title : widget.board.title,
+                        description: _description != ''
+                            ? _description
+                            : widget.board.description,
                       );
                       context.read<BoardCubit>().updateBoard(boardId, data);
+                      Navigator.pop(context);
                     } catch (e) {
-                      if (!context.mounted) return;
                       context.showSnackBar('Unable to save data: $e');
                     }
                   }

@@ -44,7 +44,6 @@ class BoardPage extends StatelessWidget {
                           return BlocProvider.value(
                             value: boardCubit,
                             child: EditBoardPage(
-                              boardId: boardId,
                               board: board,
                               onDelete: () async {
                                 Navigator.pop(context);

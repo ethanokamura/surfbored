@@ -81,7 +81,7 @@ class ImageHeader extends StatelessWidget {
               MorePostOptions(
                 isOwner: isOwner,
                 onManage: () => _manage(context, post.id!, userId),
-                onEdit: () => _onEdit(context, post.id!, postCubit),
+                onEdit: () => _onEdit(context, post, postCubit),
                 onDelete: () => _onDelete(context, post, postCubit),
               ),
             ],
@@ -111,7 +111,7 @@ class Header extends StatelessWidget {
         MorePostOptions(
           isOwner: isOwner,
           onManage: () => _manage(context, post.id!, userId),
-          onEdit: () => _onEdit(context, post.id!, postCubit),
+          onEdit: () => _onEdit(context, post, postCubit),
           onDelete: () => _onDelete(context, post, postCubit),
         ),
       ],
@@ -193,7 +193,7 @@ void _manage(
 
 void _onEdit(
   BuildContext context,
-  int postId,
+  Post post,
   PostCubit postCubit,
 ) =>
     Navigator.push(
@@ -202,7 +202,7 @@ void _onEdit(
         builder: (context) {
           return BlocProvider.value(
             value: postCubit,
-            child: EditPostPage(postId: postId),
+            child: EditPostPage(post: post),
           );
         },
       ),

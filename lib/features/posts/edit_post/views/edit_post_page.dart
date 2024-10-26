@@ -1,26 +1,24 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/failures/post_failures.dart';
 import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/tags/tags.dart';
 
 class EditPostPage extends StatelessWidget {
   const EditPostPage({
-    required this.postId,
+    required this.post,
     super.key,
   });
-  final int postId;
-  static MaterialPage<void> page({required int postId}) {
+  final Post post;
+  static MaterialPage<void> page({required Post post}) {
     return MaterialPage<void>(
-      child: EditPostPage(postId: postId),
+      child: EditPostPage(post: post),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    context.read<PostCubit>().fetchPost(postId);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
@@ -29,59 +27,29 @@ class EditPostPage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           title: AppBarText(text: context.l10n.edit),
         ),
-        body: BlocListener<PostCubit, PostState>(
-          listener: (context, state) {
-            if (state.isUpdated) {
-              // Show a success message or navigate back
-              context.showSnackBar(context.l10n.fromUpdate);
-            }
-          },
-          child: listenForPostFailures<PostCubit, PostState>(
-            failureSelector: (state) => state.failure,
-            isFailureSelector: (state) => state.isFailure,
-            child: BlocBuilder<PostCubit, PostState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state.isLoaded) {
-                  return EditView(
-                    post: state.post,
-                    postTags: state.tags,
-                    postCubit: context.read<PostCubit>(),
-                  );
-                } else if (state.isDeleted) {
-                  return Center(
-                    child: PrimaryText(text: context.l10n.delete),
-                  );
-                }
-                return Center(
-                  child: PrimaryText(text: context.l10n.unknownFailure),
-                );
-              },
-            ),
-          ),
+        body: EditPostView(
+          post: post,
+          postCubit: context.read<PostCubit>(),
         ),
       ),
     );
   }
 }
 
-class EditView extends StatefulWidget {
-  const EditView({
-    required this.postCubit,
+class EditPostView extends StatefulWidget {
+  const EditPostView({
     required this.post,
-    required this.postTags,
+    required this.postCubit,
     super.key,
   });
   final Post post;
-  final List<String> postTags;
   final PostCubit postCubit;
 
   @override
-  State<EditView> createState() => _EditViewState();
+  State<EditPostView> createState() => _EditPostViewState();
 }
 
-class _EditViewState extends State<EditView> {
+class _EditPostViewState extends State<EditPostView> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   bool _titleIsValid = false;
@@ -132,6 +100,8 @@ class _EditViewState extends State<EditView> {
 
   @override
   Widget build(BuildContext context) {
+    final postId = widget.post.id!;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -143,11 +113,10 @@ class _EditViewState extends State<EditView> {
             photoUrl: widget.postCubit.state.photoUrl,
             collection: 'posts',
             userId: widget.post.creatorId,
-            docId: widget.post.id!,
-            onFileChanged: (url) =>
-                widget.postCubit.uploadImage(widget.post.id!, url),
+            docId: postId,
             aspectX: 4,
             aspectY: 3,
+            onFileChanged: (url) => widget.postCubit.uploadImage(postId, url),
           ),
           const VerticalSpacer(),
           customTextFormField(
@@ -156,10 +125,6 @@ class _EditViewState extends State<EditView> {
             label: context.l10n.title,
             maxLength: 40,
             onChanged: (value) async => _onTitleChanged(value.trim()),
-            validator: (title) =>
-                title != null && title.length < 3 && title.length > 20
-                    ? 'Invalid Title'
-                    : null,
           ),
           const VerticalSpacer(),
           customTextFormField(
@@ -188,15 +153,15 @@ class _EditViewState extends State<EditView> {
                 ? () {
                     try {
                       final data = Post.update(
-                        title: _title,
-                        description: _description,
-                        tags: _tags,
+                        title: _title != '' ? _title : widget.post.title,
+                        description: _description != ''
+                            ? _description
+                            : widget.post.description,
+                        tags: _tags != '' ? _tags : widget.post.tags,
                       );
-                      context
-                          .read<PostCubit>()
-                          .updatePost(widget.post.id!, data);
+                      context.read<PostCubit>().updatePost(postId, data);
+                      Navigator.pop(context);
                     } catch (e) {
-                      if (!context.mounted) return;
                       context.showSnackBar('Unable to save data: $e');
                     }
                   }

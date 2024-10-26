@@ -25,20 +25,19 @@ class BoardButtons extends StatelessWidget {
     final l10n = context.l10n;
     return Row(
       children: [
-        if (isOwner)
-          Expanded(
-            child: ActionButton(
-              onTap: () {},
-              text: l10n.share,
-            ),
+        Expanded(
+          child: DefaultButton(
+            onTap: () {},
+            text: l10n.share,
           ),
-        if (!isOwner)
-          Expanded(
-            child: SaveButton(
-              board: board,
-              userId: user.uuid,
-            ),
-          ),
+        ),
+
+        /// TODO(Ethan): add save
+        // Expanded(
+        //   child: SaveButton(
+        //     board: board,
+        //     userId: user.uuid,
+        //   ),
         const HorizontalSpacer(),
         Expanded(
           child: ActionButton(

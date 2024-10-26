@@ -67,6 +67,8 @@ class AppIcons {
   static const IconData delete = FontAwesomeIcons.trash;
   static const IconData edit = FontAwesomeIcons.pencil;
   static const IconData block = FontAwesomeIcons.userLock;
+  static const IconData next = FontAwesomeIcons.arrowRight;
+  static const IconData back = FontAwesomeIcons.arrowLeft;
 
   // toggles
   static const IconData saved = FontAwesomeIcons.solidBookmark;

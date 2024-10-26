@@ -7,6 +7,7 @@ import 'package:surfbored/features/create/create_post/view/post_preview.dart';
 import 'package:surfbored/features/create/create_post/view/upload_post_image.dart';
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/create/helpers/create_flow_controller.dart';
+import 'package:surfbored/features/create/helpers/navigator_widget.dart';
 import 'package:tag_repository/tag_repository.dart';
 
 class CreatePostFlow extends StatelessWidget {
@@ -61,12 +62,9 @@ class CreatePostPages extends StatelessWidget {
                 PostPreview(),
               ],
             ),
-            Container(
-              alignment: const Alignment(0, 0.90),
-              child: SmoothPageIndicator(
-                controller: createFlowController,
-                count: 3,
-              ),
+            CreateFlowNavigator(
+              controller: createFlowController,
+              alignment: 0.9,
             ),
           ],
         ),

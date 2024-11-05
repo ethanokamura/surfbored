@@ -13,7 +13,7 @@ class AppBarText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
+      text.toUpperCase(),
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
       style: TextStyle(

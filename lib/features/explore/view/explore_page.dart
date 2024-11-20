@@ -20,11 +20,7 @@ class ExplorePage extends StatelessWidget {
           IconButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute<dynamic>(
-                builder: (context) {
-                  return const SearchPage();
-                },
-              ),
+              bottomSlideTransition(const SearchPage()),
             ),
             icon: appBarIconStyle(context, AppIcons.search),
           ),

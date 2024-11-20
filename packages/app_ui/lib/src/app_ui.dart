@@ -10,4 +10,5 @@ export 'strings.dart';
 export 'text.dart';
 export 'text_form.dart';
 export 'theme.dart';
+export 'transitions.dart';
 export 'widgets.dart';

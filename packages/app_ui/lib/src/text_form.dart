@@ -1,16 +1,5 @@
 import 'package:app_ui/app_ui.dart';
 
-// // dynamic input length maximum
-// int maxInputLength(String field) {
-//   if (field == 'title') return 40;
-//   if (field == 'username') return 15;
-//   if (field == 'name') return 30;
-//   if (field == 'bio') return 150;
-//   if (field == 'link') return 150;
-//   if (field == 'description') return 150;
-//   return 50;
-// }
-
 InputDecoration defaultTextFormFieldDecoration({
   required BuildContext context,
   required String label,
@@ -58,5 +47,45 @@ TextFormField customTextFormField({
         context: context,
         label: label,
         prefix: prefix,
+      ),
+    );
+
+InputDecoration searchTextFormFieldDecoration({
+  required BuildContext context,
+  required String label,
+}) =>
+    InputDecoration(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: defaultPadding,
+      ),
+      labelStyle: TextStyle(
+        color: context.theme.subtextColor,
+        fontSize: 14,
+      ),
+      label: Text(label),
+      enabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.transparent,
+          width: 0,
+        ),
+      ),
+    );
+
+TextFormField searchTextFormField({
+  required BuildContext context,
+  required String label,
+  required TextEditingController controller,
+  void Function(String)? onChanged,
+  String? Function(String?)? validator,
+}) =>
+    TextFormField(
+      controller: controller,
+      onChanged: onChanged,
+      validator: validator,
+      minLines: 1,
+      style: const TextStyle(fontSize: 18),
+      decoration: searchTextFormFieldDecoration(
+        context: context,
+        label: label,
       ),
     );

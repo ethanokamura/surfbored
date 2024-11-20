@@ -7,7 +7,9 @@ ButtonStyle defaultStyle(BuildContext context, {bool? onSurface}) {
   return ElevatedButton.styleFrom(
     padding: const EdgeInsets.all(defaultPadding),
     elevation: 0,
-    backgroundColor: context.theme.colorScheme.surface,
+    backgroundColor: onSurface != null && onSurface
+        ? context.theme.colorScheme.primary
+        : context.theme.colorScheme.surface,
     shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
   );
 }

@@ -38,7 +38,7 @@ Icon inverseIconStyle(BuildContext context, IconData icon, {double size = 14}) {
 Icon surfaceIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: context.theme.surfaceColor,
+    color: context.theme.textColor,
     size: size,
   );
 }

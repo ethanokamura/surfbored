@@ -39,20 +39,18 @@ class BoardPage extends StatelessWidget {
                   IconButton(
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (context) {
-                          return BlocProvider.value(
-                            value: boardCubit,
-                            child: EditBoardPage(
-                              board: board,
-                              onDelete: () async {
-                                Navigator.pop(context);
-                                await boardCubit.deleteBoard(boardId);
-                                if (context.mounted) Navigator.pop(context);
-                              },
-                            ),
-                          );
-                        },
+                      bottomSlideTransition(
+                        BlocProvider.value(
+                          value: boardCubit,
+                          child: EditBoardPage(
+                            board: board,
+                            onDelete: () async {
+                              Navigator.pop(context);
+                              await boardCubit.deleteBoard(boardId);
+                              if (context.mounted) Navigator.pop(context);
+                            },
+                          ),
+                        ),
                       ),
                     ),
                     icon: defaultIconStyle(context, AppIcons.more),

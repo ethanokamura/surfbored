@@ -183,8 +183,8 @@ void _manage(
 ) =>
     Navigator.push(
       context,
-      MaterialPageRoute<dynamic>(
-        builder: (context) => SelectBoardPage(
+      bottomSlideTransition(
+        SelectBoardPage(
           postId: postId,
           userId: userId,
         ),
@@ -198,13 +198,11 @@ void _onEdit(
 ) =>
     Navigator.push(
       context,
-      MaterialPageRoute<dynamic>(
-        builder: (context) {
-          return BlocProvider.value(
-            value: postCubit,
-            child: EditPostPage(post: post),
-          );
-        },
+      bottomSlideTransition(
+        BlocProvider.value(
+          value: postCubit,
+          child: EditPostPage(post: post),
+        ),
       ),
     );
 

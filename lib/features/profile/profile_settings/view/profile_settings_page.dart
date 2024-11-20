@@ -50,13 +50,11 @@ class ProfileSettingsPage extends StatelessWidget {
             DefaultButton(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: profileCubit,
-                      child: const EditProfilePage(),
-                    );
-                  },
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: profileCubit,
+                    child: const EditProfilePage(),
+                  ),
                 ),
               ),
               text: context.l10n.editProfilePage,

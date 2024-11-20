@@ -180,8 +180,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                 icon: AppIcons.edit,
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) => AddTagsPage(
+                  bottomSlideTransition(
+                    AddTagsPage(
                       tags: widget.user.interests.split('+'),
                       label: context.l10n.interestsPrompt,
                       returnTags: (interests) {

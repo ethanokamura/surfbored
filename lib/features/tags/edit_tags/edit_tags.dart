@@ -31,8 +31,8 @@ class EditTagsPrompt extends StatelessWidget {
                 icon: AppIcons.edit,
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) => AddTagsPage(
+                  bottomSlideTransition(
+                    AddTagsPage(
                       tags: tags,
                       label: label,
                       returnTags: updateTags,

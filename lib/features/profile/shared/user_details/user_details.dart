@@ -16,9 +16,7 @@ class UserDetails extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute<dynamic>(
-          builder: (context) => ProfilePage(userId: id),
-        ),
+        bottomSlideTransition(ProfilePage(userId: id)),
       ),
       child: Flexible(
         child: FutureBuilder<UserProfile>(

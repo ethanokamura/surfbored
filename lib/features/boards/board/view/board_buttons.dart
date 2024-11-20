@@ -45,13 +45,11 @@ class BoardButtons extends StatelessWidget {
               posts.shuffle();
               Navigator.push(
                 context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: postCubit,
-                      child: ShuffledPostsPage(posts: posts),
-                    );
-                  },
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: postCubit,
+                    child: ShuffledPostsPage(posts: posts),
+                  ),
                 ),
               );
             },

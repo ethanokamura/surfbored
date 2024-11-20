@@ -38,9 +38,7 @@ class FriendsListButton extends StatelessWidget {
       horizontal: defaultPadding,
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute<dynamic>(
-          builder: (context) => FriendsPage(userId: userId),
-        ),
+        bottomSlideTransition(FriendsPage(userId: userId)),
       ),
       text: context.l10n.myFriends,
     );

@@ -30,13 +30,11 @@ class CommentButton extends StatelessWidget {
           return ToggleButton(
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute<dynamic>(
-                builder: (context) {
-                  return CommentsPage(
-                    postCreatorId: postCreatorId,
-                    postId: postId,
-                  );
-                },
+              bottomSlideTransition(
+                CommentsPage(
+                  postCreatorId: postCreatorId,
+                  postId: postId,
+                ),
               ),
             ),
             icon: defaultIconStyle(context, AppIcons.comment),

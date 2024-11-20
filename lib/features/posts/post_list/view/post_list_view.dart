@@ -9,12 +9,14 @@ class PostListView extends StatelessWidget {
     required this.onLoadMore,
     required this.onRefresh,
     required this.hasMore,
+    this.scrollController,
     super.key,
   });
   final List<Post> posts;
   final Future<void> Function() onLoadMore;
   final Future<void> Function() onRefresh;
   final bool hasMore;
+  final ScrollController? scrollController;
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -29,6 +31,7 @@ class PostListView extends StatelessWidget {
           return false;
         },
         child: ListView.separated(
+          controller: scrollController,
           padding: const EdgeInsets.only(bottom: defaultPadding),
           separatorBuilder: (context, index) => const VerticalSpacer(),
           physics: const AlwaysScrollableScrollPhysics(),

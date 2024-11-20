@@ -110,9 +110,8 @@ class BottomNavBar extends StatelessWidget {
     }
     await Navigator.push(
       context,
-      MaterialPageRoute<Page<dynamic>>(
-        builder: (context) =>
-            choice == 'post' ? const CreatePostFlow() : const CreateBoardFlow(),
+      bottomSlideTransition(
+        choice == 'post' ? const CreatePostFlow() : const CreateBoardFlow(),
       ),
     );
   }

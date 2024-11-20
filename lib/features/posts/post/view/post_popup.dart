@@ -48,8 +48,8 @@ Future<dynamic> postPopUp(
                     isOwner: isOwner,
                     onManage: () => Navigator.push(
                       context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (context) => SelectBoardPage(
+                      bottomSlideTransition(
+                        SelectBoardPage(
                           postId: post.id!,
                           userId: userId,
                         ),
@@ -59,13 +59,11 @@ Future<dynamic> postPopUp(
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (context) {
-                            return BlocProvider.value(
-                              value: postCubit,
-                              child: EditPostPage(post: post),
-                            );
-                          },
+                        bottomSlideTransition(
+                          BlocProvider.value(
+                            value: postCubit,
+                            child: EditPostPage(post: post),
+                          ),
                         ),
                       );
                     },

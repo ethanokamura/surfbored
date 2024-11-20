@@ -90,15 +90,13 @@ class ProfileBuilder extends StatelessWidget {
                     isCurrent: isCurrent,
                     onEdit: () => Navigator.push(
                       context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (context) {
-                          return BlocProvider.value(
-                            value: profileCubit,
-                            child: ProfileSettingsPage(
-                              profileCubit: profileCubit,
-                            ),
-                          );
-                        },
+                      bottomSlideTransition(
+                        BlocProvider.value(
+                          value: profileCubit,
+                          child: ProfileSettingsPage(
+                            profileCubit: profileCubit,
+                          ),
+                        ),
                       ),
                     ),
                     onBlock: () => {},
@@ -246,13 +244,11 @@ class ProfileButtons extends StatelessWidget {
             child: ActionButton(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: profileCubit,
-                      child: const EditProfilePage(),
-                    );
-                  },
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: profileCubit,
+                    child: const EditProfilePage(),
+                  ),
                 ),
               ),
               text: 'edit profile',

@@ -17,6 +17,7 @@ class _SearchPageState extends State<SearchPage> {
   final _searchTextController = TextEditingController();
   Timer? _debounce;
   String _query = '';
+  bool _isValidSearch = false;
 
   int currentPage = 0;
   final int pageSize = 10;
@@ -59,16 +60,19 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Future<void> _onSearchChanged(BuildContext context, String query) async {
-    if (query.isEmpty) return;
+  Future<void> _validateQuery(BuildContext context, String query) async {
+    if (query.isEmpty || query == _query) {
+      setState(() {
+        _isValidSearch = false;
+      });
+      return;
+    }
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       setState(() {
         _query = query;
+        _isValidSearch = true;
       });
-      if (query.isNotEmpty) {
-        await _searchForPosts(context, query, refresh: true);
-      }
     });
   }
 
@@ -77,39 +81,39 @@ class _SearchPageState extends State<SearchPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: AppBarText(text: context.l10n.search),
+        ),
+        top: true,
         body: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _searchTextController,
-                    onChanged: (value) async => _onSearchChanged(
-                      context,
-                      value.trim(),
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: defaultPadding,
-                      ),
-                      label: PrimaryText(text: context.l10n.search),
-                      prefixIcon: defaultIconStyle(context, AppIcons.search),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: context.theme.colorScheme.primary,
-                          width: 2,
-                        ),
-                      ),
+            CustomContainer(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: searchTextFormField(
+                      context: context,
+                      label: context.l10n.searchPrompt,
+                      controller: _searchTextController,
+                      onChanged: (value) async =>
+                          _validateQuery(context, value.trim()),
                     ),
                   ),
-                ),
-                const HorizontalSpacer(),
-                ActionIconButton(
-                  icon: AppIcons.cancel,
-                  onTap: () => Navigator.pop(context),
-                ),
-              ],
+                  const HorizontalSpacer(),
+                  // activate search
+                  ActionIconButton(
+                    icon: AppIcons.search,
+                    onSurface: true,
+                    onTap: _isValidSearch
+                        ? () => _searchForPosts(context, _query, refresh: true)
+                        : () => context
+                            .showSnackBar(context.l10n.invalidSearchQuery),
+                  ),
+                ],
+              ),
             ),
             const VerticalSpacer(),
             if (_query.isNotEmpty)
@@ -123,9 +127,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               )
             else
-              const PrimaryText(
-                text: 'Enter a tag, title or description of something',
-              ),
+              PrimaryText(text: context.l10n.queryPrompt),
           ],
         ),
       ),

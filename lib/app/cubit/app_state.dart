@@ -36,10 +36,9 @@ final class AppState extends Equatable {
           user: user,
         );
 
-  const AppState.needsUsername(UserData user)
+  const AppState.needsUsername()
       : this._(
           status: AppStatus.needsUsername,
-          user: user,
         );
 
   const AppState.authenticated(UserData user)

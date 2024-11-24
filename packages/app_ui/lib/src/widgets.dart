@@ -184,17 +184,24 @@ class CustomPageView extends StatelessWidget {
 }
 
 class VerticalSpacer extends StatelessWidget {
-  const VerticalSpacer({super.key});
+  const VerticalSpacer({this.multiple, super.key});
+  final double? multiple;
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(height: defaultSpacing);
+    return multiple != null
+        ? SizedBox(height: defaultSpacing * multiple!)
+        : const SizedBox(height: defaultSpacing);
   }
 }
 
 class HorizontalSpacer extends StatelessWidget {
-  const HorizontalSpacer({super.key});
+  const HorizontalSpacer({this.multiple, super.key});
+  final double? multiple;
+
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(width: defaultSpacing);
+    return multiple != null
+        ? SizedBox(width: defaultSpacing * multiple!)
+        : const SizedBox(width: defaultSpacing);
   }
 }

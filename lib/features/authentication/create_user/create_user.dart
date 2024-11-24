@@ -29,36 +29,27 @@ class _CreateUserPageState extends State<CreateUserPage> {
   }
 
   Future<void> _onUsernameChanged(BuildContext context, String username) async {
+    // use regex
     if (username.length > 15 || username.length < 3) {
       setState(() => _isValid = false);
       return;
-    }
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () async {
+    } else {
       setState(() {
+        _isValid = true;
         _username = username;
       });
-      final unique = await context
-          .read<UserRepository>()
-          .isUsernameUnique(username: username);
-      setState(() {
-        _isValid = unique;
-      });
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const AppBarText(text: UserStrings.createUsername),
-      ),
-      top: true,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const AppBarText(text: UserStrings.createUsername),
+            const VerticalSpacer(multiple: 3),
             customTextFormField(
               controller: _usernameController,
               context: context,
@@ -68,17 +59,27 @@ class _CreateUserPageState extends State<CreateUserPage> {
               ),
               label: CreateStrings.usernamePrompt,
             ),
-            const VerticalSpacer(),
+            const VerticalSpacer(multiple: 3),
             ActionAccentButton(
               onTap: _isValid
                   ? () async {
-                      await context
+                      final unique = await context
                           .read<UserRepository>()
-                          .updateUsername(username: _username);
-                      if (context.mounted) {
-                        context.read<AppCubit>().reinitState();
+                          .isUsernameUnique(username: _username);
+                      if (!context.mounted) return;
+                      if (unique) {
+                        // change username
+                        await context
+                            .read<UserRepository>()
+                            .updateUsername(username: _username);
+
+                        // change this
+                        if (!context.mounted) return;
+                        context.read<AppCubit>().usernameSubmitted();
+                      } else {
+                        // add some sort of animation
+                        context.showSnackBar(CreateStrings.invalidUsername);
                       }
-                      _usernameController.clear();
                     }
                   : null,
               text: _isValid

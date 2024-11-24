@@ -13,6 +13,7 @@ import 'package:surfbored/theme/theme_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
+/// Generate pages based on AppStatus
 List<Page<dynamic>> onGenerateAppPages(
   AppStatus status,
   List<Page<dynamic>> pages,
@@ -29,6 +30,7 @@ List<Page<dynamic>> onGenerateAppPages(
   return pages;
 }
 
+/// Construct the app
 class App extends StatelessWidget {
   const App({
     required this.boardRepository,
@@ -49,6 +51,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Define create instances
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<UserRepository>.value(
@@ -70,6 +73,8 @@ class App extends StatelessWidget {
           value: friendRepository,
         ),
       ],
+
+      /// Initialize top level providers
       child: MultiBlocProvider(
         providers: [
           BlocProvider<ThemeCubit>(
@@ -79,6 +84,8 @@ class App extends StatelessWidget {
             create: (_) => AppCubit(userRepository: userRepository),
           ),
         ],
+
+        /// Return AppView
         child: const AppView(),
       ),
     );

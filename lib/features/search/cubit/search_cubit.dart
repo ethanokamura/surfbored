@@ -5,6 +5,7 @@ import 'package:user_repository/user_repository.dart';
 
 part 'search_state.dart';
 
+/// TODO(Ethan): Implement
 class SearchCubit extends Cubit<SearchState> {
   SearchCubit({
     required BoardRepository boardRepository,

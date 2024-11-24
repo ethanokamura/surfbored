@@ -16,7 +16,7 @@ class CommentLikeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CommentLikesCubit(context.read<CommentRepository>())
-        ..fetchCommentData(userId, comment.id!),
+        ..fetchData(userId, comment.id!),
       child: BlocBuilder<CommentLikesCubit, CommentLikesState>(
         builder: (context, state) {
           var likes = 0;

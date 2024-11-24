@@ -215,9 +215,9 @@ Future<void> _onDelete(
 ) async {
   if (Navigator.canPop(context)) Navigator.pop(context);
   await postCubit.deletePost(
-    post.creatorId,
+    // post.creatorId,
     post.id!,
-    post.photoUrl.toString(),
+    // post.photoUrl.toString(),
   );
   if (context.mounted && Navigator.canPop(context)) {
     Navigator.pop(context);

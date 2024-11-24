@@ -1,5 +1,6 @@
 part of 'board_cubit.dart';
 
+/// Represents the different states a board operation can be in.
 enum BoardStatus {
   initial,
   loading,
@@ -10,7 +11,9 @@ enum BoardStatus {
   failure,
 }
 
+/// Represents the state of board-related operations.
 final class BoardState extends Equatable {
+  /// Private constructor for creating BoardState instances.
   const BoardState._({
     this.status = BoardStatus.initial,
     this.board = Board.empty,
@@ -20,6 +23,7 @@ final class BoardState extends Equatable {
     this.index = 0,
   });
 
+  /// Creates an initial BoardState.
   const BoardState.initial() : this._();
 
   final BoardStatus status;
@@ -29,6 +33,7 @@ final class BoardState extends Equatable {
   final bool selected;
   final int index;
 
+  // Rebuilds the widget when the props change
   @override
   List<Object?> get props => [
         status,
@@ -39,6 +44,8 @@ final class BoardState extends Equatable {
         index,
       ];
 
+  /// Creates a new BoardState with updated fields.
+  /// Any parameter that is not provided will retain its current value.
   BoardState copyWith({
     BoardStatus? status,
     Board? board,
@@ -58,6 +65,7 @@ final class BoardState extends Equatable {
   }
 }
 
+/// Extension methods for convenient state checks.
 extension BoardStateExtensions on BoardState {
   bool get isEmpty => status == BoardStatus.empty;
   bool get isLoaded => status == BoardStatus.loaded;
@@ -65,4 +73,30 @@ extension BoardStateExtensions on BoardState {
   bool get isFailure => status == BoardStatus.failure;
   bool get isDeleted => status == BoardStatus.deleted;
   bool get isUpdated => status == BoardStatus.updated;
+}
+
+/// Extension methods for creating new [BoardState] instances.
+extension _BoardStateExtensions on BoardState {
+  BoardState fromLoading() => copyWith(status: BoardStatus.loading);
+
+  BoardState fromEmpty() => copyWith(boards: [], status: BoardStatus.empty);
+
+  BoardState fromDeleted() => copyWith(status: BoardStatus.deleted);
+
+  BoardState fromUpdated() => copyWith(status: BoardStatus.updated);
+
+  BoardState fromBoardLoaded(Board board) => copyWith(
+        status: BoardStatus.loaded,
+        board: board,
+      );
+
+  BoardState fromBoardsLoaded(List<Board> boards) => copyWith(
+        status: BoardStatus.loaded,
+        boards: boards,
+      );
+
+  BoardState fromFailure(BoardFailure failure) => copyWith(
+        status: BoardStatus.failure,
+        failure: failure,
+      );
 }

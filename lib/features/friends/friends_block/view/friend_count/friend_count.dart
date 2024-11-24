@@ -14,7 +14,7 @@ class FriendsCountText extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => FriendCountCubit(context.read<FriendRepository>())
-        ..fetchFriendCount(userId),
+        ..fetchFriendCount(userId: userId),
       child: BlocBuilder<FriendCountCubit, FriendCountState>(
         builder: (context, state) {
           if (state.isLoading) {

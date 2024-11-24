@@ -9,7 +9,11 @@ import 'package:tag_repository/tag_repository.dart';
 // State definitions
 part 'create_state.dart';
 
+/// Manages the state and logic for post creation-related operations.
 class CreateCubit extends Cubit<CreateState> {
+  /// Creates a new instance of [CreateCubit].
+  /// Requires a [PostRepository], [BoardRepository], and [TagRepository]
+  ///   to handle data operations.
   CreateCubit({
     required PostRepository postRepository,
     required BoardRepository boardRepository,
@@ -23,6 +27,7 @@ class CreateCubit extends Cubit<CreateState> {
   final PostRepository _postRepository;
   final TagRepository _tagRepository;
 
+  /// Creates a new post!
   Future<void> createPost({
     required String userId,
     required String title,
@@ -70,6 +75,7 @@ class CreateCubit extends Cubit<CreateState> {
     }
   }
 
+  /// Creates a new board!
   Future<void> createBoard({
     required String userId,
     required String title,

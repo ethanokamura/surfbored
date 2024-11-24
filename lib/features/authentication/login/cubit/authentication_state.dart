@@ -1,13 +1,15 @@
 part of 'authentication_cubit.dart';
 
+/// Defines possible status for authentication process.
 enum AuthStatus {
   initial,
   loading,
   failure,
-  success,
+  loaded,
   otp,
 }
 
+/// Constructs the AuthState and related methods
 final class AuthState extends Equatable {
   const AuthState._({
     this.phoneNumber = '',
@@ -28,6 +30,7 @@ final class AuthState extends Equatable {
         failure,
       ];
 
+  /// Allows for easy state manipulation
   AuthState copyWith({
     String? phoneNumber,
     AuthStatus? status,
@@ -41,19 +44,21 @@ final class AuthState extends Equatable {
   }
 }
 
+/// Public getters for AuthStatus
 extension AuthStateExtensions on AuthState {
   bool get isFailure => status == AuthStatus.failure;
-  bool get isSuccess => status == AuthStatus.success;
+  bool get isSuccess => status == AuthStatus.loaded;
   bool get isLoading => status == AuthStatus.loading;
   bool get needsOtp => status == AuthStatus.otp;
 }
 
+/// Private setters for AuthStatus
 extension _AuthStateExtensions on AuthState {
   AuthState fromLoading() => copyWith(
         status: AuthStatus.loading,
       );
-  AuthState fromSuccess() => copyWith(
-        status: AuthStatus.success,
+  AuthState fromLoaded() => copyWith(
+        status: AuthStatus.loaded,
       );
   AuthState fromFailure(UserFailure failure) => copyWith(
         status: AuthStatus.failure,

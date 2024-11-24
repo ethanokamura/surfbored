@@ -75,9 +75,9 @@ Future<dynamic> postPopUp(
                     onDelete: () async {
                       Navigator.pop(context);
                       await postCubit.deletePost(
-                        post.creatorId,
+                        // post.creatorId,
                         post.id!,
-                        post.photoUrl.toString(),
+                        // post.photoUrl.toString(),
                       );
                       if (context.mounted) Navigator.pop(context);
                     },

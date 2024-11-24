@@ -7,16 +7,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:surfbored/app/app_bloc_observer.dart';
 
+/// Bootstrap function to initialize and run the app
+///
+/// [builder] is a required function that returns the root widget of the app
+/// [init] is an optional function for additional initialization
 Future<void> bootstrap({
   required FutureOr<Widget> Function() builder,
   FutureOr<void> Function()? init,
 }) async {
   await runZonedGuarded(
     () async {
+      // Enable fatal errors in debug mode
       BindingBase.debugZoneErrorsAreFatal = true;
+      // Ensure Flutter bindings are initialized
       WidgetsFlutterBinding.ensureInitialized();
+      // Run optional initialization
       await init?.call();
 
+      // Set up global error handlers
       FlutterError.onError = (details) {
         log(details.exceptionAsString(), stackTrace: details.stack);
       };
@@ -24,6 +32,7 @@ Future<void> bootstrap({
         log(error.toString(), stackTrace: stackTrace);
         return true;
       };
+      // Set up error listener for the current isolate
       Isolate.current.addErrorListener(
         RawReceivePort((dynamic pair) async {
           final errorAndStackTrace = pair as List<dynamic>;
@@ -35,16 +44,18 @@ Future<void> bootstrap({
           log(error.toString(), stackTrace: stackTrace);
         }).sendPort,
       );
+
+      // Set up BLoC observer
       Bloc.observer = AppBlocObserver();
 
-      // get assets
-      // await Assets.covers.preload();
-
+      // Build the app widget
       final app = await builder();
+      // Set preferred device orientation to portrait
       await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp],
       ).then((value) => runApp(app));
     },
+    // Log any errors that occur during app execution
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );
 }

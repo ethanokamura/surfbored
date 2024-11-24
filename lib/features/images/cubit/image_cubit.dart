@@ -6,11 +6,15 @@ import 'package:app_ui/app_ui.dart';
 
 part 'image_state.dart';
 
+/// Manages the state and logic for image-related operations.
 class ImageCubit extends Cubit<ImageState> {
+  /// Creates a new instance of [ImageCubit].
   ImageCubit() : super(const ImageState.initial());
 
   final ImagePicker picker = ImagePicker();
 
+  /// Helper method to pick an image using the given [source]
+  /// Manipulate aspect ratio using [aspectX] and [aspectY]
   Future<void> pickImage({
     required ImageSource source,
     required double aspectX,
@@ -48,6 +52,9 @@ class ImageCubit extends Cubit<ImageState> {
     }
   }
 
+  /// Picks and uploads a given image for a post or board
+  /// Requires paramters for [pickImage]
+  /// Requires the [docId] and [collection] for the image path
   Future<void> pickAndUploadImage({
     required ImageSource source,
     required String userId,
@@ -71,6 +78,9 @@ class ImageCubit extends Cubit<ImageState> {
     }
   }
 
+  /// Picks and uploads a given image for a user
+  /// Requires paramters for [pickImage]
+  /// Requires the [userId] for the image path
   Future<void> pickUserImage({
     required ImageSource source,
     required String userId,

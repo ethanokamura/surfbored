@@ -5,7 +5,10 @@ import 'package:tag_repository/tag_repository.dart';
 // State definitions
 part 'post_state.dart';
 
+/// Manages the state and logic for post-related operations.
 class PostCubit extends Cubit<PostState> {
+  /// Creates a new instance of [PostCubit].
+  /// Requires a [PostRepository] to handle data operations.
   PostCubit({
     required PostRepository postRepository,
     required TagRepository tagRepository,
@@ -22,6 +25,7 @@ class PostCubit extends Cubit<PostState> {
 
   bool get hasMorePosts => _hasMore;
 
+  /// Fetches a specific post by its [postId].
   Future<void> fetchPost(int postId) async {
     emit(state.fromLoading());
     try {
@@ -32,6 +36,8 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  /// Shuffles the posts for a given board
+  /// Requires the board's [boardId]
   Future<void> shufflePostList(int boardId) async {
     emit(state.fromLoading());
     try {
@@ -42,12 +48,15 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  /// Insertes a specific [field] with [data] for a given post
+  /// Requires [postId] for the target post
   Future<void> editField(int postId, String field, dynamic data) async {
     emit(state.fromLoading());
     await _postRepository.updatePost(postId: postId, field: field, data: data);
     emit(state.fromUpdate());
   }
 
+  /// Updates the [tags] for a given post using its [postId]
   Future<void> updateTags(int postId, List<String> tags) async {
     await _tagRepository.updatePostTags(id: postId, tags: tags);
     await _postRepository.updatePost(
@@ -57,10 +66,10 @@ class PostCubit extends Cubit<PostState> {
     );
   }
 
+  /// Deletes a given post using its [postId]
+  /// TODO(Ethan): needs photoUrl? to clean supabase storage
   Future<void> deletePost(
-    String userId,
     int postId,
-    String photoURL,
   ) async {
     emit(state.fromLoading());
     try {
@@ -103,6 +112,9 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  /// Fetches posts for a specific board.
+  /// If [refresh] is true, resets pagination and fetches from the beginning.
+  /// Implements pagination, fetching [_pageSize] posts at a time.
   Future<void> fetchBoardPosts(int boardId, {bool refresh = false}) async {
     if (refresh) {
       _currentPage = 0;
@@ -136,6 +148,9 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  /// Fetches posts for a specific user.
+  /// If [refresh] is true, resets pagination and fetches from the beginning.
+  /// Implements pagination, fetching [_pageSize] posts at a time.
   Future<void> fetchUserPosts(String userId, {bool refresh = false}) async {
     if (refresh) {
       _currentPage = 0;

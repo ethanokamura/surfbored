@@ -1,6 +1,7 @@
 part of 'profile_cubit.dart';
 
 class ProfileState {
+  /// Private constructor for creating [ProfileState] instances.
   ProfileState({
     required this.user,
     this.isLoading = false,

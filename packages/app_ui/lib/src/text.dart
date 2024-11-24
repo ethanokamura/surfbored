@@ -12,7 +12,7 @@ class AppBarText extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       text.toUpperCase(),
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
@@ -37,7 +37,7 @@ class TitleText extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       text,
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
@@ -62,7 +62,7 @@ class PrimaryText extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       text,
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
@@ -86,7 +86,7 @@ class SecondaryText extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       text,
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
@@ -110,7 +110,7 @@ class DescriptionText extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       text,
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 4,
@@ -136,7 +136,7 @@ class UserText extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       text,
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 1,
@@ -161,7 +161,7 @@ class ButtonText extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       text,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,

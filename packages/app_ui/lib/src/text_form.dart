@@ -53,8 +53,10 @@ TextFormField customTextFormField({
 InputDecoration searchTextFormFieldDecoration({
   required BuildContext context,
   required String label,
+  IconData? icon,
 }) =>
     InputDecoration(
+      prefixIcon: icon != null ? defaultIconStyle(context, icon) : null,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: defaultPadding,
       ),
@@ -77,6 +79,7 @@ TextFormField searchTextFormField({
   required TextEditingController controller,
   void Function(String)? onChanged,
   String? Function(String?)? validator,
+  IconData? icon,
 }) =>
     TextFormField(
       controller: controller,
@@ -87,5 +90,6 @@ TextFormField searchTextFormField({
       decoration: searchTextFormFieldDecoration(
         context: context,
         label: label,
+        icon: icon,
       ),
     );

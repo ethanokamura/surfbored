@@ -28,6 +28,7 @@ class AppBarText extends StatelessWidget {
         : AutoSizeText(
             text.toUpperCase(),
             overflow: TextOverflow.ellipsis,
+            maxFontSize: fontSize ?? 28,
             maxLines: maxLines ?? 1,
             style: TextStyle(
               color: context.theme.textColor,
@@ -67,6 +68,7 @@ class TitleText extends StatelessWidget {
             text,
             overflow: TextOverflow.ellipsis,
             maxLines: maxLines ?? 1,
+            maxFontSize: fontSize ?? 20,
             style: TextStyle(
               color: context.theme.textColor,
               fontSize: fontSize ?? 20,
@@ -104,6 +106,7 @@ class PrimaryText extends StatelessWidget {
             text,
             overflow: TextOverflow.ellipsis,
             maxLines: maxLines ?? 1,
+            maxFontSize: fontSize ?? 16,
             style: TextStyle(
               color: context.theme.textColor,
               fontSize: fontSize ?? 16,
@@ -140,6 +143,7 @@ class SecondaryText extends StatelessWidget {
             text,
             overflow: TextOverflow.ellipsis,
             maxLines: maxLines ?? 1,
+            maxFontSize: fontSize ?? 14,
             style: TextStyle(
               color: context.theme.subtextColor,
               fontSize: fontSize ?? 14,
@@ -176,6 +180,7 @@ class DescriptionText extends StatelessWidget {
             text,
             overflow: TextOverflow.ellipsis,
             maxLines: maxLines ?? 4,
+            maxFontSize: fontSize ?? 16,
             style: TextStyle(
               color: context.theme.subtextColor,
               fontSize: fontSize ?? 16,
@@ -215,6 +220,7 @@ class UserText extends StatelessWidget {
             text,
             overflow: TextOverflow.ellipsis,
             maxLines: maxLines ?? 1,
+            maxFontSize: fontSize ?? 18,
             style: TextStyle(
               color: context.theme.accentColor,
               fontSize: fontSize ?? 18,
@@ -258,6 +264,7 @@ class ButtonText extends StatelessWidget {
             text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            maxFontSize: fontSize ?? 16,
             style: TextStyle(
               color: inverted
                   ? context.theme.inverseTextColor

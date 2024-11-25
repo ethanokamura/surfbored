@@ -257,7 +257,7 @@ PopupMenuItem<Options> _menuItem(
       children: [
         defaultIconStyle(context, item.icon),
         const HorizontalSpacer(),
-        PrimaryText(text: item.text),
+        SizedBox(width: 96, child: PrimaryText(text: item.text)),
       ],
     ),
   );

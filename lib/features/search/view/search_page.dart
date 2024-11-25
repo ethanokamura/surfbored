@@ -1,7 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/search/view/search_post_list_view.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -17,7 +17,6 @@ class _SearchPageState extends State<SearchPage> {
   final _searchTextController = TextEditingController();
   Timer? _debounce;
   String _query = '';
-  bool _isValidSearch = false;
 
   int currentPage = 0;
   final int pageSize = 10;
@@ -61,18 +60,15 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _validateQuery(BuildContext context, String query) async {
-    if (query.isEmpty || query == _query) {
-      setState(() {
-        _isValidSearch = false;
-      });
-      return;
-    }
+    if (query.isEmpty || query == _query) return;
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       setState(() {
         _query = query;
-        _isValidSearch = true;
       });
+      if (query.isNotEmpty) {
+        await _searchForPosts(context, query, refresh: true);
+      }
     });
   }
 
@@ -95,6 +91,7 @@ class _SearchPageState extends State<SearchPage> {
                 children: [
                   Expanded(
                     child: searchTextFormField(
+                      icon: AppIcons.search,
                       context: context,
                       label: context.l10n.searchPrompt,
                       controller: _searchTextController,
@@ -102,23 +99,13 @@ class _SearchPageState extends State<SearchPage> {
                           _validateQuery(context, value.trim()),
                     ),
                   ),
-                  const HorizontalSpacer(),
-                  // activate search
-                  ActionIconButton(
-                    icon: AppIcons.search,
-                    onSurface: true,
-                    onTap: _isValidSearch
-                        ? () => _searchForPosts(context, _query, refresh: true)
-                        : () => context
-                            .showSnackBar(context.l10n.invalidSearchQuery),
-                  ),
                 ],
               ),
             ),
             const VerticalSpacer(),
             if (_query.isNotEmpty)
               Expanded(
-                child: PostListView(
+                child: SearchPostListView(
                   posts: _posts,
                   hasMore: hasMore,
                   onLoadMore: () async => _searchForPosts(context, _query),

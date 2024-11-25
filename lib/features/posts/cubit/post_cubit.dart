@@ -215,4 +215,39 @@ class PostCubit extends Cubit<PostState> {
       emit(state.fromFailure(failure));
     }
   }
+
+  /// Fetches posts based on a search query.
+  /// If [refresh] is true, resets pagination and fetches from the beginning.
+  /// Implements pagination, fetching [_pageSize] posts at a time.
+  Future<void> searchPosts(String query, {bool refresh = false}) async {
+    if (refresh) {
+      _currentPage = 0;
+      _hasMore = true;
+      emit(state.fromEmpty());
+    }
+
+    if (!_hasMore) return;
+
+    emit(state.fromLoading());
+    try {
+      final posts = await _postRepository.searchPosts(
+        query: query,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
+      );
+      if (posts.isEmpty) {
+        _hasMore = false; // No more boards to load
+        emit(state.fromEmpty());
+      } else {
+        if (posts.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
+      }
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
 }

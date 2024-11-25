@@ -1,16 +1,16 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:surfbored/features/images/images.dart';
-import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/search/view/post_search_popup.dart';
 
-class PostCard extends StatelessWidget {
-  const PostCard({required this.post, super.key});
+class PostSearchCard extends StatelessWidget {
+  const PostSearchCard({required this.post, super.key});
   final Post post;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async => postPopUp(context, post),
+      onTap: () async => postSearchPopup(context, post),
       child: CustomContainer(
         child: Row(
           children: [

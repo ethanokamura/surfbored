@@ -67,16 +67,38 @@ class ImageCubit extends Cubit<ImageState> {
       await pickImage(source: source, aspectX: aspectX, aspectY: aspectY);
       final path = '$userId/image_$docId.jpeg';
       // upload image
-      final uploadURL = await Supabase.instance.client.uploadFile(
-        collection: collection,
-        path: path,
-        file: state.imageFile!.readAsBytesSync(),
-      );
-      emit(state.fromLoadedUrl(uploadURL));
+      try {
+        final uploadUrl = state.photoUrl == null || state.photoUrl!.isEmpty
+            ? await uploadImage(collection: collection, path: path)
+            : await updateImage(collection: collection, path: path);
+        emit(state.fromLoadedUrl(uploadUrl));
+      } catch (e) {
+        print(e);
+      }
     } catch (e) {
       emit(state.fromFailure('Failed to pick image'));
     }
   }
+
+  Future<String> uploadImage({
+    required String collection,
+    required String path,
+  }) async =>
+      Supabase.instance.client.uploadFile(
+        collection: collection,
+        path: path,
+        file: state.imageFile!.readAsBytesSync(),
+      );
+
+  Future<String> updateImage({
+    required String collection,
+    required String path,
+  }) async =>
+      Supabase.instance.client.updateFile(
+        collection: collection,
+        path: path,
+        file: state.imageFile!.readAsBytesSync(),
+      );
 
   /// Picks and uploads a given image for a user
   /// Requires paramters for [pickImage]
@@ -90,12 +112,10 @@ class ImageCubit extends Cubit<ImageState> {
     try {
       await pickImage(source: source, aspectX: aspectX, aspectY: aspectY);
       final path = '$userId/image.jpeg';
-      final uploadURL = await Supabase.instance.client.uploadFile(
-        collection: 'users',
-        path: path,
-        file: state.imageFile!.readAsBytesSync(),
-      );
-      emit(state.fromLoadedUrl(uploadURL));
+      final uploadUrl = state.photoUrl == null || state.photoUrl!.isEmpty
+          ? await uploadImage(collection: 'users', path: path)
+          : await updateImage(collection: 'users', path: path);
+      emit(state.fromLoadedUrl(uploadUrl));
     } catch (e) {
       emit(state.fromFailure('Failed to pick image'));
     }

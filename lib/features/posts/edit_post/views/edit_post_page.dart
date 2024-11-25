@@ -59,11 +59,13 @@ class _EditPostViewState extends State<EditPostView> {
   String _description = '';
   String _tags = '';
   List<String> rawTags = [];
+  late String? _photoUrl;
 
   @override
   void initState() {
     _titleController.text = widget.post.title;
     _descriptionController.text = widget.post.description;
+    _photoUrl = widget.post.photoUrl;
     super.initState();
   }
 
@@ -110,13 +112,18 @@ class _EditPostViewState extends State<EditPostView> {
           EditImage(
             width: 200,
             // height: 200,
-            photoUrl: widget.postCubit.state.photoUrl,
+            photoUrl: _photoUrl,
             collection: 'posts',
             userId: widget.post.creatorId,
             docId: postId,
             aspectX: 4,
             aspectY: 3,
-            onFileChanged: (url) => widget.postCubit.uploadImage(postId, url),
+            onFileChanged: (url) async {
+              print('uploading url');
+              await widget.postCubit.uploadImage(postId, url);
+              setState(() => _photoUrl = url);
+              print('set url $url');
+            },
           ),
           const VerticalSpacer(),
           customTextFormField(

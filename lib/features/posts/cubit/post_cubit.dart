@@ -66,11 +66,13 @@ class PostCubit extends Cubit<PostState> {
   /// Requires the new [url] for the image
   Future<void> uploadImage(int postId, String url) async {
     emit(state.fromLoading());
+    print('photourl: $url for post($postId)');
     await _postRepository.updatePostField(
       postId: postId,
       field: Post.photoUrlConverter,
       data: url,
     );
+    print('setting url: $url');
     emit(state.fromSetImage(url));
   }
 

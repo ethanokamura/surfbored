@@ -67,11 +67,13 @@ class _EditBoardViewState extends State<EditBoardView> {
   bool _descriptionIsValid = false;
   String _title = '';
   String _description = '';
+  late String? _photoUrl;
 
   @override
   void initState() {
     _titleController.text = widget.board.title;
     _descriptionController.text = widget.board.description;
+    _photoUrl = widget.board.photoUrl;
     super.initState();
   }
 
@@ -116,13 +118,16 @@ class _EditBoardViewState extends State<EditBoardView> {
           EditImage(
             width: 200,
             // height: 200,
-            photoUrl: widget.boardCubit.state.photoUrl,
+            photoUrl: _photoUrl,
             collection: 'boards',
             userId: widget.board.creatorId,
             docId: boardId,
             aspectX: 4,
             aspectY: 3,
-            onFileChanged: (url) => widget.boardCubit.uploadImage(boardId, url),
+            onFileChanged: (url) async {
+              await widget.boardCubit.uploadImage(boardId, url);
+              setState(() => _photoUrl = url);
+            },
           ),
           const VerticalSpacer(),
           customTextFormField(

@@ -39,25 +39,25 @@ class EditImage extends StatelessWidget {
               aspectX: aspectX,
               aspectY: aspectY,
             );
-          } else if (state.isLoaded) {
-            onFileChanged(state.photoUrl!);
           }
           return GestureDetector(
             onTap: () async => showImagePicker(
               context: context,
-              onSelected: (source) async =>
-                  context.read<ImageCubit>().pickAndUploadImage(
-                        userId: userId,
-                        docId: docId,
-                        collection: collection,
-                        source: source,
-                        aspectX: aspectX,
-                        aspectY: aspectY,
-                      ),
+              onSelected: (source) async {
+                await context.read<ImageCubit>().pickAndUploadImage(
+                      userId: userId,
+                      docId: docId,
+                      collection: collection,
+                      source: source,
+                      aspectX: aspectX,
+                      aspectY: aspectY,
+                    );
+                onFileChanged(state.photoUrl!);
+              },
             ),
             child: ImageWidget(
               width: width,
-              photoUrl: photoUrl,
+              photoUrl: state.photoUrl,
               borderRadius: defaultBorderRadius,
               aspectX: aspectX,
               aspectY: aspectY,

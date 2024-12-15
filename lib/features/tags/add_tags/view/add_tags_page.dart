@@ -45,11 +45,7 @@ class _AddTagsPageState extends State<AddTagsPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        top: false,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: context.l10n.createTags),
-        ),
+        title: context.l10n.createTags,
         body: SingleChildScrollView(
           child: Column(
             children: [

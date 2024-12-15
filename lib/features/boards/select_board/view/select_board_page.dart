@@ -25,11 +25,7 @@ class SelectBoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.addToBoard),
-      ),
+      title: context.l10n.addToBoard,
       body: SelectBoardsList(userId: userId, postId: postId),
     );
   }

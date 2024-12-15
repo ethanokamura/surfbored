@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/boards/boards.dart';
-// import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
@@ -77,82 +76,52 @@ class ProfileBuilder extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: CustomPageView(
-        top: true,
-
-        /// Change?
-        appBar: Navigator.canPop(context)
-            ? AppBar(
-                backgroundColor: Colors.transparent,
-                title: AppBarText(text: user.username),
-                actions: [
-                  /// TODO(Ethan): block/unblock/settings/share
-                  MoreProfileOptions(
-                    isCurrent: isCurrent,
-                    onEdit: () => Navigator.push(
-                      context,
-                      bottomSlideTransition(
-                        BlocProvider.value(
-                          value: profileCubit,
-                          child: ProfileSettingsPage(
-                            profileCubit: profileCubit,
-                          ),
-                        ),
-                      ),
-                    ),
-                    onBlock: () => {},
-                    // context.read<UserRepository>().toggleBlockUser(userId),
-                    onShare: () {},
+        title: user.username,
+        actions: [
+          MoreProfileOptions(
+            isCurrent: isCurrent,
+            onEdit: () => Navigator.push(
+              context,
+              bottomSlideTransition(
+                BlocProvider.value(
+                  value: profileCubit,
+                  child: ProfileSettingsPage(
+                    profileCubit: profileCubit,
                   ),
-                ],
-              )
-            : null,
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: defaultPadding,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ProfileHeader(user: user),
-                          const VerticalSpacer(),
-                          if (user.bio.isNotEmpty) About(bio: user.bio),
-                          if (user.bio.isNotEmpty) const VerticalSpacer(),
-                          if (user.interests.isNotEmpty)
-                            InterestsList(interests: user.interests.split('+')),
-                          if (user.interests.isNotEmpty) const VerticalSpacer(),
-                          ProfileButtons(
-                            isCurrent: isCurrent,
-                            profileCubit: profileCubit,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
               ),
-            ];
-          },
-          body: Column(
-            children: [
-              const ProfileTabBar(),
-              const VerticalSpacer(),
-              Flexible(
-                child: TabBarView(
-                  children: [
-                    UserPostList(userId: userId),
-                    UserBoards(userId: userId),
-                  ],
-                ),
-              ),
-            ],
+            ),
+            onBlock: () => {},
+            // context.read<UserRepository>().toggleBlockUser(userId),
+            onShare: () {},
           ),
+        ],
+        body: NestedWrapper(
+          header: <Widget>[
+            ProfileHeader(user: user),
+            const VerticalSpacer(),
+            if (user.bio.isNotEmpty) About(bio: user.bio),
+            if (user.bio.isNotEmpty) const VerticalSpacer(),
+            if (user.interests.isNotEmpty)
+              InterestsList(interests: user.interests.split('+')),
+            if (user.interests.isNotEmpty) const VerticalSpacer(),
+            ProfileButtons(
+              isCurrent: isCurrent,
+              profileCubit: profileCubit,
+            ),
+          ],
+          body: <Widget>[
+            const ProfileTabBar(),
+            const VerticalSpacer(),
+            Flexible(
+              child: TabBarView(
+                children: [
+                  UserPostList(userId: userId),
+                  UserBoards(userId: userId),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

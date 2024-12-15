@@ -67,6 +67,7 @@
   "shuffledPosts": "shuffled posts",
   "shuffle": "shuffle",
   "editBoard": "edit board",
+  "comments": "comments",
   "createComment": "create comment",
   "deleteComment": "delete comment",
   "emptyComments": "be the first to leave a comment!",

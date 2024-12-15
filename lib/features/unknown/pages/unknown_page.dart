@@ -8,11 +8,7 @@ class UnkownPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.pageNotFoundTitle),
-      ),
-      top: true,
+      title: context.l10n.pageNotFoundTitle,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

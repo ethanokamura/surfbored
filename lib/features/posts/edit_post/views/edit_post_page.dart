@@ -22,11 +22,7 @@ class EditPostPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        top: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: context.l10n.edit),
-        ),
+        title: context.l10n.edit,
         body: EditPostView(
           post: post,
           postCubit: context.read<PostCubit>(),

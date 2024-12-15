@@ -77,11 +77,7 @@ class _SearchPageState extends State<SearchPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: context.l10n.search),
-        ),
-        top: true,
+        title: context.l10n.search,
         body: Column(
           children: <Widget>[
             CustomContainer(

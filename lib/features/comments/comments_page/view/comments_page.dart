@@ -28,10 +28,7 @@ class CommentsPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        appBar: AppBar(
-          title: const AppBarText(text: 'Comments'),
-        ),
-        top: true,
+        title: context.l10n.comments,
         body: BlocProvider<CommentsCubit>(
           create: (context) => CommentsCubit(
             commentRepository: context.read<CommentRepository>(),

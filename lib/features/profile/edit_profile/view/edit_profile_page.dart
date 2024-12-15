@@ -14,11 +14,7 @@ class EditProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.editProfilePage),
-      ),
+      title: context.l10n.editProfilePage,
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           if (state.isLoading) {

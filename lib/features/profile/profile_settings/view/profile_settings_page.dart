@@ -20,11 +20,7 @@ class ProfileSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = context.read<ThemeCubit>().isDarkMode;
     return CustomPageView(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.settingsPage),
-      ),
-      top: false,
+      title: context.l10n.settingsPage,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -37,11 +33,8 @@ class ProfileSettingsPage extends StatelessWidget {
                       ? context.l10n.darkMode
                       : context.l10n.lightMode,
                 ),
-                ToggleButton(
-                  icon: defaultIconStyle(
-                    context,
-                    isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,
-                  ),
+                ActionIconButton(
+                  icon: isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,
                   onTap: () => context.read<ThemeCubit>().toggleTheme(),
                 ),
               ],

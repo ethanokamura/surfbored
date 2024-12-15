@@ -47,11 +47,7 @@ class CreateBoardPages extends StatelessWidget {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: CustomPageView(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: context.l10n.create),
-        ),
-        top: true,
+        title: context.l10n.create,
         body: Stack(
           children: [
             PageView(
@@ -75,11 +71,7 @@ class CreateBoardPages extends StatelessWidget {
 
 Widget _buildErrorScreen(BuildContext context) {
   return CustomPageView(
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      title: AppBarText(text: context.l10n.errorPage),
-    ),
-    top: false,
+    title: context.l10n.errorPage,
     body: Center(
       child: PrimaryText(text: context.l10n.unknownFailure),
     ),

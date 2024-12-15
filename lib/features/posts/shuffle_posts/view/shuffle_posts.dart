@@ -10,11 +10,7 @@ class ShuffledPostsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.shuffledPosts),
-      ),
+      title: context.l10n.shuffledPosts,
       body: PostViewController(posts: posts),
     );
   }

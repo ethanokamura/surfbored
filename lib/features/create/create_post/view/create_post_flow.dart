@@ -8,6 +8,8 @@ import 'package:surfbored/features/create/create_post/view/upload_post_image.dar
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/create/helpers/create_flow_controller.dart';
 import 'package:surfbored/features/create/helpers/navigator_widget.dart';
+import 'package:surfbored/features/error_page.dart';
+import 'package:surfbored/features/loading_page.dart';
 import 'package:tag_repository/tag_repository.dart';
 
 class CreatePostFlow extends StatelessWidget {
@@ -26,8 +28,8 @@ class CreatePostFlow extends StatelessWidget {
       ),
       child: BlocBuilder<CreateCubit, CreateState>(
         builder: (context, state) {
-          if (state.isFailure) return _buildErrorScreen(context);
-          if (state.isLoading) return _buildLoadingScreen();
+          if (state.isFailure) return const ErrorPage();
+          if (state.isLoading) return const LoadingPage();
           return ListenableProvider(
             create: (_) => CreateFlowController(),
             child: const CreatePostPages(),
@@ -47,11 +49,7 @@ class CreatePostPages extends StatelessWidget {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: CustomPageView(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: context.l10n.create),
-        ),
-        top: true,
+        title: context.l10n.create,
         body: Stack(
           children: [
             PageView(
@@ -71,21 +69,4 @@ class CreatePostPages extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget _buildErrorScreen(BuildContext context) {
-  return CustomPageView(
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      title: AppBarText(text: context.l10n.errorPage),
-    ),
-    top: false,
-    body: Center(
-      child: PrimaryText(text: context.l10n.unknownFailure),
-    ),
-  );
-}
-
-Widget _buildLoadingScreen() {
-  return const Center(child: CircularProgressIndicator());
 }

@@ -11,59 +11,42 @@ class ExplorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: false,
-      appBar: AppBar(
-        centerTitle: false,
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: context.l10n.explorePage),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              bottomSlideTransition(const SearchPage()),
-            ),
-            icon: appBarIconStyle(context, AppIcons.search),
+      centerTitle: false,
+      title: context.l10n.explorePage,
+      actions: [
+        IconButton(
+          onPressed: () => Navigator.push(
+            context,
+            bottomSlideTransition(const SearchPage()),
           ),
-        ],
-      ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverList(
-              delegate: SliverChildListDelegate(
-                <Widget>[],
-              ),
-            ),
-          ];
-        },
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: defaultPadding),
-          child: Column(
+          icon: appBarIconStyle(context, AppIcons.search),
+        ),
+      ],
+      body: NestedWrapper(
+        header: const [],
+        body: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: ActionButton(
-                      onTap: () {},
-                      text: 'top rated',
-                    ),
-                  ),
-                  const HorizontalSpacer(),
-                  Expanded(
-                    child: ActionButton(
-                      onTap: () {},
-                      text: 'near me',
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: ActionButton(
+                  onTap: () {},
+                  text: 'top rated',
+                ),
               ),
-              const VerticalSpacer(),
-              const Flexible(
-                child: PostFeed(),
+              const HorizontalSpacer(),
+              Expanded(
+                child: ActionButton(
+                  onTap: () {},
+                  text: 'near me',
+                ),
               ),
             ],
           ),
-        ),
+          const VerticalSpacer(),
+          const Flexible(
+            child: PostFeed(),
+          ),
+        ],
       ),
     );
   }

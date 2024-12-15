@@ -163,27 +163,69 @@ class CustomTabBarWidget extends StatelessWidget {
 class CustomPageView extends StatelessWidget {
   const CustomPageView({
     required this.body,
-    this.top,
-    this.appBar,
+    this.title,
+    this.actions,
+    this.centerTitle,
     super.key,
   });
   final Widget body;
-  final bool? top;
-  final AppBar? appBar;
+  final String? title;
+  final bool? centerTitle;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
+    final appBar = title != null || actions != null || centerTitle != null;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: appBar,
+      appBar: appBar
+          ? AppBar(
+              centerTitle: centerTitle,
+              backgroundColor: Colors.transparent,
+              title: AppBarText(text: title!),
+              actions: actions,
+            )
+          : null,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
             left: defaultPadding,
             right: defaultPadding,
-            top: (top != null && top!) ? defaultPadding : 0,
+            top: appBar ? defaultPadding : 0,
           ),
           child: body,
+        ),
+      ),
+    );
+  }
+}
+
+class NestedWrapper extends StatelessWidget {
+  const NestedWrapper({
+    required this.header,
+    required this.body,
+    super.key,
+  });
+
+  final List<Widget> header;
+  final List<Widget> body;
+
+  @override
+  Widget build(BuildContext context) {
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) {
+        return [
+          SliverList(
+            delegate: SliverChildListDelegate(
+              header,
+            ),
+          ),
+        ];
+      },
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: defaultPadding),
+        child: Column(
+          children: body,
         ),
       ),
     );

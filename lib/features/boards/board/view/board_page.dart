@@ -31,32 +31,28 @@ class BoardPage extends StatelessWidget {
             final board = state.board;
             final boardCubit = context.read<BoardCubit>();
             return CustomPageView(
-              top: true,
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                title: AppBarText(text: board.title),
-                actions: <Widget>[
-                  IconButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      bottomSlideTransition(
-                        BlocProvider.value(
-                          value: boardCubit,
-                          child: EditBoardPage(
-                            board: board,
-                            onDelete: () async {
-                              Navigator.pop(context);
-                              await boardCubit.deleteBoard(boardId);
-                              if (context.mounted) Navigator.pop(context);
-                            },
-                          ),
+              title: board.title,
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    bottomSlideTransition(
+                      BlocProvider.value(
+                        value: boardCubit,
+                        child: EditBoardPage(
+                          board: board,
+                          onDelete: () async {
+                            Navigator.pop(context);
+                            await boardCubit.deleteBoard(boardId);
+                            if (context.mounted) Navigator.pop(context);
+                          },
                         ),
                       ),
                     ),
-                    icon: defaultIconStyle(context, AppIcons.more),
                   ),
-                ],
-              ),
+                  icon: defaultIconStyle(context, AppIcons.more),
+                ),
+              ],
               body: buildBoardPage(
                 context,
                 board,

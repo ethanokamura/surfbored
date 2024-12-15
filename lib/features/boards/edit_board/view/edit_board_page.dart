@@ -29,11 +29,7 @@ class EditBoardPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        top: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: context.l10n.editBoard),
-        ),
+        title: context.l10n.editBoard,
         body: EditBoardView(
           board: board,
           boardCubit: context.read<BoardCubit>(),

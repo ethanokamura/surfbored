@@ -17,10 +17,7 @@ class FriendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      appBar: AppBar(
-        title: const AppBarText(text: 'Friends'),
-        backgroundColor: Colors.transparent,
-      ),
+      title: context.l10n.myFriends,
       body: Expanded(
         child: FriendsList(userId: userId),
       ),

@@ -6,6 +6,7 @@ import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
 import 'package:surfbored/features/profile/edit_profile/edit_profile.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
+import 'package:surfbored/features/profile/profile_cubit_wrapper.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
@@ -39,23 +40,8 @@ class _ProfilePageState extends State<ProfilePage>
         tagRepository: context.read<TagRepository>(),
         userId: widget.userId,
       ),
-      child: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.hasError) {
-            return Center(
-              child: PrimaryText(text: context.l10n.fromGetUser),
-            );
-          }
-          if (state.user.isEmpty) {
-            return Center(
-              child: PrimaryText(text: context.l10n.empty),
-            );
-          }
-          return ProfileBuilder(user: state.user);
-        },
+      child: ProfileCubitWrapper(
+        defaultFunction: (context, state) => ProfileBuilder(user: state.user),
       ),
     );
   }

@@ -1,9 +1,9 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:surfbored/features/boards/board_cubit_wrapper.dart';
 import 'package:surfbored/features/boards/board_list/view/board_card.dart';
 import 'package:surfbored/features/boards/boards.dart';
-import 'package:surfbored/features/failures/board_failures.dart';
 import 'package:surfbored/features/unknown/unknown.dart';
 
 class UserBoards extends StatelessWidget {
@@ -15,40 +15,19 @@ class UserBoards extends StatelessWidget {
       create: (context) => BoardCubit(
         boardRepository: context.read<BoardRepository>(),
       )..fetchBoards(userId),
-      child: listenForBoardFailures<BoardCubit, BoardState>(
-        failureSelector: (state) => state.failure,
-        isFailureSelector: (state) => state.isFailure,
-        child: BlocBuilder<BoardCubit, BoardState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.isLoaded) {
-              final boards = state.boards;
-              return BoardListView(
-                boards: boards,
-                onLoadMore: () async =>
-                    context.read<BoardCubit>().fetchBoards(userId),
-                onRefresh: () async => context
-                    .read<BoardCubit>()
-                    .fetchBoards(userId, refresh: true),
-              );
-            } else if (state.isEmpty) {
-              return Center(
-                child: PrimaryText(text: context.l10n.empty),
-              );
-            } else if (state.isDeleted || state.isUpdated) {
-              context.read<BoardCubit>().streamUserBoards(userId);
-              return Center(
-                child: PrimaryText(text: context.l10n.fromUpdate),
-              );
-            } else if (state.isFailure) {
-              return Center(
-                child: PrimaryText(text: context.l10n.unknownFailure),
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+      child: BoardCubitWrapper(
+        loadedFunction: (context, state) {
+          final boards = state.boards;
+          return BoardListView(
+            boards: boards,
+            onLoadMore: () async =>
+                context.read<BoardCubit>().fetchBoards(userId),
+            onRefresh: () async =>
+                context.read<BoardCubit>().fetchBoards(userId, refresh: true),
+          );
+        },
+        updatedFunction: (context, state) =>
+            context.read<BoardCubit>().streamUserBoards(userId),
       ),
     );
   }

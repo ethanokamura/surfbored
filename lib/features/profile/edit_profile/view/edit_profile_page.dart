@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
+import 'package:surfbored/features/profile/profile_cubit_wrapper.dart';
 import 'package:surfbored/features/tags/tags.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -15,23 +16,8 @@ class EditProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPageView(
       title: context.l10n.editProfilePage,
-      body: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.hasError) {
-            return Center(
-              child: PrimaryText(text: context.l10n.fromGetUser),
-            );
-          }
-          if (state.user.isEmpty) {
-            return Center(
-              child: PrimaryText(text: context.l10n.empty),
-            );
-          }
-          return EditProfileView(user: state.user);
-        },
+      body: ProfileCubitWrapper(
+        defaultFunction: (context, state) => EditProfileView(user: state.user),
       ),
     );
   }

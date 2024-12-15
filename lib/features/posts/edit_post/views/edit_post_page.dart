@@ -115,10 +115,8 @@ class _EditPostViewState extends State<EditPostView> {
             aspectX: 4,
             aspectY: 3,
             onFileChanged: (url) async {
-              print('uploading url');
               await widget.postCubit.uploadImage(postId, url);
               setState(() => _photoUrl = url);
-              print('set url $url');
             },
           ),
           const VerticalSpacer(),

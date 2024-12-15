@@ -3,8 +3,8 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/board/view/board_details.dart';
 import 'package:surfbored/features/boards/board/view/board_posts.dart';
+import 'package:surfbored/features/boards/board_cubit_wrapper.dart';
 import 'package:surfbored/features/boards/boards.dart';
-import 'package:surfbored/features/failures/board_failures.dart';
 import 'package:surfbored/features/images/images.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -20,54 +20,40 @@ class BoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<BoardCubit>().fetchBoard(boardId);
-    return listenForBoardFailures<BoardCubit, BoardState>(
-      failureSelector: (state) => state.failure,
-      isFailureSelector: (state) => state.isFailure,
-      child: BlocBuilder<BoardCubit, BoardState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.isLoaded) {
-            final board = state.board;
-            final boardCubit = context.read<BoardCubit>();
-            return CustomPageView(
-              title: board.title,
-              actions: <Widget>[
-                IconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    bottomSlideTransition(
-                      BlocProvider.value(
-                        value: boardCubit,
-                        child: EditBoardPage(
-                          board: board,
-                          onDelete: () async {
-                            Navigator.pop(context);
-                            await boardCubit.deleteBoard(boardId);
-                            if (context.mounted) Navigator.pop(context);
-                          },
-                        ),
-                      ),
+    return BoardCubitWrapper(
+      loadedFunction: (context, state) {
+        final board = state.board;
+        final boardCubit = context.read<BoardCubit>();
+        return CustomPageView(
+          title: board.title,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () => Navigator.push(
+                context,
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: boardCubit,
+                    child: EditBoardPage(
+                      board: board,
+                      onDelete: () async {
+                        Navigator.pop(context);
+                        await boardCubit.deleteBoard(boardId);
+                        if (context.mounted) Navigator.pop(context);
+                      },
                     ),
                   ),
-                  icon: defaultIconStyle(context, AppIcons.more),
                 ),
-              ],
-              body: buildBoardPage(
-                context,
-                board,
               ),
-            );
-          } else if (state.isDeleted) {
-            return Center(
-              child: PrimaryText(text: context.l10n.fromDelete),
-            );
-          }
-          return Center(
-            child: PrimaryText(text: context.l10n.unknownFailure),
-          );
-        },
-      ),
+              icon: defaultIconStyle(context, AppIcons.more),
+            ),
+          ],
+          body: buildBoardPage(
+            context,
+            board,
+          ),
+        );
+      },
+      updatedFunction: (context, state) => {},
     );
   }
 }

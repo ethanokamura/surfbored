@@ -77,45 +77,6 @@ class CustomInputField extends StatelessWidget {
   }
 }
 
-/// TODO(Ethan): remove?
-class CustomTextBox extends StatelessWidget {
-  const CustomTextBox({
-    required this.text,
-    required this.label,
-    required this.onPressed,
-    super.key,
-  });
-
-  final String text;
-  final String label;
-  final void Function() onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: CustomContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SecondaryText(text: label),
-                accentIconStyle(context, AppIcons.edit),
-              ],
-            ),
-            // text
-            PrimaryText(text: text),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// Custom container widget
 /// Requires [child] child to display inside the tab
 class CustomTabWidget extends StatelessWidget {

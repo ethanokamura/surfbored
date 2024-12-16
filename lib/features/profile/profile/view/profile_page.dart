@@ -66,7 +66,7 @@ class ProfileBuilder extends StatelessWidget {
         actions: [
           MoreProfileOptions(
             isCurrent: isCurrent,
-            onEdit: () => Navigator.push(
+            onSettings: () => Navigator.push(
               context,
               bottomSlideTransition(
                 BlocProvider.value(
@@ -95,6 +95,7 @@ class ProfileBuilder extends StatelessWidget {
               isCurrent: isCurrent,
               profileCubit: profileCubit,
             ),
+            const VerticalSpacer(),
           ],
           body: <Widget>[
             const ProfileTabBar(),

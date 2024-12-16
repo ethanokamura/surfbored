@@ -10,6 +10,7 @@ enum Options {
   manage,
   share,
   edit,
+  settings,
   delete,
   block,
 }
@@ -184,7 +185,7 @@ class MoreSearchOptions extends StatelessWidget {
 class MoreProfileOptions extends StatelessWidget {
   const MoreProfileOptions({
     required this.isCurrent,
-    required this.onEdit,
+    required this.onSettings,
     required this.onBlock,
     required this.onShare,
     this.onSurface,
@@ -193,8 +194,8 @@ class MoreProfileOptions extends StatelessWidget {
 
   final bool isCurrent;
   final bool? onSurface;
-  final void Function() onEdit;
   final void Function() onBlock;
+  final void Function() onSettings;
   final void Function() onShare;
 
   @override
@@ -214,9 +215,9 @@ class MoreProfileOptions extends StatelessWidget {
           _menuItem(
             context,
             MenuItem(
-              Options.edit,
+              Options.settings,
               AppIcons.settings,
-              context.l10n.edit,
+              context.l10n.settingsPage,
             ),
           ),
         if (!isCurrent)
@@ -230,8 +231,8 @@ class MoreProfileOptions extends StatelessWidget {
           ),
       ]),
       onSelected: (value) {
-        if (value == Options.edit) {
-          onEdit();
+        if (value == Options.settings) {
+          onSettings();
         } else if (value == Options.share) {
           // Handle share action
         } else if (value == Options.block) {

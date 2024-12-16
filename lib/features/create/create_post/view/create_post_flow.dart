@@ -8,8 +8,8 @@ import 'package:surfbored/features/create/create_post/view/upload_post_image.dar
 import 'package:surfbored/features/create/cubit/create_cubit.dart';
 import 'package:surfbored/features/create/helpers/create_flow_controller.dart';
 import 'package:surfbored/features/create/helpers/navigator_widget.dart';
-import 'package:surfbored/features/misc/error_page.dart';
-import 'package:surfbored/features/misc/loading_page.dart';
+import 'package:surfbored/features/error_page.dart';
+import 'package:surfbored/features/loading_page.dart';
 import 'package:tag_repository/tag_repository.dart';
 
 class CreatePostFlow extends StatelessWidget {

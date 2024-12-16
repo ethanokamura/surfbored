@@ -8,7 +8,7 @@ import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/authentication/create_user/create_user.dart';
 import 'package:surfbored/features/authentication/login/login.dart';
 import 'package:surfbored/features/home/home.dart';
-import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:surfbored/features/misc/unknown/unknown.dart';
 import 'package:surfbored/theme/theme_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';

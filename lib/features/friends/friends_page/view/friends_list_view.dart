@@ -1,6 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/friends/friends_page/view/friend_card.dart';
-import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:surfbored/features/misc/unknown/unknown.dart';
 
 class FriendsListView extends StatelessWidget {
   const FriendsListView({

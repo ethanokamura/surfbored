@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:surfbored/features/misc/unknown/unknown.dart';
 import 'package:surfbored/features/posts/post_list/view/post_card.dart';
-import 'package:surfbored/features/unknown/unknown.dart';
 
 class PostListView extends StatelessWidget {
   const PostListView({

@@ -3,7 +3,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/boards/select_board/view/select_board_card.dart';
-import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:surfbored/features/misc/unknown/unknown.dart';
 
 class SelectBoardPage extends StatelessWidget {
   const SelectBoardPage({

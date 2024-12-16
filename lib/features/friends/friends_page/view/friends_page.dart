@@ -17,10 +17,7 @@ class FriendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      appBar: AppBar(
-        title: const AppBarText(text: 'Friends'),
-        backgroundColor: Colors.transparent,
-      ),
+      title: context.l10n.myFriends,
       body: Expanded(
         child: FriendsList(userId: userId),
       ),
@@ -54,12 +51,12 @@ class FriendsList extends StatelessWidget {
                     context.read<FriendsCubit>().fetchFriends(userId),
               );
             } else if (state.isEmpty) {
-              return const Center(
-                child: PrimaryText(text: FriendStrings.empty),
+              return Center(
+                child: PrimaryText(text: context.l10n.empty),
               );
             }
-            return const Center(
-              child: PrimaryText(text: DataStrings.fromUnknownFailure),
+            return Center(
+              child: PrimaryText(text: context.l10n.unknownFailure),
             );
           },
         ),

@@ -1,4 +1,5 @@
 import 'package:app_ui/src/button_styles.dart';
+import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
@@ -6,10 +7,13 @@ import 'package:app_ui/src/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ActionButton extends StatelessWidget {
-  const ActionButton({
+/// Default button for the UI
+/// Requires [onTap] function to handle the tap event
+/// Optionally takes an [icon] and [text] for UI
+/// Optional padding using [horizontal] and [vertical]
+class DefaultButton extends StatelessWidget {
+  const DefaultButton({
     required this.onTap,
-    this.onSurface,
     this.icon,
     this.text,
     this.vertical,
@@ -18,7 +22,6 @@ class ActionButton extends StatelessWidget {
   });
 
   final IconData? icon;
-  final bool? onSurface;
   final String? text;
   final double? vertical;
   final double? horizontal;
@@ -28,7 +31,7 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onTap,
-      style: defaultStyle(context, onSurface: onSurface),
+      style: defaultStyle(context),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: horizontal ?? 0,
@@ -37,10 +40,7 @@ class ActionButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null)
-              onSurface != null && onSurface!
-                  ? surfaceIconStyle(context, icon!)
-                  : defaultIconStyle(context, icon!),
+            if (icon != null) defaultIconStyle(context, icon!),
             if (text != null && icon != null) const SizedBox(width: 10),
             if (text != null)
               ButtonText(
@@ -54,8 +54,13 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-class ActionAccentButton extends StatelessWidget {
-  const ActionAccentButton({
+/// Action button for the UI
+/// Accent colored background
+/// Requires [onTap] function to handle the tap event
+/// Optionally takes an [icon] and [text] for UI
+/// Optional padding using [horizontal] and [vertical]
+class ActionButton extends StatelessWidget {
+  const ActionButton({
     required this.onTap,
     this.icon,
     this.text,
@@ -83,12 +88,12 @@ class ActionAccentButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) accentIconStyle(context, icon!),
+            if (icon != null) inverseIconStyle(context, icon!),
             if (text != null && icon != null) const SizedBox(width: 10),
             if (text != null)
               ButtonText(
                 text: text!,
-                inverted: true,
+                inverted: onTap != null,
               ),
           ],
         ),
@@ -97,6 +102,10 @@ class ActionAccentButton extends StatelessWidget {
   }
 }
 
+/// Universal Icon button
+/// Requires [onTap] function to handle the tap event
+/// Requires an [icon] for UI
+/// Option UI parameters with [inverted], [background], and [onSurface]
 class ActionIconButton extends StatelessWidget {
   const ActionIconButton({
     required this.icon,
@@ -137,8 +146,11 @@ class ActionIconButton extends StatelessWidget {
   }
 }
 
-class ActionSelectButton extends StatelessWidget {
-  const ActionSelectButton({
+/// Button for bottom modals
+/// Requires [onTap] function to handle the tap event
+/// Requires an [icon] and [label] for UI
+class BottomModalButton extends StatelessWidget {
+  const BottomModalButton({
     required this.icon,
     required this.label,
     required this.onTap,
@@ -156,8 +168,8 @@ class ActionSelectButton extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onTap,
-          style: accentStyleWithPadding(context),
-          icon: selectionIconStyle(context, icon),
+          style: bottomModalStyle(context),
+          icon: inverseIconStyle(context, icon, size: 40),
         ),
         const VerticalSpacer(),
         PrimaryText(text: label),
@@ -166,6 +178,8 @@ class ActionSelectButton extends StatelessWidget {
   }
 }
 
+/// Check box for board selection
+/// Requires [isSelected] to display different icons
 class CheckBox extends StatelessWidget {
   const CheckBox({
     required this.isSelected,
@@ -181,18 +195,18 @@ class CheckBox extends StatelessWidget {
   }
 }
 
+/// Universal toggle button
+/// Used for likes and saves
+/// Requires [onTap] function to handle the tap event
+/// Optionally add an [icon] or [text] for clarity
+/// Option UI parameters with [background] and [onSurface]
 class ToggleButton extends StatelessWidget {
   const ToggleButton({
-    required this.onSurface,
     required this.onTap,
     super.key,
     this.icon,
     this.text,
-    this.background,
   });
-
-  final bool onSurface;
-  final bool? background;
   final Icon? icon;
   final String? text;
   final void Function()? onTap;
@@ -201,9 +215,7 @@ class ToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onTap,
-      style: background != null && background! == false
-          ? noBackgroundStyle()
-          : defaultStyle(context, onSurface: onSurface),
+      style: noBackgroundStyle(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -221,6 +233,8 @@ class ToggleButton extends StatelessWidget {
   }
 }
 
+/// Universal link button
+/// Requires a [url] to be linked to
 class WebLink extends StatelessWidget {
   const WebLink({required this.url, super.key});
   final String url;
@@ -251,7 +265,7 @@ class WebLink extends StatelessWidget {
         url,
         maxLines: 1,
         style: TextStyle(
-          color: Theme.of(context).accentColor,
+          color: context.theme.accentColor,
           overflow: TextOverflow.ellipsis,
         ),
       ),

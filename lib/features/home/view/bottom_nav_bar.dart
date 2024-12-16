@@ -44,20 +44,15 @@ class BottomNavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       onTap: (index) async {
         if (NavBarItem.values[index].isCreate) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute<MaterialPage<dynamic>>(
-              builder: (context) => const CreatePage(),
-            ),
-          );
+          await showCreateModal(context);
         } else {
           navBarController.item = NavBarItem.values[index];
         }
       },
       currentIndex: context
           .select((NavBarController controller) => controller.item.index),
-      selectedItemColor: Theme.of(context).accentColor,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      selectedItemColor: context.theme.accentColor,
+      backgroundColor: context.theme.colorScheme.surface,
       showSelectedLabels: true,
       showUnselectedLabels: false,
       items: const <BottomNavigationBarItem>[
@@ -74,6 +69,50 @@ class BottomNavBar extends StatelessWidget {
           label: 'Profile',
         ),
       ],
+    );
+  }
+
+  Future<void> showCreateModal(BuildContext context) async {
+    String? choice;
+    await showBottomModal(
+      context,
+      <Widget>[
+        TitleText(text: context.l10n.create, fontSize: 24),
+        const VerticalSpacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BottomModalButton(
+              icon: AppIcons.posts,
+              label: context.l10n.post,
+              onTap: () async {
+                choice = 'post';
+                Navigator.pop(context);
+              },
+            ),
+            const SizedBox(width: 40),
+            BottomModalButton(
+              icon: AppIcons.boards,
+              label: context.l10n.board,
+              onTap: () async {
+                choice = 'board';
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+    if (!context.mounted ||
+        choice == null ||
+        (choice != 'post' && choice != 'board')) {
+      return;
+    }
+    await Navigator.push(
+      context,
+      bottomSlideTransition(
+        choice == 'post' ? const CreatePostFlow() : const CreateBoardFlow(),
+      ),
     );
   }
 }

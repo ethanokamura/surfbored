@@ -7,8 +7,8 @@ class Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).colorScheme.primary,
-      shadowColor: Theme.of(context).shadowColor,
+      color: context.theme.colorScheme.primary,
+      shadowColor: context.theme.shadowColor,
       borderRadius: const BorderRadius.all(Radius.circular(5)),
       child: Padding(
         padding: const EdgeInsets.symmetric(

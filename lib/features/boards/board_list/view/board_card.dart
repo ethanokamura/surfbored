@@ -15,13 +15,11 @@ class BoardCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute<dynamic>(
-            builder: (context) {
-              return BlocProvider.value(
-                value: boardCubit,
-                child: BoardPage(boardId: board.id!),
-              );
-            },
+          bottomSlideTransition(
+            BlocProvider.value(
+              value: boardCubit,
+              child: BoardPage(boardId: board.id!),
+            ),
           ),
         );
       },

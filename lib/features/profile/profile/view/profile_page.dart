@@ -1,11 +1,12 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/boards/boards.dart';
-import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/profile/cubit/profile_cubit.dart';
+import 'package:surfbored/features/profile/edit_profile/edit_profile.dart';
 import 'package:surfbored/features/profile/profile/view/interests.dart';
+import 'package:surfbored/features/profile/profile_cubit_wrapper.dart';
 import 'package:surfbored/features/profile/profile_settings/profile_settings.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
@@ -39,23 +40,8 @@ class _ProfilePageState extends State<ProfilePage>
         tagRepository: context.read<TagRepository>(),
         userId: widget.userId,
       ),
-      child: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.hasError) {
-            return const Center(
-              child: PrimaryText(text: DataStrings.fromGetFailure),
-            );
-          }
-          if (state.user.isEmpty) {
-            return const Center(
-              child: PrimaryText(text: DataStrings.empty),
-            );
-          }
-          return ProfileBuilder(user: state.user);
-        },
+      child: ProfileCubitWrapper(
+        defaultFunction: (context, state) => ProfileBuilder(user: state.user),
       ),
     );
   }
@@ -74,136 +60,57 @@ class ProfileBuilder extends StatelessWidget {
     final isCurrent = userId == context.read<UserRepository>().user.uuid;
     final profileCubit = context.read<ProfileCubit>();
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: CustomPageView(
-        top: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: AppBarText(text: user.username),
-          actions: [
-            MoreProfileOptions(
-              isCurrent: isCurrent,
-              onEdit: () => Navigator.push(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: profileCubit,
-                      child: ProfileSettingsPage(
-                        userId: user.uuid,
-                        profileCubit: profileCubit,
-                      ),
-                    );
-                  },
+        title: user.username,
+        actions: [
+          MoreProfileOptions(
+            isCurrent: isCurrent,
+            onSettings: () => Navigator.push(
+              context,
+              bottomSlideTransition(
+                BlocProvider.value(
+                  value: profileCubit,
+                  child: ProfileSettingsPage(
+                    profileCubit: profileCubit,
+                  ),
                 ),
               ),
-              onBlock: () => {},
-              // context.read<UserRepository>().toggleBlockUser(userId),
-              onShare: () {},
+            ),
+            onBlock: () => {},
+            // context.read<UserRepository>().toggleBlockUser(userId),
+            onShare: () {},
+          ),
+        ],
+        body: NestedWrapper(
+          header: <Widget>[
+            ProfileHeader(user: user),
+            const VerticalSpacer(),
+            if (user.bio.isNotEmpty) About(bio: user.bio),
+            if (user.bio.isNotEmpty) const VerticalSpacer(),
+            if (user.interests.isNotEmpty)
+              InterestsList(interests: user.interests.split('+')),
+            if (user.interests.isNotEmpty) const VerticalSpacer(),
+            ProfileButtons(
+              isCurrent: isCurrent,
+              profileCubit: profileCubit,
+            ),
+            const VerticalSpacer(),
+          ],
+          body: <Widget>[
+            const ProfileTabBar(),
+            const VerticalSpacer(),
+            Flexible(
+              child: TabBarView(
+                children: [
+                  UserPostList(userId: userId),
+                  UserBoards(userId: userId),
+                ],
+              ),
             ),
           ],
-        ),
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: defaultPadding,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ProfileHeader(user: user),
-                          const VerticalSpacer(),
-                          if (user.bio.isNotEmpty) About(bio: user.bio),
-                          if (user.bio.isNotEmpty) const VerticalSpacer(),
-                          FriendsBlock(
-                            userId: userId,
-                            isCurrent: isCurrent,
-                          ),
-                          if (user.interests.isNotEmpty) const VerticalSpacer(),
-                          if (user.interests.isNotEmpty)
-                            InterestsList(interests: user.interests.split('+')),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ];
-          },
-          body: Column(
-            children: [
-              const ProfileTabBar(),
-              const VerticalSpacer(),
-              Flexible(
-                child: TabBarView(
-                  children: [
-                    UserPostList(userId: userId),
-                    UserBoards(userId: userId),
-                    UserBoards(userId: userId),
-                    // UserLikesList(userId: userId),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
-    );
-  }
-}
-
-class ProfileTopBar extends StatelessWidget {
-  const ProfileTopBar({
-    required this.user,
-    required this.profileCubit,
-    required this.isCurrent,
-    super.key,
-  });
-  final bool isCurrent;
-  final UserData user;
-  final ProfileCubit profileCubit;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Row(
-          children: [
-            MoreProfileOptions(
-              isCurrent: isCurrent,
-              onEdit: () => Navigator.push(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: profileCubit,
-                      child: ProfileSettingsPage(
-                        userId: user.uuid,
-                        profileCubit: profileCubit,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              onBlock: () => {},
-              // context.read<UserRepository>().toggleBlockUser(user.uuid),
-              onShare: () {},
-            ),
-            if (Navigator.of(context).canPop())
-              ActionIconButton(
-                inverted: false,
-                onTap: () => Navigator.pop(context),
-                icon: AppIcons.cancel,
-              ),
-          ],
-        ),
-      ],
     );
   }
 }
@@ -226,13 +133,15 @@ class ProfileHeader extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (user.displayName.isEmpty)
-              TitleText(text: '@${user.username}')
-            else
-              TitleText(text: user.displayName),
+            UserText(
+              text: '@${user.username}',
+              bold: true,
+              fontSize: 24,
+            ),
+            if (user.displayName.isNotEmpty) TitleText(text: user.displayName),
             if (user.websiteUrl.isNotEmpty) WebLink(url: user.websiteUrl),
             SecondaryText(
-              text: '${UserStrings.joined}: ${DateFormatter.formatTimestamp(
+              text: '${context.l10n.joined}: ${DateFormatter.formatTimestamp(
                 user.createdAt!,
               )}',
             ),
@@ -252,10 +161,56 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SecondaryText(text: UserStrings.about),
+          SecondaryText(text: context.l10n.about),
           PrimaryText(text: bio),
         ],
       ),
+    );
+  }
+}
+
+class ProfileButtons extends StatelessWidget {
+  const ProfileButtons({
+    required this.isCurrent,
+    required this.profileCubit,
+    super.key,
+  });
+  final bool isCurrent;
+  final ProfileCubit profileCubit;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: DefaultButton(
+            onTap: () {},
+            text: 'share',
+          ),
+        ),
+        const HorizontalSpacer(),
+        if (!isCurrent)
+          Expanded(
+            child: ActionButton(
+              onTap: () {},
+              text: 'subscribe',
+            ),
+          )
+        else
+          Expanded(
+            child: ActionButton(
+              onTap: () => Navigator.push(
+                context,
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: profileCubit,
+                    child: const EditProfilePage(),
+                  ),
+                ),
+              ),
+              text: 'edit profile',
+            ),
+          ),
+      ],
     );
   }
 }
@@ -268,13 +223,24 @@ class ProfileTabBar extends StatelessWidget {
     return CustomTabBarWidget(
       tabs: [
         CustomTabWidget(
-          child: defaultIconStyle(context, AppIcons.posts),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              defaultIconStyle(context, AppIcons.posts),
+              const HorizontalSpacer(),
+              PrimaryText(text: context.l10n.posts),
+            ],
+          ),
         ),
         CustomTabWidget(
-          child: defaultIconStyle(context, AppIcons.boards),
-        ),
-        CustomTabWidget(
-          child: defaultIconStyle(context, AppIcons.notLiked),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              defaultIconStyle(context, AppIcons.boards),
+              const HorizontalSpacer(),
+              PrimaryText(text: context.l10n.boards),
+            ],
+          ),
         ),
       ],
     );

@@ -30,6 +30,7 @@ class PostCubit extends Cubit<PostState> {
     emit(state.fromLoading());
     try {
       final post = await _postRepository.fetchPost(postId: postId);
+      emit(state.copyWith(photoUrl: post.photoUrl));
       emit(state.fromPostLoaded(post));
     } on PostFailure catch (failure) {
       emit(state.fromFailure(failure));
@@ -48,18 +49,48 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  /// Insertes a specific [field] with [data] for a given post
+  /// Inserts a specific [field] with [data] for a given post
   /// Requires [postId] for the target post
   Future<void> editField(int postId, String field, dynamic data) async {
     emit(state.fromLoading());
-    await _postRepository.updatePost(postId: postId, field: field, data: data);
+    await _postRepository.updatePostField(
+      postId: postId,
+      field: field,
+      data: data,
+    );
     emit(state.fromUpdate());
+  }
+
+  /// Uploads the new post image.
+  /// Requires the [postId] to update
+  /// Requires the new [url] for the image
+  Future<void> uploadImage(int postId, String url) async {
+    emit(state.fromLoading());
+    print('photourl: $url for post($postId)');
+    await _postRepository.updatePostField(
+      postId: postId,
+      field: Post.photoUrlConverter,
+      data: url,
+    );
+    print('setting url: $url');
+    emit(state.fromSetImage(url));
+  }
+
+  /// Inserts post's new [data]
+  /// Requires [postId] for the target post
+  Future<void> updatePost(int postId, Map<String, dynamic> data) async {
+    emit(state.fromLoading());
+    final post = await _postRepository.updatePost(
+      postId: postId,
+      data: data,
+    );
+    emit(state.fromPostLoaded(post));
   }
 
   /// Updates the [tags] for a given post using its [postId]
   Future<void> updateTags(int postId, List<String> tags) async {
     await _tagRepository.updatePostTags(id: postId, tags: tags);
-    await _postRepository.updatePost(
+    await _postRepository.updatePostField(
       field: Post.tagsConverter,
       postId: postId,
       data: tags.join('+'),
@@ -80,6 +111,7 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  /// TODO(Ethan): remove
   Future<void> fetchAllPosts({bool refresh = false}) async {
     if (refresh == true) {
       _currentPage = 0;
@@ -97,7 +129,7 @@ class PostCubit extends Cubit<PostState> {
       );
 
       if (posts.isEmpty) {
-        _hasMore = false; // No more boards to load
+        _hasMore = false; // No more posts to load
         emit(state.fromEmpty());
       } else {
         if (posts.length <= _pageSize) {
@@ -168,6 +200,41 @@ class PostCubit extends Cubit<PostState> {
         limit: _pageSize,
       );
 
+      if (posts.isEmpty) {
+        _hasMore = false; // No more boards to load
+        emit(state.fromEmpty());
+      } else {
+        if (posts.length <= _pageSize) {
+          _hasMore = false;
+        } else {
+          _currentPage++; // Increment the page number
+        }
+        emit(state.fromPostsLoaded([...state.posts, ...posts]));
+      }
+    } on PostFailure catch (failure) {
+      emit(state.fromFailure(failure));
+    }
+  }
+
+  /// Fetches posts based on a search query.
+  /// If [refresh] is true, resets pagination and fetches from the beginning.
+  /// Implements pagination, fetching [_pageSize] posts at a time.
+  Future<void> searchPosts(String query, {bool refresh = false}) async {
+    if (refresh) {
+      _currentPage = 0;
+      _hasMore = true;
+      emit(state.fromEmpty());
+    }
+
+    if (!_hasMore) return;
+
+    emit(state.fromLoading());
+    try {
+      final posts = await _postRepository.searchPosts(
+        query: query,
+        offset: _currentPage * _pageSize,
+        limit: _pageSize,
+      );
       if (posts.isEmpty) {
         _hasMore = false; // No more boards to load
         emit(state.fromEmpty());

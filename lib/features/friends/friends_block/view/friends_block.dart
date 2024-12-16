@@ -1,3 +1,4 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/friends/friends.dart';
 import 'package:surfbored/features/friends/friends_block/view/friend_button/friend_button.dart';
@@ -34,15 +35,12 @@ class FriendsListButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionButton(
-      onSurface: true,
       horizontal: defaultPadding,
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute<dynamic>(
-          builder: (context) => FriendsPage(userId: userId),
-        ),
+        bottomSlideTransition(FriendsPage(userId: userId)),
       ),
-      text: FriendStrings.myFriends,
+      text: context.l10n.myFriends,
     );
   }
 }

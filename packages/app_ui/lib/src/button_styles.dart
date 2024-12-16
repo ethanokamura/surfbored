@@ -1,32 +1,33 @@
 import 'package:app_ui/src/constants.dart';
+import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 
 ButtonStyle defaultStyle(BuildContext context, {bool? onSurface}) {
   return ElevatedButton.styleFrom(
-    padding: EdgeInsets.zero,
+    padding: const EdgeInsets.all(defaultPadding),
     elevation: 0,
     backgroundColor: onSurface != null && onSurface
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.surface,
+        ? context.theme.colorScheme.primary
+        : context.theme.colorScheme.surface,
     shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
   );
 }
 
 ButtonStyle accentStyle(BuildContext context) {
   return ElevatedButton.styleFrom(
-    padding: EdgeInsets.zero,
+    padding: const EdgeInsets.all(defaultPadding),
     elevation: 0,
-    backgroundColor: Theme.of(context).accentColor,
+    backgroundColor: context.theme.accentColor,
     shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
   );
 }
 
-ButtonStyle accentStyleWithPadding(BuildContext context) {
+ButtonStyle bottomModalStyle(BuildContext context) {
   return ElevatedButton.styleFrom(
     padding: const EdgeInsets.all(defaultPadding),
     elevation: 0,
-    backgroundColor: Theme.of(context).accentColor,
+    backgroundColor: context.theme.accentColor,
     shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
   );
 }

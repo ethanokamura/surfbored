@@ -30,8 +30,6 @@ class CommentLikeButton extends StatelessWidget {
             isLiked = state.liked;
           }
           return ToggleButton(
-            onSurface: true,
-            background: false,
             onTap: () async => context.read<CommentLikesCubit>().toggleLike(
                   commentId: comment.id!,
                   userId: userId,

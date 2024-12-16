@@ -1,13 +1,20 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/tags/tags.dart';
 
-class EditTagsBox extends StatelessWidget {
-  const EditTagsBox({required this.tags, required this.updateTags, super.key});
+class EditTagsPrompt extends StatelessWidget {
+  const EditTagsPrompt({
+    required this.tags,
+    required this.updateTags,
+    required this.label,
+    super.key,
+  });
   final List<String> tags;
+  final String label;
   final void Function(List<String>) updateTags;
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -16,17 +23,18 @@ class EditTagsBox extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // section name
-              const SecondaryText(text: TagStrings.edit),
-              ActionIconButton(
-                background: false,
-                inverted: true,
-                icon: AppIcons.settings,
+              PrimaryText(
+                text: label,
+                fontSize: 22,
+              ),
+              DefaultButton(
+                icon: AppIcons.edit,
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) => AddTagsPage(
+                  bottomSlideTransition(
+                    AddTagsPage(
                       tags: tags,
+                      label: label,
                       returnTags: updateTags,
                     ),
                   ),
@@ -34,11 +42,8 @@ class EditTagsBox extends StatelessWidget {
               ),
             ],
           ),
-          // tags
-          if (tags.isEmpty)
-            const PrimaryText(text: TagStrings.empty)
-          else
-            TagList(tags: tags),
+          if (tags.isNotEmpty) const VerticalSpacer(),
+          TagList(tags: tags),
         ],
       ),
     );

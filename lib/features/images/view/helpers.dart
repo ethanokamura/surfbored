@@ -28,7 +28,7 @@ Widget errorWidget({
     child: Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        color: Theme.of(context).colorScheme.primary,
+        color: context.theme.colorScheme.primary,
       ),
       child: Center(
         child: Container(
@@ -37,7 +37,7 @@ Widget errorWidget({
           decoration: BoxDecoration(
             borderRadius: borderRadius,
             image: DecorationImage(
-              image: AssetImage(Theme.of(context).defaultImagePath),
+              image: AssetImage(context.theme.defaultImagePath),
               fit: BoxFit.contain,
             ),
           ),
@@ -75,7 +75,7 @@ Widget imageWidget({
       aspectRatio: aspectX / aspectY,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
+          color: context.theme.colorScheme.primary,
           borderRadius: borderRadius,
           image: DecorationImage(
             fit: BoxFit.cover,

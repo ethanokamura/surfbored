@@ -26,8 +26,7 @@ class AppCubit extends Cubit<AppState> {
         : const AppState.needsUsername();
   }
 
-  /// Public function to recheck user's authenticated state
-  void reinitState() {
+  void verifyUsernameExistence() {
     final user = _userRepository.user;
     user.hasUsername
         ? emit(AppState.newlyAuthenticated(user))

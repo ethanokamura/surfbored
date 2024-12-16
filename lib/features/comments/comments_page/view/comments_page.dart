@@ -28,10 +28,7 @@ class CommentsPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        appBar: AppBar(
-          title: const AppBarText(text: 'Comments'),
-        ),
-        top: true,
+        title: context.l10n.comments,
         body: BlocProvider<CommentsCubit>(
           create: (context) => CommentsCubit(
             commentRepository: context.read<CommentRepository>(),
@@ -72,12 +69,12 @@ class CommentsView extends StatelessWidget {
           final comments = state.comments;
           return CommentListView(comments: comments, postId: postId);
         } else if (state.isEmpty) {
-          return const Center(
-            child: PrimaryText(text: CommentStrings.empty),
+          return Center(
+            child: PrimaryText(text: context.l10n.empty),
           );
         }
-        return const Center(
-          child: PrimaryText(text: DataStrings.fromUnknownFailure),
+        return Center(
+          child: PrimaryText(text: context.l10n.unknownFailure),
         );
       },
     );

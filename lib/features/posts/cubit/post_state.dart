@@ -20,6 +20,7 @@ final class PostState extends Equatable {
     this.post = Post.empty,
     this.posts = const [],
     this.tags = const [],
+    this.photoUrl = '',
     this.failure = PostFailure.empty,
   });
 
@@ -28,6 +29,7 @@ final class PostState extends Equatable {
 
   final PostStatus status;
   final Post post;
+  final String photoUrl;
   final List<Post> posts;
   final List<String> tags;
   final PostFailure failure;
@@ -37,6 +39,7 @@ final class PostState extends Equatable {
   List<Object?> get props => [
         status,
         post,
+        photoUrl,
         tags,
         posts,
         failure,
@@ -47,6 +50,7 @@ final class PostState extends Equatable {
   PostState copyWith({
     PostStatus? status,
     Post? post,
+    String? photoUrl,
     List<Post>? posts,
     List<String>? tags,
     PostFailure? failure,
@@ -54,6 +58,7 @@ final class PostState extends Equatable {
     return PostState._(
       status: status ?? this.status,
       post: post ?? this.post,
+      photoUrl: photoUrl ?? this.photoUrl,
       tags: tags ?? this.tags,
       posts: posts ?? this.posts,
       failure: failure ?? this.failure,
@@ -75,6 +80,9 @@ extension PostStateExtensions on PostState {
 /// Extension methods for creating new [PostState] instances.
 extension _PostStateExtensions on PostState {
   PostState fromLoading() => copyWith(status: PostStatus.loading);
+
+  PostState fromSetImage(String url) =>
+      copyWith(status: PostStatus.loaded, photoUrl: url);
 
   PostState fromEmpty() => copyWith(posts: [], status: PostStatus.empty);
 

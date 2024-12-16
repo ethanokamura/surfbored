@@ -1,3 +1,4 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 
 class UnkownPage extends StatelessWidget {
@@ -7,11 +8,7 @@ class UnkownPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const AppBarText(text: UnknownStrings.pageNotFoundTitle),
-      ),
-      top: true,
+      title: context.l10n.pageNotFoundTitle,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -22,14 +19,14 @@ class UnkownPage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: defaultBorderRadius,
                 image: DecorationImage(
-                  image: AssetImage(Theme.of(context).defaultImagePath),
+                  image: AssetImage(context.theme.defaultImagePath),
                   fit: BoxFit.contain,
                 ),
               ),
             ),
             const VerticalSpacer(),
             const VerticalSpacer(),
-            const TitleText(text: UnknownStrings.pageNotFound),
+            TitleText(text: context.l10n.pageNotFound),
           ],
         ),
       ),

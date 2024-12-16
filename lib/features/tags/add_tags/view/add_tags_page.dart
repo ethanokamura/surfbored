@@ -1,13 +1,16 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/tags/add_tags/view/edit_tag_list.dart';
 
 class AddTagsPage extends StatefulWidget {
   const AddTagsPage({
     required this.returnTags,
+    required this.label,
     required this.tags,
     super.key,
   });
 
+  final String label;
   final List<String> tags;
   final void Function(List<String> tags) returnTags;
 
@@ -42,48 +45,42 @@ class _AddTagsPageState extends State<AddTagsPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
-        top: false,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: const AppBarText(text: TagStrings.create),
-        ),
+        title: context.l10n.createTags,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              CustomContainer(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: TextField(
-                        controller: _tagController,
-                        cursorColor: Theme.of(context).subtextColor,
-                        decoration: const InputDecoration(
-                          labelText: TagStrings.createSingle,
-                        ),
-                      ),
+              Row(
+                children: [
+                  Flexible(
+                    child: customTextFormField(
+                      controller: _tagController,
+                      context: context,
+                      maxLength: 10,
+                      label: widget.label,
                     ),
-                    ActionIconButton(
-                      inverted: true,
-                      icon: AppIcons.create,
-                      onTap: () {
-                        final tag = _tagController.text.trim();
-                        if (tag.isNotEmpty) {
-                          setState(() => _tags.add(tag));
-                        }
-                        _tagController.clear();
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  const HorizontalSpacer(),
+                  ActionIconButton(
+                    inverted: true,
+                    icon: AppIcons.create,
+                    onTap: () {
+                      final tag = _tagController.text.trim();
+                      if (tag.isNotEmpty) {
+                        setState(() => _tags.add(tag));
+                      }
+                      _tagController.clear();
+                    },
+                  ),
+                ],
               ),
-              const VerticalSpacer(),
+              const VerticalSpacer(multiple: 2),
               EditTagList(
                 tags: _tags,
                 onDelete: _deleteTag,
               ),
               const VerticalSpacer(),
-              ActionAccentButton(
-                text: ButtonStrings.confirm,
+              ActionButton(
+                text: context.l10n.save,
                 onTap: () {
                   widget.returnTags(_tags);
                   Navigator.pop(context);

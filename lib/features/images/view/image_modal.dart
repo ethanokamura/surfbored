@@ -1,3 +1,4 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 
 Future<void> showImagePicker({
@@ -7,23 +8,23 @@ Future<void> showImagePicker({
   await showBottomModal(
     context,
     <Widget>[
-      const TitleText(text: '${ImageStrings.selectMedia}:', fontSize: 24),
+      TitleText(text: context.l10n.selectMedia, fontSize: 24),
       const VerticalSpacer(),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ActionSelectButton(
+          BottomModalButton(
             icon: AppIcons.camera,
-            label: ImageStrings.camera,
+            label: context.l10n.camera,
             onTap: () async {
               Navigator.pop(context);
               await onSelected(ImageSource.camera);
             },
           ),
           const SizedBox(width: 40),
-          ActionSelectButton(
+          BottomModalButton(
             icon: AppIcons.posts,
-            label: ImageStrings.photoLibrary,
+            label: context.l10n.library,
             onTap: () async {
               Navigator.pop(context);
               await onSelected(ImageSource.gallery);

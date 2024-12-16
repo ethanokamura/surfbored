@@ -1,3 +1,4 @@
+export 'bottom_modal.dart';
 export 'button_styles.dart';
 export 'buttons.dart';
 export 'colors.dart';
@@ -5,9 +6,9 @@ export 'constants.dart';
 export 'extensions.dart';
 export 'icons.dart';
 export 'more_options.dart';
-export 'pop_ups.dart';
 export 'strings.dart';
 export 'text.dart';
 export 'text_form.dart';
 export 'theme.dart';
+export 'transitions.dart';
 export 'widgets.dart';

@@ -25,6 +25,7 @@ class BoardCubit extends Cubit<BoardState> {
     emit(state.fromLoading());
     try {
       final board = await _boardRepository.fetchBoard(boardId: boardId);
+      emit(state.copyWith(photoUrl: board.photoUrl));
       emit(state.fromBoardLoaded(board));
     } on BoardFailure catch (failure) {
       emit(state.fromFailure(failure));
@@ -75,13 +76,34 @@ class BoardCubit extends Cubit<BoardState> {
   /// After updating, re-fetches the board to ensure state consistency.
   Future<void> editField(int boardId, String field, dynamic data) async {
     emit(state.fromLoading());
-    await _boardRepository.updateBoard(
+    await _boardRepository.updateBoardField(
       boardId: boardId,
       field: field,
       data: data,
     );
     emit(state.fromUpdated());
     await fetchBoard(boardId);
+  }
+
+  /// Uploads the new board image.
+  /// Requires the [boardId] to update
+  /// Requires the new [url] for the image
+  Future<void> uploadImage(int boardId, String url) async {
+    emit(state.fromLoading());
+    await _boardRepository.updateBoardField(
+      boardId: boardId,
+      field: Board.photoUrlConverter,
+      data: url,
+    );
+    emit(state.fromSetImage(url));
+  }
+
+  /// Updates the given of a board.
+  Future<void> updateBoard(int boardId, Map<String, dynamic> data) async {
+    emit(state.fromLoading());
+    final board =
+        await _boardRepository.updateBoard(boardId: boardId, data: data);
+    emit(state.fromBoardLoaded(board));
   }
 
   /// Deletes a board by its ID.

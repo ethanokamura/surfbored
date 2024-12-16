@@ -50,7 +50,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updateInterests(List<String> interests) async {
     await _tagRepository.updateUserTags(userId: _userID, tags: interests);
 
-    await _userRepository.updateUser(
+    await _userRepository.updateUserField(
       field: UserData.interestsConverter,
       data: interests.join('+'),
     );
@@ -58,5 +58,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   /// Updates the given [field] with [data] for the current user
   Future<void> editField(String field, dynamic data) async =>
-      _userRepository.updateUser(field: field, data: data);
+      _userRepository.updateUserField(field: field, data: data);
+
+  Future<void> saveChanges(Map<String, dynamic> data) async =>
+      _userRepository.updateUser(data: data, uuid: _userID);
 }

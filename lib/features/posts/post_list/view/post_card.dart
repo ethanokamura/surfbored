@@ -10,7 +10,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => postPopUp(context, post),
+      onTap: () async => postPopUp(context, post),
       child: CustomContainer(
         child: Row(
           children: [

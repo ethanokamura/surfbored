@@ -24,7 +24,6 @@ class SaveButton extends StatelessWidget {
             isSaved = state.saved;
           }
           return ToggleButton(
-            onSurface: false,
             onTap: () => context.read<SaveCubit>().toggleSave(
                   userId: userId,
                   boardId: boardId,
@@ -33,7 +32,7 @@ class SaveButton extends StatelessWidget {
             icon: isSaved
                 ? accentIconStyle(context, AppIcons.saved)
                 : defaultIconStyle(context, AppIcons.notSaved),
-            text: '$saves ${BoardStrings.saves}',
+            text: saves.toString(),
           );
         },
       ),

@@ -25,12 +25,12 @@ class _OtpPromptState extends State<OtpPrompt> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const AppBarText(text: AuthStrings.otpPrompt),
         customTextFormField(
           controller: _otpController,
           keyboardType: TextInputType.number,
           context: context,
-          label: AuthStrings.otpHint,
+          label: context.l10n.otpPrompt,
+          maxLength: 6,
           onChanged: (otp) => setState(() => _otp = otp.trim()),
           validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
         ),
@@ -49,7 +49,7 @@ class _OtpPromptState extends State<OtpPrompt> {
                   }
                 }
               : null,
-          text: ButtonStrings.continueText,
+          text: context.l10n.next,
         ),
       ],
     );

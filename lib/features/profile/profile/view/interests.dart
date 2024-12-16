@@ -1,3 +1,4 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/tags/tags.dart';
 
@@ -10,7 +11,7 @@ class InterestsList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SecondaryText(text: UserStrings.interests),
+          SecondaryText(text: context.l10n.interests),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: TagList(tags: interests),

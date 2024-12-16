@@ -20,6 +20,7 @@ final class BoardState extends Equatable {
     this.boards = const [],
     this.failure = BoardFailure.empty,
     this.selected = false,
+    this.photoUrl = '',
     this.index = 0,
   });
 
@@ -31,6 +32,7 @@ final class BoardState extends Equatable {
   final List<Board> boards;
   final BoardFailure failure;
   final bool selected;
+  final String photoUrl;
   final int index;
 
   // Rebuilds the widget when the props change
@@ -41,6 +43,7 @@ final class BoardState extends Equatable {
         boards,
         failure,
         selected,
+        photoUrl,
         index,
       ];
 
@@ -51,6 +54,7 @@ final class BoardState extends Equatable {
     Board? board,
     List<Board>? boards,
     BoardFailure? failure,
+    String? photoUrl,
     bool? selected,
     int? index,
   }) {
@@ -59,6 +63,7 @@ final class BoardState extends Equatable {
       board: board ?? this.board,
       boards: boards ?? this.boards,
       failure: failure ?? this.failure,
+      photoUrl: photoUrl ?? this.photoUrl,
       selected: selected ?? this.selected,
       index: index ?? this.index,
     );
@@ -89,6 +94,9 @@ extension _BoardStateExtensions on BoardState {
         status: BoardStatus.loaded,
         board: board,
       );
+
+  BoardState fromSetImage(String url) =>
+      copyWith(photoUrl: url, status: BoardStatus.loaded);
 
   BoardState fromBoardsLoaded(List<Board> boards) => copyWith(
         status: BoardStatus.loaded,

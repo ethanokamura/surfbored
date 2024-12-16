@@ -24,17 +24,16 @@ class FriendButton extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             if (state.isLoaded) {
-              final buttonText = _getButtonText(state.friendStatus);
+              final buttonText = _getButtonText(context, state.friendStatus);
               return state.friendStatus != FriendStatus.requested
-                  ? ActionAccentButton(
+                  ? ActionButton(
                       horizontal: defaultPadding,
                       onTap: () => context
                           .read<FriendButtonCubit>()
                           .friendStateSelection(userId),
                       text: buttonText,
                     )
-                  : ActionButton(
-                      onSurface: true,
+                  : DefaultButton(
                       horizontal: defaultPadding,
                       onTap: () => context
                           .read<FriendButtonCubit>()
@@ -42,8 +41,8 @@ class FriendButton extends StatelessWidget {
                       text: buttonText,
                     );
             }
-            return const Center(
-              child: PrimaryText(text: DataStrings.emptyFailure),
+            return Center(
+              child: PrimaryText(text: context.l10n.empty),
             );
           },
         ),
@@ -51,10 +50,10 @@ class FriendButton extends StatelessWidget {
     );
   }
 
-  String _getButtonText(FriendStatus status) {
-    if (status == FriendStatus.requested) return FriendStrings.requestSent;
-    if (status == FriendStatus.recieved) return FriendStrings.acceptRequest;
-    if (status == FriendStatus.friends) return FriendStrings.removeFriend;
-    return FriendStrings.addFriend;
+  String _getButtonText(BuildContext context, FriendStatus status) {
+    if (status == FriendStatus.requested) return context.l10n.requestSent;
+    if (status == FriendStatus.recieved) return context.l10n.acceptRequest;
+    if (status == FriendStatus.friends) return context.l10n.removeFriend;
+    return context.l10n.addFriend;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/posts/posts.dart';
+import 'package:surfbored/features/search/view/search_post_list_view.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -59,8 +59,8 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Future<void> _onSearchChanged(BuildContext context, String query) async {
-    if (query.isEmpty) return;
+  Future<void> _validateQuery(BuildContext context, String query) async {
+    if (query.isEmpty || query == _query) return;
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       setState(() {
@@ -77,44 +77,31 @@ class _SearchPageState extends State<SearchPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomPageView(
+        title: context.l10n.search,
         body: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _searchTextController,
-                    onChanged: (value) async => _onSearchChanged(
-                      context,
-                      value.trim(),
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: defaultPadding,
-                      ),
-                      label: const PrimaryText(text: PromptStrings.search),
-                      prefixIcon: defaultIconStyle(context, AppIcons.search),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 2,
-                        ),
-                      ),
+            CustomContainer(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: searchTextFormField(
+                      icon: AppIcons.search,
+                      context: context,
+                      label: context.l10n.searchPrompt,
+                      controller: _searchTextController,
+                      onChanged: (value) async =>
+                          _validateQuery(context, value.trim()),
                     ),
                   ),
-                ),
-                const HorizontalSpacer(),
-                ActionIconButton(
-                  icon: AppIcons.cancel,
-                  onTap: () => Navigator.pop(context),
-                ),
-              ],
+                ],
+              ),
             ),
             const VerticalSpacer(),
             if (_query.isNotEmpty)
               Expanded(
-                child: PostListView(
+                child: SearchPostListView(
                   posts: _posts,
                   hasMore: hasMore,
                   onLoadMore: () async => _searchForPosts(context, _query),
@@ -123,9 +110,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               )
             else
-              const PrimaryText(
-                text: 'Enter a tag, title or description of something',
-              ),
+              PrimaryText(text: context.l10n.queryPrompt),
           ],
         ),
       ),

@@ -27,8 +27,9 @@ class _PhonePromptState extends State<PhonePrompt> {
           controller: _phoneController,
           keyboardType: TextInputType.phone,
           context: context,
-          label: AuthStrings.phoneNumberPrompt,
+          label: context.l10n.phoneNumberPrompt,
           prefix: '+1 ',
+          maxLength: 10,
           onChanged: (number) => setState(() => _phoneNumber = number.trim()),
           validator: (number) =>
               number?.length != 10 ? 'Invalid Phone Number' : null,
@@ -49,7 +50,7 @@ class _PhonePromptState extends State<PhonePrompt> {
                   }
                 }
               : null,
-          text: ButtonStrings.continueText,
+          text: context.l10n.next,
         ),
       ],
     );

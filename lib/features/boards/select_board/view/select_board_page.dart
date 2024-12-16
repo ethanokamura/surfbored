@@ -3,7 +3,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/boards/select_board/view/select_board_card.dart';
-import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:surfbored/features/misc/unknown/unknown.dart';
 
 class SelectBoardPage extends StatelessWidget {
   const SelectBoardPage({
@@ -25,11 +25,7 @@ class SelectBoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppBarStrings.addToBoard),
-      ),
+      title: context.l10n.addToBoard,
       body: SelectBoardsList(userId: userId, postId: postId),
     );
   }
@@ -62,17 +58,17 @@ class SelectBoardsList extends StatelessWidget {
                   context.read<BoardCubit>().fetchBoards(userId),
             );
           } else if (state.isEmpty) {
-            return const Center(
-              child: PrimaryText(text: PostStrings.empty),
+            return Center(
+              child: PrimaryText(text: context.l10n.empty),
             );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<BoardCubit>().streamUserBoards(userId);
-            return const Center(
-              child: PrimaryText(text: DataStrings.fromUpdate),
+            return Center(
+              child: PrimaryText(text: context.l10n.fromUpdate),
             );
           } else if (state.isFailure) {
-            return const Center(
-              child: PrimaryText(text: PostStrings.failure),
+            return Center(
+              child: PrimaryText(text: context.l10n.fetchFailure),
             );
           }
           return const Center(child: CircularProgressIndicator());

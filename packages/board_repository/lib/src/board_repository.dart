@@ -29,6 +29,17 @@ extension Create on BoardRepository {
     }
   }
 
+  /// Creates a new board and returns its ID.
+  Future<int> uploadBoard({required Map<String, dynamic> data}) async {
+    try {
+      final res =
+          await _supabase.fromBoardsTable().insert(data).select('id').single();
+      return res['id'] as int;
+    } catch (e) {
+      throw BoardFailure.fromCreate();
+    }
+  }
+
   /// Saves a board for a user.
   Future<void> saveBoard({required BoardSave save}) async {
     try {
@@ -188,7 +199,7 @@ extension StreamData on BoardRepository {
 
 extension Update on BoardRepository {
   /// Updates a specific field of a board.
-  Future<void> updateBoard({
+  Future<void> updateBoardField({
     required String field,
     required int boardId,
     required dynamic data,
@@ -197,6 +208,24 @@ extension Update on BoardRepository {
       await _supabase
           .fromBoardsTable()
           .update({field: data}).eq(Board.idConverter, boardId);
+    } catch (e) {
+      throw BoardFailure.fromUpdate();
+    }
+  }
+
+  /// Updates the entire board.
+  Future<Board> updateBoard({
+    required int boardId,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final board = await _supabase
+          .fromBoardsTable()
+          .update(data)
+          .eq(Board.idConverter, boardId)
+          .single()
+          .withConverter(Board.converterSingle);
+      return board;
     } catch (e) {
       throw BoardFailure.fromUpdate();
     }

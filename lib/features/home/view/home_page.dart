@@ -20,8 +20,6 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> showSearch(BuildContext context) async {}
 }
 
 class HomeBody extends StatelessWidget {
@@ -36,7 +34,7 @@ class HomeBody extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         const ExplorePage(),
-        const Center(child: TitleText(text: AppStrings.create)),
+        Center(child: TitleText(text: context.l10n.create)),
         ProfilePage(userId: userId),
       ],
     );

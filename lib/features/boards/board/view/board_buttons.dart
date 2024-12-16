@@ -2,7 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/boards/board/view/saves/saves.dart';
+// import 'package:surfbored/features/boards/board/view/saves/saves.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -22,22 +22,22 @@ class BoardButtons extends StatelessWidget {
   final PostCubit postCubit;
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Row(
       children: [
-        if (isOwner)
-          Expanded(
-            child: ActionButton(
-              onTap: () {},
-              text: ButtonStrings.share,
-            ),
+        Expanded(
+          child: DefaultButton(
+            onTap: () {},
+            text: l10n.share,
           ),
-        if (!isOwner)
-          Expanded(
-            child: SaveButton(
-              board: board,
-              userId: user.uuid,
-            ),
-          ),
+        ),
+
+        /// TODO(Ethan): add save
+        // Expanded(
+        //   child: SaveButton(
+        //     board: board,
+        //     userId: user.uuid,
+        //   ),
         const HorizontalSpacer(),
         Expanded(
           child: ActionButton(
@@ -45,17 +45,15 @@ class BoardButtons extends StatelessWidget {
               posts.shuffle();
               Navigator.push(
                 context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: postCubit,
-                      child: ShuffledPostsPage(posts: posts),
-                    );
-                  },
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: postCubit,
+                    child: ShuffledPostsPage(posts: posts),
+                  ),
                 ),
               );
             },
-            text: ButtonStrings.shuffle,
+            text: l10n.shuffle,
           ),
         ),
       ],

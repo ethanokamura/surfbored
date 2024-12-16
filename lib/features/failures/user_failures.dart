@@ -14,16 +14,16 @@ BlocListener<C, S> listenForUserFailures<C extends Cubit<S>, S>({
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);
         final message = switch (failure) {
-          EmptyFailure() => DataStrings.emptyFailure,
-          CreateFailure() => DataStrings.fromCreateFailure,
-          GetFailure() => DataStrings.fromGetFailure,
-          UpdateFailure() => DataStrings.fromUpdateFailure,
-          DeleteFailure() => DataStrings.fromDeleteFailure,
-          AuthChangesFailure() => AuthStrings.authFailure,
-          SignOutFailure() => AuthStrings.signOutFailure,
-          InvalidPhoneNumberFailure() => AuthStrings.invalidPhoneNumber,
-          PhoneNumberSignInFailure() => AuthStrings.signInFailure,
-          _ => DataStrings.fromUnknownFailure,
+          EmptyFailure() => context.l10n.empty,
+          CreateFailure() => context.l10n.createFailure,
+          GetFailure() => context.l10n.fetchFailure,
+          UpdateFailure() => context.l10n.updateFailure,
+          DeleteFailure() => context.l10n.deleteFailure,
+          AuthChangesFailure() => context.l10n.authFailure,
+          SignOutFailure() => context.l10n.signOutFailure,
+          InvalidPhoneNumberFailure() => context.l10n.invalidPhoneNumber,
+          PhoneNumberSignInFailure() => context.l10n.signInFailure,
+          _ => context.l10n.unknownFailure,
         };
         context.showSnackBar(message);
       }

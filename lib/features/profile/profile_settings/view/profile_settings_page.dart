@@ -4,59 +4,65 @@ import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/theme/theme_cubit.dart';
 
-class ProfileSettingsPage extends StatelessWidget {
+class ProfileSettingsPage extends StatefulWidget {
   const ProfileSettingsPage({
     required this.profileCubit,
-    required this.userId,
     super.key,
   });
-  final String userId;
   final ProfileCubit profileCubit;
-  static MaterialPage<void> page({
-    required String userId,
-    required ProfileCubit profileCubit,
-  }) {
+  static MaterialPage<void> page({required ProfileCubit profileCubit}) {
     return MaterialPage<void>(
-      child: ProfileSettingsPage(userId: userId, profileCubit: profileCubit),
+      child: ProfileSettingsPage(profileCubit: profileCubit),
     );
   }
 
   @override
+  State<ProfileSettingsPage> createState() => _ProfileSettingsPageState();
+}
+
+class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
+  late bool isDarkMode;
+  @override
+  void initState() {
+    isDarkMode = context.read<ThemeCubit>().isDarkMode;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.read<ThemeCubit>().isDarkMode;
     return CustomPageView(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const AppBarText(text: UserStrings.settings),
-      ),
-      top: false,
+      title: context.l10n.settingsPage,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ActionButton(
-              text:
-                  // ignore: lines_longer_than_80_chars
-                  '${AppStrings.theme}: ${isDarkMode ? ButtonStrings.darkMode : ButtonStrings.lightMode}',
-              onTap: () => context.read<ThemeCubit>().toggleTheme(),
+            DefaultButton(
+              icon: isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,
+              text: isDarkMode ? context.l10n.darkMode : context.l10n.lightMode,
+              onTap: () async {
+                await context.read<ThemeCubit>().toggleTheme();
+                setState(() {
+                  isDarkMode = context.read<ThemeCubit>().isDarkMode;
+                });
+              },
             ),
-            ActionButton(
+            const VerticalSpacer(),
+            DefaultButton(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return BlocProvider.value(
-                      value: profileCubit,
-                      child: EditProfilePage(userId: userId),
-                    );
-                  },
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: widget.profileCubit,
+                    child: const EditProfilePage(),
+                  ),
                 ),
               ),
-              text: UserStrings.editProfile,
+              text: context.l10n.editProfilePage,
             ),
+            const VerticalSpacer(),
             ActionButton(
               onTap: context.read<AppCubit>().logOut,
-              text: AuthStrings.logOut,
+              text: context.l10n.logOut,
             ),
           ],
         ),

@@ -10,11 +10,7 @@ class ShuffledPostsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const AppBarText(text: AppBarStrings.shuffledPosts),
-      ),
+      title: context.l10n.shuffledPosts,
       body: PostViewController(posts: posts),
     );
   }
@@ -40,7 +36,7 @@ class PostViewController extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ActionButton(
-                        text: ButtonStrings.last,
+                        text: context.l10n.previous,
                         onTap: () {
                           if (state > 0) {
                             context.read<ShuffleIndexCubit>().decrement();
@@ -50,8 +46,8 @@ class PostViewController extends StatelessWidget {
                     ),
                     const HorizontalSpacer(),
                     Expanded(
-                      child: ActionAccentButton(
-                        text: ButtonStrings.next,
+                      child: DefaultButton(
+                        text: context.l10n.next,
                         onTap: () {
                           if (state < posts.length - 1) {
                             context.read<ShuffleIndexCubit>().increment();

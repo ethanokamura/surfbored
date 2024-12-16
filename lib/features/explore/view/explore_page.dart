@@ -1,3 +1,4 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/posts/posts.dart';
 import 'package:surfbored/features/search/search.dart';
@@ -10,25 +11,43 @@ class ExplorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPageView(
-      top: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const AppBarText(text: '🌊 ${AppStrings.appTitle} 🌊'),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (context) {
-                  return const SearchPage();
-                },
+      centerTitle: false,
+      title: context.l10n.explorePage,
+      actions: [
+        IconButton(
+          onPressed: () => Navigator.push(
+            context,
+            bottomSlideTransition(const SearchPage()),
+          ),
+          icon: appBarIconStyle(context, AppIcons.search),
+        ),
+      ],
+      body: NestedWrapper(
+        header: const [],
+        body: [
+          Row(
+            children: [
+              Expanded(
+                child: ActionButton(
+                  onTap: () {},
+                  text: 'top rated',
+                ),
               ),
-            ),
-            icon: defaultIconStyle(context, AppIcons.search),
+              const HorizontalSpacer(),
+              Expanded(
+                child: ActionButton(
+                  onTap: () {},
+                  text: 'near me',
+                ),
+              ),
+            ],
+          ),
+          const VerticalSpacer(),
+          const Flexible(
+            child: PostFeed(),
           ),
         ],
       ),
-      body: const PostFeed(),
     );
   }
 }

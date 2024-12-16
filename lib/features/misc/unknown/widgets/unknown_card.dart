@@ -1,3 +1,4 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:surfbored/features/images/view/image.dart';
 
@@ -23,7 +24,7 @@ class UnknownCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const TitleText(text: UnknownStrings.empty),
+                TitleText(text: context.l10n.empty),
                 SecondaryText(text: message),
               ],
             ),

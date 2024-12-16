@@ -13,14 +13,14 @@ BlocListener<C, S> listenForBoardFailures<C extends Cubit<S>, S>({
       if (isFailureSelector(state)) {
         final failure = failureSelector(state);
         final message = switch (failure) {
-          EmptyFailure() => DataStrings.emptyFailure,
-          CreateFailure() => DataStrings.fromCreateFailure,
-          ReadFailure() => DataStrings.fromGetFailure,
-          UpdateFailure() => DataStrings.fromUpdateFailure,
-          DeleteFailure() => DataStrings.fromDeleteFailure,
-          AddSaveFailure() => DataStrings.fromAddSaveFailure,
-          RemoveSaveFailure() => DataStrings.fromRemoveSaveFailure,
-          _ => DataStrings.fromUnknownFailure,
+          EmptyFailure() => context.l10n.empty,
+          CreateFailure() => context.l10n.createFailure,
+          ReadFailure() => context.l10n.fetchFailure,
+          UpdateFailure() => context.l10n.updateFailure,
+          DeleteFailure() => context.l10n.deleteFailure,
+          AddSaveFailure() => context.l10n.addSaveFailure,
+          RemoveSaveFailure() => context.l10n.removeSaveFailure,
+          _ => context.l10n.unknownFailure,
         };
         context.showSnackBar(message);
       }

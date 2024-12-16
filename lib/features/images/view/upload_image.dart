@@ -6,10 +6,10 @@ import 'package:surfbored/features/images/cubit/image_cubit.dart';
 import 'package:surfbored/features/images/images.dart';
 import 'package:surfbored/features/images/view/helpers.dart';
 import 'package:surfbored/features/images/view/image_modal.dart';
+import 'package:surfbored/features/images/view/image_preview.dart';
 
 class UploadImage extends StatelessWidget {
   const UploadImage({
-    required this.photoUrl,
     required this.width,
     required this.onFileChanged,
     required this.aspectX,
@@ -18,7 +18,6 @@ class UploadImage extends StatelessWidget {
   });
 
   final ValueChanged<File> onFileChanged;
-  final String? photoUrl;
   final double width;
   final double aspectX;
   final double aspectY;
@@ -40,14 +39,22 @@ class UploadImage extends StatelessWidget {
             final pickedImage = state.imageFile!.readAsBytesSync();
             return picker(
               context,
-              Image.memory(pickedImage),
+              state,
+              ImagePreview(
+                image: pickedImage,
+                width: 256,
+                borderRadius: defaultBorderRadius,
+                aspectX: 4,
+                aspectY: 3,
+              ),
             );
           }
           return picker(
             context,
+            state,
             ImageWidget(
               width: width,
-              photoUrl: photoUrl,
+              photoUrl: null,
               borderRadius: defaultBorderRadius,
               aspectX: aspectX,
               aspectY: aspectY,
@@ -58,17 +65,24 @@ class UploadImage extends StatelessWidget {
     );
   }
 
-  Widget picker(BuildContext context, Widget child) {
-    return GestureDetector(
-      onTap: () async => showImagePicker(
-        context: context,
-        onSelected: (source) async => context.read<ImageCubit>().pickImage(
-              source: source,
-              aspectX: aspectX,
-              aspectY: aspectY,
-            ),
-      ),
-      child: child,
+  Widget picker(BuildContext context, ImageState state, Widget child) {
+    return Column(
+      children: [
+        child,
+        const VerticalSpacer(),
+        DefaultButton(
+          /// TODO(Ethan): add to app strings
+          text: 'upload image',
+          onTap: () async => showImagePicker(
+            context: context,
+            onSelected: (source) async => context.read<ImageCubit>().pickImage(
+                  source: source,
+                  aspectX: aspectX,
+                  aspectY: aspectY,
+                ),
+          ),
+        ),
+      ],
     );
   }
 }

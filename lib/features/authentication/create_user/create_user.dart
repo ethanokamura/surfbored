@@ -28,9 +28,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
     super.dispose();
   }
 
-  Future<void> _onUsernameChanged(BuildContext context, String username) async {
+  void _onUsernameChanged(String username) {
     // use regex
-    if (username.length > 15 || username.length < 3) {
+    if (username.length < 15 && username.length > 3) {
       setState(() => _isValid = false);
       return;
     } else {
@@ -43,50 +43,56 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPageView(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const AppBarText(text: UserStrings.createUsername),
-            const VerticalSpacer(multiple: 3),
-            customTextFormField(
-              controller: _usernameController,
-              context: context,
-              onChanged: (value) async => _onUsernameChanged(
-                context,
-                value.trim(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: CustomPageView(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppBarText(text: context.l10n.usernameTitle),
+              const VerticalSpacer(multiple: 3),
+              customTextFormField(
+                controller: _usernameController,
+                context: context,
+                label: context.l10n.usernamePrompt,
+                maxLength: 15,
+                onChanged: (value) => _onUsernameChanged(
+                  value.trim(),
+                ),
+                validator: (name) =>
+                    name != null && (name.length < 3 || name.length > 20)
+                        ? 'Invalid Username'
+                        : null,
               ),
-              label: CreateStrings.usernamePrompt,
-            ),
-            const VerticalSpacer(multiple: 3),
-            ActionAccentButton(
-              onTap: _isValid
-                  ? () async {
-                      final unique = await context
-                          .read<UserRepository>()
-                          .isUsernameUnique(username: _username);
-                      if (!context.mounted) return;
-                      if (unique) {
-                        // change username
-                        await context
+              const VerticalSpacer(multiple: 3),
+              ActionButton(
+                onTap: _isValid
+                    ? () async {
+                        final unique = await context
                             .read<UserRepository>()
-                            .updateUsername(username: _username);
-
-                        // change this
+                            .isUsernameUnique(username: _username);
                         if (!context.mounted) return;
-                        context.read<AppCubit>().usernameSubmitted();
-                      } else {
-                        // add some sort of animation
-                        context.showSnackBar(CreateStrings.invalidUsername);
+                        if (unique) {
+                          // change username
+                          await context
+                              .read<UserRepository>()
+                              .updateUsername(username: _username);
+
+                          // change this
+                          if (!context.mounted) return;
+                          context.read<AppCubit>().usernameSubmitted();
+                        } else {
+                          // add some sort of animation
+                          context.showSnackBar(context.l10n.invalidUsername);
+                        }
                       }
-                    }
-                  : null,
-              text: _isValid
-                  ? ButtonStrings.continueText
-                  : CreateStrings.invalidUsername,
-            ),
-          ],
+                    : null,
+                text:
+                    _isValid ? context.l10n.next : context.l10n.invalidUsername,
+              ),
+            ],
+          ),
         ),
       ),
     );

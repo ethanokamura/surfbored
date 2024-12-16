@@ -78,10 +78,10 @@ class ImageHeader extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              MoreOptions(
+              MorePostOptions(
                 isOwner: isOwner,
                 onManage: () => _manage(context, post.id!, userId),
-                onEdit: () => _onEdit(context, post.id!, postCubit),
+                onEdit: () => _onEdit(context, post, postCubit),
                 onDelete: () => _onDelete(context, post, postCubit),
               ),
             ],
@@ -108,10 +108,10 @@ class Header extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        MoreOptions(
+        MorePostOptions(
           isOwner: isOwner,
           onManage: () => _manage(context, post.id!, userId),
-          onEdit: () => _onEdit(context, post.id!, postCubit),
+          onEdit: () => _onEdit(context, post, postCubit),
           onDelete: () => _onDelete(context, post, postCubit),
         ),
       ],
@@ -183,8 +183,8 @@ void _manage(
 ) =>
     Navigator.push(
       context,
-      MaterialPageRoute<dynamic>(
-        builder: (context) => SelectBoardPage(
+      bottomSlideTransition(
+        SelectBoardPage(
           postId: postId,
           userId: userId,
         ),
@@ -193,18 +193,16 @@ void _manage(
 
 void _onEdit(
   BuildContext context,
-  int postId,
+  Post post,
   PostCubit postCubit,
 ) =>
     Navigator.push(
       context,
-      MaterialPageRoute<dynamic>(
-        builder: (context) {
-          return BlocProvider.value(
-            value: postCubit,
-            child: EditPostPage(postId: postId),
-          );
-        },
+      bottomSlideTransition(
+        BlocProvider.value(
+          value: postCubit,
+          child: EditPostPage(post: post),
+        ),
       ),
     );
 

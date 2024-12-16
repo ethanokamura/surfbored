@@ -1,3 +1,4 @@
+import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,7 +6,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 Icon defaultIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).textColor,
+    color: context.theme.textColor,
+    size: size,
+  );
+}
+
+Icon appBarIconStyle(BuildContext context, IconData icon, {double size = 24}) {
+  return Icon(
+    icon,
+    color: context.theme.textColor,
     size: size,
   );
 }
@@ -13,7 +22,7 @@ Icon defaultIconStyle(BuildContext context, IconData icon, {double size = 14}) {
 Icon accentIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).accentColor,
+    color: context.theme.accentColor,
     size: size,
   );
 }
@@ -21,7 +30,7 @@ Icon accentIconStyle(BuildContext context, IconData icon, {double size = 14}) {
 Icon inverseIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).inverseTextColor,
+    color: context.theme.inverseTextColor,
     size: size,
   );
 }
@@ -29,7 +38,7 @@ Icon inverseIconStyle(BuildContext context, IconData icon, {double size = 14}) {
 Icon surfaceIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
-    color: Theme.of(context).surfaceColor,
+    color: context.theme.textColor,
     size: size,
   );
 }
@@ -41,7 +50,7 @@ Icon selectionIconStyle(
 }) {
   return Icon(
     icon,
-    color: Theme.of(context).surfaceColor,
+    color: context.theme.surfaceColor,
     size: size,
   );
 }
@@ -58,6 +67,8 @@ class AppIcons {
   static const IconData delete = FontAwesomeIcons.trash;
   static const IconData edit = FontAwesomeIcons.pencil;
   static const IconData block = FontAwesomeIcons.userLock;
+  static const IconData next = FontAwesomeIcons.arrowRight;
+  static const IconData back = FontAwesomeIcons.arrowLeft;
 
   // toggles
   static const IconData saved = FontAwesomeIcons.solidBookmark;
@@ -66,6 +77,8 @@ class AppIcons {
   static const IconData notLiked = FontAwesomeIcons.heart;
   static const IconData checked = FontAwesomeIcons.solidSquareCheck;
   static const IconData notChecked = FontAwesomeIcons.square;
+  static const IconData lightMode = FontAwesomeIcons.sun;
+  static const IconData darkMode = FontAwesomeIcons.moon;
 
   // misc
   static const IconData activity = FontAwesomeIcons.mountain;

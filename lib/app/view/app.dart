@@ -8,7 +8,7 @@ import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/authentication/create_user/create_user.dart';
 import 'package:surfbored/features/authentication/login/login.dart';
 import 'package:surfbored/features/home/home.dart';
-import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:surfbored/features/misc/unknown/unknown.dart';
 import 'package:surfbored/theme/theme_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:user_repository/user_repository.dart';
@@ -100,7 +100,14 @@ class AppView extends StatelessWidget {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
         return MaterialApp(
-          onGenerateTitle: (context) => AppStrings.appTitle,
+          onGenerateTitle: (context) => context.l10n.appTitle,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            // GlobalCupertinoLocalizations.delegate
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
           theme: context.read<ThemeCubit>().themeData,
           onUnknownRoute: (settings) {
             return MaterialPageRoute(builder: (_) => const UnkownPage());
@@ -111,10 +118,10 @@ class AppView extends StatelessWidget {
             listener: (context, state) {
               return switch (state.failure) {
                 AuthChangesFailure() =>
-                  context.showSnackBar(AuthStrings.authFailure),
+                  context.showSnackBar(context.l10n.authFailure),
                 SignOutFailure() =>
-                  context.showSnackBar(AuthStrings.authFailure),
-                _ => context.showSnackBar(AuthStrings.unknownFailure),
+                  context.showSnackBar(context.l10n.authFailure),
+                _ => context.showSnackBar(context.l10n.unknownFailure),
               };
             },
             child: FlowBuilder(

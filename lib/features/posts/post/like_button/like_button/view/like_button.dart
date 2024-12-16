@@ -23,7 +23,6 @@ class LikeButton extends StatelessWidget {
             isLiked = state.liked;
           }
           return ToggleButton(
-            onSurface: true,
             onTap: () => context.read<LikeCubit>().toggleLike(
                   userId,
                   post.id!,
@@ -32,7 +31,7 @@ class LikeButton extends StatelessWidget {
             icon: isLiked
                 ? accentIconStyle(context, AppIcons.liked)
                 : defaultIconStyle(context, AppIcons.notLiked),
-            text: '$likes',
+            text: likes.toString(),
           );
         },
       ),

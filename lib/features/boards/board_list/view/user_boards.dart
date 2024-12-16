@@ -1,10 +1,10 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
+import 'package:surfbored/features/boards/board_cubit_wrapper.dart';
 import 'package:surfbored/features/boards/board_list/view/board_card.dart';
 import 'package:surfbored/features/boards/boards.dart';
-import 'package:surfbored/features/failures/board_failures.dart';
-import 'package:surfbored/features/unknown/unknown.dart';
+import 'package:surfbored/features/misc/unknown/unknown.dart';
 
 class UserBoards extends StatelessWidget {
   const UserBoards({required this.userId, super.key});
@@ -15,40 +15,27 @@ class UserBoards extends StatelessWidget {
       create: (context) => BoardCubit(
         boardRepository: context.read<BoardRepository>(),
       )..fetchBoards(userId),
-      child: listenForBoardFailures<BoardCubit, BoardState>(
-        failureSelector: (state) => state.failure,
-        isFailureSelector: (state) => state.isFailure,
-        child: BlocBuilder<BoardCubit, BoardState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.isLoaded) {
-              final boards = state.boards;
-              return BoardListView(
-                boards: boards,
-                onLoadMore: () async =>
-                    context.read<BoardCubit>().fetchBoards(userId),
-                onRefresh: () async => context
-                    .read<BoardCubit>()
-                    .fetchBoards(userId, refresh: true),
-              );
-            } else if (state.isEmpty) {
-              return const Center(
-                child: PrimaryText(text: DataStrings.empty),
-              );
-            } else if (state.isDeleted || state.isUpdated) {
-              context.read<BoardCubit>().streamUserBoards(userId);
-              return const Center(
-                child: PrimaryText(text: DataStrings.fromUpdate),
-              );
-            } else if (state.isFailure) {
-              return const Center(
-                child: PrimaryText(text: DataStrings.fromUnknownFailure),
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+      child: BoardCubitWrapper(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return loadingBoardState(context);
+          } else if (state.isLoaded) {
+            final boards = state.boards;
+            return BoardListView(
+              boards: boards,
+              onLoadMore: () async =>
+                  context.read<BoardCubit>().fetchBoards(userId),
+              onRefresh: () async =>
+                  context.read<BoardCubit>().fetchBoards(userId, refresh: true),
+            );
+          } else if (state.isEmpty) {
+            return emptyBoardState(context);
+          } else if (state.isDeleted || state.isUpdated) {
+            context.read<BoardCubit>().streamUserBoards(userId);
+            return updatedBoardState(context);
+          }
+          return errorBoardState(context);
+        },
       ),
     );
   }

@@ -20,10 +20,7 @@ Future<dynamic> postPopUp(
   final userId = context.read<UserRepository>().user.uuid;
   final isOwner = userId == post.creatorId;
 
-  await showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    isScrollControlled: true,
+  await context.showScrollControlledBottomSheet<void>(
     builder: (context) => Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -46,13 +43,13 @@ Future<dynamic> postPopUp(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  MoreOptions(
+                  MorePostOptions(
                     onSurface: !(post.photoUrl != null && post.photoUrl! != ''),
                     isOwner: isOwner,
                     onManage: () => Navigator.push(
                       context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (context) => SelectBoardPage(
+                      bottomSlideTransition(
+                        SelectBoardPage(
                           postId: post.id!,
                           userId: userId,
                         ),
@@ -62,13 +59,11 @@ Future<dynamic> postPopUp(
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (context) {
-                            return BlocProvider.value(
-                              value: postCubit,
-                              child: EditPostPage(postId: post.id!),
-                            );
-                          },
+                        bottomSlideTransition(
+                          BlocProvider.value(
+                            value: postCubit,
+                            child: EditPostPage(post: post),
+                          ),
                         ),
                       );
                     },

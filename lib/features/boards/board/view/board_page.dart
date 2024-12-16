@@ -30,8 +30,16 @@ class BoardPage extends StatelessWidget {
           return CustomPageView(
             title: board.title,
             actions: <Widget>[
-              IconButton(
-                onPressed: () => Navigator.push(
+              MoreBoardOptions(
+                isOwner:
+                    board.creatorId == context.read<UserRepository>().user.uuid,
+                onDelete: () async {
+                  await context.read<BoardCubit>().deleteBoard(board.id!);
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
+                },
+                onShare: () => {},
+                onEdit: () => Navigator.push(
                   context,
                   bottomSlideTransition(
                     BlocProvider.value(
@@ -47,7 +55,6 @@ class BoardPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                icon: defaultIconStyle(context, AppIcons.more),
               ),
             ],
             body: buildBoardPage(

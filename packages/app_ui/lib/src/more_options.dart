@@ -178,7 +178,7 @@ class MoreSearchOptions extends StatelessWidget {
 /// Action button for the UI
 /// Accent colored background
 /// Requires [isCurrent] bool to check ownership of the profile
-/// Requires [onEdit] function to handle the edit event
+/// Requires [onSettings] function to handle the edit event
 /// Requires [onBlock] function to handle the event of blocking a user
 /// Requires [onShare] function to handle sharing
 /// Optionally changes background color with [onSurface]
@@ -237,6 +237,80 @@ class MoreProfileOptions extends StatelessWidget {
           // Handle share action
         } else if (value == Options.block) {
           onBlock();
+        }
+      },
+    );
+  }
+}
+
+/// Action button for the UI
+/// Accent colored background
+/// Requires [onDelete] function to handle the deletion event
+/// Requires [onEdit] function to handle the edit event
+/// Optionally changes background color with [onSurface]
+class MoreBoardOptions extends StatelessWidget {
+  const MoreBoardOptions({
+    required this.isOwner,
+    required this.onDelete,
+    required this.onShare,
+    required this.onEdit,
+    this.onSurface,
+    super.key,
+  });
+  final bool isOwner;
+  final bool? onSurface;
+  final void Function() onDelete;
+  final void Function() onShare;
+  final void Function() onEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<Options>(
+      style: noBackgroundStyle(),
+      itemBuilder: (BuildContext context) => _buildMenuItems([
+        _menuItem(
+          context,
+          MenuItem(
+            Options.manage,
+            AppIcons.boards,
+            context.l10n.addOrRemove,
+          ),
+        ),
+        _menuItem(
+          context,
+          MenuItem(
+            Options.share,
+            AppIcons.share,
+            context.l10n.share,
+          ),
+        ),
+        if (isOwner) ...[
+          _menuItem(
+            context,
+            MenuItem(
+              Options.edit,
+              AppIcons.edit,
+              context.l10n.edit,
+            ),
+          ),
+          _menuItem(
+            context,
+            MenuItem(
+              Options.delete,
+              AppIcons.delete,
+              context.l10n.delete,
+            ),
+          ),
+        ],
+      ]),
+      onSelected: (value) {
+        if (value == Options.share) {
+          // Handle share action
+          onShare();
+        } else if (value == Options.edit) {
+          onEdit();
+        } else if (value == Options.delete) {
+          onDelete();
         }
       },
     );

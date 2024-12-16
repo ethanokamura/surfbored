@@ -16,19 +16,27 @@ class PostSearchResults extends StatelessWidget {
         tagRepository: context.read<TagRepository>(),
       )..searchPosts(query, refresh: true),
       child: PostCubitWrapper(
-        loadedFunction: (context, state) {
-          final posts = state.posts;
-          return PostListView(
-            posts: posts,
-            hasMore: context.read<PostCubit>().hasMorePosts,
-            onLoadMore: () async =>
-                context.read<PostCubit>().searchPosts(query),
-            onRefresh: () async =>
-                context.read<PostCubit>().searchPosts(query, refresh: true),
-          );
+        builder: (context, state) {
+          if (state.isLoading) {
+            return loadingPostState(context);
+          } else if (state.isLoaded) {
+            final posts = state.posts;
+            return PostListView(
+              posts: posts,
+              hasMore: context.read<PostCubit>().hasMorePosts,
+              onLoadMore: () async =>
+                  context.read<PostCubit>().searchPosts(query),
+              onRefresh: () async =>
+                  context.read<PostCubit>().searchPosts(query, refresh: true),
+            );
+          } else if (state.isEmpty) {
+            return emptyPostState(context);
+          } else if (state.isDeleted || state.isUpdated) {
+            context.read<PostCubit>().searchPosts(query, refresh: true);
+            return updatedPostState(context);
+          }
+          return errorPostState(context);
         },
-        updatedFunction: (context, state) =>
-            context.read<PostCubit>().searchPosts(query, refresh: true),
       ),
     );
   }

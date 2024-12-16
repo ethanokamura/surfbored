@@ -16,19 +16,28 @@ class UserPostList extends StatelessWidget {
         tagRepository: context.read<TagRepository>(),
       )..fetchUserPosts(userId),
       child: PostCubitWrapper(
-        loadedFunction: (context, state) {
-          final posts = state.posts;
-          return PostListView(
-            posts: posts,
-            hasMore: context.read<PostCubit>().hasMorePosts,
-            onLoadMore: () async =>
-                context.read<PostCubit>().fetchUserPosts(userId),
-            onRefresh: () async =>
-                context.read<PostCubit>().fetchUserPosts(userId, refresh: true),
-          );
+        builder: (context, state) {
+          if (state.isLoading) {
+            return loadingPostState(context);
+          } else if (state.isLoaded) {
+            final posts = state.posts;
+            return PostListView(
+              posts: posts,
+              hasMore: context.read<PostCubit>().hasMorePosts,
+              onLoadMore: () async =>
+                  context.read<PostCubit>().fetchUserPosts(userId),
+              onRefresh: () async => context
+                  .read<PostCubit>()
+                  .fetchUserPosts(userId, refresh: true),
+            );
+          } else if (state.isEmpty) {
+            return emptyPostState(context);
+          } else if (state.isDeleted || state.isUpdated) {
+            context.read<PostCubit>().fetchUserPosts(userId);
+            return updatedPostState(context);
+          }
+          return errorPostState(context);
         },
-        updatedFunction: (context, state) =>
-            context.read<PostCubit>().fetchUserPosts(userId),
       ),
     );
   }

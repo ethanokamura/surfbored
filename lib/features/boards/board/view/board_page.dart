@@ -21,39 +21,47 @@ class BoardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<BoardCubit>().fetchBoard(boardId);
     return BoardCubitWrapper(
-      loadedFunction: (context, state) {
-        final board = state.board;
-        final boardCubit = context.read<BoardCubit>();
-        return CustomPageView(
-          title: board.title,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () => Navigator.push(
-                context,
-                bottomSlideTransition(
-                  BlocProvider.value(
-                    value: boardCubit,
-                    child: EditBoardPage(
-                      board: board,
-                      onDelete: () async {
-                        Navigator.pop(context);
-                        await boardCubit.deleteBoard(boardId);
-                        if (context.mounted) Navigator.pop(context);
-                      },
+      builder: (context, state) {
+        if (state.isLoading) {
+          return loadingBoardState(context);
+        } else if (state.isLoaded) {
+          final board = state.board;
+          final boardCubit = context.read<BoardCubit>();
+          return CustomPageView(
+            title: board.title,
+            actions: <Widget>[
+              IconButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  bottomSlideTransition(
+                    BlocProvider.value(
+                      value: boardCubit,
+                      child: EditBoardPage(
+                        board: board,
+                        onDelete: () async {
+                          Navigator.pop(context);
+                          await boardCubit.deleteBoard(boardId);
+                          if (context.mounted) Navigator.pop(context);
+                        },
+                      ),
                     ),
                   ),
                 ),
+                icon: defaultIconStyle(context, AppIcons.more),
               ),
-              icon: defaultIconStyle(context, AppIcons.more),
+            ],
+            body: buildBoardPage(
+              context,
+              board,
             ),
-          ],
-          body: buildBoardPage(
-            context,
-            board,
-          ),
-        );
+          );
+        } else if (state.isEmpty) {
+          return emptyBoardState(context);
+        } else if (state.isDeleted || state.isUpdated) {
+          return updatedBoardState(context);
+        }
+        return errorBoardState(context);
       },
-      updatedFunction: (context, state) => {},
     );
   }
 }

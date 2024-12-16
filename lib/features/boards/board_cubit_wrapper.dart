@@ -5,12 +5,10 @@ import 'package:surfbored/features/failures/board_failures.dart';
 
 class BoardCubitWrapper extends StatelessWidget {
   const BoardCubitWrapper({
-    required this.loadedFunction,
-    required this.updatedFunction,
+    required this.builder,
     super.key,
   });
-  final Widget Function(BuildContext, BoardState) loadedFunction;
-  final void Function(BuildContext, BoardState) updatedFunction;
+  final Widget Function(BuildContext, BoardState) builder;
 
   @override
   Widget build(BuildContext context) {
@@ -18,28 +16,20 @@ class BoardCubitWrapper extends StatelessWidget {
       failureSelector: (state) => state.failure,
       isFailureSelector: (state) => state.isFailure,
       child: BlocBuilder<BoardCubit, BoardState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.isLoaded) {
-            loadedFunction(context, state);
-          } else if (state.isEmpty) {
-            return Center(
-              child: PrimaryText(text: context.l10n.empty),
-            );
-          } else if (state.isDeleted || state.isUpdated) {
-            updatedFunction(context, state);
-            return Center(
-              child: PrimaryText(text: context.l10n.fromUpdate),
-            );
-          } else if (state.isFailure) {
-            return Center(
-              child: PrimaryText(text: context.l10n.unknownFailure),
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+        builder: builder,
       ),
     );
   }
 }
+
+Widget loadingBoardState(BuildContext context) =>
+    const Center(child: CircularProgressIndicator());
+
+Widget emptyBoardState(BuildContext context) =>
+    Center(child: PrimaryText(text: context.l10n.empty));
+
+Widget updatedBoardState(BuildContext context) =>
+    Center(child: PrimaryText(text: context.l10n.fromUpdate));
+
+Widget errorBoardState(BuildContext context) =>
+    Center(child: PrimaryText(text: context.l10n.unknownFailure));

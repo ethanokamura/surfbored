@@ -16,20 +16,28 @@ class BoardPostList extends StatelessWidget {
         tagRepository: context.read<TagRepository>(),
       )..fetchBoardPosts(boardId),
       child: PostCubitWrapper(
-        loadedFunction: (context, state) {
-          final posts = state.posts;
-          return PostListView(
-            posts: posts,
-            hasMore: context.read<PostCubit>().hasMorePosts,
-            onLoadMore: () async =>
-                context.read<PostCubit>().fetchBoardPosts(boardId),
-            onRefresh: () async => context
-                .read<PostCubit>()
-                .fetchBoardPosts(boardId, refresh: true),
-          );
+        builder: (context, state) {
+          if (state.isLoading) {
+            return loadingPostState(context);
+          } else if (state.isLoaded) {
+            final posts = state.posts;
+            return PostListView(
+              posts: posts,
+              hasMore: context.read<PostCubit>().hasMorePosts,
+              onLoadMore: () async =>
+                  context.read<PostCubit>().fetchBoardPosts(boardId),
+              onRefresh: () async => context
+                  .read<PostCubit>()
+                  .fetchBoardPosts(boardId, refresh: true),
+            );
+          } else if (state.isEmpty) {
+            return emptyPostState(context);
+          } else if (state.isDeleted || state.isUpdated) {
+            context.read<PostCubit>().fetchBoardPosts(boardId);
+            return updatedPostState(context);
+          }
+          return errorPostState(context);
         },
-        updatedFunction: (context, state) =>
-            context.read<PostCubit>().fetchBoardPosts(boardId),
       ),
     );
   }

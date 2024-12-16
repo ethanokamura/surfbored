@@ -18,27 +18,35 @@ class PostFeed extends StatelessWidget {
         tagRepository: context.read<TagRepository>(),
       )..fetchAllPosts(),
       child: PostCubitWrapper(
-        loadedFunction: (context, state) {
-          final posts = state.posts;
-          return RefreshIndicator(
-            onRefresh: () async =>
-                context.read<PostCubit>().fetchAllPosts(refresh: true),
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-              separatorBuilder: (context, index) => const VerticalSpacer(),
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return post.isEmpty
-                    ? UnknownCard(message: context.l10n.dataNotFound)
-                    : PostView(post: post);
-              },
-            ),
-          );
+        builder: (context, state) {
+          if (state.isLoading) {
+            return loadingPostState(context);
+          } else if (state.isLoaded) {
+            final posts = state.posts;
+            return RefreshIndicator(
+              onRefresh: () async =>
+                  context.read<PostCubit>().fetchAllPosts(refresh: true),
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+                separatorBuilder: (context, index) => const VerticalSpacer(),
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: posts.length,
+                itemBuilder: (context, index) {
+                  final post = posts[index];
+                  return post.isEmpty
+                      ? UnknownCard(message: context.l10n.dataNotFound)
+                      : PostView(post: post);
+                },
+              ),
+            );
+          } else if (state.isEmpty) {
+            return emptyPostState(context);
+          } else if (state.isDeleted || state.isUpdated) {
+            context.read<PostCubit>().fetchAllPosts(refresh: true);
+            return updatedPostState(context);
+          }
+          return errorPostState(context);
         },
-        updatedFunction: (context, state) =>
-            context.read<PostCubit>().fetchAllPosts(refresh: true),
       ),
     );
   }

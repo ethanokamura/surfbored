@@ -16,18 +16,26 @@ class UserBoards extends StatelessWidget {
         boardRepository: context.read<BoardRepository>(),
       )..fetchBoards(userId),
       child: BoardCubitWrapper(
-        loadedFunction: (context, state) {
-          final boards = state.boards;
-          return BoardListView(
-            boards: boards,
-            onLoadMore: () async =>
-                context.read<BoardCubit>().fetchBoards(userId),
-            onRefresh: () async =>
-                context.read<BoardCubit>().fetchBoards(userId, refresh: true),
-          );
+        builder: (context, state) {
+          if (state.isLoading) {
+            return loadingBoardState(context);
+          } else if (state.isLoaded) {
+            final boards = state.boards;
+            return BoardListView(
+              boards: boards,
+              onLoadMore: () async =>
+                  context.read<BoardCubit>().fetchBoards(userId),
+              onRefresh: () async =>
+                  context.read<BoardCubit>().fetchBoards(userId, refresh: true),
+            );
+          } else if (state.isEmpty) {
+            return emptyBoardState(context);
+          } else if (state.isDeleted || state.isUpdated) {
+            context.read<BoardCubit>().streamUserBoards(userId);
+            return updatedBoardState(context);
+          }
+          return errorBoardState(context);
         },
-        updatedFunction: (context, state) =>
-            context.read<BoardCubit>().streamUserBoards(userId),
       ),
     );
   }

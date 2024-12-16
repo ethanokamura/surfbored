@@ -43,8 +43,35 @@ Future<dynamic> postPopUp(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  MorePostOptions(
+                  ActionIconButton(
                     onSurface: !(post.photoUrl != null && post.photoUrl! != ''),
+                    icon: AppIcons.cancel,
+                    inverted: false,
+                    onTap: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: defaultPadding,
+            right: defaultPadding,
+            top: post.photoUrl != null && post.photoUrl! != ''
+                ? defaultPadding
+                : 0,
+            bottom: 60,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(child: TitleText(text: post.title)),
+                  MorePostOptions(
+                    onSurface: false,
                     isOwner: isOwner,
                     onManage: () => Navigator.push(
                       context,
@@ -77,30 +104,8 @@ Future<dynamic> postPopUp(
                       if (context.mounted) Navigator.pop(context);
                     },
                   ),
-                  ActionIconButton(
-                    onSurface: !(post.photoUrl != null && post.photoUrl! != ''),
-                    icon: AppIcons.cancel,
-                    inverted: false,
-                    onTap: () => Navigator.pop(context),
-                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            left: defaultPadding,
-            right: defaultPadding,
-            top: post.photoUrl != null && post.photoUrl! != ''
-                ? defaultPadding
-                : 0,
-            bottom: 60,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TitleText(text: post.title),
               if (post.description.isNotEmpty)
                 DescriptionText(text: post.description),
               if (post.description.isNotEmpty) const VerticalSpacer(),

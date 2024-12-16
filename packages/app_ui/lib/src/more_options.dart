@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/src/button_styles.dart';
+import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/icons.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/widgets.dart';
@@ -76,7 +77,8 @@ class MorePostOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: defaultStyle(context, onSurface: onSurface),
+      style: noBackgroundStyle(),
+      color: context.theme.colorScheme.primary,
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,

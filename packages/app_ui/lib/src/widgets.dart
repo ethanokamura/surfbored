@@ -159,7 +159,6 @@ class CustomTabBarWidget extends StatelessWidget {
 
 /// Custom container widget
 /// Requires [body] content to display inside the page
-/// Optional [appBar] and [top] padding
 class CustomPageView extends StatelessWidget {
   const CustomPageView({
     required this.body,
@@ -182,7 +181,7 @@ class CustomPageView extends StatelessWidget {
           ? AppBar(
               centerTitle: centerTitle,
               backgroundColor: Colors.transparent,
-              title: AppBarText(text: title!),
+              title: title != null ? AppBarText(text: title!) : null,
               actions: actions,
             )
           : null,

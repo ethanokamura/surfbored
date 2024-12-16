@@ -146,6 +146,27 @@ class ActionIconButton extends StatelessWidget {
   }
 }
 
+/// Icon button for the app bar
+/// Requires [onTap] function to handle the tap event
+/// Requires an [icon] for UI
+class AppBarButton extends StatelessWidget {
+  const AppBarButton({
+    required this.icon,
+    required this.onTap,
+    super.key,
+  });
+  final IconData icon;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onTap,
+      icon: appBarIconStyle(context, icon),
+    );
+  }
+}
+
 /// Button for bottom modals
 /// Requires [onTap] function to handle the tap event
 /// Requires an [icon] and [label] for UI
@@ -199,7 +220,6 @@ class CheckBox extends StatelessWidget {
 /// Used for likes and saves
 /// Requires [onTap] function to handle the tap event
 /// Optionally add an [icon] or [text] for clarity
-/// Option UI parameters with [background] and [onSurface]
 class ToggleButton extends StatelessWidget {
   const ToggleButton({
     required this.onTap,

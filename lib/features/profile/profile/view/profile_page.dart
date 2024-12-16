@@ -64,23 +64,27 @@ class ProfileBuilder extends StatelessWidget {
       child: CustomPageView(
         title: user.username,
         actions: [
-          MoreProfileOptions(
-            isCurrent: isCurrent,
-            onSettings: () => Navigator.push(
-              context,
-              bottomSlideTransition(
-                BlocProvider.value(
-                  value: profileCubit,
-                  child: ProfileSettingsPage(
-                    profileCubit: profileCubit,
+          if (isCurrent)
+            AppBarButton(
+              onTap: () => Navigator.push(
+                context,
+                bottomSlideTransition(
+                  BlocProvider.value(
+                    value: profileCubit,
+                    child: ProfileSettingsPage(
+                      profileCubit: profileCubit,
+                    ),
                   ),
                 ),
               ),
+              icon: AppIcons.settings,
+            )
+          else
+            MoreProfileOptions(
+              onBlock: () => {},
+              // context.read<UserRepository>().toggleBlockUser(userId),
+              onShare: () {},
             ),
-            onBlock: () => {},
-            // context.read<UserRepository>().toggleBlockUser(userId),
-            onShare: () {},
-          ),
         ],
         body: NestedWrapper(
           header: <Widget>[

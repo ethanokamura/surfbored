@@ -14,12 +14,12 @@ class ExplorePage extends StatelessWidget {
       centerTitle: false,
       title: context.l10n.explorePage,
       actions: [
-        IconButton(
-          onPressed: () => Navigator.push(
+        AppBarButton(
+          onTap: () => Navigator.push(
             context,
             bottomSlideTransition(const SearchPage()),
           ),
-          icon: appBarIconStyle(context, AppIcons.search),
+          icon: AppIcons.search,
         ),
       ],
       body: NestedWrapper(

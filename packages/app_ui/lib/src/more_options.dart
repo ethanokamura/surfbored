@@ -177,25 +177,19 @@ class MoreSearchOptions extends StatelessWidget {
 
 /// Action button for the UI
 /// Accent colored background
-/// Requires [isCurrent] bool to check ownership of the profile
-/// Requires [onSettings] function to handle the edit event
 /// Requires [onBlock] function to handle the event of blocking a user
 /// Requires [onShare] function to handle sharing
 /// Optionally changes background color with [onSurface]
 class MoreProfileOptions extends StatelessWidget {
   const MoreProfileOptions({
-    required this.isCurrent,
-    required this.onSettings,
     required this.onBlock,
     required this.onShare,
     this.onSurface,
     super.key,
   });
 
-  final bool isCurrent;
   final bool? onSurface;
   final void Function() onBlock;
-  final void Function() onSettings;
   final void Function() onShare;
 
   @override
@@ -211,29 +205,17 @@ class MoreProfileOptions extends StatelessWidget {
             context.l10n.share,
           ),
         ),
-        if (isCurrent)
-          _menuItem(
-            context,
-            MenuItem(
-              Options.settings,
-              AppIcons.settings,
-              context.l10n.settingsPage,
-            ),
+        _menuItem(
+          context,
+          MenuItem(
+            Options.block,
+            AppIcons.block,
+            context.l10n.blockUser,
           ),
-        if (!isCurrent)
-          _menuItem(
-            context,
-            MenuItem(
-              Options.block,
-              AppIcons.block,
-              context.l10n.blockUser,
-            ),
-          ),
+        ),
       ]),
       onSelected: (value) {
-        if (value == Options.settings) {
-          onSettings();
-        } else if (value == Options.share) {
+        if (value == Options.share) {
           // Handle share action
         } else if (value == Options.block) {
           onBlock();

@@ -4,7 +4,7 @@ import 'package:surfbored/app/cubit/app_cubit.dart';
 import 'package:surfbored/features/profile/profile.dart';
 import 'package:surfbored/theme/theme_cubit.dart';
 
-class ProfileSettingsPage extends StatelessWidget {
+class ProfileSettingsPage extends StatefulWidget {
   const ProfileSettingsPage({
     required this.profileCubit,
     super.key,
@@ -17,27 +17,34 @@ class ProfileSettingsPage extends StatelessWidget {
   }
 
   @override
+  State<ProfileSettingsPage> createState() => _ProfileSettingsPageState();
+}
+
+class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
+  late bool isDarkMode;
+  @override
+  void initState() {
+    isDarkMode = context.read<ThemeCubit>().isDarkMode;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.read<ThemeCubit>().isDarkMode;
     return CustomPageView(
       title: context.l10n.settingsPage,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TitleText(
-                  text: isDarkMode
-                      ? context.l10n.darkMode
-                      : context.l10n.lightMode,
-                ),
-                ActionIconButton(
-                  icon: isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,
-                  onTap: () => context.read<ThemeCubit>().toggleTheme(),
-                ),
-              ],
+            DefaultButton(
+              icon: isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,
+              text: isDarkMode ? context.l10n.darkMode : context.l10n.lightMode,
+              onTap: () async {
+                await context.read<ThemeCubit>().toggleTheme();
+                setState(() {
+                  isDarkMode = context.read<ThemeCubit>().isDarkMode;
+                });
+              },
             ),
             const VerticalSpacer(),
             DefaultButton(
@@ -45,7 +52,7 @@ class ProfileSettingsPage extends StatelessWidget {
                 context,
                 bottomSlideTransition(
                   BlocProvider.value(
-                    value: profileCubit,
+                    value: widget.profileCubit,
                     child: const EditProfilePage(),
                   ),
                 ),

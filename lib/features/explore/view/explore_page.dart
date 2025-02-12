@@ -28,14 +28,16 @@ class ExplorePage extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: ActionButton(
+                child: CustomButton(
+                  color: 2,
                   onTap: () {},
                   text: 'top rated',
                 ),
               ),
               const HorizontalSpacer(),
               Expanded(
-                child: ActionButton(
+                child: CustomButton(
+                  color: 2,
                   onTap: () {},
                   text: 'near me',
                 ),

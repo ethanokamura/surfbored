@@ -71,15 +71,15 @@ class CreateBoardPages extends StatelessWidget {
   }
 }
 
-Widget _buildErrorScreen(BuildContext context) {
-  return CustomPageView(
-    title: context.l10n.errorPage,
-    body: Center(
-      child: PrimaryText(text: context.l10n.unknownFailure),
-    ),
-  );
-}
+// Widget _buildErrorScreen(BuildContext context) {
+//   return CustomPageView(
+//     title: context.l10n.errorPage,
+//     body: Center(
+//       child: PrimaryText(text: context.l10n.unknownFailure),
+//     ),
+//   );
+// }
 
-Widget _buildLoadingScreen() {
-  return const Center(child: CircularProgressIndicator());
-}
+// Widget _buildLoadingScreen() {
+//   return const Center(child: CircularProgressIndicator());
+// }

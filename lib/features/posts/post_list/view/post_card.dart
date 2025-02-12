@@ -30,8 +30,15 @@ class PostCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TitleText(text: post.title),
-                  SecondaryText(text: post.description, maxLines: 2),
+                  CustomText(
+                    text: post.title,
+                    style: titleText,
+                  ),
+                  CustomText(
+                    text: post.description,
+                    style: secondaryText,
+                    maxLines: 2,
+                  ),
                 ],
               ),
             ),

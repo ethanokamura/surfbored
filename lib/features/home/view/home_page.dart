@@ -34,7 +34,7 @@ class HomeBody extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         const ExplorePage(),
-        Center(child: TitleText(text: context.l10n.create)),
+        Center(child: CustomText(text: context.l10n.create, style: titleText)),
         ProfilePage(userId: userId),
       ],
     );

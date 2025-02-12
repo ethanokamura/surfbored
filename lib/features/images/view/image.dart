@@ -35,27 +35,19 @@ class ImageWidget extends StatelessWidget {
               ),
             );
           } else if (state.isFailure) {
-            return SizedBox(
+            return DefaultImage(
               width: width,
-              child: errorWidget(
-                x: width == double.infinity ? 64 : width / 4,
-                context: context,
-                aspectX: aspectX,
-                aspectY: aspectY,
-                borderRadius: borderRadius,
-              ),
+              aspectX: aspectX,
+              aspectY: aspectY,
+              borderRadius: borderRadius,
             );
           } else if (state.isLoaded) {
             return state.photoUrl == null || state.photoUrl!.isEmpty
-                ? SizedBox(
+                ? DefaultImage(
                     width: width,
-                    child: errorWidget(
-                      x: width == double.infinity ? 64 : width / 4,
-                      context: context,
-                      aspectX: aspectX,
-                      aspectY: aspectY,
-                      borderRadius: borderRadius,
-                    ),
+                    aspectX: aspectX,
+                    aspectY: aspectY,
+                    borderRadius: borderRadius,
                   )
                 : SizedBox(
                     width: width,
@@ -69,15 +61,11 @@ class ImageWidget extends StatelessWidget {
                     ),
                   );
           }
-          return SizedBox(
+          return DefaultImage(
             width: width,
-            child: errorWidget(
-              x: width == double.infinity ? 64 : width / 4,
-              context: context,
-              aspectX: aspectX,
-              aspectY: aspectY,
-              borderRadius: borderRadius,
-            ),
+            aspectX: aspectX,
+            aspectY: aspectY,
+            borderRadius: borderRadius,
           );
         },
       ),

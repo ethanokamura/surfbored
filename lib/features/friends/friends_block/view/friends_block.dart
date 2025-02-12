@@ -34,7 +34,8 @@ class FriendsListButton extends StatelessWidget {
   final String userId;
   @override
   Widget build(BuildContext context) {
-    return ActionButton(
+    return CustomButton(
+      color: 2,
       horizontal: defaultPadding,
       onTap: () => Navigator.push(
         context,

@@ -36,8 +36,8 @@ class CommentLikeButton extends StatelessWidget {
                   liked: isLiked,
                 ),
             icon: isLiked
-                ? accentIconStyle(context, AppIcons.liked)
-                : defaultIconStyle(context, AppIcons.notLiked),
+                ? defaultIconStyle(context, AppIcons.liked, 3)
+                : defaultIconStyle(context, AppIcons.notLiked, 0),
             text: likes.toString(),
           );
         },

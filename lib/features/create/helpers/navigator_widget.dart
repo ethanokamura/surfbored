@@ -15,7 +15,7 @@ class CreateFlowNavigator extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          DefaultButton(
+          CustomButton(
             onTap: () => controller.previousPage(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeIn,
@@ -32,7 +32,7 @@ class CreateFlowNavigator extends StatelessWidget {
             ),
           ),
           const HorizontalSpacer(multiple: 3),
-          DefaultButton(
+          CustomButton(
             onTap: () => controller.nextPage(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeIn,

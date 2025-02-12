@@ -62,7 +62,7 @@ class _EditPostViewState extends State<EditPostView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleText(text: context.l10n.createPrompt),
+          CustomText(text: context.l10n.createPrompt, style: titleText),
           const VerticalSpacer(),
           customTextFormField(
             controller: _titleController,

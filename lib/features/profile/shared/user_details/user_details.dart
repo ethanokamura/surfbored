@@ -36,11 +36,11 @@ class UserDetails extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   const SizedBox(width: 10),
-                  UserText(text: '@$username', bold: false),
+                  CustomText(text: '@$username', style: userText),
                 ],
               );
             }
-            return const UserText(text: 'Unknown User', bold: false);
+            return CustomText(text: 'Unknown User', style: userText);
           },
         ),
       ),

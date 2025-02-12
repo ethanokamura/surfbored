@@ -26,7 +26,7 @@ class BoardButtons extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: DefaultButton(
+          child: CustomButton(
             onTap: () {},
             text: l10n.share,
           ),
@@ -40,7 +40,8 @@ class BoardButtons extends StatelessWidget {
         //   ),
         const HorizontalSpacer(),
         Expanded(
-          child: ActionButton(
+          child: CustomButton(
+            color: 2,
             onTap: () {
               posts.shuffle();
               Navigator.push(

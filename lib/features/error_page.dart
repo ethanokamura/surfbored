@@ -10,7 +10,10 @@ class ErrorPage extends StatelessWidget {
     return CustomPageView(
       title: context.l10n.errorPage,
       body: Center(
-        child: PrimaryText(text: message ?? context.l10n.unknownFailure),
+        child: CustomText(
+          text: message ?? context.l10n.unknownFailure,
+          style: primaryText,
+        ),
       ),
     );
   }

@@ -26,14 +26,15 @@ class FriendButton extends StatelessWidget {
             if (state.isLoaded) {
               final buttonText = _getButtonText(context, state.friendStatus);
               return state.friendStatus != FriendStatus.requested
-                  ? ActionButton(
+                  ? CustomButton(
+                      color: 2,
                       horizontal: defaultPadding,
                       onTap: () => context
                           .read<FriendButtonCubit>()
                           .friendStateSelection(userId),
                       text: buttonText,
                     )
-                  : DefaultButton(
+                  : CustomButton(
                       horizontal: defaultPadding,
                       onTap: () => context
                           .read<FriendButtonCubit>()
@@ -42,7 +43,7 @@ class FriendButton extends StatelessWidget {
                     );
             }
             return Center(
-              child: PrimaryText(text: context.l10n.empty),
+              child: CustomText(text: context.l10n.empty, style: primaryText),
             );
           },
         ),

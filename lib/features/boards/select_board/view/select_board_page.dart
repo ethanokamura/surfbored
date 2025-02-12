@@ -3,7 +3,6 @@ import 'package:app_ui/app_ui.dart';
 import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/boards.dart';
 import 'package:surfbored/features/boards/select_board/view/select_board_card.dart';
-import 'package:surfbored/features/misc/unknown/unknown.dart';
 
 class SelectBoardPage extends StatelessWidget {
   const SelectBoardPage({
@@ -59,16 +58,25 @@ class SelectBoardsList extends StatelessWidget {
             );
           } else if (state.isEmpty) {
             return Center(
-              child: PrimaryText(text: context.l10n.empty),
+              child: CustomText(
+                text: context.l10n.empty,
+                style: primaryText,
+              ),
             );
           } else if (state.isDeleted || state.isUpdated) {
             context.read<BoardCubit>().streamUserBoards(userId);
             return Center(
-              child: PrimaryText(text: context.l10n.fromUpdate),
+              child: CustomText(
+                text: context.l10n.fromUpdate,
+                style: primaryText,
+              ),
             );
           } else if (state.isFailure) {
             return Center(
-              child: PrimaryText(text: context.l10n.fetchFailure),
+              child: CustomText(
+                text: context.l10n.fetchFailure,
+                style: primaryText,
+              ),
             );
           }
           return const Center(child: CircularProgressIndicator());

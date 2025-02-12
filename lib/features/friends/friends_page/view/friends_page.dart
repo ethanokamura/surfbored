@@ -52,11 +52,14 @@ class FriendsList extends StatelessWidget {
               );
             } else if (state.isEmpty) {
               return Center(
-                child: PrimaryText(text: context.l10n.empty),
+                child: CustomText(text: context.l10n.empty, style: primaryText),
               );
             }
             return Center(
-              child: PrimaryText(text: context.l10n.unknownFailure),
+              child: CustomText(
+                text: context.l10n.unknownFailure,
+                style: primaryText,
+              ),
             );
           },
         ),

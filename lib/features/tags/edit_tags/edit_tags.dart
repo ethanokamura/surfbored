@@ -23,11 +23,12 @@ class EditTagsPrompt extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              PrimaryText(
+              CustomText(
                 text: label,
                 fontSize: 22,
+                style: primaryText,
               ),
-              DefaultButton(
+              CustomButton(
                 icon: AppIcons.edit,
                 onTap: () => Navigator.push(
                   context,

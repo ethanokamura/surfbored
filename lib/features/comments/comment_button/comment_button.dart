@@ -37,7 +37,7 @@ class CommentButton extends StatelessWidget {
                 ),
               ),
             ),
-            icon: defaultIconStyle(context, AppIcons.comment),
+            icon: defaultIconStyle(context, AppIcons.comment, 0),
             text: totalComments.toString(),
           );
         },

@@ -37,7 +37,7 @@ class CommentCard extends StatelessWidget {
             ],
           ),
           const VerticalSpacer(),
-          DescriptionText(text: comment.message),
+          CustomText(text: comment.message, style: secondaryText),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

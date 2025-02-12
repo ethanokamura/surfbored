@@ -110,7 +110,10 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               )
             else
-              PrimaryText(text: context.l10n.queryPrompt),
+              CustomText(
+                text: context.l10n.queryPrompt,
+                style: primaryText,
+              ),
           ],
         ),
       ),

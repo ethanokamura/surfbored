@@ -142,7 +142,8 @@ class _EditBoardViewState extends State<EditBoardView> {
             onChanged: (value) async => _onDescriptionChanged(value.trim()),
           ),
           const VerticalSpacer(),
-          ActionButton(
+          CustomButton(
+            color: 2,
             text: _titleIsValid || _descriptionIsValid
                 ? context.l10n.save
                 : context.l10n.invalid,
@@ -164,7 +165,8 @@ class _EditBoardViewState extends State<EditBoardView> {
                 : null,
           ),
           const VerticalSpacer(),
-          ActionButton(
+          CustomButton(
+            color: 2,
             text: context.l10n.delete,
             onTap: () {
               widget.onDelete();

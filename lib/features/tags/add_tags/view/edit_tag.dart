@@ -21,9 +21,13 @@ class EditTag extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PrimaryText(text: tag, fontSize: 14),
+              CustomText(
+                text: tag,
+                fontSize: 14,
+                style: primaryText,
+              ),
               const SizedBox(width: 5),
-              defaultIconStyle(context, AppIcons.cancel),
+              defaultIconStyle(context, AppIcons.cancel, 0),
             ],
           ),
         ),

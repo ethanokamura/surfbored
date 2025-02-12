@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/misc/unknown/unknown.dart';
 import 'package:surfbored/features/posts/cubit/post_cubit.dart';
 import 'package:surfbored/features/posts/post/post.dart';
 import 'package:surfbored/features/posts/post_cubit_wrapper.dart';

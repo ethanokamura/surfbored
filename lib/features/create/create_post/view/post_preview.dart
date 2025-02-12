@@ -13,12 +13,19 @@ class PostPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.read<CreateCubit>().state;
     return state.title.isEmpty
-        ? TitleText(text: context.l10n.invalidPost, maxLines: 3)
+        ? CustomText(
+            text: context.l10n.invalidPost,
+            maxLines: 3,
+            style: titleText,
+          )
         : SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TitleText(text: context.l10n.confirmCreatePage),
+                CustomText(
+                  text: context.l10n.confirmCreatePage,
+                  style: titleText,
+                ),
                 const VerticalSpacer(),
                 if (state.image != null)
                   Center(
@@ -31,13 +38,14 @@ class PostPreview extends StatelessWidget {
                     ),
                   ),
                 const VerticalSpacer(),
-                TitleText(text: state.title),
+                CustomText(text: state.title, style: titleText),
                 const VerticalSpacer(),
-                DescriptionText(text: state.description),
+                CustomText(text: state.description, style: secondaryText),
                 const VerticalSpacer(),
                 TagList(tags: state.tags.split('+')),
                 const VerticalSpacer(multiple: 3),
-                ActionButton(
+                CustomButton(
+                  color: 2,
                   text: context.l10n.next,
                   onTap: () {
                     context.read<CreateCubit>().sumbitPost(

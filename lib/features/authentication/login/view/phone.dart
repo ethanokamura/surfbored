@@ -35,7 +35,8 @@ class _PhonePromptState extends State<PhonePrompt> {
               number?.length != 10 ? 'Invalid Phone Number' : null,
         ),
         const VerticalSpacer(multiple: 3),
-        ActionButton(
+        CustomButton(
+          color: 2,
           vertical: 10,
           onTap: _phoneNumber.length == 10
               ? () async {

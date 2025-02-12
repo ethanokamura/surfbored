@@ -27,7 +27,7 @@ class _UploadBoardImageViewState extends State<UploadBoardImageView> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          TitleText(text: context.l10n.uploadImage),
+          CustomText(text: context.l10n.uploadImage, style: titleText),
           const VerticalSpacer(),
           Center(
             child: UploadImage(
@@ -39,7 +39,7 @@ class _UploadBoardImageViewState extends State<UploadBoardImageView> {
             ),
           ),
           const VerticalSpacer(),
-          SecondaryText(text: context.l10n.skip),
+          CustomText(text: context.l10n.skip, style: secondaryText),
         ],
       ),
     );

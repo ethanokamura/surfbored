@@ -4,7 +4,6 @@ import 'package:board_repository/board_repository.dart';
 import 'package:surfbored/features/boards/board_cubit_wrapper.dart';
 import 'package:surfbored/features/boards/board_list/view/board_card.dart';
 import 'package:surfbored/features/boards/boards.dart';
-import 'package:surfbored/features/misc/unknown/unknown.dart';
 
 class UserBoards extends StatelessWidget {
   const UserBoards({required this.userId, super.key});

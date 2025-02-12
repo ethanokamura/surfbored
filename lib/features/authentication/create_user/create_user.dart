@@ -50,7 +50,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppBarText(text: context.l10n.usernameTitle),
+              CustomText(text: context.l10n.usernameTitle, style: appBarText),
               const VerticalSpacer(multiple: 3),
               customTextFormField(
                 controller: _usernameController,
@@ -66,7 +66,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                         : null,
               ),
               const VerticalSpacer(multiple: 3),
-              ActionButton(
+              CustomButton(
+                color: 2,
                 onTap: _isValid
                     ? () async {
                         final unique = await context

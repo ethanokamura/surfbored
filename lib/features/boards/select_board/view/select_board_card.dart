@@ -52,11 +52,12 @@ class SelectBoardCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        TitleText(text: board.title),
-                        DescriptionText(
+                        CustomText(text: board.title, style: titleText),
+                        CustomText(
                           text: board.description,
                           maxLines: 2,
                           fontSize: 14,
+                          style: secondaryText,
                         ),
                       ],
                     ),

@@ -8,7 +8,11 @@ Future<void> showImagePicker({
   await showBottomModal(
     context,
     <Widget>[
-      TitleText(text: context.l10n.selectMedia, fontSize: 24),
+      CustomText(
+        text: context.l10n.selectMedia,
+        fontSize: 24,
+        style: titleText,
+      ),
       const VerticalSpacer(),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,

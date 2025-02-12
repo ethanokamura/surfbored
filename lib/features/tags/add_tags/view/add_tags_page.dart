@@ -60,8 +60,8 @@ class _AddTagsPageState extends State<AddTagsPage> {
                     ),
                   ),
                   const HorizontalSpacer(),
-                  ActionIconButton(
-                    inverted: true,
+                  CustomButton(
+                    color: 2,
                     icon: AppIcons.create,
                     onTap: () {
                       final tag = _tagController.text.trim();
@@ -79,7 +79,8 @@ class _AddTagsPageState extends State<AddTagsPage> {
                 onDelete: _deleteTag,
               ),
               const VerticalSpacer(),
-              ActionButton(
+              CustomButton(
+                color: 2,
                 text: context.l10n.save,
                 onTap: () {
                   widget.returnTags(_tags);

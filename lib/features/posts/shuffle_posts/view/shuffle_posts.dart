@@ -35,7 +35,8 @@ class PostViewController extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: ActionButton(
+                      child: CustomButton(
+                        color: 2,
                         text: context.l10n.previous,
                         onTap: () {
                           if (state > 0) {
@@ -46,7 +47,7 @@ class PostViewController extends StatelessWidget {
                     ),
                     const HorizontalSpacer(),
                     Expanded(
-                      child: DefaultButton(
+                      child: CustomButton(
                         text: context.l10n.next,
                         onTap: () {
                           if (state < posts.length - 1) {

@@ -35,9 +35,15 @@ class ShuffledPost extends StatelessWidget {
               ),
             if (post.photoUrl != null && post.photoUrl! != '')
               const VerticalSpacer(),
-            TitleText(text: post.title),
+            CustomText(
+              text: post.title,
+              style: titleText,
+            ),
             if (post.description.isNotEmpty)
-              DescriptionText(text: post.description),
+              CustomText(
+                text: post.description,
+                style: secondaryText,
+              ),
             if (post.description.isNotEmpty) const VerticalSpacer(),
             if (post.link.isNotEmpty) WebLink(url: post.link),
             if (post.link.isNotEmpty) const VerticalSpacer(),
@@ -64,8 +70,14 @@ class PostDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleText(text: title),
-        DescriptionText(text: description),
+        CustomText(
+          text: title,
+          style: titleText,
+        ),
+        CustomText(
+          text: description,
+          style: secondaryText,
+        ),
       ],
     );
   }

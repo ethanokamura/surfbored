@@ -70,7 +70,7 @@ class UploadImage extends StatelessWidget {
       children: [
         child,
         const VerticalSpacer(),
-        DefaultButton(
+        CustomButton(
           /// TODO(Ethan): add to app strings
           text: 'upload image',
           onTap: () async => showImagePicker(

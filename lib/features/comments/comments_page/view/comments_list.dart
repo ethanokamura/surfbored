@@ -1,7 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:comment_repository/comment_repository.dart';
 import 'package:surfbored/features/comments/comments_page/comment/comment.dart';
-import 'package:surfbored/features/misc/unknown/unknown.dart';
 
 class CommentListView extends StatelessWidget {
   const CommentListView({

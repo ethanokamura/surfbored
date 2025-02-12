@@ -11,12 +11,16 @@ class BoardDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleText(
+        CustomText(
           text: board.title,
           fontSize: 24,
           maxLines: 2,
+          style: titleText,
         ),
-        DescriptionText(text: board.description),
+        CustomText(
+          text: board.description,
+          style: secondaryText,
+        ),
         const VerticalSpacer(),
         UserDetails(id: board.creatorId),
       ],

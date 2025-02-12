@@ -25,11 +25,23 @@ class BoardCubitWrapper extends StatelessWidget {
 Widget loadingBoardState(BuildContext context) =>
     const Center(child: CircularProgressIndicator());
 
-Widget emptyBoardState(BuildContext context) =>
-    Center(child: PrimaryText(text: context.l10n.empty));
+Widget emptyBoardState(BuildContext context) => Center(
+      child: CustomText(
+        text: context.l10n.empty,
+        style: primaryText,
+      ),
+    );
 
-Widget updatedBoardState(BuildContext context) =>
-    Center(child: PrimaryText(text: context.l10n.fromUpdate));
+Widget updatedBoardState(BuildContext context) => Center(
+      child: CustomText(
+        text: context.l10n.fromUpdate,
+        style: primaryText,
+      ),
+    );
 
-Widget errorBoardState(BuildContext context) =>
-    Center(child: PrimaryText(text: context.l10n.unknownFailure));
+Widget errorBoardState(BuildContext context) => Center(
+      child: CustomText(
+        text: context.l10n.unknownFailure,
+        style: primaryText,
+      ),
+    );

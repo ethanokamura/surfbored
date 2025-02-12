@@ -36,7 +36,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            DefaultButton(
+            CustomButton(
               icon: isDarkMode ? AppIcons.darkMode : AppIcons.lightMode,
               text: isDarkMode ? context.l10n.darkMode : context.l10n.lightMode,
               onTap: () async {
@@ -47,7 +47,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
               },
             ),
             const VerticalSpacer(),
-            DefaultButton(
+            CustomButton(
               onTap: () => Navigator.push(
                 context,
                 bottomSlideTransition(
@@ -60,7 +60,8 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
               text: context.l10n.editProfilePage,
             ),
             const VerticalSpacer(),
-            ActionButton(
+            CustomButton(
+              color: 2,
               onTap: context.read<AppCubit>().logOut,
               text: context.l10n.logOut,
             ),

@@ -146,7 +146,8 @@ class _EditPostViewState extends State<EditPostView> {
             label: context.l10n.tagsPrompt,
           ),
           const VerticalSpacer(),
-          ActionButton(
+          CustomButton(
+            color: 2,
             text: _titleIsValid || _descriptionIsValid || _tagsAreValid
                 ? context.l10n.save
                 : context.l10n.invalid,

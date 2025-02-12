@@ -43,10 +43,11 @@ Future<dynamic> postPopUp(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ActionIconButton(
-                    onSurface: !(post.photoUrl != null && post.photoUrl! != ''),
+                  CustomButton(
+                    color: !(post.photoUrl != null && post.photoUrl! != '')
+                        ? 1
+                        : 0,
                     icon: AppIcons.cancel,
-                    inverted: false,
                     onTap: () => Navigator.pop(context),
                   ),
                 ],
@@ -69,7 +70,12 @@ Future<dynamic> postPopUp(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(child: TitleText(text: post.title)),
+                  Expanded(
+                    child: CustomText(
+                      text: post.title,
+                      style: titleText,
+                    ),
+                  ),
                   MorePostOptions(
                     onSurface: false,
                     isOwner: isOwner,
@@ -107,7 +113,7 @@ Future<dynamic> postPopUp(
                 ],
               ),
               if (post.description.isNotEmpty)
-                DescriptionText(text: post.description),
+                CustomText(text: post.description, style: secondaryText),
               if (post.description.isNotEmpty) const VerticalSpacer(),
               if (post.link.isNotEmpty) WebLink(url: post.link),
               if (post.link.isNotEmpty) const VerticalSpacer(),

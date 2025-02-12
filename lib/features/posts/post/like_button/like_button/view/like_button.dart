@@ -29,8 +29,8 @@ class LikeButton extends StatelessWidget {
                   liked: isLiked,
                 ),
             icon: isLiked
-                ? accentIconStyle(context, AppIcons.liked)
-                : defaultIconStyle(context, AppIcons.notLiked),
+                ? defaultIconStyle(context, AppIcons.liked, 4)
+                : defaultIconStyle(context, AppIcons.notLiked, 0),
             text: likes.toString(),
           );
         },

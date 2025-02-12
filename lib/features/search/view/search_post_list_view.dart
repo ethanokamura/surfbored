@@ -1,6 +1,5 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:surfbored/features/misc/unknown/unknown.dart';
 import 'package:surfbored/features/search/view/post_search_card.dart';
 
 class SearchPostListView extends StatelessWidget {

@@ -22,11 +22,23 @@ class PostCubitWrapper extends StatelessWidget {
 Widget loadingPostState(BuildContext context) =>
     const Center(child: CircularProgressIndicator());
 
-Widget emptyPostState(BuildContext context) =>
-    Center(child: PrimaryText(text: context.l10n.empty));
+Widget emptyPostState(BuildContext context) => Center(
+      child: CustomText(
+        text: context.l10n.empty,
+        style: primaryText,
+      ),
+    );
 
-Widget updatedPostState(BuildContext context) =>
-    Center(child: PrimaryText(text: context.l10n.fromUpdate));
+Widget updatedPostState(BuildContext context) => Center(
+      child: CustomText(
+        text: context.l10n.fromUpdate,
+        style: primaryText,
+      ),
+    );
 
-Widget errorPostState(BuildContext context) =>
-    Center(child: PrimaryText(text: context.l10n.unknownFailure));
+Widget errorPostState(BuildContext context) => Center(
+      child: CustomText(
+        text: context.l10n.unknownFailure,
+        style: primaryText,
+      ),
+    );

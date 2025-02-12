@@ -15,7 +15,11 @@ class Tag extends StatelessWidget {
           horizontal: 10,
           vertical: 5,
         ),
-        child: PrimaryText(text: tag, fontSize: 14),
+        child: CustomText(
+          text: tag,
+          fontSize: 14,
+          style: primaryText,
+        ),
       ),
     );
   }

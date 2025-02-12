@@ -20,12 +20,18 @@ class ProfileCubitWrapper extends StatelessWidget {
         }
         if (state.hasError) {
           return Center(
-            child: PrimaryText(text: context.l10n.fromGetUser),
+            child: CustomText(
+              text: context.l10n.fromGetUser,
+              style: primaryText,
+            ),
           );
         }
         if (state.user.isEmpty) {
           return Center(
-            child: PrimaryText(text: context.l10n.empty),
+            child: CustomText(
+              text: context.l10n.empty,
+              style: primaryText,
+            ),
           );
         }
         return defaultFunction(context, state);

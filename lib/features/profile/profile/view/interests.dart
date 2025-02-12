@@ -11,7 +11,7 @@ class InterestsList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SecondaryText(text: context.l10n.interests),
+          CustomText(text: context.l10n.interests, style: secondaryText),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: TagList(tags: interests),

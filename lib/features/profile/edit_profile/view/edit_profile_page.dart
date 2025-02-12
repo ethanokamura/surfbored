@@ -154,11 +154,12 @@ class _EditProfileViewState extends State<EditProfileView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              PrimaryText(
+              CustomText(
                 text: context.l10n.interestsPrompt,
                 fontSize: 22,
+                style: primaryText,
               ),
-              DefaultButton(
+              CustomButton(
                 icon: AppIcons.edit,
                 onTap: () => Navigator.push(
                   context,
@@ -181,7 +182,8 @@ class _EditProfileViewState extends State<EditProfileView> {
           if (_interests != null && _interests!.isNotEmpty)
             TagList(tags: _interests!.split('+')),
           const VerticalSpacer(),
-          ActionButton(
+          CustomButton(
+            color: 2,
             text: _bioIsValid ||
                     _usernameIsValid ||
                     _displayNameIsValid ||

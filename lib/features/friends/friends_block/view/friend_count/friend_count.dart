@@ -58,7 +58,7 @@ class FriendsCountText extends StatelessWidget {
               ),
             );
           }
-          return PrimaryText(text: context.l10n.empty);
+          return CustomText(text: context.l10n.empty, style: primaryText);
         },
       ),
     );

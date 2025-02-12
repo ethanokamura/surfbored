@@ -35,7 +35,8 @@ class _OtpPromptState extends State<OtpPrompt> {
           validator: (otp) => otp?.length != 6 ? 'Invalid OTP Code' : null,
         ),
         const VerticalSpacer(multiple: 3),
-        ActionButton(
+        CustomButton(
+          color: 2,
           onTap: _otp.length == 6
               ? () async {
                   try {

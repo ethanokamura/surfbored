@@ -30,8 +30,8 @@ class SaveButton extends StatelessWidget {
                   saved: isSaved,
                 ),
             icon: isSaved
-                ? accentIconStyle(context, AppIcons.saved)
-                : defaultIconStyle(context, AppIcons.notSaved),
+                ? defaultIconStyle(context, AppIcons.saved, 3)
+                : defaultIconStyle(context, AppIcons.notSaved, 0),
             text: saves.toString(),
           );
         },

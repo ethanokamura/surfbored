@@ -62,32 +62,41 @@ class ProfileBuilder extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: CustomPageView(
-        title: user.username,
-        actions: [
-          if (isCurrent)
-            AppBarButton(
-              onTap: () => Navigator.push(
-                context,
-                bottomSlideTransition(
-                  BlocProvider.value(
-                    value: profileCubit,
-                    child: ProfileSettingsPage(
-                      profileCubit: profileCubit,
-                    ),
-                  ),
-                ),
-              ),
-              icon: AppIcons.settings,
-            )
-          else
-            MoreProfileOptions(
-              onBlock: () => {},
-              // context.read<UserRepository>().toggleBlockUser(userId),
-              onShare: () {},
-            ),
-        ],
         body: NestedWrapper(
           header: <Widget>[
+            Row(
+              mainAxisAlignment: Navigator.canPop(context)
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.end,
+              children: [
+                if (Navigator.canPop(context))
+                  AppBarButton(
+                    onTap: () => Navigator.pop(context),
+                    icon: AppIcons.back,
+                  ),
+                if (isCurrent)
+                  AppBarButton(
+                    onTap: () => Navigator.push(
+                      context,
+                      bottomSlideTransition(
+                        BlocProvider.value(
+                          value: profileCubit,
+                          child: ProfileSettingsPage(
+                            profileCubit: profileCubit,
+                          ),
+                        ),
+                      ),
+                    ),
+                    icon: AppIcons.settings,
+                  )
+                else
+                  MoreProfileOptions(
+                    onBlock: () => {},
+                    // context.read<UserRepository>().toggleBlockUser(userId),
+                    onShare: () {},
+                  ),
+              ],
+            ),
             ProfileHeader(user: user),
             const VerticalSpacer(),
             if (user.bio.isNotEmpty) About(bio: user.bio),
@@ -124,7 +133,8 @@ class ProfileHeader extends StatelessWidget {
   final UserData user;
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ImageWidget(
           photoUrl: user.photoUrl,
@@ -133,23 +143,24 @@ class ProfileHeader extends StatelessWidget {
           aspectY: 1,
           borderRadius: defaultBorderRadius,
         ),
-        const HorizontalSpacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UserText(
-              text: '@${user.username}',
-              bold: true,
-              fontSize: 24,
-            ),
-            if (user.displayName.isNotEmpty) TitleText(text: user.displayName),
-            if (user.websiteUrl.isNotEmpty) WebLink(url: user.websiteUrl),
-            SecondaryText(
-              text: '${context.l10n.joined}: ${DateFormatter.formatTimestamp(
-                user.createdAt!,
-              )}',
-            ),
-          ],
+        const VerticalSpacer(),
+        CustomText(
+          text: '@${user.username}',
+          bold: true,
+          fontSize: 24,
+          style: userText,
+        ),
+        if (user.displayName.isNotEmpty)
+          CustomText(
+            text: user.displayName,
+            style: titleText,
+          ),
+        if (user.websiteUrl.isNotEmpty) WebLink(url: user.websiteUrl),
+        CustomText(
+          text: '${context.l10n.joined}: ${DateFormatter.formatTimestamp(
+            user.createdAt!,
+          )}',
+          style: secondaryText,
         ),
       ],
     );
@@ -165,8 +176,11 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SecondaryText(text: context.l10n.about),
-          PrimaryText(text: bio),
+          CustomText(
+            text: context.l10n.about,
+            style: secondaryText,
+          ),
+          CustomText(text: bio, style: primaryText),
         ],
       ),
     );
@@ -186,7 +200,7 @@ class ProfileButtons extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: DefaultButton(
+          child: CustomButton(
             onTap: () {},
             text: 'share',
           ),
@@ -194,14 +208,16 @@ class ProfileButtons extends StatelessWidget {
         const HorizontalSpacer(),
         if (!isCurrent)
           Expanded(
-            child: ActionButton(
+            child: CustomButton(
+              color: 2,
               onTap: () {},
               text: 'subscribe',
             ),
           )
         else
           Expanded(
-            child: ActionButton(
+            child: CustomButton(
+              color: 2,
               onTap: () => Navigator.push(
                 context,
                 bottomSlideTransition(
@@ -230,9 +246,9 @@ class ProfileTabBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              defaultIconStyle(context, AppIcons.posts),
+              defaultIconStyle(context, AppIcons.posts, 0),
               const HorizontalSpacer(),
-              PrimaryText(text: context.l10n.posts),
+              CustomText(text: context.l10n.posts, style: primaryText),
             ],
           ),
         ),
@@ -240,9 +256,9 @@ class ProfileTabBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              defaultIconStyle(context, AppIcons.boards),
+              defaultIconStyle(context, AppIcons.boards, 0),
               const HorizontalSpacer(),
-              PrimaryText(text: context.l10n.boards),
+              CustomText(text: context.l10n.boards, style: primaryText),
             ],
           ),
         ),

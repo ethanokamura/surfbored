@@ -33,7 +33,7 @@ class MoreCommentOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: noBackgroundStyle(),
+      style: clearButtonStyle(),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
@@ -77,7 +77,7 @@ class MorePostOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: noBackgroundStyle(),
+      style: clearButtonStyle(),
       color: context.theme.colorScheme.primary,
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
@@ -147,7 +147,7 @@ class MoreSearchOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: defaultStyle(context, onSurface: onSurface),
+      style: defaultButtonStyle(context, 1),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
@@ -197,7 +197,7 @@ class MoreProfileOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: noBackgroundStyle(),
+      style: clearButtonStyle(),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
@@ -250,7 +250,7 @@ class MoreBoardOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Options>(
-      style: noBackgroundStyle(),
+      style: clearButtonStyle(),
       itemBuilder: (BuildContext context) => _buildMenuItems([
         _menuItem(
           context,
@@ -314,9 +314,9 @@ PopupMenuItem<Options> _menuItem(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        defaultIconStyle(context, item.icon),
+        defaultIconStyle(context, item.icon, 0),
         const HorizontalSpacer(),
-        PrimaryText(text: item.text, staticSize: true),
+        CustomText(text: item.text, style: buttonText),
       ],
     ),
   );

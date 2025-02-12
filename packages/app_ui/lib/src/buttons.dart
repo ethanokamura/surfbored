@@ -11,9 +11,11 @@ import 'package:url_launcher/url_launcher.dart';
 /// Requires [onTap] function to handle the tap event
 /// Optionally takes an [icon] and [text] for UI
 /// Optional padding using [horizontal] and [vertical]
-class DefaultButton extends StatelessWidget {
-  const DefaultButton({
+class CustomButton extends StatelessWidget {
+  const CustomButton({
     required this.onTap,
+    this.fontSize,
+    this.color,
     this.icon,
     this.text,
     this.vertical,
@@ -21,6 +23,8 @@ class DefaultButton extends StatelessWidget {
     super.key,
   });
 
+  final int? color;
+  final double? fontSize;
   final IconData? icon;
   final String? text;
   final double? vertical;
@@ -29,9 +33,15 @@ class DefaultButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = [
+      0,
+      1,
+      3,
+      0,
+    ];
     return ElevatedButton(
       onPressed: onTap,
-      style: defaultStyle(context),
+      style: defaultButtonStyle(context, color ?? 0),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: horizontal ?? 0,
@@ -40,109 +50,20 @@ class DefaultButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) defaultIconStyle(context, icon!),
-            if (text != null && icon != null) const SizedBox(width: 10),
+            if (icon != null)
+              defaultIconStyle(context, icon!, colors[color ?? 0], size: 16),
+            if (text != null && icon != null) const SizedBox(width: 5),
             if (text != null)
-              ButtonText(
+              CustomText(
+                style: buttonText,
+                color: colors[color ?? 0],
+                fontSize: fontSize,
                 text: text!,
-                inverted: false,
               ),
           ],
         ),
       ),
     );
-  }
-}
-
-/// Action button for the UI
-/// Accent colored background
-/// Requires [onTap] function to handle the tap event
-/// Optionally takes an [icon] and [text] for UI
-/// Optional padding using [horizontal] and [vertical]
-class ActionButton extends StatelessWidget {
-  const ActionButton({
-    required this.onTap,
-    this.icon,
-    this.text,
-    this.vertical,
-    this.horizontal,
-    super.key,
-  });
-
-  final IconData? icon;
-  final String? text;
-  final double? vertical;
-  final double? horizontal;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: accentStyle(context),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontal ?? 0,
-          vertical: vertical ?? 0,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) inverseIconStyle(context, icon!),
-            if (text != null && icon != null) const SizedBox(width: 10),
-            if (text != null)
-              ButtonText(
-                text: text!,
-                inverted: onTap != null,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Universal Icon button
-/// Requires [onTap] function to handle the tap event
-/// Requires an [icon] for UI
-/// Option UI parameters with [inverted], [background], and [onSurface]
-class ActionIconButton extends StatelessWidget {
-  const ActionIconButton({
-    required this.icon,
-    required this.onTap,
-    super.key,
-    this.inverted,
-    this.background,
-    this.onSurface,
-  });
-  final IconData icon;
-  final bool? inverted;
-  final bool? background;
-  final bool? onSurface;
-  final void Function() onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return background != null && background! == false
-        ? GestureDetector(
-            onTap: onTap,
-            child: onSurface != null && onSurface!
-                ? surfaceIconStyle(context, icon)
-                : inverted != null && inverted!
-                    ? accentIconStyle(context, icon)
-                    : defaultIconStyle(context, icon),
-          )
-        : IconButton(
-            onPressed: onTap,
-            style: background != null && background! == false
-                ? noBackgroundStyle()
-                : inverted != null && inverted!
-                    ? accentStyle(context)
-                    : defaultStyle(context, onSurface: onSurface),
-            icon: onSurface != null && onSurface!
-                ? surfaceIconStyle(context, icon)
-                : defaultIconStyle(context, icon),
-          );
   }
 }
 
@@ -163,6 +84,42 @@ class AppBarButton extends StatelessWidget {
     return IconButton(
       onPressed: onTap,
       icon: appBarIconStyle(context, icon),
+    );
+  }
+}
+
+/// Default button for the UI
+/// Requires [onTap] function to handle the tap event
+/// Requires [text] for UI
+/// Optional padding using [horizontal] and [vertical]
+class DefaultTextButton extends StatelessWidget {
+  const DefaultTextButton({
+    required this.onTap,
+    required this.text,
+    this.vertical,
+    this.horizontal,
+    super.key,
+  });
+
+  final String text;
+  final double? vertical;
+  final double? horizontal;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontal ?? 0,
+          vertical: vertical ?? 0,
+        ),
+        child: CustomText(
+          style: buttonText,
+          text: text,
+        ),
+      ),
     );
   }
 }
@@ -189,11 +146,11 @@ class BottomModalButton extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onTap,
-          style: bottomModalStyle(context),
-          icon: inverseIconStyle(context, icon, size: 40),
+          style: defaultButtonStyle(context, 3),
+          icon: defaultIconStyle(context, icon, 3, size: 40),
         ),
         const VerticalSpacer(),
-        PrimaryText(text: label),
+        CustomText(text: label, style: primaryText),
       ],
     );
   }
@@ -210,9 +167,12 @@ class CheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isSelected
-        ? accentIconStyle(context, AppIcons.checked, size: 22)
-        : defaultIconStyle(context, AppIcons.notChecked, size: 22);
+    return defaultIconStyle(
+      context,
+      AppIcons.checked,
+      size: 22,
+      isSelected ? 4 : 0,
+    );
   }
 }
 
@@ -233,19 +193,18 @@ class ToggleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: noBackgroundStyle(),
+    return GestureDetector(
+      onTap: onTap,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null) icon!,
           if (text != null && icon != null) const SizedBox(width: 5),
           if (text != null)
-            ButtonText(
+            CustomText(
               text: text!,
-              inverted: false,
               fontSize: 14,
+              style: buttonText,
             ),
         ],
       ),

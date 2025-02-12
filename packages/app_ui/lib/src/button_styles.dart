@@ -3,39 +3,23 @@ import 'package:app_ui/src/extensions.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 
-ButtonStyle defaultStyle(BuildContext context, {bool? onSurface}) {
+ButtonStyle defaultButtonStyle(BuildContext context, int color) {
+  final colors = [
+    context.theme.surfaceColor,
+    context.theme.primaryColor,
+    context.theme.accentColor,
+    // context.theme.secondaryColor,
+  ];
   return ElevatedButton.styleFrom(
-    padding: const EdgeInsets.all(defaultPadding),
-    elevation: 0,
-    backgroundColor: onSurface != null && onSurface
-        ? context.theme.colorScheme.primary
-        : context.theme.colorScheme.surface,
+    padding: const EdgeInsets.symmetric(
+      horizontal: defaultPadding,
+    ),
+    elevation: defaultElevation,
+    backgroundColor: colors[color],
     shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
   );
 }
 
-ButtonStyle accentStyle(BuildContext context) {
-  return ElevatedButton.styleFrom(
-    padding: const EdgeInsets.all(defaultPadding),
-    elevation: 0,
-    backgroundColor: context.theme.accentColor,
-    shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
-  );
-}
-
-ButtonStyle bottomModalStyle(BuildContext context) {
-  return ElevatedButton.styleFrom(
-    padding: const EdgeInsets.all(defaultPadding),
-    elevation: 0,
-    backgroundColor: context.theme.accentColor,
-    shape: const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
-  );
-}
-
-ButtonStyle noBackgroundStyle() {
-  return ElevatedButton.styleFrom(
-    padding: EdgeInsets.zero,
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-  );
+ButtonStyle clearButtonStyle() {
+  return ElevatedButton.styleFrom(backgroundColor: Colors.transparent);
 }

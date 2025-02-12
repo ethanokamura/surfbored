@@ -1,6 +1,7 @@
 /// App UI
 library app_ui;
 
+export 'package:animations/animations.dart';
 export 'package:auto_size_text/auto_size_text.dart';
 export 'package:cached_network_image/cached_network_image.dart';
 export 'package:flutter/material.dart';

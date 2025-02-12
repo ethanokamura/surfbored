@@ -1,278 +1,144 @@
 import 'package:app_ui/app_ui.dart';
 
-class AppBarText extends StatelessWidget {
-  const AppBarText({
+class CustomText extends StatelessWidget {
+  const CustomText({
     required this.text,
-    this.maxLines,
+    required this.style,
     this.fontSize,
-    this.staticSize,
+    this.maxLines,
+    this.alignment,
+    this.color,
+    this.bold = false,
+    this.autoSize = false,
     super.key,
   });
-  final String text;
-  final int? maxLines;
-  final double? fontSize;
-  final bool? staticSize;
-  @override
-  Widget build(BuildContext context) {
-    return staticSize != null && staticSize!
-        ? Text(
-            text.toUpperCase(),
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 1,
-            style: TextStyle(
-              color: context.theme.textColor,
-              fontSize: fontSize ?? 28,
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        : AutoSizeText(
-            text.toUpperCase(),
-            overflow: TextOverflow.ellipsis,
-            maxFontSize: fontSize ?? 28,
-            maxLines: maxLines ?? 1,
-            style: TextStyle(
-              color: context.theme.textColor,
-              fontSize: fontSize ?? 28,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-  }
-}
 
-class TitleText extends StatelessWidget {
-  const TitleText({
-    required this.text,
-    this.maxLines,
-    this.fontSize,
-    this.staticSize,
-    super.key,
-  });
+  final int? color;
   final String text;
-  final int? maxLines;
   final double? fontSize;
-  final bool? staticSize;
-  @override
-  Widget build(BuildContext context) {
-    return staticSize != null && staticSize!
-        ? Text(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 1,
-            style: TextStyle(
-              color: context.theme.textColor,
-              fontSize: fontSize ?? 20,
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        : AutoSizeText(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 1,
-            maxFontSize: fontSize ?? 20,
-            style: TextStyle(
-              color: context.theme.textColor,
-              fontSize: fontSize ?? 20,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-  }
-}
-
-class PrimaryText extends StatelessWidget {
-  const PrimaryText({
-    required this.text,
-    this.maxLines,
-    this.fontSize,
-    this.staticSize,
-    super.key,
-  });
-  final String text;
+  final TextStyle style;
   final int? maxLines;
-  final double? fontSize;
-  final bool? staticSize;
-  @override
-  Widget build(BuildContext context) {
-    return staticSize != null && staticSize!
-        ? Text(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 1,
-            style: TextStyle(
-              color: context.theme.textColor,
-              fontSize: fontSize ?? 16,
-            ),
-          )
-        : AutoSizeText(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 1,
-            maxFontSize: fontSize ?? 16,
-            style: TextStyle(
-              color: context.theme.textColor,
-              fontSize: fontSize ?? 16,
-            ),
-          );
-  }
-}
-
-class SecondaryText extends StatelessWidget {
-  const SecondaryText({
-    required this.text,
-    this.maxLines,
-    this.fontSize,
-    this.staticSize,
-    super.key,
-  });
-  final String text;
-  final int? maxLines;
-  final double? fontSize;
-  final bool? staticSize;
-  @override
-  Widget build(BuildContext context) {
-    return staticSize != null && staticSize!
-        ? Text(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 1,
-            style: TextStyle(
-              color: context.theme.subtextColor,
-              fontSize: fontSize ?? 14,
-            ),
-          )
-        : AutoSizeText(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 1,
-            maxFontSize: fontSize ?? 14,
-            style: TextStyle(
-              color: context.theme.subtextColor,
-              fontSize: fontSize ?? 14,
-            ),
-          );
-  }
-}
-
-class DescriptionText extends StatelessWidget {
-  const DescriptionText({
-    required this.text,
-    this.maxLines,
-    this.fontSize,
-    this.staticSize,
-    super.key,
-  });
-  final String text;
-  final int? maxLines;
-  final double? fontSize;
-  final bool? staticSize;
-  @override
-  Widget build(BuildContext context) {
-    return staticSize != null && staticSize!
-        ? Text(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 4,
-            style: TextStyle(
-              color: context.theme.subtextColor,
-              fontSize: fontSize ?? 16,
-            ),
-          )
-        : AutoSizeText(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: maxLines ?? 4,
-            maxFontSize: fontSize ?? 16,
-            style: TextStyle(
-              color: context.theme.subtextColor,
-              fontSize: fontSize ?? 16,
-            ),
-          );
-  }
-}
-
-class UserText extends StatelessWidget {
-  const UserText({
-    required this.text,
-    required this.bold,
-    this.fontSize,
-    this.maxLines,
-    this.staticSize,
-    super.key,
-  });
-  final String text;
+  final TextAlign? alignment;
   final bool bold;
-  final int? maxLines;
-  final double? fontSize;
-  final bool? staticSize;
+  final bool autoSize;
+
   @override
   Widget build(BuildContext context) {
-    return staticSize != null && staticSize!
-        ? Text(
+    final colorOptions = <Color>[
+      context.theme.textColor,
+      context.theme.subtextColor,
+      context.theme.hintTextColor,
+      context.theme.inverseTextColor,
+      context.theme.accentColor,
+    ];
+    final textStyle = style.copyWith(
+      color: colorOptions[color ?? 0],
+      fontSize: fontSize,
+    );
+    return autoSize
+        ? AutoSizeText(
             text,
-            overflow: TextOverflow.ellipsis,
+            style: textStyle,
             maxLines: maxLines ?? 1,
-            style: TextStyle(
-              color: context.theme.accentColor,
-              fontSize: fontSize ?? 18,
-              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-            ),
+            textAlign: alignment,
+            overflow: TextOverflow.ellipsis,
           )
-        : AutoSizeText(
+        : Text(
             text,
-            overflow: TextOverflow.ellipsis,
+            style: textStyle,
             maxLines: maxLines ?? 1,
-            maxFontSize: fontSize ?? 18,
-            style: TextStyle(
-              color: context.theme.accentColor,
-              fontSize: fontSize ?? 18,
-              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-            ),
+            textAlign: alignment,
+            overflow: TextOverflow.ellipsis,
           );
   }
 }
 
-class ButtonText extends StatelessWidget {
-  const ButtonText({
-    required this.text,
-    required this.inverted,
-    this.maxLines,
-    this.fontSize,
-    this.staticSize,
-    super.key,
-  });
-  final String text;
-  final bool inverted;
-  final int? maxLines;
-  final double? fontSize;
-  final bool? staticSize;
-  @override
-  Widget build(BuildContext context) {
-    return staticSize != null && staticSize!
-        ? Text(
-            text,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: inverted
-                  ? context.theme.inverseTextColor
-                  : context.theme.textColor,
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.bold,
-              fontSize: fontSize ?? 16,
-            ),
-          )
-        : AutoSizeText(
-            text,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            maxFontSize: fontSize ?? 16,
-            style: TextStyle(
-              color: inverted
-                  ? context.theme.inverseTextColor
-                  : context.theme.textColor,
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.bold,
-              fontSize: fontSize ?? 16,
-            ),
-          );
-  }
+// class WarningText extends StatelessWidget {
+//   const WarningText({
+//     required this.text,
+//     required this.style,
+//     required this.value,
+//     this.maxLines,
+//     this.alignment,
+//     this.bold = false,
+//     this.autoSize = false,
+//     super.key,
+//   });
+
+//   final int value;
+//   final String text;
+//   final TextStyle style;
+//   final int? maxLines;
+//   final TextAlign? alignment;
+//   final bool bold;
+//   final bool autoSize;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final textStyle = style.copyWith(
+//       color: context.theme.dangerLevelColors[value],
+//     );
+//     return autoSize
+//         ? AutoSizeText(
+//             text,
+//             style: textStyle,
+//             maxLines: maxLines,
+//             textAlign: alignment,
+//           )
+//         : Text(
+//             text,
+//             style: textStyle,
+//             maxLines: maxLines,
+//             textAlign: alignment,
+//           );
+//   }
+// }
+
+TextStyle get appBarText => CustomTextStyle.appBar;
+TextStyle get titleText => CustomTextStyle.title;
+TextStyle get primaryText => CustomTextStyle.primary;
+TextStyle get secondaryText => CustomTextStyle.secondary;
+TextStyle get buttonText => CustomTextStyle.button;
+TextStyle get userText => CustomTextStyle.user;
+
+class CustomTextStyle {
+  static const appBar = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 28,
+    letterSpacing: 0.3,
+    overflow: TextOverflow.ellipsis,
+  );
+
+  static const title = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+    letterSpacing: 0.3,
+    overflow: TextOverflow.ellipsis,
+  );
+
+  static const primary = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    letterSpacing: 0.3,
+    overflow: TextOverflow.ellipsis,
+  );
+
+  static const secondary = TextStyle(
+    fontSize: 14,
+    letterSpacing: 0.3,
+    overflow: TextOverflow.ellipsis,
+  );
+
+  static const button = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0.3,
+    overflow: TextOverflow.ellipsis,
+  );
+
+  static const user = TextStyle(
+    fontSize: 18,
+    letterSpacing: 0.3,
+    overflow: TextOverflow.ellipsis,
+  );
 }

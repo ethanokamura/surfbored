@@ -1,6 +1,7 @@
+import 'package:app_core/app_core.dart';
 import 'package:app_ui/src/constants.dart';
 import 'package:app_ui/src/extensions.dart';
-import 'package:app_ui/src/icons.dart';
+import 'package:app_ui/src/image.dart';
 import 'package:app_ui/src/text.dart';
 import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,13 @@ import 'package:flutter/material.dart';
 class CustomContainer extends StatelessWidget {
   const CustomContainer({
     required this.child,
+    this.accent,
     this.horizontal,
     this.vertical,
     super.key,
   });
 
+  final bool? accent;
   final double? horizontal;
   final double? vertical;
   final Widget child;
@@ -23,8 +26,11 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.theme.colorScheme.surface,
+      color: accent == null || !accent!
+          ? context.theme.colorScheme.surface
+          : context.theme.accentColor,
       borderRadius: defaultBorderRadius,
+      elevation: defaultElevation,
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: horizontal == null ? 15 : horizontal!,
@@ -36,46 +42,46 @@ class CustomContainer extends StatelessWidget {
   }
 }
 
-/// TODO(Ethan): remove?
-class CustomInputField extends StatelessWidget {
-  const CustomInputField({
-    required this.label,
-    required this.text,
-    required this.onPressed,
-    super.key,
-  });
+// TODO(Ethan): remove?
+// class CustomInputField extends StatelessWidget {
+//   const CustomInputField({
+//     required this.label,
+//     required this.text,
+//     required this.onPressed,
+//     super.key,
+//   });
 
-  final String label;
-  final String text;
-  final void Function()? onPressed;
+//   final String label;
+//   final String text;
+//   final void Function()? onPressed;
 
-  @override
-  Widget build(BuildContext context) {
-    return CustomContainer(
-      vertical: 0,
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: PrimaryText(text: text),
-            ),
-          ),
-          IconButton(
-            onPressed: onPressed,
-            icon: accentIconStyle(context, AppIcons.edit),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-            // splashColor: Colors.transparent,
-            // highlightColor: Colors.transparent,
-            tooltip: 'Edit',
-            iconSize: 20,
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return CustomContainer(
+//       vertical: 0,
+//       child: Row(
+//         children: [
+//           Expanded(
+//             child: Padding(
+//               padding: const EdgeInsets.symmetric(vertical: 10),
+//               child: CustomText(text: text, style: primaryText),
+//             ),
+//           ),
+//           IconButton(
+//             onPressed: onPressed,
+//             icon: defaultIconStyle(context, AppIcons.edit, 3),
+//             padding: EdgeInsets.zero,
+//             constraints: const BoxConstraints(),
+//             // splashColor: Colors.transparent,
+//             // highlightColor: Colors.transparent,
+//             tooltip: 'Edit',
+//             iconSize: 20,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 /// Custom container widget
 /// Requires [child] child to display inside the tab
@@ -126,12 +132,16 @@ class CustomPageView extends StatelessWidget {
     this.title,
     this.actions,
     this.centerTitle,
+    this.floatingActionButton,
+    this.bottomNavigationBar,
     super.key,
   });
   final Widget body;
   final String? title;
   final bool? centerTitle;
   final List<Widget>? actions;
+  final Widget? floatingActionButton;
+  final Widget? bottomNavigationBar;
 
   @override
   Widget build(BuildContext context) {
@@ -142,20 +152,45 @@ class CustomPageView extends StatelessWidget {
           ? AppBar(
               centerTitle: centerTitle,
               backgroundColor: Colors.transparent,
-              title: title != null ? AppBarText(text: title!) : null,
+              title: title != null
+                  ? CustomText(
+                      text: title!,
+                      style: appBarText,
+                    )
+                  : null,
               actions: actions,
             )
           : null,
-      body: SafeArea(
+      body: ShaderMask(
+        shaderCallback: (Rect rect) {
+          return LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              context.theme.backgroundColor,
+              Colors.transparent,
+              Colors.transparent,
+              context.theme.backgroundColor,
+            ],
+            stops: const [
+              0.0,
+              0.0,
+              0.9,
+              1.0,
+            ], // 10% purple, 80% transparent, 10% purple
+          ).createShader(rect);
+        },
+        blendMode: BlendMode.dstOut,
         child: Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: defaultPadding,
             right: defaultPadding,
-            top: appBar ? defaultPadding : 0,
           ),
           child: body,
         ),
       ),
+      floatingActionButton: floatingActionButton,
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }
@@ -214,5 +249,37 @@ class HorizontalSpacer extends StatelessWidget {
     return multiple != null
         ? SizedBox(width: defaultSpacing * multiple!)
         : const SizedBox(width: defaultSpacing);
+  }
+}
+
+class UnknownCard extends StatelessWidget {
+  const UnknownCard({required this.message, super.key});
+  final String message;
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      child: Row(
+        children: [
+          const DefaultImage(
+            borderRadius: defaultBorderRadius,
+            aspectX: 1,
+            aspectY: 1,
+            width: 64,
+          ),
+          const HorizontalSpacer(),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomText(text: context.l10n.empty, style: primaryText),
+                CustomText(text: message, style: secondaryText),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

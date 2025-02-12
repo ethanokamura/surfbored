@@ -19,8 +19,8 @@ abstract class CustomColors {
   static const Color lightBackground = Color(0xffffffff);
   static const Color lightSurface = Color(0xfff3f5f6);
   static const Color lightPrimary = Color(0xffe5e8ea);
-  static const Color lightTextColor = Color(0xff1a1a1a);
-  static const Color lightSubtextColor = Color(0xff7e8286);
+  static const Color lightTextColor = Color(0xff46494b);
+  static const Color lightSubtextColor = Color(0xff7f8b90);
   static const Color lightHintTextColor = Color(0xff8f8f8f);
-  static const Color inverseLightTextColor = Color(0xff151b24);
+  static const Color inverseLightTextColor = Color(0xff46494b);
 }

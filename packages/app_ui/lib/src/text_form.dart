@@ -3,48 +3,79 @@ import 'package:app_ui/app_ui.dart';
 InputDecoration defaultTextFormFieldDecoration({
   required BuildContext context,
   required String label,
+  String? hintText,
+  bool? onBackground,
   String? prefix,
 }) =>
     InputDecoration(
+      filled: true,
+      fillColor: onBackground != null && onBackground
+          ? context.theme.primaryColor
+          : context.theme.backgroundColor,
       prefixText: prefix,
-      prefixStyle: const TextStyle(fontSize: 22),
+      prefixStyle: const TextStyle(fontSize: 16),
+      hintText: hintText,
+      hintStyle: secondaryText,
+      hintMaxLines: 1,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: defaultPadding,
       ),
-      labelStyle: TextStyle(
-        color: context.theme.subtextColor,
-        fontSize: 22,
+      labelStyle: const TextStyle(
+        fontSize: 16,
       ),
-      label: Text(label),
-      enabledBorder: UnderlineInputBorder(
+      border: const OutlineInputBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(defaultRadius),
+          bottomLeft: Radius.circular(defaultRadius),
+        ),
         borderSide: BorderSide(
-          color: context.theme.subtextColor,
-          width: 2,
+          color: Colors.transparent,
+          width: 0,
         ),
       ),
+      enabledBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(defaultRadius),
+          bottomLeft: Radius.circular(defaultRadius),
+        ),
+        borderSide: BorderSide(
+          color: Colors.transparent,
+          width: 0,
+        ),
+      ),
+      label: Text(label),
     );
 
 TextFormField customTextFormField({
   required BuildContext context,
   required String label,
   required TextEditingController controller,
-  required int maxLength,
+  bool? onBackground,
+  bool autofocus = false,
   String? prefix,
+  int? maxLength,
   TextInputType? keyboardType,
+  bool? obscureText,
+  String? hintText,
   void Function(String)? onChanged,
   String? Function(String?)? validator,
 }) =>
     TextFormField(
       controller: controller,
+      obscureText: obscureText ?? false,
       onChanged: onChanged,
       keyboardType: keyboardType,
       validator: validator,
       minLines: 1,
       maxLines: 5,
       maxLength: maxLength,
-      style: const TextStyle(fontSize: 22),
+      cursorColor: context.theme.hintTextColor,
+      autofocus: autofocus,
+      style: const TextStyle(fontSize: 16),
       decoration: defaultTextFormFieldDecoration(
+        onBackground: onBackground,
         context: context,
+        hintText: hintText,
         label: label,
         prefix: prefix,
       ),
@@ -56,15 +87,11 @@ InputDecoration searchTextFormFieldDecoration({
   IconData? icon,
 }) =>
     InputDecoration(
-      prefixIcon: icon != null ? defaultIconStyle(context, icon) : null,
+      prefixIcon: icon != null ? defaultIconStyle(context, icon, 0) : null,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: defaultPadding,
       ),
-      labelStyle: TextStyle(
-        color: context.theme.subtextColor,
-        fontSize: 14,
-      ),
-      label: Text(label),
+      label: CustomText(text: label, style: secondaryText),
       enabledBorder: const UnderlineInputBorder(
         borderSide: BorderSide(
           color: Colors.transparent,

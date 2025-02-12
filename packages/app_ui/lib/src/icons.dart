@@ -3,26 +3,30 @@ import 'package:app_ui/src/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Icon defaultIconStyle(BuildContext context, IconData icon, {double size = 14}) {
+Icon defaultIconStyle(
+  BuildContext context,
+  IconData icon,
+  int? color, {
+  double size = 14,
+}) {
+  final colors = [
+    context.theme.textColor,
+    context.theme.subtextColor,
+    context.theme.hintTextColor,
+    context.theme.inverseTextColor,
+    context.theme.accentColor,
+  ];
   return Icon(
     icon,
-    color: context.theme.textColor,
+    color: colors[color ?? 0],
     size: size,
   );
 }
 
-Icon appBarIconStyle(BuildContext context, IconData icon, {double size = 18}) {
+Icon appBarIconStyle(BuildContext context, IconData icon, {double size = 24}) {
   return Icon(
     icon,
-    color: context.theme.textColor,
-    size: size,
-  );
-}
-
-Icon accentIconStyle(BuildContext context, IconData icon, {double size = 14}) {
-  return Icon(
-    icon,
-    color: context.theme.accentColor,
+    color: context.theme.inverseTextColor,
     size: size,
   );
 }
@@ -31,14 +35,6 @@ Icon inverseIconStyle(BuildContext context, IconData icon, {double size = 14}) {
   return Icon(
     icon,
     color: context.theme.inverseTextColor,
-    size: size,
-  );
-}
-
-Icon surfaceIconStyle(BuildContext context, IconData icon, {double size = 14}) {
-  return Icon(
-    icon,
-    color: context.theme.textColor,
     size: size,
   );
 }
